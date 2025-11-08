@@ -1,0 +1,88 @@
+package com.example.debugappproject.ui.buglist;
+
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
+
+import com.example.debugappproject.data.repository.BugRepository;
+import com.example.debugappproject.model.Bug;
+import com.example.debugappproject.util.Constants;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * ViewModel for BugListFragment.
+ * Manages bug list and filtering logic.
+ */
+public class BugListViewModel extends AndroidViewModel {
+
+    private final BugRepository repository;
+    private final LiveData<List<Bug>> allBugs;
+    private final MutableLiveData<String> selectedDifficulty;
+    private final MutableLiveData<String> selectedCategory;
+    private final LiveData<List<Bug>> filteredBugs;
+
+    public BugListViewModel(@NonNull Application application) {
+        super(application);
+        repository = new BugRepository(application);
+        allBugs = repository.getAllBugs();
+
+        // Initialize filters
+        selectedDifficulty = new MutableLiveData<>(Constants.DIFFICULTY_ALL);
+        selectedCategory = new MutableLiveData<>(Constants.CATEGORY_ALL);
+
+        // Create filtered bugs LiveData based on selected filters
+        filteredBugs = Transformations.switchMap(selectedDifficulty, difficulty ->
+            Transformations.switchMap(selectedCategory, category ->
+                Transformations.map(allBugs, bugs -> filterBugs(bugs, difficulty, category))
+            )
+        );
+    }
+
+    /**
+     * Filter bugs based on difficulty and category.
+     */
+    private List<Bug> filterBugs(List<Bug> bugs, String difficulty, String category) {
+        if (bugs == null) {
+            return new ArrayList<>();
+        }
+
+        List<Bug> filtered = new ArrayList<>();
+        for (Bug bug : bugs) {
+            boolean matchesDifficulty = difficulty.equals(Constants.DIFFICULTY_ALL) ||
+                                       bug.getDifficulty().equals(difficulty);
+            boolean matchesCategory = category.equals(Constants.CATEGORY_ALL) ||
+                                     bug.getCategory().equals(category);
+
+            if (matchesDifficulty && matchesCategory) {
+                filtered.add(bug);
+            }
+        }
+        return filtered;
+    }
+
+    public LiveData<List<Bug>> getFilteredBugs() {
+        return filteredBugs;
+    }
+
+    public void setDifficultyFilter(String difficulty) {
+        selectedDifficulty.setValue(difficulty);
+    }
+
+    public void setCategoryFilter(String category) {
+        selectedCategory.setValue(category);
+    }
+
+    public LiveData<String> getSelectedDifficulty() {
+        return selectedDifficulty;
+    }
+
+    public LiveData<String> getSelectedCategory() {
+        return selectedCategory;
+    }
+}
