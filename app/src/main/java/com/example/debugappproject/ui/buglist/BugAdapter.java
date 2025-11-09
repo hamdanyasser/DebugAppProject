@@ -10,12 +10,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.debugappproject.R;
 import com.example.debugappproject.model.Bug;
+import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * RecyclerView Adapter for displaying list of bugs.
+ *
+ * Features:
+ * - Material 3 chip-based design for difficulty and category
+ * - Dynamic difficulty chip coloring (green/orange/red)
+ * - Checkmark indicator for completed bugs
+ * - Card-based layout with ripple effects
  */
 public class BugAdapter extends RecyclerView.Adapter<BugAdapter.BugViewHolder> {
 
@@ -56,44 +63,58 @@ public class BugAdapter extends RecyclerView.Adapter<BugAdapter.BugViewHolder> {
 
     static class BugViewHolder extends RecyclerView.ViewHolder {
         private final TextView titleText;
-        private final TextView difficultyText;
-        private final TextView categoryText;
-        private final View completedIndicator;
+        private final Chip difficultyChip;
+        private final Chip categoryChip;
+        private final TextView completedIcon;
 
         public BugViewHolder(@NonNull View itemView) {
             super(itemView);
             titleText = itemView.findViewById(R.id.text_bug_title);
-            difficultyText = itemView.findViewById(R.id.text_bug_difficulty);
-            categoryText = itemView.findViewById(R.id.text_bug_category);
-            completedIndicator = itemView.findViewById(R.id.completed_indicator);
+            difficultyChip = itemView.findViewById(R.id.chip_difficulty);
+            categoryChip = itemView.findViewById(R.id.chip_category);
+            completedIcon = itemView.findViewById(R.id.icon_completed);
         }
 
+        /**
+         * Binds bug data to the view holder.
+         * Sets chip colors based on difficulty level.
+         */
         public void bind(Bug bug, OnBugClickListener listener) {
             titleText.setText(bug.getTitle());
-            difficultyText.setText(bug.getDifficulty());
-            categoryText.setText(bug.getCategory());
+
+            // Set difficulty chip
+            difficultyChip.setText(bug.getDifficulty());
+            setDifficultyChipColor(bug.getDifficulty());
+
+            // Set category chip
+            categoryChip.setText(bug.getCategory());
 
             // Show/hide completed indicator
-            completedIndicator.setVisibility(bug.isCompleted() ? View.VISIBLE : View.GONE);
+            completedIcon.setVisibility(bug.isCompleted() ? View.VISIBLE : View.GONE);
 
-            // Set difficulty color
-            int color;
-            switch (bug.getDifficulty()) {
-                case "Easy":
-                    color = 0xFF4CAF50; // Green
+            // Set click listener
+            itemView.setOnClickListener(v -> listener.onBugClick(bug));
+        }
+
+        /**
+         * Sets difficulty chip background color based on difficulty level.
+         */
+        private void setDifficultyChipColor(String difficulty) {
+            int colorRes;
+            switch (difficulty.toLowerCase()) {
+                case "easy":
+                    colorRes = R.color.difficulty_easy;
                     break;
-                case "Medium":
-                    color = 0xFFFF9800; // Orange
+                case "medium":
+                    colorRes = R.color.difficulty_medium;
                     break;
-                case "Hard":
-                    color = 0xFFF44336; // Red
+                case "hard":
+                    colorRes = R.color.difficulty_hard;
                     break;
                 default:
-                    color = 0xFF9E9E9E; // Grey
+                    colorRes = R.color.difficulty_easy;
             }
-            difficultyText.setTextColor(color);
-
-            itemView.setOnClickListener(v -> listener.onBugClick(bug));
+            difficultyChip.setChipBackgroundColorResource(colorRes);
         }
     }
 }
