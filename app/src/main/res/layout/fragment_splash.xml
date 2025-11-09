@@ -4,31 +4,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
-    android:padding="24dp">
+    android:padding="@dimen/padding_large">
 
+    <!-- App Icon Placeholder (would be an ImageView in real app) -->
     <TextView
-        android:id="@+id/text_app_name"
+        android:id="@+id/text_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_name_full"
-        android:textColor="@android:color/white"
-        android:textSize="48sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/text_tagline"
+        android:text="🐞"
+        android:textSize="72sp"
+        android:alpha="0"
+        app:layout_constraintBottom_toTopOf="@+id/text_app_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
+        android:id="@+id/text_app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:text="@string/app_name_full"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="48sp"
+        android:textStyle="bold"
+        android:alpha="0"
+        app:layout_constraintBottom_toTopOf="@+id/text_tagline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_icon" />
+
+    <TextView
         android:id="@+id/text_tagline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacing_medium"
         android:text="@string/app_tagline"
-        android:textColor="@android:color/white"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="18sp"
-        android:alpha="0.9"
+        android:textAlignment="center"
+        android:alpha="0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
