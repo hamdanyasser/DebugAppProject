@@ -8,14 +8,19 @@
     <string name="action_settings">Settings</string>
 
     <!-- Home Screen -->
+    <string name="welcome_debugger">Welcome, Debugger!</string>
     <string name="bug_of_the_day">Bug of the Day</string>
+    <string name="loading">Loading…</string>
     <string name="quick_stats">Quick Stats</string>
     <string name="solved">Solved</string>
     <string name="total">Total</string>
     <string name="day_streak">Day Streak</string>
+    <string name="keep_going">Keep going! You\'re doing great.</string>
     <string name="solve_now">Solve Now</string>
     <string name="all_bugs">All Bugs</string>
     <string name="my_progress">My Progress</string>
+    <string name="practice_all_bugs">Practice All Bugs</string>
+    <string name="view_my_progress">View My Progress</string>
 
     <!-- Bug List Screen -->
     <string name="filters">Filters</string>

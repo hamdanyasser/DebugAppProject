@@ -18,10 +18,17 @@ import com.example.debugappproject.model.UserProgress;
 
 /**
  * HomeFragment - Dashboard/home screen of the app.
+ *
  * Displays:
- * - Bug of the Day
- * - Quick stats (bugs solved, streak)
+ * - Bug of the Day with difficulty/category chips
+ * - Quick stats (bugs solved, total, streak)
+ * - Motivational messages based on progress
  * - Navigation buttons to other screens
+ *
+ * Features:
+ * - Material 3 design with cards and chips
+ * - Dynamic difficulty chip coloring
+ * - Progress-based motivational text
  */
 public class HomeFragment extends Fragment {
 
@@ -69,30 +76,98 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    /**
+     * Updates Bug of the Day card with bug information.
+     * Sets chip colors based on difficulty level.
+     */
     private void updateBugOfTheDay(Bug bug) {
         binding.textBugOfDayTitle.setText(bug.getTitle());
-        binding.textBugOfDayDifficulty.setText(bug.getDifficulty());
-        binding.textBugOfDayCategory.setText(bug.getCategory());
+
+        // Set difficulty chip
+        binding.chipDifficulty.setText(bug.getDifficulty());
+        setDifficultyChipColor(bug.getDifficulty());
+
+        // Set category chip
+        binding.chipCategory.setText(bug.getCategory());
 
         // Store bug ID for navigation
         binding.cardBugOfDay.setTag(bug.getId());
+        binding.buttonSolveNow.setTag(bug.getId());
     }
 
+    /**
+     * Sets chip background color based on difficulty level.
+     */
+    private void setDifficultyChipColor(String difficulty) {
+        int colorRes;
+        switch (difficulty.toLowerCase()) {
+            case "easy":
+                colorRes = R.color.difficulty_easy;
+                break;
+            case "medium":
+                colorRes = R.color.difficulty_medium;
+                break;
+            case "hard":
+                colorRes = R.color.difficulty_hard;
+                break;
+            default:
+                colorRes = R.color.difficulty_easy;
+        }
+        binding.chipDifficulty.setChipBackgroundColorResource(colorRes);
+    }
+
+    /**
+     * Updates stats display with user progress.
+     * Shows motivational message based on progress.
+     */
     private void updateStats(UserProgress progress) {
         binding.textSolvedCount.setText(String.valueOf(progress.getTotalSolved()));
         binding.textStreakDays.setText(String.valueOf(progress.getStreakDays()));
+
+        // Set motivational message based on progress
+        String motivation = getMotivationalMessage(progress);
+        binding.textMotivation.setText(motivation);
     }
 
+    /**
+     * Returns motivational message based on user progress.
+     */
+    private String getMotivationalMessage(UserProgress progress) {
+        int solved = progress.getTotalSolved();
+        int streak = progress.getStreakDays();
+
+        if (streak >= 7) {
+            return "Amazing! 7-day streak! Keep it up! 🔥";
+        } else if (streak >= 3) {
+            return "Great streak! You're on fire! 🔥";
+        } else if (solved >= 10) {
+            return "Double digits! You're a debugging pro! 🎯";
+        } else if (solved >= 5) {
+            return "Halfway there! Keep going! 💪";
+        } else if (solved >= 1) {
+            return "Great start! Keep practicing! 🚀";
+        } else {
+            return getString(R.string.keep_going);
+        }
+    }
+
+    /**
+     * Sets up click listeners for navigation.
+     */
     private void setupClickListeners() {
-        // Bug of the Day card click
+        // Bug of the Day - "Solve Now" button click
+        binding.buttonSolveNow.setOnClickListener(v -> {
+            Integer bugId = (Integer) v.getTag();
+            if (bugId != null) {
+                navigateToBugDetail(bugId, v);
+            }
+        });
+
+        // Bug of the Day card click (for convenience)
         binding.cardBugOfDay.setOnClickListener(v -> {
             Integer bugId = (Integer) v.getTag();
             if (bugId != null) {
-                Bundle args = new Bundle();
-                args.putInt("bugId", bugId);
-                Navigation.findNavController(v).navigate(
-                    R.id.action_home_to_bugDetail, args
-                );
+                navigateToBugDetail(bugId, v);
             }
         });
 
@@ -104,6 +179,17 @@ public class HomeFragment extends Fragment {
         // My Progress button
         binding.buttonMyProgress.setOnClickListener(v ->
             Navigation.findNavController(v).navigate(R.id.action_home_to_progress)
+        );
+    }
+
+    /**
+     * Navigates to bug detail screen with the given bug ID.
+     */
+    private void navigateToBugDetail(int bugId, View view) {
+        Bundle args = new Bundle();
+        args.putInt("bugId", bugId);
+        Navigation.findNavController(view).navigate(
+            R.id.action_home_to_bugDetail, args
         );
     }
 
