@@ -1,9 +1,136 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Base application theme (Light) -->
     <style name="Base.Theme.DebugAppProject" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/primary_light</item>
+        <item name="colorPrimaryVariant">@color/primary_variant_light</item>
+        <item name="colorOnPrimary">@color/on_primary_light</item>
+
+        <!-- Secondary colors -->
+        <item name="colorSecondary">@color/secondary_light</item>
+        <item name="colorSecondaryVariant">@color/secondary_variant_light</item>
+        <item name="colorOnSecondary">@color/on_secondary_light</item>
+
+        <!-- Error colors -->
+        <item name="colorError">@color/error_light</item>
+        <item name="colorOnError">@color/on_error_light</item>
+
+        <!-- Surface colors -->
+        <item name="colorSurface">@color/surface_light</item>
+        <item name="colorOnSurface">@color/on_surface_light</item>
+
+        <!-- Background colors -->
+        <item name="android:colorBackground">@color/background_light</item>
+        <item name="colorOnBackground">@color/on_background_light</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@color/primary_light</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Material components -->
+        <item name="materialCardViewStyle">@style/Widget.DebugMaster.CardView</item>
+        <item name="materialButtonStyle">@style/Widget.DebugMaster.Button</item>
+        <item name="chipStyle">@style/Widget.DebugMaster.Chip</item>
     </style>
 
     <style name="Theme.DebugAppProject" parent="Base.Theme.DebugAppProject" />
+
+    <!-- Text Appearances -->
+    <style name="TextAppearance.DebugMaster.Headline1" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textSize">32sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/on_surface_light</item>
+    </style>
+
+    <style name="TextAppearance.DebugMaster.Headline2" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/on_surface_light</item>
+    </style>
+
+    <style name="TextAppearance.DebugMaster.Subtitle" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/on_surface_light</item>
+    </style>
+
+    <style name="TextAppearance.DebugMaster.Body1" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/on_surface_light</item>
+    </style>
+
+    <style name="TextAppearance.DebugMaster.Body2" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/on_surface_light</item>
+    </style>
+
+    <style name="TextAppearance.DebugMaster.Caption" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/on_surface_light</item>
+        <item name="android:alpha">0.7</item>
+    </style>
+
+    <style name="TextAppearance.DebugMaster.Code" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textSize">@dimen/code_text_size</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textColor">@color/on_surface_light</item>
+    </style>
+
+    <!-- Material Card View -->
+    <style name="Widget.DebugMaster.CardView" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="contentPadding">@dimen/padding_medium</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <!-- Material Button -->
+    <style name="Widget.DebugMaster.Button" parent="Widget.Material3.Button">
+        <item name="cornerRadius">@dimen/button_corner_radius</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+    </style>
+
+    <style name="Widget.DebugMaster.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="cornerRadius">@dimen/button_corner_radius</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+    </style>
+
+    <!-- Chip Style -->
+    <style name="Widget.DebugMaster.Chip" parent="Widget.Material3.Chip.Suggestion">
+        <item name="chipCornerRadius">@dimen/chip_corner_radius</item>
+        <item name="android:minHeight">@dimen/chip_height</item>
+    </style>
+
+    <!-- Code Block Style -->
+    <style name="CodeBlock">
+        <item name="android:background">@color/code_background_light</item>
+        <item name="android:padding">@dimen/code_padding</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">@dimen/code_text_size</item>
+        <item name="android:scrollbars">vertical|horizontal</item>
+    </style>
+
+    <!-- Difficulty Chip Styles -->
+    <style name="DifficultyChip" parent="Widget.Material3.Chip.Assist">
+        <item name="chipCornerRadius">@dimen/chip_corner_radius</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="DifficultyChip.Easy">
+        <item name="chipBackgroundColor">@color/difficulty_easy</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="DifficultyChip.Medium">
+        <item name="chipBackgroundColor">@color/difficulty_medium</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="DifficultyChip.Hard">
+        <item name="chipBackgroundColor">@color/difficulty_hard</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>
