@@ -89,12 +89,14 @@ public class SplashFragment extends Fragment {
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        // Slight bounce back
-                        binding.textIcon.animate()
-                                .scaleX(1f)
-                                .scaleY(1f)
-                                .setDuration(200)
-                                .start();
+                        // Slight bounce back - check if binding is still valid
+                        if (binding != null && isAdded()) {
+                            binding.textIcon.animate()
+                                    .scaleX(1f)
+                                    .scaleY(1f)
+                                    .setDuration(200)
+                                    .start();
+                        }
                     }
                 })
                 .start();
@@ -139,6 +141,13 @@ public class SplashFragment extends Fragment {
         // Cancel pending navigation to avoid memory leaks
         if (navigationHandler != null && navigationRunnable != null) {
             navigationHandler.removeCallbacks(navigationRunnable);
+        }
+
+        // Cancel any running animations to prevent callbacks from accessing null binding
+        if (binding != null) {
+            binding.textIcon.animate().cancel();
+            binding.textAppName.animate().cancel();
+            binding.textTagline.animate().cancel();
         }
 
         binding = null;
