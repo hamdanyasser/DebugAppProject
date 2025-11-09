@@ -13,7 +13,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.debugappproject.databinding.FragmentProgressBinding;
+import com.example.debugappproject.model.Achievement;
+import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.model.UserProgress;
+
+import java.util.List;
 
 /**
  * ProgressFragment - Stats dashboard showing user's learning progress.
@@ -59,6 +63,7 @@ public class ProgressFragment extends Fragment {
         viewModel.getUserProgress().observe(getViewLifecycleOwner(), progress -> {
             if (progress != null) {
                 updateProgressDisplay(progress);
+                computeAndDisplayAchievements();
             }
         });
 
@@ -72,7 +77,14 @@ public class ProgressFragment extends Fragment {
                 if (progress != null) {
                     updateProgressBars(progress, bugs.size());
                 }
+
+                computeAndDisplayAchievements();
             }
+        });
+
+        // Observe completed bugs for achievements
+        viewModel.getCompletedBugs().observe(getViewLifecycleOwner(), completedBugs -> {
+            computeAndDisplayAchievements();
         });
     }
 
@@ -130,6 +142,113 @@ public class ProgressFragment extends Fragment {
             })
             .setNegativeButton("Cancel", null)
             .show();
+    }
+
+    /**
+     * Computes achievements and displays them in the achievements container.
+     * Shows unlocked achievements in full color and locked ones in gray.
+     */
+    private void computeAndDisplayAchievements() {
+        UserProgress progress = viewModel.getUserProgress().getValue();
+        List<Bug> completedBugs = viewModel.getCompletedBugs().getValue();
+        List<Bug> allBugs = viewModel.getAllBugs().getValue();
+
+        if (progress == null || completedBugs == null || allBugs == null) {
+            return;
+        }
+
+        List<Achievement> achievements = viewModel.computeAchievements(progress, completedBugs, allBugs);
+
+        // Count unlocked achievements
+        int unlockedCount = 0;
+        for (Achievement achievement : achievements) {
+            if (achievement.isUnlocked()) {
+                unlockedCount++;
+            }
+        }
+
+        // Update achievement count
+        binding.textAchievementsCount.setText(unlockedCount + " / " + achievements.size() + " unlocked");
+
+        // Clear existing achievement views
+        binding.layoutAchievementsContainer.removeAllViews();
+
+        // Display each achievement
+        for (Achievement achievement : achievements) {
+            View achievementView = createAchievementView(achievement);
+            binding.layoutAchievementsContainer.addView(achievementView);
+        }
+    }
+
+    /**
+     * Creates a view for a single achievement.
+     * Shows icon, name, and description with appropriate styling for locked/unlocked state.
+     */
+    private View createAchievementView(Achievement achievement) {
+        // Create a horizontal LinearLayout for the achievement
+        android.widget.LinearLayout achievementLayout = new android.widget.LinearLayout(requireContext());
+        achievementLayout.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+        achievementLayout.setPadding(0, (int) (8 * getResources().getDisplayMetrics().density), 0, (int) (8 * getResources().getDisplayMetrics().density));
+
+        // Icon TextView
+        android.widget.TextView iconView = new android.widget.TextView(requireContext());
+        iconView.setText(achievement.getIcon());
+        iconView.setTextSize(24);
+        iconView.setAlpha(achievement.isUnlocked() ? 1.0f : 0.3f);
+        android.widget.LinearLayout.LayoutParams iconParams = new android.widget.LinearLayout.LayoutParams(
+                (int) (40 * getResources().getDisplayMetrics().density),
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        iconView.setLayoutParams(iconParams);
+
+        // Text container (name + description)
+        android.widget.LinearLayout textContainer = new android.widget.LinearLayout(requireContext());
+        textContainer.setOrientation(android.widget.LinearLayout.VERTICAL);
+        android.widget.LinearLayout.LayoutParams textContainerParams = new android.widget.LinearLayout.LayoutParams(
+                0,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+                1.0f
+        );
+        textContainer.setLayoutParams(textContainerParams);
+
+        // Name TextView
+        android.widget.TextView nameView = new android.widget.TextView(requireContext());
+        nameView.setText(achievement.getName());
+        nameView.setTextSize(16);
+        nameView.setTypeface(null, android.graphics.Typeface.BOLD);
+        nameView.setAlpha(achievement.isUnlocked() ? 1.0f : 0.5f);
+
+        // Description TextView
+        android.widget.TextView descView = new android.widget.TextView(requireContext());
+        descView.setText(achievement.getDescription());
+        descView.setTextSize(14);
+        descView.setAlpha(achievement.isUnlocked() ? 0.7f : 0.4f);
+
+        textContainer.addView(nameView);
+        textContainer.addView(descView);
+
+        // Status indicator
+        android.widget.TextView statusView = new android.widget.TextView(requireContext());
+        if (achievement.isUnlocked()) {
+            statusView.setText("✓");
+            statusView.setTextColor(getResources().getColor(com.example.debugappproject.R.color.difficulty_easy, null));
+        } else {
+            statusView.setText("🔒");
+            statusView.setAlpha(0.3f);
+        }
+        statusView.setTextSize(18);
+        android.widget.LinearLayout.LayoutParams statusParams = new android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        statusParams.setMarginStart((int) (8 * getResources().getDisplayMetrics().density));
+        statusView.setLayoutParams(statusParams);
+
+        achievementLayout.addView(iconView);
+        achievementLayout.addView(textContainer);
+        achievementLayout.addView(statusView);
+
+        return achievementLayout;
     }
 
     @Override
