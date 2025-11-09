@@ -1,255 +1,337 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="?android:attr/colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="@dimen/padding_medium">
 
-        <!-- Bug Header -->
-        <TextView
-            android:id="@+id/text_bug_title"
+        <!-- Bug Header Card -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bug Title"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:layout_marginBottom="@dimen/spacing_medium"
+            app:cardElevation="@dimen/card_elevation"
+            app:cardCornerRadius="@dimen/card_corner_radius">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/text_bug_difficulty"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Easy"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:orientation="vertical"
+                android:padding="@dimen/padding_medium">
 
-            <TextView
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/text_bug_title"
+                    style="@style/TextAppearance.DebugMaster.Headline2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Off-by-One Error in Array Loop" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_normal"
+                    app:singleLine="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_difficulty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/difficulty_easy"
+                        app:chipCornerRadius="@dimen/chip_corner_radius"
+                        style="@style/Widget.Material3.Chip.Assist"
+                        tools:text="Easy" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_category"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:chipBackgroundColor="?attr/colorSurfaceVariant"
+                        app:chipCornerRadius="@dimen/chip_corner_radius"
+                        style="@style/Widget.Material3.Chip.Assist"
+                        tools:text="Loops" />
+                </com.google.android.material.chip.ChipGroup>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Description Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            app:cardElevation="@dimen/card_elevation"
+            app:cardCornerRadius="@dimen/card_corner_radius">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="•" />
+                android:orientation="vertical"
+                android:padding="@dimen/padding_medium">
 
-            <TextView
-                android:id="@+id/text_bug_category"
-                android:layout_width="wrap_content"
+                <TextView
+                    style="@style/TextAppearance.DebugMaster.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/description"
+                    android:textColor="?attr/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/text_bug_description"
+                    style="@style/TextAppearance.DebugMaster.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    tools:text="This bug demonstrates a common off-by-one error..." />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Broken Code Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            app:cardElevation="@dimen/card_elevation"
+            app:cardCornerRadius="@dimen/card_corner_radius">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Loops" />
-        </LinearLayout>
+                android:orientation="vertical"
+                android:padding="@dimen/padding_medium">
 
-        <!-- Description -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/description"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorPrimary" />
+                <TextView
+                    style="@style/TextAppearance.DebugMaster.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/broken_code"
+                    android:textColor="?attr/colorError" />
 
-        <TextView
-            android:id="@+id/text_bug_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Description text"
-            android:textSize="14sp" />
-
-        <!-- Broken Code -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/broken_code"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorPrimary" />
-
-        <TextView
-            android:id="@+id/text_broken_code"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="#F5F5F5"
-            android:fontFamily="monospace"
-            android:padding="12dp"
-            android:text="Code here"
-            android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/text_broken_code"
+                    style="@style/CodeBlock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    tools:text="for (int i = 0; i &lt;= arr.length; i++) { ... }" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginBottom="@dimen/spacing_medium"
             android:orientation="horizontal"
             android:weightSum="2">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_run_code"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/button_height"
                 android:layout_weight="1"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="@dimen/spacing_small"
                 android:text="@string/run_code"
+                app:icon="@android:drawable/ic_media_play"
+                app:iconGravity="start"
+                app:cornerRadius="@dimen/button_corner_radius"
                 style="@style/Widget.Material3.Button.TonalButton" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_show_hint"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/button_height"
                 android:layout_weight="1"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="@dimen/spacing_small"
                 android:text="@string/show_hint"
+                app:icon="@android:drawable/ic_dialog_info"
+                app:iconGravity="start"
+                app:cornerRadius="@dimen/button_corner_radius"
                 style="@style/Widget.Material3.Button.OutlinedButton" />
         </LinearLayout>
 
-        <!-- Output Section -->
-        <LinearLayout
-            android:id="@+id/layout_output"
+        <!-- Output Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_output"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:visibility="gone"
+            app:cardElevation="@dimen/card_elevation"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            tools:visibility="visible">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/output"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="?attr/colorPrimary" />
+                android:orientation="vertical"
+                android:padding="@dimen/padding_medium">
 
-            <TextView
-                android:id="@+id/text_expected_output"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="#E8F5E9"
-                android:fontFamily="monospace"
-                android:padding="12dp"
-                android:text="Expected Output"
-                android:textSize="12sp" />
+                <TextView
+                    style="@style/TextAppearance.DebugMaster.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/output"
+                    android:textColor="?attr/colorPrimary" />
 
-            <TextView
-                android:id="@+id/text_actual_output"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="#FFEBEE"
-                android:fontFamily="monospace"
-                android:padding="12dp"
-                android:text="Actual Output"
-                android:textSize="12sp" />
-        </LinearLayout>
+                <!-- Expected Output -->
+                <TextView
+                    style="@style/TextAppearance.DebugMaster.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:text="Expected Output:"
+                    android:textStyle="bold" />
 
-        <!-- Hints Section -->
-        <LinearLayout
-            android:id="@+id/layout_hints"
+                <TextView
+                    android:id="@+id/text_expected_output"
+                    style="@style/CodeBlock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:background="@color/success_background"
+                    tools:text="[0, 1, 2, 3, 4]" />
+
+                <!-- Actual Output -->
+                <TextView
+                    style="@style/TextAppearance.DebugMaster.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:text="Actual Output (with bug):"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_actual_output"
+                    style="@style/CodeBlock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:background="@color/error_background"
+                    tools:text="ArrayIndexOutOfBoundsException" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Hints Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_hints"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:visibility="gone"
+            app:cardElevation="@dimen/card_elevation"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardBackgroundColor="@color/hint_background"
+            tools:visibility="visible">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/hints"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="?attr/colorPrimary" />
+                android:orientation="vertical"
+                android:padding="@dimen/padding_medium">
 
-            <TextView
-                android:id="@+id/text_hints"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="#FFF9C4"
-                android:padding="12dp"
-                android:text=""
-                android:textSize="14sp" />
-        </LinearLayout>
+                <TextView
+                    style="@style/TextAppearance.DebugMaster.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hints"
+                    android:textColor="?attr/colorPrimary" />
 
-        <!-- Solution Section -->
-        <LinearLayout
-            android:id="@+id/layout_solution"
+                <LinearLayout
+                    android:id="@+id/layout_hints_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:orientation="vertical" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Solution Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_solution"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:visibility="gone"
+            app:cardElevation="@dimen/card_elevation"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardBackgroundColor="@color/success_background"
+            tools:visibility="visible">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/solution"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="?attr/colorPrimary" />
+                android:orientation="vertical"
+                android:padding="@dimen/padding_medium">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/explanation"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                <TextView
+                    style="@style/TextAppearance.DebugMaster.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/solution"
+                    android:textColor="?attr/colorSecondary" />
 
-            <TextView
-                android:id="@+id/text_explanation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Explanation"
-                android:textSize="14sp" />
+                <TextView
+                    style="@style/TextAppearance.DebugMaster.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:text="@string/explanation"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/fixed_code"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/text_explanation"
+                    style="@style/TextAppearance.DebugMaster.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    tools:text="The loop condition should use &lt; instead of &lt;=..." />
 
-            <TextView
-                android:id="@+id/text_fixed_code"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:background="#E8F5E9"
-                android:fontFamily="monospace"
-                android:padding="12dp"
-                android:text="Fixed code"
-                android:textSize="12sp" />
-        </LinearLayout>
+                <TextView
+                    style="@style/TextAppearance.DebugMaster.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:text="@string/fixed_code"
+                    android:textStyle="bold" />
 
-        <!-- Bottom Actions -->
-        <Button
+                <TextView
+                    android:id="@+id/text_fixed_code"
+                    style="@style/CodeBlock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    tools:text="for (int i = 0; i &lt; arr.length; i++) { ... }" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Bottom Action Buttons -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_show_solution"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginBottom="@dimen/spacing_normal"
             android:text="@string/show_solution"
+            app:icon="@android:drawable/ic_menu_help"
+            app:iconGravity="start"
+            app:cornerRadius="@dimen/button_corner_radius"
             style="@style/Widget.Material3.Button.OutlinedButton" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_mark_solved"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/mark_as_solved" />
+            android:layout_height="@dimen/button_height"
+            android:text="@string/mark_as_solved"
+            app:icon="@android:drawable/checkbox_on_background"
+            app:iconGravity="start"
+            app:cornerRadius="@dimen/button_corner_radius" />
 
     </LinearLayout>
 </ScrollView>

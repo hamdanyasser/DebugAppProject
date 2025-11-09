@@ -55,6 +55,11 @@
     <color name="hint_background_light">#FFF9C4</color>   <!-- Light yellow -->
     <color name="hint_background_dark">#F57F17</color>    <!-- Dark yellow -->
 
+    <!-- Semantic color aliases -->
+    <color name="success_background">@color/output_expected_light</color>
+    <color name="error_background">@color/output_actual_light</color>
+    <color name="hint_background">@color/hint_background_light</color>
+
     <color name="completed_indicator">#4CAF50</color>     <!-- Green checkmark -->
 
     <!-- Dividers and borders -->
