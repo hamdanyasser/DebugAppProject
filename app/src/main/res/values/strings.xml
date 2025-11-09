@@ -23,10 +23,12 @@
     <string name="view_my_progress">View My Progress</string>
 
     <!-- Bug List Screen -->
+    <string name="search_bugs">Search bugs by title or description…</string>
     <string name="filters">Filters</string>
     <string name="difficulty">Difficulty</string>
     <string name="category">Category</string>
     <string name="no_bugs_found">No bugs found with selected filters</string>
+    <string name="no_bugs_match_search">No bugs match your search. Try clearing filters.</string>
 
     <!-- Bug Detail Screen -->
     <string name="description">Description</string>
