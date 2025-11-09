@@ -58,6 +58,18 @@
                         app:chipCornerRadius="@dimen/chip_corner_radius"
                         style="@style/Widget.Material3.Chip.Assist"
                         tools:text="Loops" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_completed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Completed ✓"
+                        android:textColor="@color/white"
+                        android:visibility="gone"
+                        app:chipBackgroundColor="@color/completed_indicator"
+                        app:chipCornerRadius="@dimen/chip_corner_radius"
+                        style="@style/Widget.Material3.Chip.Assist"
+                        tools:ignore="HardcodedText" />
                 </com.google.android.material.chip.ChipGroup>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -121,6 +133,124 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_small"
                     tools:text="for (int i = 0; i &lt;= arr.length; i++) { ... }" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Your Fix Editor Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            app:cardElevation="@dimen/card_elevation"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardBackgroundColor="@color/code_editor_background">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_medium">
+
+                <TextView
+                    style="@style/TextAppearance.DebugMaster.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Your Fix"
+                    android:textColor="?attr/colorPrimary" />
+
+                <EditText
+                    android:id="@+id/edit_user_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:minHeight="150dp"
+                    android:gravity="top|start"
+                    android:padding="@dimen/padding_small"
+                    android:background="@color/white"
+                    android:textColor="@color/black"
+                    android:fontFamily="monospace"
+                    android:textSize="14sp"
+                    android:inputType="textMultiLine"
+                    android:scrollbars="vertical"
+                    android:hint="Enter your fixed code here..."
+                    android:importantForAutofill="no"
+                    tools:ignore="HardcodedText,LabelFor" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_check_fix"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/button_height"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/spacing_small"
+                        android:text="Run Tests"
+                        app:icon="@android:drawable/ic_menu_send"
+                        app:iconGravity="start"
+                        app:cornerRadius="@dimen/button_corner_radius"
+                        style="@style/Widget.Material3.Button"
+                        tools:ignore="HardcodedText" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_reset_code"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/button_height"
+                        android:layout_weight="1"
+                        android:layout_marginStart="@dimen/spacing_small"
+                        android:text="Reset Code"
+                        app:icon="@android:drawable/ic_menu_revert"
+                        app:iconGravity="start"
+                        app:cornerRadius="@dimen/button_corner_radius"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Test Results Card (initially hidden) -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_test_results"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:visibility="gone"
+            app:cardElevation="@dimen/card_elevation"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_medium">
+
+                <TextView
+                    android:id="@+id/text_test_result_title"
+                    style="@style/TextAppearance.DebugMaster.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Test Results"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/text_test_result_message"
+                    style="@style/TextAppearance.DebugMaster.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    tools:text="All tests passed! 🎉" />
+
+                <LinearLayout
+                    android:id="@+id/layout_test_cases"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:orientation="vertical" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

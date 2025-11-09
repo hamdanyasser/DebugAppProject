@@ -84,9 +84,28 @@ public interface UserProgressDao {
     void updateStreak(int streak);
 
     /**
+     * Add XP to user's total.
+     */
+    @Query("UPDATE user_progress SET xp = xp + :xpAmount WHERE id = 1")
+    void addXp(int xpAmount);
+
+    /**
+     * Increment hints used count.
+     */
+    @Query("UPDATE user_progress SET hintsUsed = hintsUsed + 1 WHERE id = 1")
+    void incrementHintsUsed();
+
+    /**
+     * Increment bugs solved without hints count.
+     */
+    @Query("UPDATE user_progress SET bugsSolvedWithoutHints = bugsSolvedWithoutHints + 1 WHERE id = 1")
+    void incrementBugsSolvedWithoutHints();
+
+    /**
      * Reset all progress (for reset feature).
      */
     @Query("UPDATE user_progress SET totalSolved = 0, easySolved = 0, mediumSolved = 0, " +
-            "hardSolved = 0, streakDays = 0, lastSolvedTimestamp = 0 WHERE id = 1")
+            "hardSolved = 0, streakDays = 0, lastSolvedTimestamp = 0, xp = 0, hintsUsed = 0, " +
+            "bugsSolvedWithoutHints = 0 WHERE id = 1")
     void resetProgress();
 }

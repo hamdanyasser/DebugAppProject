@@ -76,12 +76,22 @@ public class ProgressFragment extends Fragment {
         });
     }
 
+    /**
+     * Updates progress display with user statistics.
+     * Shows overall progress, streak, XP, level, hints used, and difficulty breakdown.
+     */
     private void updateProgressDisplay(UserProgress progress) {
         binding.textSolvedCount.setText(String.valueOf(progress.getTotalSolved()));
         binding.textEasySolved.setText(String.valueOf(progress.getEasySolved()));
         binding.textMediumSolved.setText(String.valueOf(progress.getMediumSolved()));
         binding.textHardSolved.setText(String.valueOf(progress.getHardSolved()));
         binding.textStreak.setText(String.valueOf(progress.getStreakDays()));
+
+        // Update XP & Level section
+        binding.textLevel.setText(String.valueOf(progress.getLevel()));
+        binding.textTotalXp.setText(String.valueOf(progress.getXp()));
+        binding.textHintsUsed.setText(String.valueOf(progress.getHintsUsed()));
+        binding.textNoHints.setText(String.valueOf(progress.getBugsSolvedWithoutHints()));
     }
 
     private void updateProgressBars(UserProgress progress, int totalBugs) {
