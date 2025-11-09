@@ -144,7 +144,7 @@ public class SplashFragment extends Fragment {
             navigationHandler.removeCallbacks(navigationRunnable);
         }
 
-        // Cancel any running animations to prevent callbacks on destroyed view
+        // Cancel any running animations to prevent callbacks from accessing null binding
         if (binding != null) {
             binding.textIcon.animate().cancel();
             binding.textAppName.animate().cancel();
