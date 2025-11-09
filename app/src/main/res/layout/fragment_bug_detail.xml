@@ -27,12 +27,34 @@
                 android:orientation="vertical"
                 android:padding="@dimen/padding_medium">
 
-                <TextView
-                    android:id="@+id/text_bug_title"
-                    style="@style/TextAppearance.DebugMaster.Headline2"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:text="Off-by-One Error in Array Loop" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/text_bug_title"
+                        style="@style/TextAppearance.DebugMaster.Headline2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        tools:text="Off-by-One Error in Array Loop" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_completed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/completed"
+                        android:textColor="@color/white"
+                        android:visibility="gone"
+                        app:chipBackgroundColor="@color/success"
+                        app:chipIcon="@android:drawable/checkbox_on_background"
+                        app:chipIconTint="@color/white"
+                        app:chipCornerRadius="@dimen/chip_corner_radius"
+                        style="@style/Widget.Material3.Chip.Assist"
+                        tools:visibility="visible" />
+                </LinearLayout>
 
                 <com.google.android.material.chip.ChipGroup
                     android:layout_width="wrap_content"
@@ -124,38 +146,139 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Action Buttons -->
-        <LinearLayout
+        <!-- Your Fix Editor Card -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/spacing_medium"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            app:cardElevation="@dimen/card_elevation"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:cardBackgroundColor="@color/code_editor_background">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_run_code"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/button_height"
-                android:layout_weight="1"
-                android:layout_marginEnd="@dimen/spacing_small"
-                android:text="@string/run_code"
-                app:icon="@android:drawable/ic_media_play"
-                app:iconGravity="start"
-                app:cornerRadius="@dimen/button_corner_radius"
-                style="@style/Widget.Material3.Button.TonalButton" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_medium">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_show_hint"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/button_height"
-                android:layout_weight="1"
-                android:layout_marginStart="@dimen/spacing_small"
-                android:text="@string/show_hint"
-                app:icon="@android:drawable/ic_dialog_info"
-                app:iconGravity="start"
-                app:cornerRadius="@dimen/button_corner_radius"
-                style="@style/Widget.Material3.Button.OutlinedButton" />
-        </LinearLayout>
+                <TextView
+                    style="@style/TextAppearance.DebugMaster.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/your_fix"
+                    android:textColor="?attr/colorSecondary"
+                    android:drawableStart="@android:drawable/ic_menu_edit"
+                    android:drawablePadding="@dimen/spacing_small" />
+
+                <TextView
+                    style="@style/TextAppearance.DebugMaster.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_tiny"
+                    android:text="@string/your_fix_hint"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+
+                <EditText
+                    android:id="@+id/edit_your_fix"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_normal"
+                    android:minHeight="200dp"
+                    android:gravity="top|start"
+                    android:padding="@dimen/padding_small"
+                    android:background="@drawable/code_editor_background"
+                    android:fontFamily="monospace"
+                    android:textSize="14sp"
+                    android:textColor="?attr/colorOnSurface"
+                    android:inputType="textMultiLine|textNoSuggestions"
+                    android:scrollbars="vertical"
+                    android:overScrollMode="always"
+                    android:scrollbarStyle="insideOverlay"
+                    android:hint="@string/write_your_fix_here"
+                    android:importantForAutofill="no"
+                    tools:ignore="LabelFor" />
+
+                <!-- Editor Action Buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_run_tests"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/button_height"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/spacing_small"
+                        android:text="@string/run_tests"
+                        app:icon="@android:drawable/ic_media_play"
+                        app:iconGravity="start"
+                        app:cornerRadius="@dimen/button_corner_radius"
+                        style="@style/Widget.Material3.Button" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_reset_code"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/button_height"
+                        android:layout_weight="1"
+                        android:layout_marginStart="@dimen/spacing_small"
+                        android:text="@string/reset_code"
+                        app:icon="@android:drawable/ic_menu_revert"
+                        app:iconGravity="start"
+                        app:cornerRadius="@dimen/button_corner_radius"
+                        style="@style/Widget.Material3.Button.OutlinedButton" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Hint Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_show_hint"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:text="@string/show_hint"
+            app:icon="@android:drawable/ic_dialog_info"
+            app:iconGravity="start"
+            app:cornerRadius="@dimen/button_corner_radius"
+            style="@style/Widget.Material3.Button.TonalButton" />
+
+        <!-- Test Results Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_test_results"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_medium"
+            android:visibility="gone"
+            app:cardElevation="@dimen/card_elevation"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_medium">
+
+                <TextView
+                    android:id="@+id/text_test_result_title"
+                    style="@style/TextAppearance.DebugMaster.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/test_results"
+                    android:textColor="?attr/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/text_test_result_message"
+                    style="@style/TextAppearance.DebugMaster.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    tools:text="All tests passed! 🎉" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- Output Card -->
         <com.google.android.material.card.MaterialCardView

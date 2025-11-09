@@ -1,7 +1,10 @@
 package com.example.debugappproject.model;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import java.util.List;
 
 /**
  * Bug entity representing a debugging exercise.
@@ -24,11 +27,16 @@ public class Bug {
     private String explanation;     // Root cause explanation of the bug
     private String fixedCode;       // The corrected version of the code
     private boolean isCompleted;    // Whether user has solved this bug
+    private String starterCode;     // Optional: starter code for the editor (null = use brokenCode)
+    private String userNotes;       // Optional: student's personal notes about this bug
+
+    @Ignore
+    private List<TestCase> tests;   // Optional: test cases for display (not persisted, read-only from JSON)
 
     // Constructor
     public Bug(int id, String title, String language, String difficulty, String category,
                String description, String brokenCode, String expectedOutput, String actualOutput,
-               String explanation, String fixedCode, boolean isCompleted) {
+               String explanation, String fixedCode, boolean isCompleted, String starterCode, String userNotes) {
         this.id = id;
         this.title = title;
         this.language = language;
@@ -41,6 +49,8 @@ public class Bug {
         this.explanation = explanation;
         this.fixedCode = fixedCode;
         this.isCompleted = isCompleted;
+        this.starterCode = starterCode;
+        this.userNotes = userNotes;
     }
 
     // Getters and Setters
@@ -138,5 +148,44 @@ public class Bug {
 
     public void setCompleted(boolean completed) {
         isCompleted = completed;
+    }
+
+    public String getStarterCode() {
+        return starterCode;
+    }
+
+    public void setStarterCode(String starterCode) {
+        this.starterCode = starterCode;
+    }
+
+    public String getUserNotes() {
+        return userNotes;
+    }
+
+    public void setUserNotes(String userNotes) {
+        this.userNotes = userNotes;
+    }
+
+    public List<TestCase> getTests() {
+        return tests;
+    }
+
+    public void setTests(List<TestCase> tests) {
+        this.tests = tests;
+    }
+
+    /**
+     * Helper method to get the initial code for the editor.
+     * Returns starterCode if available, otherwise returns brokenCode.
+     */
+    public String getInitialEditorCode() {
+        return starterCode != null ? starterCode : brokenCode;
+    }
+
+    /**
+     * Helper method to check if this bug has test cases defined.
+     */
+    public boolean hasTests() {
+        return tests != null && !tests.isEmpty();
     }
 }

@@ -31,15 +31,28 @@
     <!-- Bug Detail Screen -->
     <string name="description">Description</string>
     <string name="broken_code">Broken Code</string>
+    <string name="your_fix">✏️ Your Fix</string>
+    <string name="your_fix_hint">Edit the code below to fix the bug</string>
+    <string name="write_your_fix_here">Write your fix here…</string>
     <string name="run_code">Run Code</string>
+    <string name="run_tests">Run Tests</string>
+    <string name="reset_code">Reset Code</string>
     <string name="show_hint">Show Hint</string>
     <string name="output">Output</string>
+    <string name="test_results">Test Results</string>
     <string name="hints">Hints</string>
     <string name="solution">Solution</string>
     <string name="explanation">Explanation</string>
     <string name="fixed_code">Fixed Code</string>
     <string name="show_solution">Show Solution</string>
     <string name="mark_as_solved">Mark as Solved</string>
+    <string name="completed">✓ Completed</string>
+    <string name="confirm_mark_solved_title">Mark as Solved?</string>
+    <string name="confirm_mark_solved_message">Your code hasn\'t passed all tests yet. Are you sure you want to mark this as solved?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="all_tests_passed">✅ All tests passed! Amazing work!</string>
+    <string name="tests_failed">Not quite there yet. Double-check your code and try again.</string>
 
     <!-- Progress Screen -->
     <string name="overall_progress">Overall Progress</string>

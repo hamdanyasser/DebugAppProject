@@ -1,5 +1,6 @@
 package com.example.debugappproject.ui.bugdetail;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,29 +17,29 @@ import com.example.debugappproject.R;
 import com.example.debugappproject.databinding.FragmentBugDetailBinding;
 import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.model.Hint;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
 /**
- * BugDetailFragment - Shows detailed view of a single bug with Material 3 design.
+ * BugDetailFragment - Interactive bug debugging practice screen with code editor.
  *
- * Features:
+ * NEW Features (Interactive Mode):
+ * - Editable code editor for students to write their fix
+ * - "Run Tests" button to check if code matches the solution
+ * - Code comparison with normalized whitespace/formatting
+ * - "Reset Code" to restore original starter code
+ * - Real-time test feedback (pass/fail)
+ * - Hint tracking with XP penalties
+ * - Automatic completion on test pass
+ * - Confirmation dialog for manual completion without passing tests
+ *
+ * Original Features:
  * - Material 3 card-based layout with proper visual hierarchy
  * - Difficulty and category chips with dynamic coloring
- * - Code execution simulation with output comparison
  * - Progressive hint revelation system
  * - Solution with explanation and fixed code
- * - Completion tracking
- *
- * Displays:
- * - Bug header with title and chips
- * - Description card
- * - Broken code card with syntax highlighting background
- * - Run Code and Show Hint buttons
- * - Output comparison card (shown after running code)
- * - Hints card (reveals hints one by one)
- * - Solution card (shows explanation and fixed code)
- * - Action buttons (Show Solution, Mark as Solved)
+ * - Completion tracking with visual indicator
  */
 public class BugDetailFragment extends Fragment {
 
@@ -47,6 +48,12 @@ public class BugDetailFragment extends Fragment {
     private int bugId;
     private Bug currentBug;
     private List<Hint> hints;
+
+    // Track hints used for this bug (for XP penalty calculation)
+    private int hintsUsedForThisBug = 0;
+
+    // Track if tests have passed (for confirmation dialog)
+    private boolean testsPassedForThisBug = false;
 
     @Nullable
     @Override
@@ -98,9 +105,16 @@ public class BugDetailFragment extends Fragment {
     /**
      * Displays bug details in the UI.
      * Sets chip colors based on difficulty level.
+     * Initializes the code editor with starter code.
      */
     private void displayBug(Bug bug) {
         binding.textBugTitle.setText(bug.getTitle());
+
+        // Show completed chip if bug is completed
+        if (bug.isCompleted()) {
+            binding.chipCompleted.setVisibility(View.VISIBLE);
+            testsPassedForThisBug = true; // Already completed, so tests are considered passed
+        }
 
         // Set difficulty chip
         binding.chipDifficulty.setText(bug.getDifficulty());
@@ -111,6 +125,10 @@ public class BugDetailFragment extends Fragment {
 
         binding.textBugDescription.setText(bug.getDescription());
         binding.textBrokenCode.setText(bug.getBrokenCode());
+
+        // Initialize code editor with starter code
+        String initialCode = bug.getInitialEditorCode();
+        binding.editYourFix.setText(initialCode);
 
         // Update button states based on completion
         if (bug.isCompleted()) {
@@ -141,10 +159,17 @@ public class BugDetailFragment extends Fragment {
     }
 
     private void setupClickListeners() {
-        // Run Code button
-        binding.buttonRunCode.setOnClickListener(v -> {
+        // Run Tests button - check if user's code matches the solution
+        binding.buttonRunTests.setOnClickListener(v -> {
             if (currentBug != null) {
-                showOutput();
+                runTests();
+            }
+        });
+
+        // Reset Code button - restore initial starter code
+        binding.buttonResetCode.setOnClickListener(v -> {
+            if (currentBug != null) {
+                resetCode();
             }
         });
 
@@ -161,16 +186,161 @@ public class BugDetailFragment extends Fragment {
         // Mark as Solved button
         binding.buttonMarkSolved.setOnClickListener(v -> {
             if (currentBug != null && !currentBug.isCompleted()) {
-                viewModel.markBugAsCompleted(currentBug.getId(), currentBug.getDifficulty());
-                binding.buttonMarkSolved.setText("Completed ✓");
-                binding.buttonMarkSolved.setEnabled(false);
-                Toast.makeText(requireContext(), "Bug marked as completed!", Toast.LENGTH_SHORT).show();
+                handleMarkAsSolved();
             }
         });
     }
 
     /**
+     * Runs tests by comparing user's code with the fixed code.
+     * Uses normalized comparison (trimmed, collapsed whitespace).
+     * If tests pass, automatically marks bug as completed.
+     */
+    private void runTests() {
+        String userCode = binding.editYourFix.getText().toString();
+        String fixedCode = currentBug.getFixedCode();
+
+        // Normalize both strings for comparison
+        String normalizedUserCode = normalizeCode(userCode);
+        String normalizedFixedCode = normalizeCode(fixedCode);
+
+        // Show test results card
+        binding.cardTestResults.setVisibility(View.VISIBLE);
+
+        if (normalizedUserCode.equals(normalizedFixedCode)) {
+            // Tests passed!
+            testsPassedForThisBug = true;
+            binding.textTestResultTitle.setText("✅ All Tests Passed!");
+            binding.textTestResultTitle.setTextColor(getResources().getColor(R.color.success, null));
+            binding.textTestResultMessage.setText(getString(R.string.all_tests_passed));
+            binding.cardTestResults.setCardBackgroundColor(getResources().getColor(R.color.success_background, null));
+
+            // Automatically mark as completed if not already
+            if (!currentBug.isCompleted()) {
+                viewModel.markBugAsCompleted(currentBug.getId(), currentBug.getDifficulty());
+                binding.buttonMarkSolved.setText("Completed ✓");
+                binding.buttonMarkSolved.setEnabled(false);
+                binding.chipCompleted.setVisibility(View.VISIBLE);
+
+                // Show celebration message
+                Snackbar.make(binding.getRoot(), "🎉 Bug solved! Great work!", Snackbar.LENGTH_LONG).show();
+            }
+        } else {
+            // Tests failed
+            testsPassedForThisBug = false;
+            binding.textTestResultTitle.setText("❌ Tests Failed");
+            binding.textTestResultTitle.setTextColor(getResources().getColor(R.color.error_light, null));
+            binding.textTestResultMessage.setText(getString(R.string.tests_failed));
+            binding.cardTestResults.setCardBackgroundColor(getResources().getColor(R.color.error_background, null));
+
+            // Optional: Try to find which line differs
+            String diffHint = findCodeDifference(userCode, fixedCode);
+            if (diffHint != null) {
+                binding.textTestResultMessage.setText(getString(R.string.tests_failed) + "\n\n" + diffHint);
+            }
+        }
+    }
+
+    /**
+     * Normalizes code for comparison by:
+     * - Trimming whitespace
+     * - Removing blank lines
+     * - Collapsing multiple spaces to single space
+     * - Converting to lowercase for case-insensitive comparison (optional)
+     */
+    private String normalizeCode(String code) {
+        if (code == null) return "";
+
+        // Split into lines, trim each, remove empty lines
+        String[] lines = code.split("\n");
+        StringBuilder normalized = new StringBuilder();
+
+        for (String line : lines) {
+            String trimmed = line.trim();
+            if (!trimmed.isEmpty()) {
+                // Collapse multiple spaces to single space
+                trimmed = trimmed.replaceAll("\\s+", " ");
+                normalized.append(trimmed).append("\n");
+            }
+        }
+
+        return normalized.toString().trim();
+    }
+
+    /**
+     * Attempts to find the first line where user code differs from fixed code.
+     * Returns a helpful hint message, or null if no specific difference found.
+     */
+    private String findCodeDifference(String userCode, String fixedCode) {
+        String[] userLines = userCode.split("\n");
+        String[] fixedLines = fixedCode.split("\n");
+
+        int minLength = Math.min(userLines.length, fixedLines.length);
+
+        for (int i = 0; i < minLength; i++) {
+            String userLine = userLines[i].trim();
+            String fixedLine = fixedLines[i].trim();
+
+            if (!userLine.equals(fixedLine)) {
+                return "💡 Hint: Check line " + (i + 1) + " – something looks different.";
+            }
+        }
+
+        if (userLines.length != fixedLines.length) {
+            return "💡 Hint: Your code has a different number of lines than expected.";
+        }
+
+        return null;
+    }
+
+    /**
+     * Resets the code editor to the initial starter code.
+     */
+    private void resetCode() {
+        String initialCode = currentBug.getInitialEditorCode();
+        binding.editYourFix.setText(initialCode);
+        Toast.makeText(requireContext(), "Code reset to original", Toast.LENGTH_SHORT).show();
+
+        // Hide test results when code is reset
+        binding.cardTestResults.setVisibility(View.GONE);
+        testsPassedForThisBug = false;
+    }
+
+    /**
+     * Handles the "Mark as Solved" button click.
+     * Shows confirmation dialog if tests haven't passed yet.
+     */
+    private void handleMarkAsSolved() {
+        if (testsPassedForThisBug) {
+            // Tests passed, so just mark as solved
+            markBugAsSolved();
+        } else {
+            // Tests haven't passed, show confirmation dialog
+            new AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.confirm_mark_solved_title)
+                    .setMessage(R.string.confirm_mark_solved_message)
+                    .setPositiveButton(R.string.yes, (dialog, which) -> markBugAsSolved())
+                    .setNegativeButton(R.string.no, null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
+    }
+
+    /**
+     * Marks the bug as solved and updates the UI.
+     */
+    private void markBugAsSolved() {
+        viewModel.markBugAsCompleted(currentBug.getId(), currentBug.getDifficulty());
+        binding.buttonMarkSolved.setText("Completed ✓");
+        binding.buttonMarkSolved.setEnabled(false);
+        binding.chipCompleted.setVisibility(View.VISIBLE);
+        testsPassedForThisBug = true;
+        Toast.makeText(requireContext(), "Bug marked as completed!", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
      * Shows output comparison card with expected vs actual output.
+     * (Kept for backward compatibility, though now superseded by test results)
      */
     private void showOutput() {
         binding.cardOutput.setVisibility(View.VISIBLE);
@@ -181,6 +351,7 @@ public class BugDetailFragment extends Fragment {
     /**
      * Reveals the next hint and adds it to the hints container.
      * Each hint is displayed in a separate TextView for better readability.
+     * Tracks hints used for XP penalty calculation (Part 3).
      */
     private void showNextHint() {
         if (hints == null || hints.isEmpty()) {
@@ -213,6 +384,9 @@ public class BugDetailFragment extends Fragment {
 
             binding.layoutHintsContainer.addView(hintView);
             viewModel.revealNextHint();
+
+            // Track hints used for this bug (for XP calculation in Part 3)
+            hintsUsedForThisBug++;
         } else {
             Toast.makeText(requireContext(), "No more hints available", Toast.LENGTH_SHORT).show();
         }
