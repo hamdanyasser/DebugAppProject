@@ -24,12 +24,14 @@ public class BugDetailViewModel extends AndroidViewModel {
     private LiveData<List<Hint>> hints;
     private final MutableLiveData<Integer> currentHintLevel;
     private final MutableLiveData<Boolean> showingSolution;
+    private int hintsUsedForCurrentBug; // Track hints used for the current bug
 
     public BugDetailViewModel(@NonNull Application application) {
         super(application);
         repository = new BugRepository(application);
         currentHintLevel = new MutableLiveData<>(0);
         showingSolution = new MutableLiveData<>(false);
+        hintsUsedForCurrentBug = 0;
     }
 
     /**
@@ -58,11 +60,15 @@ public class BugDetailViewModel extends AndroidViewModel {
 
     /**
      * Reveal next hint (increment hint level).
+     * Also tracks the number of hints used for XP calculation.
      */
     public void revealNextHint() {
         Integer current = currentHintLevel.getValue();
         if (current != null) {
             currentHintLevel.setValue(current + 1);
+            hintsUsedForCurrentBug++;
+            // Update global hints used count
+            repository.incrementHintsUsed();
         }
     }
 
@@ -71,6 +77,7 @@ public class BugDetailViewModel extends AndroidViewModel {
      */
     public void resetHints() {
         currentHintLevel.setValue(0);
+        hintsUsedForCurrentBug = 0;
     }
 
     /**
@@ -81,9 +88,39 @@ public class BugDetailViewModel extends AndroidViewModel {
     }
 
     /**
+     * Get number of hints used for the current bug.
+     */
+    public int getHintsUsedForCurrentBug() {
+        return hintsUsedForCurrentBug;
+    }
+
+    /**
      * Mark current bug as completed.
+     * This is the old method for manual "Mark as Solved" button.
      */
     public void markBugAsCompleted(int bugId, String difficulty) {
         repository.markBugAsCompleted(bugId, difficulty);
+    }
+
+    /**
+     * Mark bug as completed with XP rewards.
+     * Called when user passes all tests.
+     *
+     * XP rewards:
+     * - Easy: 10 XP
+     * - Medium: 20 XP
+     * - Hard: 30 XP
+     * - Bonus +5 XP if solved without hints
+     */
+    public void markBugAsCompletedWithXP(int bugId, String difficulty) {
+        boolean solvedWithoutHints = (hintsUsedForCurrentBug == 0);
+        repository.markBugAsCompletedWithXP(bugId, difficulty, solvedWithoutHints);
+    }
+
+    /**
+     * Save user notes for a bug.
+     */
+    public void saveBugNotes(int bugId, String notes) {
+        repository.updateBugNotes(bugId, notes);
     }
 }

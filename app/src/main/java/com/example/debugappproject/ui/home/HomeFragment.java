@@ -119,10 +119,20 @@ public class HomeFragment extends Fragment {
     /**
      * Updates stats display with user progress.
      * Shows motivational message based on progress.
+     * Displays level, XP, and XP progress bar.
      */
     private void updateStats(UserProgress progress) {
         binding.textSolvedCount.setText(String.valueOf(progress.getTotalSolved()));
         binding.textStreakDays.setText(String.valueOf(progress.getStreakDays()));
+
+        // Update level and XP
+        int level = progress.getLevel();
+        int xpInLevel = progress.getXpProgressInLevel();
+        int xpToNextLevel = 100; // Each level requires 100 XP
+
+        binding.textLevel.setText(String.valueOf(level));
+        binding.textXpProgress.setText(xpInLevel + " / " + xpToNextLevel + " XP");
+        binding.progressBarXp.setProgress(xpInLevel);
 
         // Set motivational message based on progress
         String motivation = getMotivationalMessage(progress);

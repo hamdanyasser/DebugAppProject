@@ -107,4 +107,10 @@ public interface BugDao {
      */
     @Query("UPDATE bugs SET isCompleted = 0")
     void resetAllBugs();
+
+    /**
+     * Update user notes for a specific bug.
+     */
+    @Query("UPDATE bugs SET userNotes = :notes WHERE id = :bugId")
+    void updateBugNotes(int bugId, String notes);
 }

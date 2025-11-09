@@ -46,6 +46,7 @@
     <!-- Special Purpose Colors -->
     <color name="code_background_light">#F5F5F5</color>   <!-- Light grey for code -->
     <color name="code_background_dark">#2B2B2B</color>    <!-- Dark grey for code -->
+    <color name="code_editor_background">#E3F2FD</color>  <!-- Light blue for code editor card -->
 
     <color name="output_expected_light">#E8F5E9</color>   <!-- Light green bg -->
     <color name="output_actual_light">#FFEBEE</color>     <!-- Light red bg -->

@@ -20,6 +20,9 @@ public class UserProgress {
     private int hardSolved;             // Number of hard bugs solved
     private long lastSolvedTimestamp;   // Timestamp of last solved bug (for streak calculation)
     private long lastOpenedTimestamp;   // Timestamp of last app open (for streak calculation)
+    private int xp;                     // Total experience points earned
+    private int hintsUsed;              // Total number of hints used across all bugs
+    private int bugsSolvedWithoutHints; // Number of bugs solved without using any hints
 
     // Constructor
     public UserProgress() {
@@ -31,6 +34,9 @@ public class UserProgress {
         this.hardSolved = 0;
         this.lastSolvedTimestamp = 0;
         this.lastOpenedTimestamp = 0;
+        this.xp = 0;
+        this.hintsUsed = 0;
+        this.bugsSolvedWithoutHints = 0;
     }
 
     // Getters and Setters
@@ -96,5 +102,53 @@ public class UserProgress {
 
     public void setLastOpenedTimestamp(long lastOpenedTimestamp) {
         this.lastOpenedTimestamp = lastOpenedTimestamp;
+    }
+
+    public int getXp() {
+        return xp;
+    }
+
+    public void setXp(int xp) {
+        this.xp = xp;
+    }
+
+    public int getHintsUsed() {
+        return hintsUsed;
+    }
+
+    public void setHintsUsed(int hintsUsed) {
+        this.hintsUsed = hintsUsed;
+    }
+
+    public int getBugsSolvedWithoutHints() {
+        return bugsSolvedWithoutHints;
+    }
+
+    public void setBugsSolvedWithoutHints(int bugsSolvedWithoutHints) {
+        this.bugsSolvedWithoutHints = bugsSolvedWithoutHints;
+    }
+
+    /**
+     * Calculates the user's level based on XP.
+     * Formula: level = 1 + xp / 100
+     */
+    public int getLevel() {
+        return 1 + (xp / 100);
+    }
+
+    /**
+     * Calculates XP needed to reach the next level.
+     */
+    public int getXpToNextLevel() {
+        int currentLevel = getLevel();
+        int xpForNextLevel = currentLevel * 100;
+        return xpForNextLevel - xp;
+    }
+
+    /**
+     * Calculates XP progress within the current level (0-100).
+     */
+    public int getXpProgressInLevel() {
+        return xp % 100;
     }
 }

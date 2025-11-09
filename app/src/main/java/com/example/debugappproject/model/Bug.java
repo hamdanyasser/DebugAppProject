@@ -24,6 +24,9 @@ public class Bug {
     private String explanation;     // Root cause explanation of the bug
     private String fixedCode;       // The corrected version of the code
     private boolean isCompleted;    // Whether user has solved this bug
+    private String starterCode;     // Starting code for user's attempt (defaults to brokenCode if null)
+    private String userNotes;       // User's personal notes for this bug
+    private String testsJson;       // JSON string containing test cases
 
     // Constructor
     public Bug(int id, String title, String language, String difficulty, String category,
@@ -41,6 +44,9 @@ public class Bug {
         this.explanation = explanation;
         this.fixedCode = fixedCode;
         this.isCompleted = isCompleted;
+        this.starterCode = null; // Will default to brokenCode if null
+        this.userNotes = "";
+        this.testsJson = null;
     }
 
     // Getters and Setters
@@ -138,5 +144,37 @@ public class Bug {
 
     public void setCompleted(boolean completed) {
         isCompleted = completed;
+    }
+
+    public String getStarterCode() {
+        return starterCode;
+    }
+
+    public void setStarterCode(String starterCode) {
+        this.starterCode = starterCode;
+    }
+
+    public String getUserNotes() {
+        return userNotes;
+    }
+
+    public void setUserNotes(String userNotes) {
+        this.userNotes = userNotes;
+    }
+
+    public String getTestsJson() {
+        return testsJson;
+    }
+
+    public void setTestsJson(String testsJson) {
+        this.testsJson = testsJson;
+    }
+
+    /**
+     * Gets the starting code for the user's fix attempt.
+     * Returns starterCode if set, otherwise falls back to brokenCode.
+     */
+    public String getInitialCode() {
+        return (starterCode != null && !starterCode.isEmpty()) ? starterCode : brokenCode;
     }
 }

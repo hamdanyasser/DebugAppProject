@@ -1,6 +1,8 @@
 package com.example.debugappproject.ui.buglist;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +50,7 @@ public class BugListFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(BugListViewModel.class);
 
         setupRecyclerView();
+        setupSearchBar();
         setupFilters();
         setupObservers();
     }
@@ -64,6 +67,29 @@ public class BugListFragment extends Fragment {
 
         binding.recyclerViewBugs.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerViewBugs.setAdapter(adapter);
+    }
+
+    /**
+     * Sets up the search bar with real-time text filtering.
+     */
+    private void setupSearchBar() {
+        binding.editSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Update search query in ViewModel
+                viewModel.setSearchQuery(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Not needed
+            }
+        });
     }
 
     /**
