@@ -116,4 +116,11 @@ public class BugDetailViewModel extends AndroidViewModel {
         boolean solvedWithoutHints = (hintsUsedForCurrentBug == 0);
         repository.markBugAsCompletedWithXP(bugId, difficulty, solvedWithoutHints);
     }
+
+    /**
+     * Save user notes for a bug.
+     */
+    public void saveBugNotes(int bugId, String notes) {
+        repository.updateBugNotes(bugId, notes);
+    }
 }

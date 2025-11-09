@@ -134,6 +134,11 @@ public class BugDetailFragment extends Fragment {
         initialCode = bug.getInitialCode();
         binding.editUserCode.setText(initialCode);
 
+        // Load user notes if available
+        if (bug.getUserNotes() != null && !bug.getUserNotes().isEmpty()) {
+            binding.editUserNotes.setText(bug.getUserNotes());
+        }
+
         // Parse test cases from JSON if available
         parseTestCases(bug.getTestsJson());
     }
@@ -218,6 +223,15 @@ public class BugDetailFragment extends Fragment {
                     binding.buttonMarkSolved.setEnabled(false);
                     Toast.makeText(requireContext(), "Bug marked as completed!", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        // Save Notes button
+        binding.buttonSaveNotes.setOnClickListener(v -> {
+            if (currentBug != null) {
+                String notes = binding.editUserNotes.getText().toString();
+                viewModel.saveBugNotes(currentBug.getId(), notes);
+                Toast.makeText(requireContext(), "Notes saved!", Toast.LENGTH_SHORT).show();
             }
         });
     }

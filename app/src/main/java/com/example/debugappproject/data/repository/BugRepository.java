@@ -203,4 +203,13 @@ public class BugRepository {
             return 0;
         }
     }
+
+    /**
+     * Update user notes for a bug.
+     */
+    public void updateBugNotes(int bugId, String notes) {
+        executorService.execute(() -> {
+            bugDao.updateBugNotes(bugId, notes);
+        });
+    }
 }
