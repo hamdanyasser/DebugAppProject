@@ -22,6 +22,113 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Level and XP Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_level_xp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_medium"
+            app:cardElevation="@dimen/card_elevation"
+            app:cardCornerRadius="@dimen/card_corner_radius"
+            app:strokeWidth="2dp"
+            app:strokeColor="?attr/colorSecondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_welcome">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_medium"
+                android:gravity="center_vertical">
+
+                <!-- Level Badge -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="?attr/colorSecondary"
+                    android:padding="16dp"
+                    android:layout_marginEnd="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/level"
+                        android:textSize="10sp"
+                        android:textColor="?attr/colorOnSecondary"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_current_level"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorOnSecondary"
+                        tools:text="5" />
+                </LinearLayout>
+
+                <!-- XP Info -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/total_xp"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <TextView
+                            android:id="@+id/text_total_xp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="0"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="?attr/colorPrimary"
+                            tools:text="250 XP" />
+                    </LinearLayout>
+
+                    <!-- XP Progress Bar -->
+                    <ProgressBar
+                        android:id="@+id/progress_bar_xp"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="8dp"
+                        android:max="100"
+                        android:progress="50"
+                        android:progressTint="?attr/colorSecondary" />
+
+                    <TextView
+                        android:id="@+id/text_xp_to_next_level"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/xp_to_next_level"
+                        android:textSize="10sp"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        tools:text="50/100 XP to Level 6" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
         <!-- Bug of the Day Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_bug_of_day"
@@ -34,7 +141,7 @@
             app:cardBackgroundColor="?attr/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_welcome">
+            app:layout_constraintTop_toBottomOf="@id/card_level_xp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

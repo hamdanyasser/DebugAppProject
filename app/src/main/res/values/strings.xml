@@ -66,4 +66,16 @@
     <string name="medium">Medium</string>
     <string name="hard">Hard</string>
     <string name="reset_progress">Reset Progress</string>
+
+    <!-- XP and Level System -->
+    <string name="level">Level</string>
+    <string name="experience_points">XP</string>
+    <string name="xp_short">XP</string>
+    <string name="current_level">Current Level</string>
+    <string name="total_xp">Total XP</string>
+    <string name="xp_to_next_level">XP to Next Level</string>
+    <string name="hints_used">Hints Used</string>
+    <string name="bugs_without_hints">Bugs Solved Without Hints</string>
+    <string name="xp_stats">XP Stats</string>
+    <string name="level_progress">Level Progress</string>
 </resources>

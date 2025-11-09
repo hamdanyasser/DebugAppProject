@@ -119,6 +119,7 @@ public class HomeFragment extends Fragment {
     /**
      * Updates stats display with user progress.
      * Shows motivational message based on progress.
+     * NEW: Updates XP and Level display (Part 4).
      */
     private void updateStats(UserProgress progress) {
         binding.textSolvedCount.setText(String.valueOf(progress.getTotalSolved()));
@@ -127,6 +128,30 @@ public class HomeFragment extends Fragment {
         // Set motivational message based on progress
         String motivation = getMotivationalMessage(progress);
         binding.textMotivation.setText(motivation);
+
+        // NEW: Update XP and Level display (Part 4)
+        updateXpAndLevel(progress);
+    }
+
+    /**
+     * Updates the XP and Level card with current progress.
+     * Shows level badge, total XP, and progress bar toward next level.
+     */
+    private void updateXpAndLevel(UserProgress progress) {
+        // Update level badge
+        binding.textCurrentLevel.setText(String.valueOf(progress.getLevel()));
+
+        // Update total XP
+        binding.textTotalXp.setText(progress.getXp() + " XP");
+
+        // Update progress bar and XP to next level text
+        int xpInLevel = progress.getXpProgressInLevel();
+        int xpForNextLevel = progress.getXpForNextLevel();
+
+        binding.progressBarXp.setProgress(xpInLevel);
+        binding.textXpToNextLevel.setText(
+            xpInLevel + "/100 XP to Level " + (progress.getLevel() + 1)
+        );
     }
 
     /**

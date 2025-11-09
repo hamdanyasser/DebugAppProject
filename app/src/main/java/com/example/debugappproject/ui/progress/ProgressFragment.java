@@ -82,6 +82,30 @@ public class ProgressFragment extends Fragment {
         binding.textMediumSolved.setText(String.valueOf(progress.getMediumSolved()));
         binding.textHardSolved.setText(String.valueOf(progress.getHardSolved()));
         binding.textStreak.setText(String.valueOf(progress.getStreakDays()));
+
+        // NEW: Update XP and Level display (Part 4)
+        updateXpStats(progress);
+    }
+
+    /**
+     * Updates the XP Stats card with level, XP, and hint information.
+     * NEW in Part 4: Display XP and Level system in UI.
+     */
+    private void updateXpStats(UserProgress progress) {
+        // Update level and total XP
+        binding.textCurrentLevel.setText(String.valueOf(progress.getLevel()));
+        binding.textXpTotal.setText(String.valueOf(progress.getXp()));
+
+        // Update level progress bar
+        int xpInLevel = progress.getXpProgressInLevel();
+        binding.progressBarLevel.setProgress(xpInLevel);
+        binding.textLevelProgress.setText(
+            xpInLevel + "/100 XP to Level " + (progress.getLevel() + 1)
+        );
+
+        // Update hint statistics
+        binding.textHintsUsed.setText(String.valueOf(progress.getHintsUsed()));
+        binding.textBugsNoHints.setText(String.valueOf(progress.getBugsSolvedWithoutHints()));
     }
 
     private void updateProgressBars(UserProgress progress, int totalBugs) {
