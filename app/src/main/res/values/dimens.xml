@@ -1,3 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
+    <!-- Spacing -->
+    <dimen name="spacing_tiny">4dp</dimen>
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_normal">12dp</dimen>
+    <dimen name="spacing_medium">16dp</dimen>
+    <dimen name="spacing_large">24dp</dimen>
+    <dimen name="spacing_xlarge">32dp</dimen>
+
+    <!-- Padding -->
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_normal">12dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+    <dimen name="padding_large">24dp</dimen>
+
+    <!-- Card -->
+    <dimen name="card_corner_radius">12dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_elevation_pressed">8dp</dimen>
+    <dimen name="card_margin">12dp</dimen>
+
+    <!-- Chip -->
+    <dimen name="chip_corner_radius">16dp</dimen>
+    <dimen name="chip_height">32dp</dimen>
+
+    <!-- Button -->
+    <dimen name="button_corner_radius">8dp</dimen>
+    <dimen name="button_height">48dp</dimen>
+
+    <!-- Code view -->
+    <dimen name="code_padding">12dp</dimen>
+    <dimen name="code_corner_radius">8dp</dimen>
+    <dimen name="code_text_size">12sp</dimen>
+
+    <!-- Icon sizes -->
+    <dimen name="icon_size_small">16dp</dimen>
+    <dimen name="icon_size_normal">24dp</dimen>
+    <dimen name="icon_size_large">32dp</dimen>
+    <dimen name="icon_size_xlarge">48dp</dimen>
+
+    <!-- Divider -->
+    <dimen name="divider_height">1dp</dimen>
 </resources>

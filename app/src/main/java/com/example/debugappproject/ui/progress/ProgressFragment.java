@@ -16,12 +16,20 @@ import com.example.debugappproject.databinding.FragmentProgressBinding;
 import com.example.debugappproject.model.UserProgress;
 
 /**
- * ProgressFragment - Displays user's progress and statistics.
- * Shows:
- * - Total bugs solved
- * - Breakdown by difficulty
- * - Current streak
- * - Reset progress option
+ * ProgressFragment - Stats dashboard showing user's learning progress.
+ *
+ * Features:
+ * - Overall progress with visual progress bar
+ * - Current streak counter to encourage daily practice
+ * - Difficulty breakdown (Easy, Medium, Hard) with individual progress bars
+ * - Reset progress functionality with confirmation dialog
+ * - Material 3 card-based design with proper visual hierarchy
+ *
+ * Displays:
+ * - Total bugs solved out of total available
+ * - Percentage completion
+ * - Streak days counter
+ * - Progress by difficulty level
  */
 public class ProgressFragment extends Fragment {
 

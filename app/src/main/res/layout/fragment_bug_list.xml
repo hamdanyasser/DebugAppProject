@@ -1,95 +1,243 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="?android:attr/colorBackground"
+    android:padding="@dimen/padding_medium">
 
-    <!-- Filters -->
+    <!-- Header -->
     <TextView
-        android:id="@+id/text_filter_label"
+        android:id="@+id/text_header"
+        style="@style/TextAppearance.DebugMaster.Headline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/filters"
-        android:textSize="14sp"
-        android:textStyle="bold"
+        android:text="@string/all_bugs"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/layout_filters"
+    <!-- Filters Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_filters"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        android:weightSum="2"
+        android:layout_marginTop="@dimen/spacing_medium"
+        app:cardElevation="@dimen/card_elevation"
+        app:cardCornerRadius="@dimen/card_corner_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_filter_label">
+        app:layout_constraintTop_toBottomOf="@id/text_header">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/padding_medium">
 
+            <!-- Filters Label -->
             <TextView
+                style="@style/TextAppearance.DebugMaster.Subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/filters"
+                android:textColor="?attr/colorPrimary" />
+
+            <!-- Difficulty Filter -->
+            <TextView
+                style="@style/TextAppearance.DebugMaster.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
                 android:text="@string/difficulty"
-                android:textSize="12sp" />
+                android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/spinner_difficulty"
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_difficulty"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="4dp" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_small"
+                app:singleLine="false"
+                app:singleSelection="true"
+                app:selectionRequired="true">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:orientation="vertical">
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_all_difficulty"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_bugs"
+                    android:checked="true"
+                    app:chipCornerRadius="@dimen/chip_corner_radius" />
 
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_difficulty_easy"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/easy"
+                    app:chipCornerRadius="@dimen/chip_corner_radius" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_difficulty_medium"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/medium"
+                    app:chipCornerRadius="@dimen/chip_corner_radius" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_difficulty_hard"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hard"
+                    app:chipCornerRadius="@dimen/chip_corner_radius" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Category Filter -->
             <TextView
+                style="@style/TextAppearance.DebugMaster.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
                 android:text="@string/category"
-                android:textSize="12sp" />
+                android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/spinner_category"
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_category"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="4dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_small"
+                app:singleLine="false"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_all_category"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_bugs"
+                    android:checked="true"
+                    app:chipCornerRadius="@dimen/chip_corner_radius" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_category_loops"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Loops"
+                    app:chipCornerRadius="@dimen/chip_corner_radius" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_category_arrays"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Arrays"
+                    app:chipCornerRadius="@dimen/chip_corner_radius" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_category_oop"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OOP"
+                    app:chipCornerRadius="@dimen/chip_corner_radius" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_category_strings"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Strings"
+                    app:chipCornerRadius="@dimen/chip_corner_radius" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_category_conditionals"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Conditionals"
+                    app:chipCornerRadius="@dimen/chip_corner_radius" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_category_exceptions"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Exceptions"
+                    app:chipCornerRadius="@dimen/chip_corner_radius" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_category_collections"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Collections"
+                    app:chipCornerRadius="@dimen/chip_corner_radius" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_category_methods"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Methods"
+                    app:chipCornerRadius="@dimen/chip_corner_radius" />
+            </com.google.android.material.chip.ChipGroup>
         </LinearLayout>
-    </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_bugs"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/spacing_medium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_filters" />
+        app:layout_constraintTop_toBottomOf="@id/card_filters"
+        tools:listitem="@layout/item_bug" />
 
     <!-- Empty State -->
-    <TextView
-        android:id="@+id/text_empty_state"
+    <LinearLayout
+        android:id="@+id/layout_empty_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/no_bugs_found"
-        android:textSize="16sp"
+        android:gravity="center"
+        android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_filters" />
+        app:layout_constraintTop_toBottomOf="@id/card_filters"
+        tools:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🔍"
+            android:textSize="48sp" />
+
+        <TextView
+            style="@style/TextAppearance.DebugMaster.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:text="@string/no_bugs_found"
+            android:textAlignment="center" />
+
+        <TextView
+            style="@style/TextAppearance.DebugMaster.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:text="Try adjusting your filters"
+            android:textAlignment="center" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
