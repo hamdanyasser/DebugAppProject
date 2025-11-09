@@ -41,4 +41,7 @@
 
     <!-- Divider -->
     <dimen name="divider_height">1dp</dimen>
+
+    <!-- FAB -->
+    <dimen name="fab_margin">16dp</dimen>
 </resources>
