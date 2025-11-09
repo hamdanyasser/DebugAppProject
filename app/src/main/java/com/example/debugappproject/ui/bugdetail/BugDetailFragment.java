@@ -217,13 +217,15 @@ public class BugDetailFragment extends Fragment {
 
             // Automatically mark as completed if not already
             if (!currentBug.isCompleted()) {
-                viewModel.markBugAsCompleted(currentBug.getId(), currentBug.getDifficulty());
+                viewModel.markBugAsCompleted(currentBug.getId(), currentBug.getDifficulty(), hintsUsedForThisBug);
                 binding.buttonMarkSolved.setText("Completed ✓");
                 binding.buttonMarkSolved.setEnabled(false);
                 binding.chipCompleted.setVisibility(View.VISIBLE);
 
-                // Show celebration message
-                Snackbar.make(binding.getRoot(), "🎉 Bug solved! Great work!", Snackbar.LENGTH_LONG).show();
+                // Show celebration message with XP info
+                int xp = calculateXpReward(currentBug.getDifficulty(), hintsUsedForThisBug);
+                String message = "🎉 Bug solved! +" + xp + " XP!";
+                Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).show();
             }
         } else {
             // Tests failed
@@ -330,12 +332,43 @@ public class BugDetailFragment extends Fragment {
      * Marks the bug as solved and updates the UI.
      */
     private void markBugAsSolved() {
-        viewModel.markBugAsCompleted(currentBug.getId(), currentBug.getDifficulty());
+        viewModel.markBugAsCompleted(currentBug.getId(), currentBug.getDifficulty(), hintsUsedForThisBug);
         binding.buttonMarkSolved.setText("Completed ✓");
         binding.buttonMarkSolved.setEnabled(false);
         binding.chipCompleted.setVisibility(View.VISIBLE);
         testsPassedForThisBug = true;
-        Toast.makeText(requireContext(), "Bug marked as completed!", Toast.LENGTH_SHORT).show();
+
+        // Show XP reward
+        int xp = calculateXpReward(currentBug.getDifficulty(), hintsUsedForThisBug);
+        Toast.makeText(requireContext(), "Bug completed! +" + xp + " XP", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Calculates XP reward based on difficulty and hints used.
+     * Same formula as BugRepository for consistency.
+     */
+    private int calculateXpReward(String difficulty, int hintsUsed) {
+        int xp;
+        switch (difficulty) {
+            case "Easy":
+                xp = 10;
+                break;
+            case "Medium":
+                xp = 20;
+                break;
+            case "Hard":
+                xp = 30;
+                break;
+            default:
+                xp = 10;
+        }
+
+        // Bonus if no hints used
+        if (hintsUsed == 0) {
+            xp += 5;
+        }
+
+        return xp;
     }
 
     /**

@@ -87,6 +87,27 @@ public interface UserProgressDao {
      * Reset all progress (for reset feature).
      */
     @Query("UPDATE user_progress SET totalSolved = 0, easySolved = 0, mediumSolved = 0, " +
-            "hardSolved = 0, streakDays = 0, lastSolvedTimestamp = 0 WHERE id = 1")
+            "hardSolved = 0, streakDays = 0, lastSolvedTimestamp = 0, xp = 0, level = 1, " +
+            "hintsUsed = 0, bugsSolvedWithoutHints = 0 WHERE id = 1")
     void resetProgress();
+
+    // NEW: XP and Level Methods (Part 3)
+
+    /**
+     * Add XP to user progress. Level is automatically computed: level = 1 + (xp / 100)
+     */
+    @Query("UPDATE user_progress SET xp = xp + :xpToAdd, level = 1 + ((xp + :xpToAdd) / 100) WHERE id = 1")
+    void addXp(int xpToAdd);
+
+    /**
+     * Increment hints used count.
+     */
+    @Query("UPDATE user_progress SET hintsUsed = hintsUsed + 1 WHERE id = 1")
+    void incrementHintsUsed();
+
+    /**
+     * Increment bugs solved without hints count.
+     */
+    @Query("UPDATE user_progress SET bugsSolvedWithoutHints = bugsSolvedWithoutHints + 1 WHERE id = 1")
+    void incrementBugsSolvedWithoutHints();
 }

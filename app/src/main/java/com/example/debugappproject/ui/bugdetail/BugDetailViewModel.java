@@ -81,9 +81,21 @@ public class BugDetailViewModel extends AndroidViewModel {
     }
 
     /**
-     * Mark current bug as completed.
+     * Mark current bug as completed (legacy method without hints tracking).
      */
     public void markBugAsCompleted(int bugId, String difficulty) {
-        repository.markBugAsCompleted(bugId, difficulty);
+        repository.markBugAsCompleted(bugId, difficulty, 0);
+    }
+
+    /**
+     * Mark current bug as completed with XP rewards.
+     * Tracks hints used and awards XP accordingly.
+     *
+     * @param bugId The bug ID
+     * @param difficulty The difficulty level
+     * @param hintsUsed Number of hints used (0 = no hints, bonus XP)
+     */
+    public void markBugAsCompleted(int bugId, String difficulty, int hintsUsed) {
+        repository.markBugAsCompleted(bugId, difficulty, hintsUsed);
     }
 }

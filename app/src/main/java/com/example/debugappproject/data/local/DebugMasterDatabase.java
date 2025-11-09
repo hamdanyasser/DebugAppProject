@@ -15,8 +15,9 @@ import com.example.debugappproject.model.UserProgress;
  * Contains bugs, hints, and user progress tables.
  *
  * Version 2: Added starterCode and userNotes fields to Bug entity
+ * Version 3: Added xp, level, hintsUsed, bugsSolvedWithoutHints to UserProgress (Part 3)
  */
-@Database(entities = {Bug.class, Hint.class, UserProgress.class}, version = 2, exportSchema = false)
+@Database(entities = {Bug.class, Hint.class, UserProgress.class}, version = 3, exportSchema = false)
 public abstract class DebugMasterDatabase extends RoomDatabase {
 
     private static volatile DebugMasterDatabase INSTANCE;

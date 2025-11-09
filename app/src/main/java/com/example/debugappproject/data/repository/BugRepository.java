@@ -66,22 +66,64 @@ public class BugRepository {
         return bugDao.getCompletedBugs();
     }
 
+    /**
+     * Marks a bug as completed (legacy method without XP - kept for compatibility).
+     */
     public void markBugAsCompleted(int bugId, String difficulty) {
+        markBugAsCompleted(bugId, difficulty, 0);
+    }
+
+    /**
+     * Marks a bug as completed with XP rewards based on difficulty and hints used.
+     *
+     * XP Rewards:
+     * - Easy: 10 XP
+     * - Medium: 20 XP
+     * - Hard: 30 XP
+     * - Bonus +5 XP if solved without hints
+     *
+     * @param bugId The ID of the bug
+     * @param difficulty The difficulty level (Easy, Medium, Hard)
+     * @param hintsUsed The number of hints used for this bug (0 = no hints)
+     */
+    public void markBugAsCompleted(int bugId, String difficulty, int hintsUsed) {
         executorService.execute(() -> {
             bugDao.markBugAsCompleted(bugId);
             userProgressDao.incrementTotalSolved();
 
-            // Increment difficulty-specific counter
+            // Calculate XP based on difficulty
+            int xpReward;
             switch (difficulty) {
                 case "Easy":
                     userProgressDao.incrementEasySolved();
+                    xpReward = 10;
                     break;
                 case "Medium":
                     userProgressDao.incrementMediumSolved();
+                    xpReward = 20;
                     break;
                 case "Hard":
                     userProgressDao.incrementHardSolved();
+                    xpReward = 30;
                     break;
+                default:
+                    xpReward = 10;
+            }
+
+            // Add bonus XP if solved without hints
+            if (hintsUsed == 0) {
+                xpReward += 5;
+                userProgressDao.incrementBugsSolvedWithoutHints();
+            }
+
+            // Award XP
+            userProgressDao.addXp(xpReward);
+
+            // Update hints used count (if any hints were used)
+            if (hintsUsed > 0) {
+                for (int i = 0; i < hintsUsed; i++) {
+                    userProgressDao.incrementHintsUsed();
+                }
             }
 
             // Update last solved timestamp
