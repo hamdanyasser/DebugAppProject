@@ -70,6 +70,7 @@ public class SplashFragment extends Fragment {
 
     /**
      * Seeds the database with initial bug data on background thread.
+     * Ensures completion before navigation occurs.
      */
     private void seedDatabase() {
         new Thread(() -> {
@@ -77,8 +78,8 @@ public class SplashFragment extends Fragment {
                 BugRepository repository = new BugRepository(requireActivity().getApplication());
                 DatabaseSeeder.seedDatabase(requireContext(), repository);
 
-                // Wait a bit to ensure all inserts complete
-                Thread.sleep(500);
+                // Wait longer to ensure all inserts complete (including learning paths and achievements)
+                Thread.sleep(1500);
             } catch (Exception e) {
                 e.printStackTrace();
             }

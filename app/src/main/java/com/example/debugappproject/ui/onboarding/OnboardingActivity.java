@@ -17,6 +17,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.debugappproject.MainActivity;
 import com.example.debugappproject.R;
+import com.example.debugappproject.data.repository.BugRepository;
+import com.example.debugappproject.data.seeding.DatabaseSeeder;
 import com.example.debugappproject.databinding.ActivityOnboardingBinding;
 import com.google.android.material.button.MaterialButton;
 
@@ -47,9 +49,27 @@ public class OnboardingActivity extends AppCompatActivity {
         binding = ActivityOnboardingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Seed database during onboarding to ensure it's ready when user enters main app
+        seedDatabaseInBackground();
+
         setupViewPager();
         setupIndicators();
         setupButtons();
+    }
+
+    /**
+     * Seeds the database in background while user goes through onboarding.
+     * This ensures data is ready when they finish onboarding.
+     */
+    private void seedDatabaseInBackground() {
+        new Thread(() -> {
+            try {
+                BugRepository repository = new BugRepository(getApplication());
+                DatabaseSeeder.seedDatabase(this, repository);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     /**
@@ -151,6 +171,7 @@ public class OnboardingActivity extends AppCompatActivity {
 
     /**
      * Marks onboarding as completed and launches main activity.
+     * Ensures a minimum delay to allow database seeding to complete.
      */
     private void finishOnboarding() {
         // Save flag to SharedPreferences
@@ -159,10 +180,27 @@ public class OnboardingActivity extends AppCompatActivity {
             .putBoolean(KEY_HAS_SEEN_ONBOARDING, true)
             .apply();
 
-        // Launch MainActivity
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        // Add a small delay to ensure database seeding completes
+        // This is safe because database seeding started in onCreate
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000); // Wait 1 second to allow seeding to complete
+                runOnUiThread(() -> {
+                    // Launch MainActivity
+                    Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Launch anyway if there's an error
+                runOnUiThread(() -> {
+                    Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                });
+            }
+        }).start();
     }
 
     /**
