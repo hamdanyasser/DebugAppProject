@@ -73,8 +73,15 @@ public class SplashFragment extends Fragment {
      */
     private void seedDatabase() {
         new Thread(() -> {
-            BugRepository repository = new BugRepository(requireActivity().getApplication());
-            DatabaseSeeder.seedDatabase(requireContext(), repository);
+            try {
+                BugRepository repository = new BugRepository(requireActivity().getApplication());
+                DatabaseSeeder.seedDatabase(requireContext(), repository);
+
+                // Wait a bit to ensure all inserts complete
+                Thread.sleep(500);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }).start();
     }
 
