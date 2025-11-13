@@ -70,16 +70,14 @@ public class SplashFragment extends Fragment {
 
     /**
      * Seeds the database with initial bug data on background thread.
-     * Ensures completion before navigation occurs.
+     * The seeding is now fully synchronous, so it completes before returning.
      */
     private void seedDatabase() {
         new Thread(() -> {
             try {
                 BugRepository repository = new BugRepository(requireActivity().getApplication());
+                // This call now blocks until all data is inserted
                 DatabaseSeeder.seedDatabase(requireContext(), repository);
-
-                // Wait longer to ensure all inserts complete (including learning paths and achievements)
-                Thread.sleep(1500);
             } catch (Exception e) {
                 e.printStackTrace();
             }
