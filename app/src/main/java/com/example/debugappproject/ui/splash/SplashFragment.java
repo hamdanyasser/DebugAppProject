@@ -120,7 +120,7 @@ public class SplashFragment extends Fragment {
     }
 
     /**
-     * Schedules navigation to HomeFragment after splash delay.
+     * Schedules navigation to Learning Paths screen after splash delay.
      * Uses Handler to avoid memory leaks.
      */
     private void scheduleNavigation(View view) {
@@ -128,7 +128,7 @@ public class SplashFragment extends Fragment {
         navigationRunnable = () -> {
             if (isAdded() && view != null) {
                 Navigation.findNavController(view).navigate(
-                    R.id.action_splash_to_home
+                    R.id.action_splash_to_learn
                 );
             }
         };

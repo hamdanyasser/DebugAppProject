@@ -2,11 +2,7 @@ package com.example.debugappproject;
 
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.view.View;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -15,13 +11,18 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.debugappproject.databinding.ActivityMainBinding;
 
-import android.view.Menu;
-import android.view.MenuItem;
+import java.util.HashSet;
+import java.util.Set;
 
+/**
+ * Main activity with bottom navigation for Mimo-style experience.
+ * Contains: Learn, Bug of Day, Profile, Settings tabs.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,45 +33,64 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+
+        // Define top-level destinations (no back button shown)
+        Set<Integer> topLevelDestinations = new HashSet<>();
+        topLevelDestinations.add(R.id.learningPathsFragment);
+        topLevelDestinations.add(R.id.bugOfTheDayFragment);
+        topLevelDestinations.add(R.id.profileFragment);
+        topLevelDestinations.add(R.id.settingsFragment);
+
+        appBarConfiguration = new AppBarConfiguration.Builder(topLevelDestinations).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAnchorView(R.id.fab)
-                        .setAction("Action", null).show();
+        // Setup bottom navigation
+        setupBottomNavigation();
+    }
+
+    /**
+     * Configure bottom navigation to work with Navigation Component.
+     */
+    private void setupBottomNavigation() {
+        binding.bottomNavigation.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.navigation_learn) {
+                navController.navigate(R.id.learningPathsFragment);
+                return true;
+            } else if (itemId == R.id.navigation_bug_of_day) {
+                navController.navigate(R.id.bugOfTheDayFragment);
+                return true;
+            } else if (itemId == R.id.navigation_profile) {
+                navController.navigate(R.id.profileFragment);
+                return true;
+            } else if (itemId == R.id.navigation_settings) {
+                navController.navigate(R.id.settingsFragment);
+                return true;
+            }
+
+            return false;
+        });
+
+        // Highlight correct bottom nav item when destination changes
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            int destId = destination.getId();
+
+            if (destId == R.id.learningPathsFragment) {
+                binding.bottomNavigation.setSelectedItemId(R.id.navigation_learn);
+            } else if (destId == R.id.bugOfTheDayFragment) {
+                binding.bottomNavigation.setSelectedItemId(R.id.navigation_bug_of_day);
+            } else if (destId == R.id.profileFragment) {
+                binding.bottomNavigation.setSelectedItemId(R.id.navigation_profile);
+            } else if (destId == R.id.settingsFragment) {
+                binding.bottomNavigation.setSelectedItemId(R.id.navigation_settings);
             }
         });
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }
