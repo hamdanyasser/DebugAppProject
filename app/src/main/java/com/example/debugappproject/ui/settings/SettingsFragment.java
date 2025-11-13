@@ -22,8 +22,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.debugappproject.auth.AuthManager;
 import com.example.debugappproject.data.repository.BugRepository;
 import com.example.debugappproject.databinding.FragmentSettingsBinding;
+import com.example.debugappproject.sync.ProgressSyncManager;
+import com.example.debugappproject.sync.SyncManagerFactory;
 import com.example.debugappproject.util.NotificationHelper;
 import com.example.debugappproject.util.NotificationScheduler;
 
@@ -41,6 +44,8 @@ public class SettingsFragment extends Fragment {
     private FragmentSettingsBinding binding;
     private SharedPreferences preferences;
     private ActivityResultLauncher<String> notificationPermissionLauncher;
+    private AuthManager authManager;
+    private ProgressSyncManager syncManager;
 
     // Preference keys
     private static final String PREFS_NAME = "DebugMasterPrefs";
@@ -86,6 +91,10 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         preferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        authManager = AuthManager.getInstance(requireContext());
+
+        BugRepository repository = new BugRepository(requireActivity().getApplication());
+        syncManager = SyncManagerFactory.createSyncManager(requireContext(), repository);
 
         // Create notification channels (required for Android O+)
         NotificationHelper.createNotificationChannels(requireContext());
@@ -183,6 +192,16 @@ public class SettingsFragment extends Fragment {
         binding.buttonResetProgress.setOnClickListener(v -> {
             showResetConfirmationDialog();
         });
+
+        // Sync Now Button
+        binding.buttonSyncNow.setOnClickListener(v -> {
+            handleSyncNow();
+        });
+
+        // Manage Account & Data Button
+        binding.buttonManageAccount.setOnClickListener(v -> {
+            showManageAccountDialog();
+        });
     }
 
     /**
@@ -273,6 +292,84 @@ public class SettingsFragment extends Fragment {
     public static boolean areAchievementNotificationsEnabled(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return prefs.getBoolean(KEY_ACHIEVEMENT_NOTIFICATIONS, true);
+    }
+
+    /**
+     * Handles manual sync request.
+     */
+    private void handleSyncNow() {
+        if (!authManager.isSignedIn()) {
+            Toast.makeText(requireContext(),
+                "Sign in required to sync progress to the cloud",
+                Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (!authManager.isFirebaseAvailable()) {
+            Toast.makeText(requireContext(),
+                "Firebase not configured. Add google-services.json to enable sync.",
+                Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // Show progress feedback
+        Toast.makeText(requireContext(), "Syncing progress...", Toast.LENGTH_SHORT).show();
+
+        syncManager.fullSync(new ProgressSyncManager.SyncCallback() {
+            @Override
+            public void onSuccess() {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(requireContext(),
+                            "Sync complete! Your progress is backed up.",
+                            Toast.LENGTH_SHORT).show();
+                    });
+                }
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(requireContext(),
+                            "Sync failed: " + errorMessage,
+                            Toast.LENGTH_LONG).show();
+                    });
+                }
+            }
+        });
+    }
+
+    /**
+     * Shows dialog for managing account and cloud data.
+     */
+    private void showManageAccountDialog() {
+        String message;
+        if (authManager.isSignedIn()) {
+            message = "Account: " + authManager.getUserEmail() + "\n\n" +
+                "Cloud Data Deletion:\n" +
+                "• Cloud-synced data will be deletable via a web dashboard (coming soon)\n" +
+                "• For now, contact support to request cloud data deletion\n\n" +
+                "Local Data:\n" +
+                "• Use 'Reset Progress' button below to clear all local data\n" +
+                "• Local reset does NOT affect cloud-synced data\n\n" +
+                "Account Deletion:\n" +
+                "• To delete your account and all associated data, contact support";
+        } else {
+            message = "You are currently in Guest mode.\n\n" +
+                "Local Data:\n" +
+                "• All your progress is stored locally on this device\n" +
+                "• Use 'Reset Progress' button below to clear all local data\n\n" +
+                "Cloud Sync:\n" +
+                "• Sign in with Google to sync your progress to the cloud\n" +
+                "• Your data will be backed up and accessible across devices";
+        }
+
+        new AlertDialog.Builder(requireContext())
+            .setTitle("Manage Account & Data")
+            .setMessage(message)
+            .setPositiveButton("OK", null)
+            .show();
     }
 
     @Override

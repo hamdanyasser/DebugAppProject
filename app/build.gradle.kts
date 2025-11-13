@@ -60,6 +60,16 @@ dependencies {
     // WorkManager for notifications
     implementation("androidx.work:work-runtime:2.9.0")
 
+    // Firebase (OPTIONAL - requires google-services.json)
+    // TODO: Add google-services.json to app/ directory to enable Firebase
+    // TODO: Add apply plugin: 'com.google.gms.google-services' to the bottom of this file
+    // TODO: Configure Firebase project in console and download google-services.json
+    // Firebase BOM for version management
+    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

@@ -86,6 +86,19 @@ Solving without hints earns bonus XP!
 - Bugs solved without hints
 - Achievement collection progress
 
+### ☁️ Cloud Sync (Optional)
+
+**100% offline-first** - works completely without sign-in:
+- **Guest Mode (default):** All data stored locally on device
+- **Sign In with Google:** Optional cloud sync for progress backup
+- **Smart Merge:** Max XP, max streaks, union of achievements
+- **Account Management:** Clear data deletion and account controls
+
+**Privacy-Focused:**
+- No Firebase required to build or run the app
+- No secrets committed to repository
+- Clear user control over data sync
+
 ---
 
 ## 🏗️ Technical Architecture
