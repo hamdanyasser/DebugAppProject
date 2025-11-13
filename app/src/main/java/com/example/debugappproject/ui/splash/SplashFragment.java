@@ -45,6 +45,8 @@ public class SplashFragment extends Fragment {
     private FragmentSplashBinding binding;
     private Handler navigationHandler;
     private Runnable navigationRunnable;
+    private volatile boolean databaseSeeded = false;
+    private volatile boolean splashDelayComplete = false;
 
     @Nullable
     @Override
@@ -71,6 +73,7 @@ public class SplashFragment extends Fragment {
     /**
      * Seeds the database with initial bug data on background thread.
      * The seeding is now fully synchronous, so it completes before returning.
+     * Triggers navigation check when complete.
      */
     private void seedDatabase() {
         new Thread(() -> {
@@ -78,8 +81,17 @@ public class SplashFragment extends Fragment {
                 BugRepository repository = new BugRepository(requireActivity().getApplication());
                 // This call now blocks until all data is inserted
                 DatabaseSeeder.seedDatabase(requireContext(), repository);
+
+                // Mark seeding as complete
+                databaseSeeded = true;
+
+                // Check if we can navigate now
+                checkAndNavigate();
             } catch (Exception e) {
                 e.printStackTrace();
+                // Even on error, mark as complete to prevent infinite waiting
+                databaseSeeded = true;
+                checkAndNavigate();
             }
         }).start();
     }
@@ -129,27 +141,49 @@ public class SplashFragment extends Fragment {
 
     /**
      * Schedules navigation to Onboarding or Learning Paths screen after splash delay.
-     * Checks if user has seen onboarding before.
+     * Navigation will only occur after BOTH splash delay AND database seeding complete.
      * Uses Handler to avoid memory leaks.
      */
     private void scheduleNavigation(View view) {
         navigationHandler = new Handler(Looper.getMainLooper());
         navigationRunnable = () -> {
-            if (isAdded() && view != null) {
-                if (OnboardingActivity.hasSeenOnboarding(requireContext())) {
-                    // User has seen onboarding - go to main app
-                    Navigation.findNavController(view).navigate(
-                        R.id.action_splash_to_learn
-                    );
-                } else {
-                    // First launch - show onboarding
-                    Intent intent = new Intent(requireActivity(), OnboardingActivity.class);
-                    startActivity(intent);
-                    requireActivity().finish();
-                }
-            }
+            // Mark splash delay as complete
+            splashDelayComplete = true;
+
+            // Check if we can navigate now
+            checkAndNavigate();
         };
         navigationHandler.postDelayed(navigationRunnable, Constants.SPLASH_DELAY_MS);
+    }
+
+    /**
+     * Checks if both conditions are met for navigation:
+     * 1. Database seeding is complete
+     * 2. Splash delay has elapsed
+     *
+     * Only navigates when both are true.
+     */
+    private void checkAndNavigate() {
+        // Must run on main thread
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            navigationHandler.post(this::checkAndNavigate);
+            return;
+        }
+
+        // Check if both conditions are met
+        if (databaseSeeded && splashDelayComplete && isAdded() && binding != null) {
+            if (OnboardingActivity.hasSeenOnboarding(requireContext())) {
+                // User has seen onboarding - go to main app
+                Navigation.findNavController(binding.getRoot()).navigate(
+                    R.id.action_splash_to_learn
+                );
+            } else {
+                // First launch - show onboarding
+                Intent intent = new Intent(requireActivity(), OnboardingActivity.class);
+                startActivity(intent);
+                requireActivity().finish();
+            }
+        }
     }
 
     @Override
