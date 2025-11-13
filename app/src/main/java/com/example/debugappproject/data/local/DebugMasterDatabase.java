@@ -171,4 +171,18 @@ public abstract class DebugMasterDatabase extends RoomDatabase {
         }
         return INSTANCE;
     }
+
+    /**
+     * Force reset the database by clearing the singleton and deleting the database file.
+     * Use this when database is corrupted or in an invalid state.
+     */
+    public static void resetDatabase(Context context) {
+        synchronized (DebugMasterDatabase.class) {
+            if (INSTANCE != null) {
+                INSTANCE.close();
+                INSTANCE = null;
+            }
+            context.deleteDatabase("debug_master_database");
+        }
+    }
 }

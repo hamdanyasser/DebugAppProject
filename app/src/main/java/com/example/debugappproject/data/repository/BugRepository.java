@@ -219,6 +219,17 @@ public class BugRepository {
         }
     }
 
+    /**
+     * Get learning path count synchronously (for integrity check).
+     */
+    public int getPathCountSync() {
+        try {
+            return executorService.submit(() -> learningPathDao.getPathCountSync()).get();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
     // Synchronous seeding methods - called from background thread during database initialization
     // These bypass the executor service to ensure completion before returning
 

@@ -27,6 +27,9 @@ public interface LearningPathDao {
     @Query("SELECT * FROM learning_paths WHERE id = :pathId")
     LearningPath getPathByIdSync(int pathId);
 
+    @Query("SELECT COUNT(*) FROM learning_paths")
+    int getPathCountSync();
+
     @Insert
     void insertPath(LearningPath path);
 

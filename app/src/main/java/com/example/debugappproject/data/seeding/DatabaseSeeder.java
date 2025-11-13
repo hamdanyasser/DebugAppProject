@@ -31,10 +31,38 @@ public class DatabaseSeeder {
      * This is called once on first app launch.
      */
     public static void seedDatabase(Context context, BugRepository repository) {
-        // Check if database is already seeded
-        int bugCount = repository.getBugCountSync();
-        if (bugCount > 0) {
-            return; // Already seeded
+        try {
+            // Check if database is already seeded
+            int bugCount = repository.getBugCountSync();
+            if (bugCount > 0) {
+                // Verify database integrity - check if learning paths exist
+                try {
+                    int pathCount = repository.getPathCountSync();
+
+                    // If we have bugs but no paths, database is corrupted - reset and reseed
+                    if (pathCount == 0) {
+                        android.util.Log.w("DatabaseSeeder", "Corrupted database detected - has bugs but no learning paths. Resetting...");
+                        com.example.debugappproject.data.local.DebugMasterDatabase.resetDatabase(context);
+                        // Database reset, continue with seeding below
+                    } else {
+                        android.util.Log.i("DatabaseSeeder", "Database already seeded with " + bugCount + " bugs and " + pathCount + " paths");
+                        return; // Already seeded and valid
+                    }
+                } catch (Exception e) {
+                    // If integrity check fails, reset database
+                    android.util.Log.w("DatabaseSeeder", "Database integrity check failed. Resetting...", e);
+                    com.example.debugappproject.data.local.DebugMasterDatabase.resetDatabase(context);
+                    // Database reset, continue with seeding below
+                }
+            }
+        } catch (Exception e) {
+            // If any error occurs during the check, reset and continue
+            android.util.Log.e("DatabaseSeeder", "Error checking database state. Resetting...", e);
+            try {
+                com.example.debugappproject.data.local.DebugMasterDatabase.resetDatabase(context);
+            } catch (Exception resetError) {
+                android.util.Log.e("DatabaseSeeder", "Failed to reset database", resetError);
+            }
         }
 
         try {
