@@ -1,24 +1,31 @@
 package com.example.debugappproject.ui.settings;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.debugappproject.data.repository.BugRepository;
 import com.example.debugappproject.databinding.FragmentSettingsBinding;
+import com.example.debugappproject.util.NotificationHelper;
+import com.example.debugappproject.util.NotificationScheduler;
 
 /**
  * Settings Fragment - Manages app settings and preferences.
@@ -33,12 +40,38 @@ public class SettingsFragment extends Fragment {
 
     private FragmentSettingsBinding binding;
     private SharedPreferences preferences;
+    private ActivityResultLauncher<String> notificationPermissionLauncher;
 
     // Preference keys
     private static final String PREFS_NAME = "DebugMasterPrefs";
     private static final String KEY_DAILY_REMINDERS = "daily_reminders";
     private static final String KEY_ACHIEVEMENT_NOTIFICATIONS = "achievement_notifications";
     private static final String KEY_HINTS_ENABLED = "hints_enabled";
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Register notification permission launcher (Android 13+)
+        notificationPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            isGranted -> {
+                if (isGranted) {
+                    // Permission granted - schedule notifications
+                    NotificationScheduler.scheduleBugOfTheDayNotification(requireContext(), 9, 0);
+                    Toast.makeText(requireContext(),
+                        "Daily reminders enabled at 9:00 AM", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Permission denied - disable toggle
+                    binding.switchDailyReminders.setChecked(false);
+                    preferences.edit().putBoolean(KEY_DAILY_REMINDERS, false).apply();
+                    Toast.makeText(requireContext(),
+                        "Notification permission denied. Enable in app settings to receive daily reminders.",
+                        Toast.LENGTH_LONG).show();
+                }
+            }
+        );
+    }
 
     @Nullable
     @Override
@@ -53,6 +86,9 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         preferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+
+        // Create notification channels (required for Android O+)
+        NotificationHelper.createNotificationChannels(requireContext());
 
         loadPreferences();
         setupListeners();
@@ -80,18 +116,34 @@ public class SettingsFragment extends Fragment {
     private void setupListeners() {
         // Daily Reminders Switch
         binding.switchDailyReminders.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            preferences.edit()
-                .putBoolean(KEY_DAILY_REMINDERS, isChecked)
-                .apply();
-
             if (isChecked) {
-                Toast.makeText(requireContext(),
-                    "Daily reminders enabled", Toast.LENGTH_SHORT).show();
-                // TODO: Schedule daily notification in Phase 3
+                // Check notification permission (Android 13+)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    if (ContextCompat.checkSelfPermission(requireContext(),
+                        Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                        // Permission already granted - schedule notifications
+                        preferences.edit().putBoolean(KEY_DAILY_REMINDERS, true).apply();
+                        NotificationScheduler.scheduleBugOfTheDayNotification(requireContext(), 9, 0);
+                        Toast.makeText(requireContext(),
+                            "Daily reminders enabled at 9:00 AM", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Request permission
+                        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+                        preferences.edit().putBoolean(KEY_DAILY_REMINDERS, true).apply();
+                    }
+                } else {
+                    // Android 12 and below - no permission needed
+                    preferences.edit().putBoolean(KEY_DAILY_REMINDERS, true).apply();
+                    NotificationScheduler.scheduleBugOfTheDayNotification(requireContext(), 9, 0);
+                    Toast.makeText(requireContext(),
+                        "Daily reminders enabled at 9:00 AM", Toast.LENGTH_SHORT).show();
+                }
             } else {
+                // Cancel daily notification
+                preferences.edit().putBoolean(KEY_DAILY_REMINDERS, false).apply();
+                NotificationScheduler.cancelBugOfTheDayNotification(requireContext());
                 Toast.makeText(requireContext(),
                     "Daily reminders disabled", Toast.LENGTH_SHORT).show();
-                // TODO: Cancel daily notification in Phase 3
             }
         });
 
@@ -213,6 +265,14 @@ public class SettingsFragment extends Fragment {
     public static boolean areDailyRemindersEnabled(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return prefs.getBoolean(KEY_DAILY_REMINDERS, true);
+    }
+
+    /**
+     * Public method to check if achievement notifications are enabled.
+     */
+    public static boolean areAchievementNotificationsEnabled(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return prefs.getBoolean(KEY_ACHIEVEMENT_NOTIFICATIONS, true);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.example.debugappproject.ui.splash;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,6 +19,7 @@ import com.example.debugappproject.R;
 import com.example.debugappproject.data.repository.BugRepository;
 import com.example.debugappproject.data.seeding.DatabaseSeeder;
 import com.example.debugappproject.databinding.FragmentSplashBinding;
+import com.example.debugappproject.ui.onboarding.OnboardingActivity;
 import com.example.debugappproject.util.Constants;
 
 /**
@@ -120,16 +122,25 @@ public class SplashFragment extends Fragment {
     }
 
     /**
-     * Schedules navigation to Learning Paths screen after splash delay.
+     * Schedules navigation to Onboarding or Learning Paths screen after splash delay.
+     * Checks if user has seen onboarding before.
      * Uses Handler to avoid memory leaks.
      */
     private void scheduleNavigation(View view) {
         navigationHandler = new Handler(Looper.getMainLooper());
         navigationRunnable = () -> {
             if (isAdded() && view != null) {
-                Navigation.findNavController(view).navigate(
-                    R.id.action_splash_to_learn
-                );
+                if (OnboardingActivity.hasSeenOnboarding(requireContext())) {
+                    // User has seen onboarding - go to main app
+                    Navigation.findNavController(view).navigate(
+                        R.id.action_splash_to_learn
+                    );
+                } else {
+                    // First launch - show onboarding
+                    Intent intent = new Intent(requireActivity(), OnboardingActivity.class);
+                    startActivity(intent);
+                    requireActivity().finish();
+                }
             }
         };
         navigationHandler.postDelayed(navigationRunnable, Constants.SPLASH_DELAY_MS);

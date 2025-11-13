@@ -19,7 +19,7 @@ This document tracks the progress of transforming DebugMaster into a polished, M
 | Phase 0: Architecture Documentation | ✅ Complete | 100% | See `docs/ARCHITECTURE_DEBUGMASTER.md` |
 | Phase 1: Data Model Upgrades | ✅ Complete | 100% | All entities, DAOs, migrations implemented |
 | Phase 2: UI & Navigation Redesign | ✅ Complete | 100% | All screens and navigation implemented |
-| Phase 3: Onboarding, Settings, Notifications | ⏳ Not Started | 0% | Requires Phase 2 completion |
+| Phase 3: Onboarding, Settings, Notifications | ✅ Complete | 100% | Onboarding, notifications, and settings wired |
 | Phase 4: Firebase Auth Skeleton | ⏳ Not Started | 0% | Clear structure provided |
 | Phase 5: Quality Assurance & Tests | ⏳ Not Started | 0% | Test framework exists |
 | Phase 6: Play Store Documentation | ⏳ Not Started | 0% | Templates ready |
@@ -334,46 +334,158 @@ This document tracks the progress of transforming DebugMaster into a polished, M
 
 ---
 
-## ⏳ Phase 3: Onboarding, Settings, Notifications (NOT STARTED)
+## ✅ Phase 3: Onboarding, Settings, Notifications (COMPLETE)
 
-### Onboarding Flow
+### Onboarding Flow Implemented
 
-**OnboardingActivity** (ViewPager2 with 3-4 screens):
-1. **Screen 1:** "Fix Real Java Bugs" - intro to concept
-2. **Screen 2:** "Learn Through Lessons" - micro-lessons + quizzes
-3. **Screen 3:** "Level Up & Earn Achievements" - XP, levels, badges
-4. **Screen 4:** "Daily Practice" - Bug of the Day, streaks
+**OnboardingActivity** (`ui/onboarding/OnboardingActivity.java`):
+- ViewPager2-based onboarding with 4 screens
+- Modern Material 3 design with page indicators
+- Skip and Next/Get Started buttons
+- Stores completion flag in SharedPreferences (`has_seen_onboarding`)
 
-Show only on first launch (use SharedPreferences: `isFirstLaunch`).
+**4 Onboarding Screens:**
+1. **Screen 1:** "Fix Real Java Bugs" 🐞 - Introduction to debugging concept
+2. **Screen 2:** "Learn Through Lessons" 📚 - Micro-lessons and quizzes
+3. **Screen 3:** "Level Up & Earn Achievements" 🏆 - XP, levels, badges, gamification
+4. **Screen 4:** "Daily Practice" 🔥 - Bug of the Day and streak building
 
-### Settings Screen
+**SplashFragment Integration:**
+- Updated to check `OnboardingActivity.hasSeenOnboarding()`
+- First launch: Shows onboarding → then MainActivity
+- Subsequent launches: Skips onboarding, goes directly to Learn tab
 
-**SettingsFragment** (use PreferenceScreen):
-- **Notifications Section:**
-  - Toggle: Bug of the Day notifications (on/off)
-  - Time picker: Preferred reminder time (default 9:00 AM)
-- **Appearance Section:**
-  - Toggle: Larger code font size (accessibility)
-  - Radio group: Theme (Follow System / Light / Dark)
-- **About Section:**
-  - App version
-  - Privacy Policy link
-  - Reset Progress button (with confirmation dialog)
+**Layouts Created:**
+- `activity_onboarding.xml` - Main activity layout with ViewPager2
+- `onboarding_screen_1.xml` through `onboarding_screen_4.xml`
+- `indicator_active.xml` and `indicator_inactive.xml` - Page indicators
 
-### Notifications (WorkManager)
+**OnboardingPagerAdapter:**
+- RecyclerView.Adapter for ViewPager2
+- Static screen layouts (no data binding needed)
 
-**BugOfTheDayNotificationWorker:**
-- Schedule daily notification at user's preferred time
-- Notification text: "Your Bug of the Day is ready – don't break your streak!"
-- Deep link: Opens `BugOfTheDayFragment` when tapped
-- Respect user's notification toggle in settings
+### Settings Screen Wiring (Complete)
 
-**Implementation:**
-1. Add WorkManager dependency to build.gradle
-2. Create `NotificationHelper` class for notification building
-3. Schedule PeriodicWorkRequest (24-hour interval)
-4. Handle notification permission (Android 13+)
-5. Update AndroidManifest with notification channel
+**Settings Toggles Now Functional:**
+
+1. **Daily Reminders Toggle** (`switchDailyReminders`):
+   - Schedules WorkManager job when enabled (default: 9:00 AM)
+   - Cancels WorkManager job when disabled
+   - Requests POST_NOTIFICATIONS permission on Android 13+
+   - Persisted in SharedPreferences
+   - `SettingsFragment.areDailyRemindersEnabled()` - Static helper method
+
+2. **Achievement Notifications Toggle** (`switchAchievementNotifications`):
+   - Controls whether achievement unlock notifications are shown
+   - Persisted in SharedPreferences
+   - `SettingsFragment.areAchievementNotificationsEnabled()` - Static helper method
+   - `NotificationHelper.showAchievementNotification()` respects this toggle
+
+3. **Hints Enabled Toggle** (`switchHintsEnabled`):
+   - Controls hint availability in BugDetailFragment
+   - Challenge mode when disabled
+   - `BugDetailFragment.showNextHint()` checks this setting
+   - Shows dialog when user tries to view hints with setting disabled
+   - Persisted in SharedPreferences
+   - `SettingsFragment.areHintsEnabled()` - Static helper method
+
+4. **Reset Progress Button**:
+   - Confirmation dialog before reset
+   - Clears all user data (progress, achievements, completions, notes)
+   - Reseeds database with fresh data
+   - Restarts activity after reset
+
+5. **Privacy Policy Button**:
+   - Shows inline AlertDialog with privacy policy text
+   - Explains offline-first, local-only data storage
+
+6. **App Version Display**:
+   - Reads from PackageInfo
+   - Displays version name (e.g., "1.0.0")
+
+### Notifications (WorkManager) Implementation
+
+**Dependencies Added:**
+- `androidx.work:work-runtime:2.9.0` - WorkManager library
+
+**NotificationHelper** (`util/NotificationHelper.java`):
+- `createNotificationChannels()` - Creates 2 channels (Bug of Day, Achievements)
+- `showBugOfTheDayNotification()` - Shows daily bug reminder with deep link
+- `showAchievementNotification()` - Shows achievement unlock notification
+- Notification channels: `bug_of_day_channel`, `achievements_channel`
+- Notification icons: `ic_notification_bug.xml`, `ic_notification_trophy.xml`
+
+**BugOfTheDayNotificationWorker** (`workers/BugOfTheDayNotificationWorker.java`):
+- Worker class for daily notifications
+- Checks `SettingsFragment.areDailyRemindersEnabled()` before showing
+- Called by WorkManager on schedule
+
+**NotificationScheduler** (`util/NotificationScheduler.java`):
+- `scheduleBugOfTheDayNotification(hour, minute)` - Schedules periodic work
+- `cancelBugOfTheDayNotification()` - Cancels scheduled work
+- Calculates initial delay until target time
+- Uses PeriodicWorkRequest with 24-hour interval
+- Replaces existing work if rescheduled
+
+**Deep Linking:**
+- MainActivity handles `EXTRA_NAVIGATE_TO` intent extra
+- `DESTINATION_BUG_OF_DAY` navigates to BugOfTheDayFragment
+- PendingIntent with FLAG_UPDATE_CURRENT | FLAG_IMMUTABLE
+
+**Notification Permission (Android 13+):**
+- Added `POST_NOTIFICATIONS` permission to AndroidManifest
+- SettingsFragment requests permission when enabling daily reminders
+- Uses ActivityResultLauncher with RequestPermission contract
+- Graceful handling if permission denied (disables toggle, shows toast)
+- Backward compatible with Android 12 and below (no permission needed)
+
+### Files Created/Modified
+
+**New Files:**
+- `OnboardingActivity.java`, `OnboardingPagerAdapter.java`
+- `onboarding_screen_*.xml` (4 layouts)
+- `indicator_active.xml`, `indicator_inactive.xml`
+- `NotificationHelper.java`
+- `NotificationScheduler.java`
+- `BugOfTheDayNotificationWorker.java`
+- `ic_notification_bug.xml`, `ic_notification_trophy.xml`
+
+**Modified Files:**
+- `SplashFragment.java` - Onboarding check
+- `SettingsFragment.java` - Notification scheduling, permission handling
+- `BugDetailFragment.java` - Hints toggle respect
+- `MainActivity.java` - Deep linking support
+- `AndroidManifest.xml` - POST_NOTIFICATIONS permission, OnboardingActivity
+- `build.gradle.kts` - WorkManager dependency
+
+### Behavior Summary
+
+**First Launch:**
+1. SplashScreen → OnboardingActivity (4 screens) → MainActivity (Learn tab)
+2. User sees onboarding once, flag stored
+
+**Subsequent Launches:**
+1. SplashScreen → MainActivity (Learn tab) directly
+2. Onboarding skipped
+
+**Daily Notifications:**
+1. User enables "Daily Reminders" in Settings
+2. App requests POST_NOTIFICATIONS permission (Android 13+)
+3. If granted, WorkManager schedules daily job at 9:00 AM
+4. Every day at 9:00 AM, notification appears: "Bug of the Day is Ready!"
+5. Tapping notification → opens Bug of the Day screen
+6. User can disable anytime in Settings
+
+**Achievement Notifications:**
+1. When achievement unlocked, checks toggle setting
+2. If enabled, shows notification: "Achievement Unlocked!"
+3. If disabled, no notification (silent unlock)
+
+**Hints Toggle:**
+1. When enabled (default), hints work normally
+2. When disabled (challenge mode), hint button shows dialog
+3. Dialog explains challenge mode is active, offers to enable hints
+4. User must go to Settings to re-enable
 
 ---
 

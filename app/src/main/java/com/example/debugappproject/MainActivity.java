@@ -10,6 +10,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.debugappproject.databinding.ActivityMainBinding;
+import com.example.debugappproject.util.NotificationHelper;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -47,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Setup bottom navigation
         setupBottomNavigation();
+
+        // Handle deep linking from notifications
+        handleDeepLink();
     }
 
     /**
@@ -87,6 +91,21 @@ public class MainActivity extends AppCompatActivity {
                 binding.bottomNavigation.setSelectedItemId(R.id.navigation_settings);
             }
         });
+    }
+
+    /**
+     * Handles deep linking from notifications.
+     * Navigates to the appropriate screen based on intent extras.
+     */
+    private void handleDeepLink() {
+        if (getIntent() != null && getIntent().hasExtra(NotificationHelper.EXTRA_NAVIGATE_TO)) {
+            String destination = getIntent().getStringExtra(NotificationHelper.EXTRA_NAVIGATE_TO);
+
+            if (NotificationHelper.DESTINATION_BUG_OF_DAY.equals(destination)) {
+                // Navigate to Bug of the Day screen
+                navController.navigate(R.id.bugOfTheDayFragment);
+            }
+        }
     }
 
     @Override

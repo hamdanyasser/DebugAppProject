@@ -18,6 +18,7 @@ import com.example.debugappproject.databinding.FragmentBugDetailBinding;
 import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.model.Hint;
 import com.example.debugappproject.model.TestCase;
+import com.example.debugappproject.ui.settings.SettingsFragment;
 import com.example.debugappproject.util.CodeComparator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -248,8 +249,25 @@ public class BugDetailFragment extends Fragment {
     /**
      * Reveals the next hint and adds it to the hints container.
      * Each hint is displayed in a separate TextView for better readability.
+     * Respects the "Hints Enabled" setting from Settings.
      */
     private void showNextHint() {
+        // Check if hints are enabled in settings
+        if (!SettingsFragment.areHintsEnabled(requireContext())) {
+            new AlertDialog.Builder(requireContext())
+                .setTitle("Hints Disabled")
+                .setMessage("Hints are currently disabled in Settings. Challenge mode is active! " +
+                    "Would you like to enable hints?")
+                .setPositiveButton("Enable Hints", (dialog, which) -> {
+                    // This would ideally open settings, for now just inform user
+                    Toast.makeText(requireContext(),
+                        "Please enable hints in Settings", Toast.LENGTH_LONG).show();
+                })
+                .setNegativeButton("Keep Disabled", null)
+                .show();
+            return;
+        }
+
         if (hints == null || hints.isEmpty()) {
             Toast.makeText(requireContext(), "No hints available", Toast.LENGTH_SHORT).show();
             return;
