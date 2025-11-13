@@ -42,6 +42,7 @@ public class OnboardingActivity extends AppCompatActivity {
     private ActivityOnboardingBinding binding;
     private OnboardingPagerAdapter adapter;
     private ImageView[] indicators;
+    private volatile boolean databaseSeeded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +69,13 @@ public class OnboardingActivity extends AppCompatActivity {
                 BugRepository repository = new BugRepository(getApplication());
                 // This call now blocks until all data is inserted
                 DatabaseSeeder.seedDatabase(this, repository);
+
+                // Mark as complete
+                databaseSeeded = true;
             } catch (Exception e) {
                 e.printStackTrace();
+                // Even on error, mark as complete to allow app to continue
+                databaseSeeded = true;
             }
         }).start();
     }
@@ -173,8 +179,7 @@ public class OnboardingActivity extends AppCompatActivity {
 
     /**
      * Marks onboarding as completed and launches main activity.
-     * Database seeding is now synchronous, but we add a small delay
-     * to ensure it completes if user skips through onboarding quickly.
+     * Waits for database seeding to complete before launching MainActivity.
      */
     private void finishOnboarding() {
         // Save flag to SharedPreferences
@@ -183,13 +188,19 @@ public class OnboardingActivity extends AppCompatActivity {
             .putBoolean(KEY_HAS_SEEN_ONBOARDING, true)
             .apply();
 
-        // Add a small delay to ensure database seeding completes
-        // This is safe because database seeding started in onCreate
+        // Wait for database seeding to complete before launching MainActivity
         new Thread(() -> {
             try {
-                Thread.sleep(500); // Short delay to allow synchronous seeding to finish
+                // Poll until database seeding is complete (with timeout of 10 seconds)
+                int maxWaitMs = 10000; // 10 seconds max
+                int waitedMs = 0;
+                while (!databaseSeeded && waitedMs < maxWaitMs) {
+                    Thread.sleep(100);
+                    waitedMs += 100;
+                }
+
+                // Launch MainActivity on main thread
                 runOnUiThread(() -> {
-                    // Launch MainActivity
                     Intent intent = new Intent(this, MainActivity.class);
                     startActivity(intent);
                     finish();
