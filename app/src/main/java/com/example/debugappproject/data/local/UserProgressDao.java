@@ -84,6 +84,12 @@ public interface UserProgressDao {
     void updateStreak(int streak);
 
     /**
+     * Update longest streak if current streak is higher.
+     */
+    @Query("UPDATE user_progress SET longestStreakDays = :longestStreak WHERE id = 1 AND :longestStreak > longestStreakDays")
+    void updateLongestStreak(int longestStreak);
+
+    /**
      * Add XP to user's total.
      */
     @Query("UPDATE user_progress SET xp = xp + :xpAmount WHERE id = 1")
@@ -105,7 +111,7 @@ public interface UserProgressDao {
      * Reset all progress (for reset feature).
      */
     @Query("UPDATE user_progress SET totalSolved = 0, easySolved = 0, mediumSolved = 0, " +
-            "hardSolved = 0, streakDays = 0, lastSolvedTimestamp = 0, xp = 0, hintsUsed = 0, " +
+            "hardSolved = 0, streakDays = 0, longestStreakDays = 0, lastSolvedTimestamp = 0, xp = 0, hintsUsed = 0, " +
             "bugsSolvedWithoutHints = 0 WHERE id = 1")
     void resetProgress();
 }
