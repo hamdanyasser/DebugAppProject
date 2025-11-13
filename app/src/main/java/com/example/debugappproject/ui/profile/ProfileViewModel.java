@@ -56,7 +56,7 @@ public class ProfileViewModel extends AndroidViewModel {
                 repository.getAchievementDao().getAllUnlockedAchievementsSync();
 
             // Create a map of unlocked achievements by achievement ID
-            Map<Integer, UserAchievement> unlockedMap = new HashMap<>();
+            Map<String, UserAchievement> unlockedMap = new HashMap<>();
             for (UserAchievement ua : unlockedAchievements) {
                 unlockedMap.put(ua.getAchievementId(), ua);
             }
