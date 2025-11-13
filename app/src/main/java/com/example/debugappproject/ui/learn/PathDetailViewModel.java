@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.debugappproject.data.repository.BugRepository;
-import com.example.debugappproject.model.BugChallenge;
+import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.model.LearningPath;
 
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class PathDetailViewModel extends AndroidViewModel {
             // Load each bug and check if completed
             List<BugInPathWithDetails> bugs = new ArrayList<>();
             for (int bugId : bugIds) {
-                BugChallenge bug = repository.getBugDao().getBugByIdSync(bugId);
+                Bug bug = repository.getBugDao().getBugByIdSync(bugId);
                 if (bug != null) {
                     boolean isCompleted = repository.getBugDao().isBugCompleted(bugId);
                     bugs.add(new BugInPathWithDetails(bug, isCompleted));

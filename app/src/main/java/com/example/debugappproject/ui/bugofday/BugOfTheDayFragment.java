@@ -16,7 +16,7 @@ import androidx.navigation.Navigation;
 
 import com.example.debugappproject.R;
 import com.example.debugappproject.databinding.FragmentBugOfDayBinding;
-import com.example.debugappproject.model.BugChallenge;
+import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.model.UserProgress;
 import com.example.debugappproject.util.DateUtils;
 
@@ -78,7 +78,7 @@ public class BugOfTheDayFragment extends Fragment {
     /**
      * Displays the bug challenge information in the UI.
      */
-    private void displayBug(BugChallenge bug) {
+    private void displayBug(Bug bug) {
         binding.textBugTitle.setText(bug.getTitle());
         binding.textDescription.setText(bug.getDescription());
         binding.textCategory.setText(bug.getCategory());

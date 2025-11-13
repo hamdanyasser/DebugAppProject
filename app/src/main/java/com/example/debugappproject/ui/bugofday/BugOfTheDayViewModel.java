@@ -7,7 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.example.debugappproject.data.repository.BugRepository;
-import com.example.debugappproject.model.BugChallenge;
+import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.model.UserProgress;
 import com.example.debugappproject.util.DateUtils;
 
@@ -27,7 +27,7 @@ public class BugOfTheDayViewModel extends AndroidViewModel {
      * Gets today's bug challenge based on the date.
      * Uses DateUtils to calculate which bug ID should be shown today.
      */
-    public LiveData<BugChallenge> getTodaysBug() {
+    public LiveData<Bug> getTodaysBug() {
         int bugId = DateUtils.getBugOfTheDayId();
         return repository.getBugById(bugId);
     }

@@ -1,5 +1,6 @@
 package com.example.debugappproject.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -11,6 +12,7 @@ import androidx.room.PrimaryKey;
 public class AchievementDefinition {
 
     @PrimaryKey
+    @NonNull
     private String id;                  // Unique achievement ID (e.g., "first_fix", "no_hint_hero")
 
     private String name;                // Display name (e.g., "First Fix")
