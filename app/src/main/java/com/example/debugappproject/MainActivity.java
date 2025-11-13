@@ -29,28 +29,41 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        try {
+            android.util.Log.d("MainActivity", "onCreate started");
 
-        setSupportActionBar(binding.toolbar);
+            binding = ActivityMainBinding.inflate(getLayoutInflater());
+            setContentView(binding.getRoot());
+            android.util.Log.d("MainActivity", "Content view set");
 
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+            setSupportActionBar(binding.toolbar);
+            android.util.Log.d("MainActivity", "Toolbar set");
 
-        // Define top-level destinations (no back button shown)
-        Set<Integer> topLevelDestinations = new HashSet<>();
-        topLevelDestinations.add(R.id.learningPathsFragment);
-        topLevelDestinations.add(R.id.bugOfTheDayFragment);
-        topLevelDestinations.add(R.id.profileFragment);
-        topLevelDestinations.add(R.id.settingsFragment);
+            navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+            android.util.Log.d("MainActivity", "NavController found");
 
-        appBarConfiguration = new AppBarConfiguration.Builder(topLevelDestinations).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+            // Define top-level destinations (no back button shown)
+            Set<Integer> topLevelDestinations = new HashSet<>();
+            topLevelDestinations.add(R.id.learningPathsFragment);
+            topLevelDestinations.add(R.id.bugOfTheDayFragment);
+            topLevelDestinations.add(R.id.profileFragment);
+            topLevelDestinations.add(R.id.settingsFragment);
 
-        // Setup bottom navigation
-        setupBottomNavigation();
+            appBarConfiguration = new AppBarConfiguration.Builder(topLevelDestinations).build();
+            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+            android.util.Log.d("MainActivity", "Navigation UI configured");
 
-        // Handle deep linking from notifications
-        handleDeepLink();
+            // Setup bottom navigation
+            setupBottomNavigation();
+            android.util.Log.d("MainActivity", "Bottom navigation setup complete");
+
+            // Handle deep linking from notifications
+            handleDeepLink();
+            android.util.Log.d("MainActivity", "onCreate completed successfully");
+        } catch (Exception e) {
+            android.util.Log.e("MainActivity", "Error in onCreate", e);
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -79,16 +92,37 @@ public class MainActivity extends AppCompatActivity {
 
         // Highlight correct bottom nav item when destination changes
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            int destId = destination.getId();
+            try {
+                int destId = destination.getId();
+                android.util.Log.d("MainActivity", "Navigated to destination: " + destination.getLabel());
 
-            if (destId == R.id.learningPathsFragment) {
-                binding.bottomNavigation.setSelectedItemId(R.id.navigation_learn);
-            } else if (destId == R.id.bugOfTheDayFragment) {
-                binding.bottomNavigation.setSelectedItemId(R.id.navigation_bug_of_day);
-            } else if (destId == R.id.profileFragment) {
-                binding.bottomNavigation.setSelectedItemId(R.id.navigation_profile);
-            } else if (destId == R.id.settingsFragment) {
-                binding.bottomNavigation.setSelectedItemId(R.id.navigation_settings);
+                // Hide bottom navigation and toolbar for splash screen
+                if (destId == R.id.splashFragment) {
+                    binding.bottomNavigation.setVisibility(android.view.View.GONE);
+                    if (getSupportActionBar() != null) {
+                        getSupportActionBar().hide();
+                    }
+                    return;
+                }
+
+                // Show bottom navigation and toolbar for main screens
+                binding.bottomNavigation.setVisibility(android.view.View.VISIBLE);
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().show();
+                }
+
+                // Update selected item
+                if (destId == R.id.learningPathsFragment) {
+                    binding.bottomNavigation.setSelectedItemId(R.id.navigation_learn);
+                } else if (destId == R.id.bugOfTheDayFragment) {
+                    binding.bottomNavigation.setSelectedItemId(R.id.navigation_bug_of_day);
+                } else if (destId == R.id.profileFragment) {
+                    binding.bottomNavigation.setSelectedItemId(R.id.navigation_profile);
+                } else if (destId == R.id.settingsFragment) {
+                    binding.bottomNavigation.setSelectedItemId(R.id.navigation_settings);
+                }
+            } catch (Exception e) {
+                android.util.Log.e("MainActivity", "Error in destination listener", e);
             }
         });
     }
