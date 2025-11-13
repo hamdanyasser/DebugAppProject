@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Level Up & Earn Achievements"
+        android:text="Level Up &amp; Earn Achievements"
         android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="?attr/colorOnSurface"
