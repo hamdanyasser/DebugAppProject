@@ -23,6 +23,7 @@ public class UserProgress {
     private int xp;                     // Total experience points earned
     private int hintsUsed;              // Total number of hints used across all bugs
     private int bugsSolvedWithoutHints; // Number of bugs solved without using any hints
+    private int longestStreakDays;      // Longest streak ever achieved
 
     // Constructor
     public UserProgress() {
@@ -37,6 +38,7 @@ public class UserProgress {
         this.xp = 0;
         this.hintsUsed = 0;
         this.bugsSolvedWithoutHints = 0;
+        this.longestStreakDays = 0;
     }
 
     // Getters and Setters
@@ -126,6 +128,14 @@ public class UserProgress {
 
     public void setBugsSolvedWithoutHints(int bugsSolvedWithoutHints) {
         this.bugsSolvedWithoutHints = bugsSolvedWithoutHints;
+    }
+
+    public int getLongestStreakDays() {
+        return longestStreakDays;
+    }
+
+    public void setLongestStreakDays(int longestStreakDays) {
+        this.longestStreakDays = longestStreakDays;
     }
 
     /**

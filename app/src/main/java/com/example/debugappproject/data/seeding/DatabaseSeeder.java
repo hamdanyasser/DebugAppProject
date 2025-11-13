@@ -3,8 +3,12 @@ package com.example.debugappproject.data.seeding;
 import android.content.Context;
 
 import com.example.debugappproject.data.repository.BugRepository;
+import com.example.debugappproject.model.AchievementDefinition;
 import com.example.debugappproject.model.Bug;
+import com.example.debugappproject.model.BugInPath;
 import com.example.debugappproject.model.Hint;
+import com.example.debugappproject.model.LearningPath;
+import com.example.debugappproject.util.AchievementManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -12,17 +16,18 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * DatabaseSeeder handles loading initial bug data from assets/bugs.json
- * and populating the Room database.
+ * DatabaseSeeder handles loading initial data from assets/bugs.json
+ * and populating the Room database with bugs, hints, learning paths, and achievements.
  */
 public class DatabaseSeeder {
 
     /**
-     * Seeds the database with initial bug and hint data from JSON file.
+     * Seeds the database with initial data from JSON file.
      * This is called once on first app launch.
      */
     public static void seedDatabase(Context context, BugRepository repository) {
@@ -58,13 +63,106 @@ public class DatabaseSeeder {
             Type hintListType = new TypeToken<List<Hint>>() {}.getType();
             List<Hint> hints = gson.fromJson(hintsJson, hintListType);
 
-            // Insert into database
+            // Insert bugs and hints
             repository.insertBugs(bugs);
             repository.insertHints(hints);
             repository.insertInitialProgress();
 
+            // Seed learning paths
+            seedLearningPaths(repository, bugs);
+
+            // Seed achievements
+            seedAchievements(repository);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Creates and seeds default learning paths based on bug categories and difficulties.
+     */
+    private static void seedLearningPaths(BugRepository repository, List<Bug> bugs) {
+        List<LearningPath> paths = new ArrayList<>();
+        List<BugInPath> bugInPathList = new ArrayList<>();
+
+        // Path 1: Basics of Debugging (Easy bugs)
+        LearningPath path1 = new LearningPath(
+            "Basics of Debugging",
+            "Start your debugging journey with simple, common mistakes",
+            "🎯",
+            "Easy",
+            1,
+            false
+        );
+        paths.add(path1);
+
+        // Path 2: Null & Exception Handling
+        LearningPath path2 = new LearningPath(
+            "Nulls & Crashes",
+            "Master null pointer exceptions and error handling",
+            "⚠️",
+            "Easy-Medium",
+            2,
+            false
+        );
+        paths.add(path2);
+
+        // Path 3: Collections & Edge Cases
+        LearningPath path3 = new LearningPath(
+            "Collections & Arrays",
+            "Tackle array indexing and collection modification bugs",
+            "📚",
+            "Medium",
+            3,
+            false
+        );
+        paths.add(path3);
+
+        // Path 4: Advanced Debugging
+        LearningPath path4 = new LearningPath(
+            "Advanced Challenges",
+            "Hard bugs requiring deep understanding",
+            "🏆",
+            "Hard",
+            4,
+            false
+        );
+        paths.add(path4);
+
+        repository.insertLearningPaths(paths);
+
+        // Assign bugs to paths (simplified mapping based on difficulty and category)
+        int pathId = 1;
+        int orderInPath = 1;
+        for (Bug bug : bugs) {
+            // Simplified logic: assign by difficulty
+            if ("Easy".equals(bug.getDifficulty())) {
+                bugInPathList.add(new BugInPath(bug.getId(), 1, orderInPath++));
+            } else if ("Medium".equals(bug.getDifficulty())) {
+                if ("Arrays".equals(bug.getCategory()) || "Collections".equals(bug.getCategory())) {
+                    bugInPathList.add(new BugInPath(bug.getId(), 3, orderInPath++));
+                } else if ("Exceptions".equals(bug.getCategory())) {
+                    bugInPathList.add(new BugInPath(bug.getId(), 2, orderInPath++));
+                }
+            } else if ("Hard".equals(bug.getDifficulty())) {
+                bugInPathList.add(new BugInPath(bug.getId(), 4, orderInPath++));
+            }
+
+            // Also add exception-related easy bugs to path 2
+            if ("Easy".equals(bug.getDifficulty()) && "Exceptions".equals(bug.getCategory())) {
+                bugInPathList.add(new BugInPath(bug.getId(), 2, orderInPath++));
+            }
+        }
+
+        repository.insertBugInPaths(bugInPathList);
+    }
+
+    /**
+     * Seeds predefined achievements.
+     */
+    private static void seedAchievements(BugRepository repository) {
+        List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
+        repository.insertAchievements(achievements);
     }
 }

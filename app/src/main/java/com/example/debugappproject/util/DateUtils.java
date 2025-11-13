@@ -80,4 +80,30 @@ public class DateUtils {
     public static boolean isToday(long timestamp) {
         return isSameDay(timestamp, System.currentTimeMillis());
     }
+
+    /**
+     * Calculate current streak based on last completion date.
+     * Returns 0 if streak is broken (more than 1 day since last completion).
+     * Returns currentStreakDays if completed today or yesterday.
+     *
+     * @param lastCompletionDate Last completion timestamp
+     * @param currentStreakDays Stored current streak value
+     * @return Actual current streak (0 if broken)
+     */
+    public static int calculateCurrentStreak(long lastCompletionDate, int currentStreakDays) {
+        if (lastCompletionDate == 0) {
+            return 0;
+        }
+
+        long currentTime = System.currentTimeMillis();
+        long daysSinceLastCompletion = TimeUnit.MILLISECONDS.toDays(currentTime - lastCompletionDate);
+
+        if (daysSinceLastCompletion <= 1) {
+            // Completed today or yesterday - streak is active
+            return currentStreakDays;
+        } else {
+            // More than 1 day - streak is broken
+            return 0;
+        }
+    }
 }

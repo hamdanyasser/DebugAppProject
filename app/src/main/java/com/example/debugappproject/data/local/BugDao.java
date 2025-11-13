@@ -97,6 +97,18 @@ public interface BugDao {
     int getCompletedBugCountByDifficulty(String difficulty);
 
     /**
+     * Get count of bugs by category.
+     */
+    @Query("SELECT COUNT(*) FROM bugs WHERE category = :category")
+    int getBugCountByCategory(String category);
+
+    /**
+     * Get count of completed bugs by category.
+     */
+    @Query("SELECT COUNT(*) FROM bugs WHERE category = :category AND isCompleted = 1")
+    int getCompletedBugsByCategory(String category);
+
+    /**
      * Mark a bug as completed.
      */
     @Query("UPDATE bugs SET isCompleted = 1 WHERE id = :bugId")
