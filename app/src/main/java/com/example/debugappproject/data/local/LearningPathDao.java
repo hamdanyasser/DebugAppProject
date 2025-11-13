@@ -24,6 +24,9 @@ public interface LearningPathDao {
     @Query("SELECT * FROM learning_paths WHERE id = :pathId")
     LiveData<LearningPath> getPathById(int pathId);
 
+    @Query("SELECT * FROM learning_paths WHERE id = :pathId")
+    LearningPath getPathByIdSync(int pathId);
+
     @Insert
     void insertPath(LearningPath path);
 
@@ -33,6 +36,9 @@ public interface LearningPathDao {
     // BugInPath queries
     @Query("SELECT bugId FROM bug_in_path WHERE pathId = :pathId ORDER BY orderInPath ASC")
     LiveData<List<Integer>> getBugIdsInPath(int pathId);
+
+    @Query("SELECT bugId FROM bug_in_path WHERE pathId = :pathId ORDER BY orderInPath ASC")
+    List<Integer> getBugIdsInPathSync(int pathId);
 
     @Query("SELECT * FROM bug_in_path WHERE pathId = :pathId ORDER BY orderInPath ASC")
     LiveData<List<BugInPath>> getBugsInPath(int pathId);
