@@ -49,6 +49,12 @@ public interface BugDao {
     LiveData<Bug> getBugById(int bugId);
 
     /**
+     * Get a specific bug by ID synchronously.
+     */
+    @Query("SELECT * FROM bugs WHERE id = :bugId")
+    Bug getBugByIdSync(int bugId);
+
+    /**
      * Get bugs filtered by difficulty.
      */
     @Query("SELECT * FROM bugs WHERE difficulty = :difficulty ORDER BY id ASC")
@@ -85,6 +91,12 @@ public interface BugDao {
     int getCompletedBugCount();
 
     /**
+     * Alias for getCompletedBugCount() for consistency.
+     */
+    @Query("SELECT COUNT(*) FROM bugs WHERE isCompleted = 1")
+    int getCompletedBugsCount();
+
+    /**
      * Get count of bugs by difficulty.
      */
     @Query("SELECT COUNT(*) FROM bugs WHERE difficulty = :difficulty")
@@ -115,14 +127,32 @@ public interface BugDao {
     void markBugAsCompleted(int bugId);
 
     /**
+     * Check if a bug is completed.
+     */
+    @Query("SELECT isCompleted FROM bugs WHERE id = :bugId")
+    boolean isBugCompleted(int bugId);
+
+    /**
      * Reset all bug completion status (for reset progress feature).
      */
     @Query("UPDATE bugs SET isCompleted = 0")
     void resetAllBugs();
 
     /**
+     * Alias for resetAllBugs() for consistency.
+     */
+    @Query("UPDATE bugs SET isCompleted = 0")
+    void resetAllBugsToNotCompleted();
+
+    /**
      * Update user notes for a specific bug.
      */
     @Query("UPDATE bugs SET userNotes = :notes WHERE id = :bugId")
     void updateBugNotes(int bugId, String notes);
+
+    /**
+     * Clear all user notes (for reset progress feature).
+     */
+    @Query("UPDATE bugs SET userNotes = ''")
+    void clearAllUserNotes();
 }

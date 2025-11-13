@@ -114,4 +114,12 @@ public interface UserProgressDao {
             "hardSolved = 0, streakDays = 0, longestStreakDays = 0, lastSolvedTimestamp = 0, xp = 0, hintsUsed = 0, " +
             "bugsSolvedWithoutHints = 0 WHERE id = 1")
     void resetProgress();
+
+    /**
+     * Alias for resetProgress() for consistency.
+     */
+    @Query("UPDATE user_progress SET totalSolved = 0, easySolved = 0, mediumSolved = 0, " +
+            "hardSolved = 0, streakDays = 0, longestStreakDays = 0, lastSolvedTimestamp = 0, xp = 0, hintsUsed = 0, " +
+            "bugsSolvedWithoutHints = 0 WHERE id = 1")
+    void deleteAllProgress();
 }

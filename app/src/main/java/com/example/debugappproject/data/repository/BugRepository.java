@@ -313,6 +313,14 @@ public class BugRepository {
         return userProgressDao;
     }
 
+    public LearningPathDao getLearningPathDao() {
+        return learningPathDao;
+    }
+
+    public LessonDao getLessonDao() {
+        return lessonDao;
+    }
+
     public ExecutorService getExecutorService() {
         return executorService;
     }

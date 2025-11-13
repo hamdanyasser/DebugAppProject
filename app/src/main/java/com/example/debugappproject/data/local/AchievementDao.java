@@ -20,6 +20,9 @@ public interface AchievementDao {
     @Query("SELECT * FROM achievement_definitions ORDER BY sortOrder ASC")
     LiveData<List<AchievementDefinition>> getAllAchievementDefinitions();
 
+    @Query("SELECT * FROM achievement_definitions ORDER BY sortOrder ASC")
+    List<AchievementDefinition> getAllAchievementDefinitionsSync();
+
     @Query("SELECT * FROM achievement_definitions WHERE id = :achievementId")
     LiveData<AchievementDefinition> getAchievementDefinitionById(String achievementId);
 
@@ -35,6 +38,9 @@ public interface AchievementDao {
     // User Achievement queries
     @Query("SELECT * FROM user_achievements")
     LiveData<List<UserAchievement>> getAllUnlockedAchievements();
+
+    @Query("SELECT * FROM user_achievements")
+    List<UserAchievement> getAllUnlockedAchievementsSync();
 
     @Query("SELECT * FROM user_achievements WHERE achievementId = :achievementId LIMIT 1")
     LiveData<UserAchievement> getUserAchievement(String achievementId);
@@ -53,4 +59,10 @@ public interface AchievementDao {
 
     @Query("DELETE FROM user_achievements")
     void clearAllUserAchievements();
+
+    /**
+     * Alias for clearAllUserAchievements() for consistency.
+     */
+    @Query("DELETE FROM user_achievements")
+    void deleteAllUserAchievements();
 }

@@ -33,6 +33,16 @@ public class DateUtils {
     }
 
     /**
+     * Calculate Bug of the Day ID using a reasonable default count.
+     * Assumes a typical bug count of 100 for the rotation.
+     *
+     * @return Bug ID for today (1-based)
+     */
+    public static int getBugOfTheDayId() {
+        return getBugOfTheDayId(100); // Default assumption of ~100 bugs
+    }
+
+    /**
      * Calculate streak days based on last solved timestamp.
      * Returns 0 if more than 1 day has passed without solving.
      *

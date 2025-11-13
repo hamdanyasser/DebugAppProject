@@ -66,6 +66,20 @@ public class UserProgress {
         this.streakDays = streakDays;
     }
 
+    /**
+     * Alias for getStreakDays() for consistency with some UI code.
+     */
+    public int getCurrentStreakDays() {
+        return streakDays;
+    }
+
+    /**
+     * Alias for setStreakDays() for consistency with some UI code.
+     */
+    public void setCurrentStreakDays(int currentStreakDays) {
+        this.streakDays = currentStreakDays;
+    }
+
     public int getEasySolved() {
         return easySolved;
     }
@@ -98,6 +112,20 @@ public class UserProgress {
         this.lastSolvedTimestamp = lastSolvedTimestamp;
     }
 
+    /**
+     * Alias for getLastSolvedTimestamp() for consistency with some UI code.
+     */
+    public long getLastCompletionDate() {
+        return lastSolvedTimestamp;
+    }
+
+    /**
+     * Alias for setLastSolvedTimestamp() for consistency with some UI code.
+     */
+    public void setLastCompletionDate(long lastCompletionDate) {
+        this.lastSolvedTimestamp = lastCompletionDate;
+    }
+
     public long getLastOpenedTimestamp() {
         return lastOpenedTimestamp;
     }
@@ -112,6 +140,20 @@ public class UserProgress {
 
     public void setXp(int xp) {
         this.xp = xp;
+    }
+
+    /**
+     * Alias for getXp() for consistency with some UI code.
+     */
+    public int getTotalXp() {
+        return xp;
+    }
+
+    /**
+     * Alias for setXp() for consistency with some UI code.
+     */
+    public void setTotalXp(int totalXp) {
+        this.xp = totalXp;
     }
 
     public int getHintsUsed() {
