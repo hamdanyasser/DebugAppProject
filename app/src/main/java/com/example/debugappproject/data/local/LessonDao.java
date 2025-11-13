@@ -20,6 +20,9 @@ public interface LessonDao {
     @Query("SELECT * FROM lessons WHERE bugId = :bugId LIMIT 1")
     LiveData<Lesson> getLessonForBug(int bugId);
 
+    @Query("SELECT * FROM lessons WHERE bugId = :bugId LIMIT 1")
+    Lesson getLessonForBugSync(int bugId);
+
     @Query("SELECT * FROM lessons WHERE id = :lessonId")
     LiveData<Lesson> getLessonById(int lessonId);
 
@@ -32,6 +35,9 @@ public interface LessonDao {
     // Lesson Question queries
     @Query("SELECT * FROM lesson_questions WHERE lessonId = :lessonId ORDER BY orderInLesson ASC")
     LiveData<List<LessonQuestion>> getQuestionsForLesson(int lessonId);
+
+    @Query("SELECT * FROM lesson_questions WHERE lessonId = :lessonId ORDER BY orderInLesson ASC")
+    List<LessonQuestion> getQuestionsForLessonSync(int lessonId);
 
     @Query("SELECT * FROM lesson_questions WHERE id = :questionId")
     LiveData<LessonQuestion> getQuestionById(int questionId);

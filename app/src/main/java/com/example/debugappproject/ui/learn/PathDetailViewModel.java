@@ -52,7 +52,7 @@ public class PathDetailViewModel extends AndroidViewModel {
             currentPath.postValue(path);
 
             // Load bug IDs in this path
-            List<Integer> bugIds = repository.getLearningPathDao().getBugIdsInPath(pathId);
+            List<Integer> bugIds = repository.getLearningPathDao().getBugIdsInPathSync(pathId);
 
             // Load each bug and check if completed
             List<BugInPathWithDetails> bugs = new ArrayList<>();
