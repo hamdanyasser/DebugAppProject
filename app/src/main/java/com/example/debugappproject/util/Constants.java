@@ -32,7 +32,7 @@ public class Constants {
 
     // UI constants
     public static final int MAX_HINT_LEVEL = 3;
-    public static final int SPLASH_DELAY_MS = 1500;
+    public static final int SPLASH_DELAY_MS = 3000;  // Increased to 3 seconds to allow database seeding
 
     private Constants() {
         // Prevent instantiation
