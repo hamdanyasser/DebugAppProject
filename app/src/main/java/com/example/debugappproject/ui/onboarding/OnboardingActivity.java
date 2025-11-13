@@ -60,11 +60,13 @@ public class OnboardingActivity extends AppCompatActivity {
     /**
      * Seeds the database in background while user goes through onboarding.
      * This ensures data is ready when they finish onboarding.
+     * The seeding is now fully synchronous, so it completes before returning.
      */
     private void seedDatabaseInBackground() {
         new Thread(() -> {
             try {
                 BugRepository repository = new BugRepository(getApplication());
+                // This call now blocks until all data is inserted
                 DatabaseSeeder.seedDatabase(this, repository);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -171,7 +173,8 @@ public class OnboardingActivity extends AppCompatActivity {
 
     /**
      * Marks onboarding as completed and launches main activity.
-     * Ensures a minimum delay to allow database seeding to complete.
+     * Database seeding is now synchronous, but we add a small delay
+     * to ensure it completes if user skips through onboarding quickly.
      */
     private void finishOnboarding() {
         // Save flag to SharedPreferences
@@ -184,7 +187,7 @@ public class OnboardingActivity extends AppCompatActivity {
         // This is safe because database seeding started in onCreate
         new Thread(() -> {
             try {
-                Thread.sleep(1000); // Wait 1 second to allow seeding to complete
+                Thread.sleep(500); // Short delay to allow synchronous seeding to finish
                 runOnUiThread(() -> {
                     // Launch MainActivity
                     Intent intent = new Intent(this, MainActivity.class);

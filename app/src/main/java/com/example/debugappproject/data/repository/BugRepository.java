@@ -219,6 +219,54 @@ public class BugRepository {
         }
     }
 
+    // Synchronous seeding methods - called from background thread during database initialization
+    // These bypass the executor service to ensure completion before returning
+
+    /**
+     * Insert bugs synchronously. MUST be called from background thread.
+     */
+    public void insertBugsSync(List<Bug> bugs) {
+        bugDao.insertAll(bugs);
+    }
+
+    /**
+     * Insert hints synchronously. MUST be called from background thread.
+     */
+    public void insertHintsSync(List<Hint> hints) {
+        hintDao.insertAll(hints);
+    }
+
+    /**
+     * Insert initial progress synchronously. MUST be called from background thread.
+     */
+    public void insertInitialProgressSync() {
+        UserProgress progress = userProgressDao.getUserProgressSync();
+        if (progress == null) {
+            userProgressDao.insert(new UserProgress());
+        }
+    }
+
+    /**
+     * Insert learning paths synchronously. MUST be called from background thread.
+     */
+    public void insertLearningPathsSync(List<LearningPath> paths) {
+        learningPathDao.insertAllPaths(paths);
+    }
+
+    /**
+     * Insert bug-in-path mappings synchronously. MUST be called from background thread.
+     */
+    public void insertBugInPathsSync(List<BugInPath> bugInPaths) {
+        learningPathDao.insertAllBugInPath(bugInPaths);
+    }
+
+    /**
+     * Insert achievements synchronously. MUST be called from background thread.
+     */
+    public void insertAchievementsSync(List<AchievementDefinition> achievements) {
+        achievementDao.insertAllAchievementDefinitions(achievements);
+    }
+
     /**
      * Update user notes for a bug.
      */

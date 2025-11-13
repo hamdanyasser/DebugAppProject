@@ -63,16 +63,16 @@ public class DatabaseSeeder {
             Type hintListType = new TypeToken<List<Hint>>() {}.getType();
             List<Hint> hints = gson.fromJson(hintsJson, hintListType);
 
-            // Insert bugs and hints
-            repository.insertBugs(bugs);
-            repository.insertHints(hints);
-            repository.insertInitialProgress();
+            // Insert bugs and hints synchronously (we're already on a background thread)
+            repository.insertBugsSync(bugs);
+            repository.insertHintsSync(hints);
+            repository.insertInitialProgressSync();
 
             // Seed learning paths
-            seedLearningPaths(repository, bugs);
+            seedLearningPathsSync(repository, bugs);
 
             // Seed achievements
-            seedAchievements(repository);
+            seedAchievementsSync(repository);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,8 +81,9 @@ public class DatabaseSeeder {
 
     /**
      * Creates and seeds default learning paths based on bug categories and difficulties.
+     * Synchronous version - called from background thread.
      */
-    private static void seedLearningPaths(BugRepository repository, List<Bug> bugs) {
+    private static void seedLearningPathsSync(BugRepository repository, List<Bug> bugs) {
         List<LearningPath> paths = new ArrayList<>();
         List<BugInPath> bugInPathList = new ArrayList<>();
 
@@ -130,7 +131,7 @@ public class DatabaseSeeder {
         );
         paths.add(path4);
 
-        repository.insertLearningPaths(paths);
+        repository.insertLearningPathsSync(paths);
 
         // Assign bugs to paths (simplified mapping based on difficulty and category)
         int pathId = 1;
@@ -155,14 +156,15 @@ public class DatabaseSeeder {
             }
         }
 
-        repository.insertBugInPaths(bugInPathList);
+        repository.insertBugInPathsSync(bugInPathList);
     }
 
     /**
-     * Seeds predefined achievements.
+     * Seeds predefined achievements synchronously.
+     * Called from background thread.
      */
-    private static void seedAchievements(BugRepository repository) {
+    private static void seedAchievementsSync(BugRepository repository) {
         List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
-        repository.insertAchievements(achievements);
+        repository.insertAchievementsSync(achievements);
     }
 }
