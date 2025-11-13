@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.debugappproject.R;
-import com.example.debugappproject.model.BugChallenge;
+import com.example.debugappproject.model.Bug;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class BugInPathAdapter extends RecyclerView.Adapter<BugInPathAdapter.BugV
      * Interface for handling bug item clicks.
      */
     public interface OnBugClickListener {
-        void onBugClick(BugChallenge bug);
+        void onBugClick(Bug bug);
     }
 
     public BugInPathAdapter(OnBugClickListener listener) {
@@ -82,7 +82,7 @@ public class BugInPathAdapter extends RecyclerView.Adapter<BugInPathAdapter.BugV
          * Binds bug data to the views.
          */
         public void bind(BugInPathWithDetails bugWithDetails, OnBugClickListener listener) {
-            BugChallenge bug = bugWithDetails.getBug();
+            Bug bug = bugWithDetails.getBug();
 
             // Set completion indicator
             if (bugWithDetails.isCompleted()) {
