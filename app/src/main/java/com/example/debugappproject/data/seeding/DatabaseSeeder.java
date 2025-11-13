@@ -96,6 +96,7 @@ public class DatabaseSeeder {
             1,
             false
         );
+        path1.setId(1); // Explicitly set ID to match BugInPath references
         paths.add(path1);
 
         // Path 2: Null & Exception Handling
@@ -107,6 +108,7 @@ public class DatabaseSeeder {
             2,
             false
         );
+        path2.setId(2); // Explicitly set ID to match BugInPath references
         paths.add(path2);
 
         // Path 3: Collections & Edge Cases
@@ -118,6 +120,7 @@ public class DatabaseSeeder {
             3,
             false
         );
+        path3.setId(3); // Explicitly set ID to match BugInPath references
         paths.add(path3);
 
         // Path 4: Advanced Debugging
@@ -129,6 +132,7 @@ public class DatabaseSeeder {
             4,
             false
         );
+        path4.setId(4); // Explicitly set ID to match BugInPath references
         paths.add(path4);
 
         repository.insertLearningPathsSync(paths);
