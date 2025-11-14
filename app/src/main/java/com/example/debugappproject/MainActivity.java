@@ -111,15 +111,21 @@ public class MainActivity extends AppCompatActivity {
                     getSupportActionBar().show();
                 }
 
-                // Update selected item
+                // Update selected item - only if it's not already selected to prevent infinite loop
+                int targetItemId = -1;
                 if (destId == R.id.learningPathsFragment) {
-                    binding.bottomNavigation.setSelectedItemId(R.id.navigation_learn);
+                    targetItemId = R.id.navigation_learn;
                 } else if (destId == R.id.bugOfTheDayFragment) {
-                    binding.bottomNavigation.setSelectedItemId(R.id.navigation_bug_of_day);
+                    targetItemId = R.id.navigation_bug_of_day;
                 } else if (destId == R.id.profileFragment) {
-                    binding.bottomNavigation.setSelectedItemId(R.id.navigation_profile);
+                    targetItemId = R.id.navigation_profile;
                 } else if (destId == R.id.settingsFragment) {
-                    binding.bottomNavigation.setSelectedItemId(R.id.navigation_settings);
+                    targetItemId = R.id.navigation_settings;
+                }
+
+                // Only update if different to prevent triggering the listener again
+                if (targetItemId != -1 && binding.bottomNavigation.getSelectedItemId() != targetItemId) {
+                    binding.bottomNavigation.setSelectedItemId(targetItemId);
                 }
             } catch (Exception e) {
                 android.util.Log.e("MainActivity", "Error in destination listener", e);
