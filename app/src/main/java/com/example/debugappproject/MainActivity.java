@@ -72,22 +72,26 @@ public class MainActivity extends AppCompatActivity {
     private void setupBottomNavigation() {
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
+            int targetDestination = -1;
 
             if (itemId == R.id.navigation_learn) {
-                navController.navigate(R.id.learningPathsFragment);
-                return true;
+                targetDestination = R.id.learningPathsFragment;
             } else if (itemId == R.id.navigation_bug_of_day) {
-                navController.navigate(R.id.bugOfTheDayFragment);
-                return true;
+                targetDestination = R.id.bugOfTheDayFragment;
             } else if (itemId == R.id.navigation_profile) {
-                navController.navigate(R.id.profileFragment);
-                return true;
+                targetDestination = R.id.profileFragment;
             } else if (itemId == R.id.navigation_settings) {
-                navController.navigate(R.id.settingsFragment);
+                targetDestination = R.id.settingsFragment;
+            }
+
+            // Only navigate if we're not already at the destination (prevents infinite loop)
+            if (targetDestination != -1 && navController.getCurrentDestination() != null
+                    && navController.getCurrentDestination().getId() != targetDestination) {
+                navController.navigate(targetDestination);
                 return true;
             }
 
-            return false;
+            return targetDestination != -1;
         });
 
         // Highlight correct bottom nav item when destination changes
