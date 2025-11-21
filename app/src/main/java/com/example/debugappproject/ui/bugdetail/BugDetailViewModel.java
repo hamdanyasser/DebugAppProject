@@ -1,11 +1,8 @@
 package com.example.debugappproject.ui.bugdetail;
 
-import android.app.Application;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.example.debugappproject.data.repository.BugRepository;
 import com.example.debugappproject.model.Bug;
@@ -15,11 +12,19 @@ import com.example.debugappproject.model.LessonQuestion;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
 /**
  * ViewModel for BugDetailFragment.
  * Manages bug details, hints, and completion logic.
+ *
+ * Uses Hilt for dependency injection - the repository is automatically
+ * provided by RepositoryModule.
  */
-public class BugDetailViewModel extends AndroidViewModel {
+@HiltViewModel
+public class BugDetailViewModel extends ViewModel {
 
     private final BugRepository repository;
     private LiveData<Bug> currentBug;
@@ -30,9 +35,13 @@ public class BugDetailViewModel extends AndroidViewModel {
     private final MutableLiveData<Boolean> showingSolution;
     private int hintsUsedForCurrentBug; // Track hints used for the current bug
 
-    public BugDetailViewModel(@NonNull Application application) {
-        super(application);
-        repository = new BugRepository(application);
+    /**
+     * Constructor with @Inject annotation for Hilt.
+     * Repository is automatically provided by Hilt.
+     */
+    @Inject
+    public BugDetailViewModel(BugRepository repository) {
+        this.repository = repository;
         lesson = new MutableLiveData<>();
         quizQuestions = new MutableLiveData<>();
         currentHintLevel = new MutableLiveData<>(0);

@@ -15,10 +15,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.debugappproject.R;
 import com.example.debugappproject.databinding.FragmentBugDetailBinding;
+import com.example.debugappproject.execution.CodeExecutionEngine;
+import com.example.debugappproject.execution.CodeExecutionResult;
 import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.model.Hint;
 import com.example.debugappproject.model.TestCase;
+import com.example.debugappproject.ui.animation.ConfettiAnimationView;
 import com.example.debugappproject.ui.settings.SettingsFragment;
+import com.example.debugappproject.util.AnimationUtil;
 import com.example.debugappproject.util.CodeComparator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -27,6 +31,8 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 /**
  * BugDetailFragment - Shows detailed view of a single bug with Material 3 design.
@@ -38,6 +44,7 @@ import java.util.List;
  * - Progressive hint revelation system
  * - Solution with explanation and fixed code
  * - Completion tracking
+ * - Hilt dependency injection for ViewModels
  *
  * Displays:
  * - Bug header with title and chips
@@ -49,6 +56,7 @@ import java.util.List;
  * - Solution card (shows explanation and fixed code)
  * - Action buttons (Show Solution, Mark as Solved)
  */
+@AndroidEntryPoint
 public class BugDetailFragment extends Fragment {
 
     private FragmentBugDetailBinding binding;
@@ -58,6 +66,8 @@ public class BugDetailFragment extends Fragment {
     private List<Hint> hints;
     private List<TestCase> testCases;
     private String initialCode; // The starting code for the user's fix attempt
+    private ConfettiAnimationView confettiView;
+    private CodeExecutionEngine codeExecutionEngine;
 
     @Nullable
     @Override
@@ -72,6 +82,13 @@ public class BugDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(BugDetailViewModel.class);
+
+        // Initialize confetti view
+        confettiView = binding.confettiView;
+
+        // Initialize code execution engine
+        codeExecutionEngine = new CodeExecutionEngine();
+        codeExecutionEngine.setTimeout(5000); // 5 second timeout
 
         // Get bug ID from arguments
         if (getArguments() != null) {
@@ -168,31 +185,35 @@ public class BugDetailFragment extends Fragment {
     private void setupClickListeners() {
         // Run Code button (old - now for demonstration purposes)
         binding.buttonRunCode.setOnClickListener(v -> {
-            if (currentBug != null) {
-                showOutput();
-            }
+            AnimationUtil.animatePress(v, () -> {
+                if (currentBug != null) {
+                    showOutput();
+                }
+            });
         });
 
         // Show Hint button
         binding.buttonShowHint.setOnClickListener(v -> {
-            showNextHint();
+            AnimationUtil.animatePress(v, this::showNextHint);
         });
 
         // Show Solution button
         binding.buttonShowSolution.setOnClickListener(v -> {
-            viewModel.showSolution();
+            AnimationUtil.animatePress(v, () -> viewModel.showSolution());
         });
 
         // Check Fix / Run Tests button
         binding.buttonCheckFix.setOnClickListener(v -> {
-            if (currentBug != null) {
-                runTests();
-            }
+            AnimationUtil.animatePress(v, () -> {
+                if (currentBug != null) {
+                    runTests();
+                }
+            });
         });
 
         // Reset Code button
         binding.buttonResetCode.setOnClickListener(v -> {
-            resetCode();
+            AnimationUtil.animatePress(v, this::resetCode);
         });
 
         // Mark as Solved button
@@ -229,11 +250,13 @@ public class BugDetailFragment extends Fragment {
 
         // Save Notes button
         binding.buttonSaveNotes.setOnClickListener(v -> {
-            if (currentBug != null) {
-                String notes = binding.editUserNotes.getText().toString();
-                viewModel.saveBugNotes(currentBug.getId(), notes);
-                Toast.makeText(requireContext(), "Notes saved!", Toast.LENGTH_SHORT).show();
-            }
+            AnimationUtil.animatePress(v, () -> {
+                if (currentBug != null) {
+                    String notes = binding.editUserNotes.getText().toString();
+                    viewModel.saveBugNotes(currentBug.getId(), notes);
+                    Toast.makeText(requireContext(), "Notes saved!", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
     }
 
@@ -241,7 +264,9 @@ public class BugDetailFragment extends Fragment {
      * Shows output comparison card with expected vs actual output.
      */
     private void showOutput() {
-        binding.cardOutput.setVisibility(View.VISIBLE);
+        if (binding.cardOutput.getVisibility() != View.VISIBLE) {
+            AnimationUtil.fadeInWithScale(binding.cardOutput);
+        }
         binding.textExpectedOutput.setText(currentBug.getExpectedOutput());
         binding.textActualOutput.setText(currentBug.getActualOutput());
     }
@@ -283,13 +308,14 @@ public class BugDetailFragment extends Fragment {
 
             // Show hints card if first hint
             if (currentLevel == 0) {
-                binding.cardHints.setVisibility(View.VISIBLE);
+                AnimationUtil.fadeInWithScale(binding.cardHints);
             }
 
             // Create a new TextView for this hint
             TextView hintView = new TextView(requireContext());
             hintView.setTextAppearance(R.style.TextAppearance_DebugMaster_Body1);
             hintView.setText("💡 Hint " + (currentLevel + 1) + ": " + hint.getText());
+            hintView.setAlpha(0f); // Start invisible for fade-in
 
             // Add spacing between hints
             if (currentLevel > 0) {
@@ -297,6 +323,10 @@ public class BugDetailFragment extends Fragment {
             }
 
             binding.layoutHintsContainer.addView(hintView);
+
+            // Fade in the new hint
+            hintView.post(() -> AnimationUtil.fadeIn(hintView));
+
             viewModel.revealNextHint();
         } else {
             Toast.makeText(requireContext(), "No more hints available", Toast.LENGTH_SHORT).show();
@@ -307,7 +337,9 @@ public class BugDetailFragment extends Fragment {
      * Shows the solution card with explanation and fixed code.
      */
     private void showSolution() {
-        binding.cardSolution.setVisibility(View.VISIBLE);
+        if (binding.cardSolution.getVisibility() != View.VISIBLE) {
+            AnimationUtil.fadeInWithScale(binding.cardSolution);
+        }
         binding.textExplanation.setText(currentBug.getExplanation());
         binding.textFixedCode.setText(currentBug.getFixedCode());
     }
@@ -341,23 +373,108 @@ public class BugDetailFragment extends Fragment {
     }
 
     /**
-     * Runs tests by comparing user's code with the fixed code.
-     * Shows results in the test results card.
+     * Runs tests by actually executing user's code with CodeExecutionEngine.
+     * Shows compilation errors, runtime errors, or compares output with expected.
      */
     private void runTests() {
+        String userCode = binding.editUserCode.getText().toString().trim();
+
+        if (userCode.isEmpty()) {
+            Toast.makeText(requireContext(), "Please enter your code fix first", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Show loading state
+        binding.buttonCheckFix.setEnabled(false);
+        binding.buttonCheckFix.setText("Running...");
+
+        // Execute code in background thread
+        new Thread(() -> {
+            CodeExecutionResult result = codeExecutionEngine.execute(userCode);
+
+            // Update UI on main thread
+            requireActivity().runOnUiThread(() -> {
+                binding.buttonCheckFix.setEnabled(true);
+                binding.buttonCheckFix.setText("Run Tests");
+
+                processExecutionResult(result);
+            });
+        }).start();
+    }
+
+    /**
+     * Processes the code execution result and updates UI accordingly.
+     */
+    private void processExecutionResult(CodeExecutionResult result) {
+        // Show test results card with animation
+        if (binding.cardTestResults.getVisibility() != View.VISIBLE) {
+            AnimationUtil.fadeInWithScale(binding.cardTestResults);
+        }
+
+        if (!result.isSuccess()) {
+            // Compilation or runtime error
+            handleExecutionError(result);
+        } else {
+            // Code executed successfully - compare output
+            handleSuccessfulExecution(result);
+        }
+    }
+
+    /**
+     * Handles compilation or runtime errors.
+     */
+    private void handleExecutionError(CodeExecutionResult result) {
+        binding.textTestResultTitle.setText("❌ " + result.getErrorType().replace("_", " "));
+        binding.textTestResultTitle.setTextColor(getResources().getColor(R.color.error_light, null));
+
+        // Show formatted error message
+        binding.textTestResultMessage.setText(result.getFormattedErrorMessage());
+
+        // Clear test cases display
+        binding.layoutTestCases.removeAllViews();
+
+        // Show helpful hint
+        if ("COMPILATION_ERROR".equals(result.getErrorType())) {
+            addErrorHint("💡 Check your syntax, variable names, and semicolons.");
+        } else if ("RUNTIME_ERROR".equals(result.getErrorType())) {
+            addErrorHint("💡 Check for array bounds, null values, and division by zero.");
+        } else if ("TIMEOUT_ERROR".equals(result.getErrorType())) {
+            addErrorHint("💡 Check for infinite loops or excessive recursion.");
+        }
+
+        // Shake the card to draw attention
+        AnimationUtil.shakeView(binding.cardTestResults);
+    }
+
+    /**
+     * Handles successful code execution and compares output.
+     */
+    private void handleSuccessfulExecution(CodeExecutionResult result) {
+        String actualOutput = result.getOutput().trim();
+        String expectedOutput = currentBug.getExpectedOutput().trim();
+
+        // Compare actual vs expected output
+        boolean outputMatches = actualOutput.equals(expectedOutput);
+
+        // Also compare with fixed code as fallback
         String userCode = binding.editUserCode.getText().toString();
-        String fixedCode = currentBug.getFixedCode();
+        boolean codeMatches = CodeComparator.codesMatch(userCode, currentBug.getFixedCode());
 
-        boolean testsPassed = CodeComparator.codesMatch(userCode, fixedCode);
-
-        // Show test results card
-        binding.cardTestResults.setVisibility(View.VISIBLE);
+        boolean testsPassed = outputMatches || codeMatches;
 
         if (testsPassed) {
             // All tests passed!
             binding.textTestResultTitle.setText("✅ All Tests Passed!");
             binding.textTestResultTitle.setTextColor(getResources().getColor(R.color.difficulty_easy, null));
-            binding.textTestResultMessage.setText("Congratulations! Your code matches the expected solution. 🎉");
+
+            String message = String.format(
+                    "Congratulations! Your code works correctly! 🎉\n\n" +
+                    "Execution time: %.2f ms\n" +
+                    "Output: %s",
+                    result.getExecutionTimeMs(),
+                    actualOutput.isEmpty() ? "(no output)" : actualOutput
+            );
+            binding.textTestResultMessage.setText(message);
 
             // Mark all test cases as passed
             for (TestCase test : testCases) {
@@ -371,6 +488,10 @@ public class BugDetailFragment extends Fragment {
             if (!currentBug.isCompleted()) {
                 viewModel.markBugAsCompletedWithXP(currentBug.getId(), currentBug.getDifficulty());
                 currentBug.setCompleted(true);
+
+                // Trigger celebration animation
+                celebrateBugCompletion();
+
                 binding.chipCompleted.setVisibility(View.VISIBLE);
                 binding.buttonMarkSolved.setText("Completed ✓");
                 binding.buttonMarkSolved.setEnabled(false);
@@ -381,13 +502,20 @@ public class BugDetailFragment extends Fragment {
                 Toast.makeText(requireContext(), "Tests passed! (Already completed)", Toast.LENGTH_SHORT).show();
             }
         } else {
-            // Tests failed
+            // Tests failed - output doesn't match
             binding.textTestResultTitle.setText("❌ Tests Failed");
             binding.textTestResultTitle.setTextColor(getResources().getColor(R.color.error_light, null));
 
-            // Generate helpful error message
-            String errorMessage = CodeComparator.generateErrorMessage(userCode, fixedCode);
-            binding.textTestResultMessage.setText(errorMessage);
+            String message = String.format(
+                    "Your code runs but produces incorrect output.\n\n" +
+                    "Expected output:\n%s\n\n" +
+                    "Your output:\n%s\n\n" +
+                    "Execution time: %.2f ms",
+                    expectedOutput.isEmpty() ? "(no output)" : expectedOutput,
+                    actualOutput.isEmpty() ? "(no output)" : actualOutput,
+                    result.getExecutionTimeMs()
+            );
+            binding.textTestResultMessage.setText(message);
 
             // Mark all test cases as failed
             for (TestCase test : testCases) {
@@ -396,7 +524,34 @@ public class BugDetailFragment extends Fragment {
 
             // Display test cases
             displayTestResults();
+
+            // Add helpful hint
+            addErrorHint("💡 Your code compiles and runs, but the output doesn't match. Review the logic.");
+
+            // Shake the card
+            AnimationUtil.shakeView(binding.cardTestResults);
         }
+    }
+
+    /**
+     * Adds a helpful hint below the error message.
+     */
+    private void addErrorHint(String hintText) {
+        TextView hintView = new TextView(requireContext());
+        hintView.setTextAppearance(R.style.TextAppearance_DebugMaster_Caption);
+        hintView.setText(hintText);
+        hintView.setPadding(
+                0,
+                (int) (16 * getResources().getDisplayMetrics().density),
+                0,
+                0
+        );
+        hintView.setAlpha(0f);
+
+        binding.layoutTestCases.addView(hintView);
+
+        // Fade in the hint
+        hintView.post(() -> AnimationUtil.fadeIn(hintView));
     }
 
     /**
@@ -431,9 +586,42 @@ public class BugDetailFragment extends Fragment {
         Toast.makeText(requireContext(), "Code reset to starting point", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Triggers celebration animations when a bug is completed.
+     * - Confetti animation
+     * - Bounce animation on completed chip
+     * - Card press animation on test results card
+     */
+    private void celebrateBugCompletion() {
+        // Start confetti animation
+        if (confettiView != null) {
+            confettiView.setParticleCount(200); // Lots of confetti for celebration!
+            confettiView.setDuration(3000); // 3 seconds
+            confettiView.startAnimation();
+        }
+
+        // Bounce the completed chip
+        binding.chipCompleted.post(() -> {
+            if (binding.chipCompleted.getVisibility() == View.VISIBLE) {
+                AnimationUtil.bounceView(binding.chipCompleted);
+            }
+        });
+
+        // Animate the test results card
+        AnimationUtil.fadeInWithScale(binding.cardTestResults);
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        // Stop confetti animation if running
+        if (confettiView != null) {
+            confettiView.stopAnimation();
+        }
+        // Shutdown code execution engine
+        if (codeExecutionEngine != null) {
+            codeExecutionEngine.shutdown();
+        }
         binding = null;
     }
 }

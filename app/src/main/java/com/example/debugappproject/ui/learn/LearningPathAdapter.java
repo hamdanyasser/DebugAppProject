@@ -7,16 +7,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.debugappproject.R;
 import com.example.debugappproject.model.LearningPath;
+import com.example.debugappproject.util.AnimationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Adapter for displaying learning paths as cards.
+ * Uses DiffUtil for efficient, animated list updates.
  */
 public class LearningPathAdapter extends RecyclerView.Adapter<LearningPathAdapter.PathViewHolder> {
 
@@ -31,9 +34,55 @@ public class LearningPathAdapter extends RecyclerView.Adapter<LearningPathAdapte
         this.listener = listener;
     }
 
-    public void setPaths(List<PathWithProgress> paths) {
-        this.paths = paths;
-        notifyDataSetChanged();
+    /**
+     * Updates paths using DiffUtil for smooth animations.
+     */
+    public void setPaths(List<PathWithProgress> newPaths) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
+                new PathDiffCallback(this.paths, newPaths)
+        );
+        this.paths = new ArrayList<>(newPaths);
+        diffResult.dispatchUpdatesTo(this);
+    }
+
+    /**
+     * DiffUtil callback for efficient path list updates.
+     */
+    private static class PathDiffCallback extends DiffUtil.Callback {
+        private final List<PathWithProgress> oldList;
+        private final List<PathWithProgress> newList;
+
+        public PathDiffCallback(List<PathWithProgress> oldList, List<PathWithProgress> newList) {
+            this.oldList = oldList;
+            this.newList = newList;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            LearningPath oldPath = oldList.get(oldItemPosition).getPath();
+            LearningPath newPath = newList.get(newItemPosition).getPath();
+            return oldPath.getId() == newPath.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            PathWithProgress oldItem = oldList.get(oldItemPosition);
+            PathWithProgress newItem = newList.get(newItemPosition);
+
+            return oldItem.getCompletedBugs() == newItem.getCompletedBugs() &&
+                   oldItem.getTotalBugs() == newItem.getTotalBugs() &&
+                   oldItem.getPath().getName().equals(newItem.getPath().getName());
+        }
     }
 
     @NonNull
@@ -87,9 +136,11 @@ public class LearningPathAdapter extends RecyclerView.Adapter<LearningPathAdapte
             progressBar.setProgress(pathWithProgress.getProgressPercentage());
 
             itemView.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onPathClick(path);
-                }
+                AnimationUtil.animatePress(v, () -> {
+                    if (listener != null) {
+                        listener.onPathClick(path);
+                    }
+                });
             });
         }
     }

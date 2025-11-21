@@ -15,6 +15,7 @@ import com.example.debugappproject.R;
 import com.example.debugappproject.databinding.FragmentHomeBinding;
 import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.model.UserProgress;
+import com.example.debugappproject.util.AnimationUtil;
 
 /**
  * HomeFragment - Dashboard/home screen of the app.
@@ -163,33 +164,42 @@ public class HomeFragment extends Fragment {
 
     /**
      * Sets up click listeners for navigation.
+     * All buttons have press animations for tactile feedback.
      */
     private void setupClickListeners() {
         // Bug of the Day - "Solve Now" button click
         binding.buttonSolveNow.setOnClickListener(v -> {
-            Integer bugId = (Integer) v.getTag();
-            if (bugId != null) {
-                navigateToBugDetail(bugId, v);
-            }
+            AnimationUtil.animatePress(v, () -> {
+                Integer bugId = (Integer) v.getTag();
+                if (bugId != null) {
+                    navigateToBugDetail(bugId, v);
+                }
+            });
         });
 
         // Bug of the Day card click (for convenience)
         binding.cardBugOfDay.setOnClickListener(v -> {
-            Integer bugId = (Integer) v.getTag();
-            if (bugId != null) {
-                navigateToBugDetail(bugId, v);
-            }
+            AnimationUtil.animatePress(v, () -> {
+                Integer bugId = (Integer) v.getTag();
+                if (bugId != null) {
+                    navigateToBugDetail(bugId, v);
+                }
+            });
         });
 
         // All Bugs button
-        binding.buttonAllBugs.setOnClickListener(v ->
-            Navigation.findNavController(v).navigate(R.id.action_home_to_bugList)
-        );
+        binding.buttonAllBugs.setOnClickListener(v -> {
+            AnimationUtil.animatePress(v, () ->
+                Navigation.findNavController(v).navigate(R.id.action_home_to_bugList)
+            );
+        });
 
         // My Progress button
-        binding.buttonMyProgress.setOnClickListener(v ->
-            Navigation.findNavController(v).navigate(R.id.action_home_to_progress)
-        );
+        binding.buttonMyProgress.setOnClickListener(v -> {
+            AnimationUtil.animatePress(v, () ->
+                Navigation.findNavController(v).navigate(R.id.action_home_to_progress)
+            );
+        });
     }
 
     /**
