@@ -1,6 +1,6 @@
 package com.example.debugappproject.di;
 
-import android.content.Context;
+import android.app.Application;
 
 import com.example.debugappproject.data.repository.BugRepository;
 
@@ -35,12 +35,12 @@ public class RepositoryModule {
      * - Background thread management
      * - Cache management
      *
-     * @param context Application context for database access
+     * @param application Application instance for database access
      * @return Singleton BugRepository instance
      */
     @Provides
     @Singleton
-    public BugRepository provideBugRepository(@ApplicationContext Context context) {
-        return new BugRepository(context);
+    public BugRepository provideBugRepository(Application application) {
+        return new BugRepository(application);
     }
 }
