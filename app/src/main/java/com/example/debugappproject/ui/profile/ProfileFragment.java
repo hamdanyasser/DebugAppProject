@@ -72,27 +72,29 @@ public class ProfileFragment extends Fragment {
         updateAuthUI();
 
         binding.buttonAuthAction.setOnClickListener(v -> {
-            if (authManager.isSignedIn()) {
-                // Sign out
-                authManager.signOut();
-                Toast.makeText(requireContext(), "Signed out. Local data preserved.", Toast.LENGTH_SHORT).show();
-                updateAuthUI();
-            } else {
-                // TODO: Implement Google Sign-In when Firebase is configured
-                // For now, show explanation
-                Toast.makeText(requireContext(),
-                    "Firebase not configured. Add google-services.json to enable sign-in.",
-                    Toast.LENGTH_LONG).show();
+            AnimationUtil.animatePress(v, () -> {
+                if (authManager.isSignedIn()) {
+                    // Sign out
+                    authManager.signOut();
+                    Toast.makeText(requireContext(), "Signed out. Local data preserved.", Toast.LENGTH_SHORT).show();
+                    updateAuthUI();
+                } else {
+                    // TODO: Implement Google Sign-In when Firebase is configured
+                    // For now, show explanation
+                    Toast.makeText(requireContext(),
+                        "Firebase not configured. Add google-services.json to enable sign-in.",
+                        Toast.LENGTH_LONG).show();
 
-                // Example implementation (uncomment when Firebase is ready):
-                // GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                //     .requestIdToken(getString(R.string.default_web_client_id))
-                //     .requestEmail()
-                //     .build();
-                // GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
-                // Intent signInIntent = googleSignInClient.getSignInIntent();
-                // startActivityForResult(signInIntent, RC_SIGN_IN);
-            }
+                    // Example implementation (uncomment when Firebase is ready):
+                    // GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    //     .requestIdToken(getString(R.string.default_web_client_id))
+                    //     .requestEmail()
+                    //     .build();
+                    // GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
+                    // Intent signInIntent = googleSignInClient.getSignInIntent();
+                    // startActivityForResult(signInIntent, RC_SIGN_IN);
+                }
+            });
         });
     }
 

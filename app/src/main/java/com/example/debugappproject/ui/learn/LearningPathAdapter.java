@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.debugappproject.R;
 import com.example.debugappproject.model.LearningPath;
+import com.example.debugappproject.util.AnimationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,9 +136,11 @@ public class LearningPathAdapter extends RecyclerView.Adapter<LearningPathAdapte
             progressBar.setProgress(pathWithProgress.getProgressPercentage());
 
             itemView.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onPathClick(path);
-                }
+                AnimationUtil.animatePress(v, () -> {
+                    if (listener != null) {
+                        listener.onPathClick(path);
+                    }
+                });
             });
         }
     }

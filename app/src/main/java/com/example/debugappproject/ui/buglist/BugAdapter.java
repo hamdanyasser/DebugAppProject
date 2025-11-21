@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.debugappproject.R;
 import com.example.debugappproject.model.Bug;
+import com.example.debugappproject.util.AnimationUtil;
 import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
@@ -92,8 +93,10 @@ public class BugAdapter extends RecyclerView.Adapter<BugAdapter.BugViewHolder> {
             // Show/hide completed indicator
             completedIcon.setVisibility(bug.isCompleted() ? View.VISIBLE : View.GONE);
 
-            // Set click listener
-            itemView.setOnClickListener(v -> listener.onBugClick(bug));
+            // Set click listener with animation
+            itemView.setOnClickListener(v -> {
+                AnimationUtil.animatePress(v, () -> listener.onBugClick(bug));
+            });
         }
 
         /**

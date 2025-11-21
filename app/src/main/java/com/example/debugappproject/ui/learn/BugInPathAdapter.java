@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.debugappproject.R;
 import com.example.debugappproject.model.Bug;
+import com.example.debugappproject.util.AnimationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,11 +168,13 @@ public class BugInPathAdapter extends RecyclerView.Adapter<BugInPathAdapter.BugV
             }
             textDifficulty.setTextColor(difficultyColor);
 
-            // Handle click
+            // Handle click with animation
             itemView.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onBugClick(bug);
-                }
+                AnimationUtil.animatePress(v, () -> {
+                    if (listener != null) {
+                        listener.onBugClick(bug);
+                    }
+                });
             });
         }
     }
