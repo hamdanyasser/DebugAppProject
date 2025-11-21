@@ -90,7 +90,6 @@ dependencies {
     // Animation & UI libraries
     implementation(libs.lottie)
     implementation(libs.shimmer)
-    implementation(libs.codeview)
 
     // Dependency Injection - Hilt
     implementation(libs.hilt.android)
