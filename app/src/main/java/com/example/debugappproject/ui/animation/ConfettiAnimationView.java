@@ -133,7 +133,7 @@ public class ConfettiAnimationView extends View {
     }
 
     private void startAnimator() {
-        if (animator != null &amp;&amp; animator.isRunning()) {
+        if (animator != null && animator.isRunning()) {
             animator.cancel();
         }
 
@@ -216,7 +216,7 @@ public class ConfettiAnimationView extends View {
      * Stops the animation immediately.
      */
     public void stopAnimation() {
-        if (animator != null &amp;&amp; animator.isRunning()) {
+        if (animator != null && animator.isRunning()) {
             animator.cancel();
         }
         setVisibility(GONE);
