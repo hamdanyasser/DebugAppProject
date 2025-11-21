@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.debugappproject.R;
@@ -57,9 +58,58 @@ public class BugAdapter extends RecyclerView.Adapter<BugAdapter.BugViewHolder> {
         return bugs.size();
     }
 
+    /**
+     * Updates the list using DiffUtil for smooth animations.
+     */
     public void submitList(List<Bug> newBugs) {
-        this.bugs = newBugs != null ? newBugs : new ArrayList<>();
-        notifyDataSetChanged();
+        List<Bug> newList = newBugs != null ? newBugs : new ArrayList<>();
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
+                new BugDiffCallback(this.bugs, newList)
+        );
+        this.bugs = new ArrayList<>(newList);
+        diffResult.dispatchUpdatesTo(this);
+    }
+
+    /**
+     * DiffUtil callback for efficient bug list updates.
+     */
+    private static class BugDiffCallback extends DiffUtil.Callback {
+        private final List<Bug> oldList;
+        private final List<Bug> newList;
+
+        public BugDiffCallback(List<Bug> oldList, List<Bug> newList) {
+            this.oldList = oldList;
+            this.newList = newList;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            // Same bug if IDs match
+            return oldList.get(oldItemPosition).getId() ==
+                   newList.get(newItemPosition).getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            Bug oldBug = oldList.get(oldItemPosition);
+            Bug newBug = newList.get(newItemPosition);
+
+            // Compare all displayed properties
+            return oldBug.getTitle().equals(newBug.getTitle()) &&
+                   oldBug.getDifficulty().equals(newBug.getDifficulty()) &&
+                   oldBug.getCategory().equals(newBug.getCategory()) &&
+                   oldBug.isCompleted() == newBug.isCompleted();
+        }
     }
 
     static class BugViewHolder extends RecyclerView.ViewHolder {
