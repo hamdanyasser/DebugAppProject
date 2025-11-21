@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.debugappproject.R;
@@ -17,6 +18,7 @@ import java.util.List;
 
 /**
  * RecyclerView adapter for displaying bugs within a learning path.
+ * Uses DiffUtil for efficient list updates with smooth animations.
  */
 public class BugInPathAdapter extends RecyclerView.Adapter<BugInPathAdapter.BugViewHolder> {
 
@@ -54,11 +56,58 @@ public class BugInPathAdapter extends RecyclerView.Adapter<BugInPathAdapter.BugV
     }
 
     /**
-     * Updates the adapter with new bug data.
+     * Updates the adapter with new bug data using DiffUtil for smooth animations.
      */
-    public void setBugs(List<BugInPathWithDetails> bugs) {
-        this.bugs = bugs;
-        notifyDataSetChanged();
+    public void setBugs(List<BugInPathWithDetails> newBugs) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
+                new BugDiffCallback(this.bugs, newBugs)
+        );
+        this.bugs = new ArrayList<>(newBugs);
+        diffResult.dispatchUpdatesTo(this);
+    }
+
+    /**
+     * DiffUtil callback for calculating list differences efficiently.
+     */
+    private static class BugDiffCallback extends DiffUtil.Callback {
+        private final List<BugInPathWithDetails> oldList;
+        private final List<BugInPathWithDetails> newList;
+
+        public BugDiffCallback(List<BugInPathWithDetails> oldList, List<BugInPathWithDetails> newList) {
+            this.oldList = oldList;
+            this.newList = newList;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            Bug oldBug = oldList.get(oldItemPosition).getBug();
+            Bug newBug = newList.get(newItemPosition).getBug();
+            return oldBug.getId() == newBug.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            BugInPathWithDetails oldItem = oldList.get(oldItemPosition);
+            BugInPathWithDetails newItem = newList.get(newItemPosition);
+
+            Bug oldBug = oldItem.getBug();
+            Bug newBug = newItem.getBug();
+
+            return oldBug.getTitle().equals(newBug.getTitle()) &&
+                   oldBug.getDifficulty().equals(newBug.getDifficulty()) &&
+                   oldBug.getCategory().equals(newBug.getCategory()) &&
+                   oldItem.isCompleted() == newItem.isCompleted();
+        }
     }
 
     /**

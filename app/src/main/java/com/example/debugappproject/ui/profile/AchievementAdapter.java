@@ -6,10 +6,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.debugappproject.R;
 import com.example.debugappproject.model.AchievementDefinition;
+import com.example.debugappproject.util.AnimationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.List;
 /**
  * RecyclerView adapter for displaying achievements in a grid.
  * Shows both locked and unlocked achievements.
+ * Uses DiffUtil for animated unlock transitions.
  */
 public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.AchievementViewHolder> {
 
@@ -43,10 +46,58 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
 
     /**
      * Updates the adapter with new achievement data.
+     * Uses DiffUtil for smooth animations when achievements are unlocked.
      */
-    public void setAchievements(List<AchievementWithStatus> achievements) {
-        this.achievements = achievements;
-        notifyDataSetChanged();
+    public void setAchievements(List<AchievementWithStatus> newAchievements) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
+            new AchievementDiffCallback(this.achievements, newAchievements)
+        );
+        this.achievements = new ArrayList<>(newAchievements);
+        diffResult.dispatchUpdatesTo(this);
+    }
+
+    /**
+     * DiffUtil callback for calculating differences between achievement lists.
+     * Enables smooth animations when achievements are unlocked.
+     */
+    private static class AchievementDiffCallback extends DiffUtil.Callback {
+        private final List<AchievementWithStatus> oldList;
+        private final List<AchievementWithStatus> newList;
+
+        public AchievementDiffCallback(List<AchievementWithStatus> oldList,
+                                        List<AchievementWithStatus> newList) {
+            this.oldList = oldList;
+            this.newList = newList;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            // Same achievement if IDs match
+            return oldList.get(oldItemPosition).getDefinition().getId() ==
+                   newList.get(newItemPosition).getDefinition().getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            AchievementWithStatus oldItem = oldList.get(oldItemPosition);
+            AchievementWithStatus newItem = newList.get(newItemPosition);
+
+            // Compare unlock status and achievement properties
+            return oldItem.isUnlocked() == newItem.isUnlocked() &&
+                   oldItem.getDefinition().getName().equals(newItem.getDefinition().getName()) &&
+                   oldItem.getDefinition().getDescription().equals(newItem.getDefinition().getDescription()) &&
+                   oldItem.getDefinition().getXpReward() == newItem.getDefinition().getXpReward();
+        }
     }
 
     /**
