@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -86,6 +87,21 @@ dependencies {
     // WorkManager for notifications
     implementation("androidx.work:work-runtime:2.9.0")
 
+    // Animation & UI libraries
+    implementation(libs.lottie)
+    implementation(libs.shimmer)
+    implementation(libs.codeview)
+
+    // Dependency Injection - Hilt
+    implementation(libs.hilt.android)
+    annotationProcessor(libs.hilt.compiler)
+
+    // Code Execution - Janino
+    implementation(libs.janino)
+
+    // Memory Leak Detection - LeakCanary (debug only)
+    debugImplementation(libs.leakcanary)
+
     // Firebase (OPTIONAL - requires google-services.json)
     // TODO: Add google-services.json to app/ directory to enable Firebase
     // TODO: Add apply plugin: 'com.google.gms.google-services' to the bottom of this file
@@ -96,7 +112,10 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 
+    // Testing
     testImplementation(libs.junit)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 }

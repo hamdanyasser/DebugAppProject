@@ -12,6 +12,14 @@ room = "2.6.1"
 lifecycle = "2.7.0"
 recyclerview = "1.3.2"
 gson = "2.10.1"
+# New dependencies for transformation
+lottie = "6.1.0"
+hilt = "2.48.1"
+janino = "3.1.10"
+leakcanary = "2.12"
+shimmer = "0.5.0"
+mockito = "5.7.0"
+codeview = "1.3.2"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -28,7 +36,21 @@ lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmode
 lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata", version.ref = "lifecycle" }
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+# Animation & UI libraries
+lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
+shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref = "shimmer" }
+codeview = { group = "io.github.kbiakov", name = "codeview-android", version.ref = "codeview" }
+# Dependency Injection
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+# Code Execution
+janino = { group = "org.codehaus.janino", name = "janino", version.ref = "janino" }
+# Debugging & Testing
+leakcanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakcanary" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockito" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
