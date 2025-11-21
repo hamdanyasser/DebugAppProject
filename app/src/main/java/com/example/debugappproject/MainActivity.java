@@ -15,10 +15,14 @@ import com.example.debugappproject.util.NotificationHelper;
 import java.util.HashSet;
 import java.util.Set;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * Main activity with bottom navigation for Mimo-style experience.
  * Contains: Learn, Bug of Day, Profile, Settings tabs.
+ * Uses Hilt for dependency injection.
  */
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;

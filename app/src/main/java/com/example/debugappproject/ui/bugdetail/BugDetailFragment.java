@@ -32,6 +32,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 /**
  * BugDetailFragment - Shows detailed view of a single bug with Material 3 design.
  *
@@ -42,6 +44,7 @@ import java.util.List;
  * - Progressive hint revelation system
  * - Solution with explanation and fixed code
  * - Completion tracking
+ * - Hilt dependency injection for ViewModels
  *
  * Displays:
  * - Bug header with title and chips
@@ -53,6 +56,7 @@ import java.util.List;
  * - Solution card (shows explanation and fixed code)
  * - Action buttons (Show Solution, Mark as Solved)
  */
+@AndroidEntryPoint
 public class BugDetailFragment extends Fragment {
 
     private FragmentBugDetailBinding binding;
