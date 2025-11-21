@@ -17,6 +17,7 @@ import com.example.debugappproject.data.repository.BugRepository;
 import com.example.debugappproject.model.UserProgress;
 import com.example.debugappproject.sync.ProgressSyncManager;
 import com.example.debugappproject.sync.SyncManagerFactory;
+import com.example.debugappproject.util.AnimationUtil;
 import com.example.debugappproject.util.DateUtils;
 
 import android.widget.Toast;
@@ -36,6 +37,7 @@ public class ProfileFragment extends Fragment {
     private AchievementAdapter achievementAdapter;
     private AuthManager authManager;
     private ProgressSyncManager syncManager;
+    private int previousLevel = -1; // Track level changes for celebration
 
     @Nullable
     @Override
@@ -176,37 +178,77 @@ public class ProfileFragment extends Fragment {
     }
 
     /**
-     * Displays user progress data in the UI.
+     * Displays user progress data in the UI with smooth animations.
      */
     private void displayUserProgress(UserProgress progress) {
         // Calculate and display level
         int level = viewModel.calculateLevel(progress.getTotalXp());
+
+        // Check for level up
+        if (previousLevel > 0 && level > previousLevel) {
+            // Level up! Celebrate!
+            celebrateLevelUp(level);
+        }
+        previousLevel = level;
+
         binding.textLevel.setText(String.valueOf(level));
 
         // Calculate XP progress within current level
         int xpInLevel = viewModel.getXpProgressInLevel(progress.getTotalXp());
         int xpForNextLevel = viewModel.getXpForNextLevel(progress.getTotalXp());
         binding.textXp.setText(xpInLevel + " / 100 XP");
-        binding.progressXp.setProgress(xpInLevel);
 
-        // Display perfect fixes (bugs solved without hints)
+        // Animate progress bar smoothly
+        AnimationUtil.animateProgress(binding.progressXp, xpInLevel, 800);
+
+        // Display perfect fixes (bugs solved without hints) with bounce
         binding.textPerfectFixes.setText(String.valueOf(progress.getBugsSolvedWithoutHints()));
+        if (progress.getBugsSolvedWithoutHints() > 0) {
+            AnimationUtil.bounceView(binding.textPerfectFixes);
+        }
 
-        // Calculate and display current streak
+        // Calculate and display current streak with animation
         int currentStreak = DateUtils.calculateCurrentStreak(
             progress.getLastCompletionDate(),
             progress.getCurrentStreakDays()
         );
         binding.textStreakDays.setText(String.valueOf(currentStreak));
 
-        // Get total bugs solved
+        // Bounce streak counter if streak > 0
+        if (currentStreak > 0) {
+            AnimationUtil.bounceView(binding.textStreakDays);
+        }
+
+        // Get total bugs solved with count-up animation
         viewModel.getTotalBugsCompleted(count -> {
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
                     binding.textBugsSolved.setText(String.valueOf(count));
+                    // Bounce the stats card on first load
+                    if (count > 0 && previousLevel == level) {
+                        AnimationUtil.fadeInWithScale(binding.textBugsSolved);
+                    }
                 });
             }
         });
+    }
+
+    /**
+     * Celebrates when user levels up with special animations.
+     */
+    private void celebrateLevelUp(int newLevel) {
+        // Show level-up message
+        Toast.makeText(requireContext(),
+                "🎉 Level Up! You reached Level " + newLevel + "!",
+                Toast.LENGTH_LONG).show();
+
+        // Celebrate the level badge
+        AnimationUtil.celebrateLevelUp(binding.textLevel, () -> {
+            // Callback after animation
+        });
+
+        // Bounce the entire profile card
+        AnimationUtil.bounceView(binding.textLevel);
     }
 
     @Override
