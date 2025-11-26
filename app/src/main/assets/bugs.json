@@ -10,7 +10,7 @@
       "brokenCode": "public void printNumbers() {\n    for (int i = 1; i < 10; i++) {\n        System.out.println(i);\n    }\n}",
       "expectedOutput": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10",
       "actualOutput": "1\n2\n3\n4\n5\n6\n7\n8\n9",
-      "explanation": "The loop condition uses < instead of <=, causing it to stop at 9 instead of 10. This is a classic off-by-one error where the boundary condition excludes the final value.",
+      "explanation": "The loop condition uses < instead of <=, causing it to stop at 9 instead of 10. This is a classic off-by-one error.",
       "fixedCode": "public void printNumbers() {\n    for (int i = 1; i <= 10; i++) {\n        System.out.println(i);\n    }\n}",
       "isCompleted": false
     },
@@ -23,8 +23,8 @@
       "description": "A method that processes a user name crashes with NullPointerException.",
       "brokenCode": "public String processName(String name) {\n    return name.toUpperCase();\n}",
       "expectedOutput": "JOHN",
-      "actualOutput": "Exception in thread \"main\" java.lang.NullPointerException\n    at processName()",
-      "explanation": "The method doesn't check if the name parameter is null before calling toUpperCase(). When a null value is passed, it causes a NullPointerException. Always validate input parameters, especially when calling methods on them.",
+      "actualOutput": "NullPointerException",
+      "explanation": "The method doesn't check if name is null before calling toUpperCase(). Always validate parameters.",
       "fixedCode": "public String processName(String name) {\n    if (name == null) {\n        return \"\";\n    }\n    return name.toUpperCase();\n}",
       "isCompleted": false
     },
@@ -34,25 +34,25 @@
       "language": "Java",
       "difficulty": "Easy",
       "category": "Strings",
-      "description": "A method that checks if a password matches, but it doesn't work correctly.",
+      "description": "A password checker always returns false even with correct password.",
       "brokenCode": "public boolean checkPassword(String input) {\n    String correctPassword = \"secret\";\n    return input == correctPassword;\n}",
-      "expectedOutput": "true (when input is \"secret\")",
-      "actualOutput": "false (even when input is \"secret\")",
-      "explanation": "The == operator compares object references, not the actual string content. For strings, you must use .equals() method to compare values. The == operator only returns true if both variables point to the exact same object in memory.",
-      "fixedCode": "public boolean checkPassword(String input) {\n    String correctPassword = \"secret\";\n    return input.equals(correctPassword);\n}",
+      "expectedOutput": "true",
+      "actualOutput": "false",
+      "explanation": "The == operator compares references, not values. Use .equals() for string comparison.",
+      "fixedCode": "public boolean checkPassword(String input) {\n    String correctPassword = \"secret\";\n    return correctPassword.equals(input);\n}",
       "isCompleted": false
     },
     {
       "id": 4,
       "title": "Integer Division Truncation",
       "language": "Java",
-      "difficulty": "Medium",
+      "difficulty": "Easy",
       "category": "Methods",
-      "description": "A method to calculate average of two integers returns incorrect results.",
+      "description": "Average calculation loses decimal precision.",
       "brokenCode": "public double calculateAverage(int a, int b) {\n    return (a + b) / 2;\n}",
-      "expectedOutput": "7.5 (for inputs 10 and 5)",
+      "expectedOutput": "7.5",
       "actualOutput": "7.0",
-      "explanation": "When dividing two integers, Java performs integer division which truncates the decimal part. Even though the return type is double, the division happens before the conversion. To fix this, cast at least one operand to double before division.",
+      "explanation": "Integer division truncates decimals. Use 2.0 to force floating-point division.",
       "fixedCode": "public double calculateAverage(int a, int b) {\n    return (a + b) / 2.0;\n}",
       "isCompleted": false
     },
@@ -62,12 +62,12 @@
       "language": "Java",
       "difficulty": "Easy",
       "category": "Conditionals",
-      "description": "A method to find the maximum of three numbers gives wrong results.",
-      "brokenCode": "public int findMax(int a, int b, int c) {\n    int max = a;\n    if (b > max) {\n        max = b;\n    }\n    if (c > a) {\n        max = c;\n    }\n    return max;\n}",
-      "expectedOutput": "15 (for inputs 10, 15, 12)",
+      "description": "Find max of three numbers returns wrong result.",
+      "brokenCode": "public int findMax(int a, int b, int c) {\n    int max = a;\n    if (b > max) max = b;\n    if (c > a) max = c;\n    return max;\n}",
+      "expectedOutput": "15",
       "actualOutput": "12",
-      "explanation": "In the second if statement, c is compared with a instead of max. This means c is only set as max if it's greater than the original value of a, not the current maximum. Always use the variable being updated in comparisons.",
-      "fixedCode": "public int findMax(int a, int b, int c) {\n    int max = a;\n    if (b > max) {\n        max = b;\n    }\n    if (c > max) {\n        max = c;\n    }\n    return max;\n}",
+      "explanation": "Second condition compares c with a instead of current max.",
+      "fixedCode": "public int findMax(int a, int b, int c) {\n    int max = a;\n    if (b > max) max = b;\n    if (c > max) max = c;\n    return max;\n}",
       "isCompleted": false
     },
     {
@@ -76,12 +76,12 @@
       "language": "Java",
       "difficulty": "Medium",
       "category": "Conditionals",
-      "description": "A method to get day name returns wrong values for some days.",
-      "brokenCode": "public String getDayName(int day) {\n    String name = \"\";\n    switch (day) {\n        case 1:\n            name = \"Monday\";\n        case 2:\n            name = \"Tuesday\";\n        case 3:\n            name = \"Wednesday\";\n            break;\n        default:\n            name = \"Invalid\";\n    }\n    return name;\n}",
-      "expectedOutput": "Monday (for input 1)",
+      "description": "Day name method returns wrong day.",
+      "brokenCode": "public String getDayName(int day) {\n    String name = \"\";\n    switch (day) {\n        case 1: name = \"Monday\";\n        case 2: name = \"Tuesday\";\n        case 3: name = \"Wednesday\";\n            break;\n        default: name = \"Invalid\";\n    }\n    return name;\n}",
+      "expectedOutput": "Monday",
       "actualOutput": "Wednesday",
-      "explanation": "Switch statements in Java have fall-through behavior. Without break statements, execution continues to the next case. When day is 1, it sets name to \"Monday\", then falls through to case 2 (sets to \"Tuesday\"), then to case 3 (sets to \"Wednesday\"). Always add break unless fall-through is intentional.",
-      "fixedCode": "public String getDayName(int day) {\n    String name = \"\";\n    switch (day) {\n        case 1:\n            name = \"Monday\";\n            break;\n        case 2:\n            name = \"Tuesday\";\n            break;\n        case 3:\n            name = \"Wednesday\";\n            break;\n        default:\n            name = \"Invalid\";\n    }\n    return name;\n}",
+      "explanation": "Without break, switch falls through to next cases. Add break after each case.",
+      "fixedCode": "public String getDayName(int day) {\n    String name = \"\";\n    switch (day) {\n        case 1: name = \"Monday\"; break;\n        case 2: name = \"Tuesday\"; break;\n        case 3: name = \"Wednesday\"; break;\n        default: name = \"Invalid\";\n    }\n    return name;\n}",
       "isCompleted": false
     },
     {
@@ -90,11 +90,11 @@
       "language": "Java",
       "difficulty": "Medium",
       "category": "Collections",
-      "description": "A method to get the last element of a list crashes.",
+      "description": "Getting last element crashes.",
       "brokenCode": "public int getLastElement(ArrayList<Integer> list) {\n    return list.get(list.size());\n}",
-      "expectedOutput": "50 (for list [10, 20, 30, 40, 50])",
-      "actualOutput": "Exception: IndexOutOfBoundsException: Index 5 out of bounds for length 5",
-      "explanation": "ArrayList indices are zero-based, meaning they range from 0 to size()-1. Using list.size() as an index tries to access one position beyond the last element. The correct index for the last element is size()-1.",
+      "expectedOutput": "50",
+      "actualOutput": "IndexOutOfBoundsException",
+      "explanation": "ArrayList is zero-indexed. Last element is at size()-1.",
       "fixedCode": "public int getLastElement(ArrayList<Integer> list) {\n    return list.get(list.size() - 1);\n}",
       "isCompleted": false
     },
@@ -104,11 +104,11 @@
       "language": "Java",
       "difficulty": "Easy",
       "category": "Loops",
-      "description": "A method to count down from 10 to 1 never terminates.",
+      "description": "Countdown never terminates.",
       "brokenCode": "public void countdown() {\n    for (int i = 10; i > 0; i++) {\n        System.out.println(i);\n    }\n}",
-      "expectedOutput": "10\n9\n8\n7\n6\n5\n4\n3\n2\n1",
-      "actualOutput": "10\n11\n12\n13\n... (never stops)",
-      "explanation": "The loop increments i (i++) instead of decrementing it (i--). Since i starts at 10 and keeps increasing, the condition i > 0 remains true forever, creating an infinite loop. Always ensure loop control variables move toward the termination condition.",
+      "expectedOutput": "10 9 8 7 6 5 4 3 2 1",
+      "actualOutput": "10 11 12 13... (infinite)",
+      "explanation": "Loop increments instead of decrements. Change i++ to i--.",
       "fixedCode": "public void countdown() {\n    for (int i = 10; i > 0; i--) {\n        System.out.println(i);\n    }\n}",
       "isCompleted": false
     },
@@ -118,11 +118,11 @@
       "language": "Java",
       "difficulty": "Hard",
       "category": "OOP",
-      "description": "A class method doesn't update the instance variable as expected.",
+      "description": "Instance variable not updating.",
       "brokenCode": "public class Counter {\n    private int count = 0;\n    \n    public void increment() {\n        int count = this.count + 1;\n    }\n    \n    public int getCount() {\n        return count;\n    }\n}",
-      "expectedOutput": "count should be 1 after calling increment()",
-      "actualOutput": "count remains 0",
-      "explanation": "The increment() method declares a new local variable 'count' instead of updating the instance variable. This is called variable shadowing. The local variable shadows the instance variable, and the update is lost when the method ends. Remove 'int' to update the instance variable.",
+      "expectedOutput": "count = 1",
+      "actualOutput": "count = 0",
+      "explanation": "Local variable shadows instance variable. Remove 'int' to update instance variable.",
       "fixedCode": "public class Counter {\n    private int count = 0;\n    \n    public void increment() {\n        this.count = this.count + 1;\n    }\n    \n    public int getCount() {\n        return count;\n    }\n}",
       "isCompleted": false
     },
@@ -132,11 +132,11 @@
       "language": "Java",
       "difficulty": "Easy",
       "category": "Methods",
-      "description": "A method to check if a number is even returns wrong results.",
+      "description": "isEven always returns true.",
       "brokenCode": "public boolean isEven(int number) {\n    if (number % 2 == 0) {\n        return true;\n    }\n    return true;\n}",
-      "expectedOutput": "false (for input 7)",
+      "expectedOutput": "false for 7",
       "actualOutput": "true",
-      "explanation": "The method returns true in both branches - when the number is even and when it's not. The else case should return false. This makes the method always return true regardless of input.",
+      "explanation": "Both branches return true. Second return should be false.",
       "fixedCode": "public boolean isEven(int number) {\n    if (number % 2 == 0) {\n        return true;\n    }\n    return false;\n}",
       "isCompleted": false
     },
@@ -146,296 +146,371 @@
       "language": "Java",
       "difficulty": "Medium",
       "category": "Arrays",
-      "description": "A method to swap first and last array elements crashes.",
+      "description": "Swap first and last crashes.",
       "brokenCode": "public void swapFirstLast(int[] arr) {\n    int temp = arr[0];\n    arr[0] = arr[arr.length];\n    arr[arr.length] = temp;\n}",
-      "expectedOutput": "Array [1,2,3,4,5] becomes [5,2,3,4,1]",
-      "actualOutput": "Exception: ArrayIndexOutOfBoundsException: Index 5 out of bounds for length 5",
-      "explanation": "Arrays are zero-indexed, so valid indices range from 0 to length-1. Using arr.length as an index tries to access beyond the array bounds. The last element is at index arr.length-1.",
+      "expectedOutput": "[5,2,3,4,1]",
+      "actualOutput": "ArrayIndexOutOfBoundsException",
+      "explanation": "Last element is at length-1, not length.",
       "fixedCode": "public void swapFirstLast(int[] arr) {\n    int temp = arr[0];\n    arr[0] = arr[arr.length - 1];\n    arr[arr.length - 1] = temp;\n}",
       "isCompleted": false
     },
     {
       "id": 12,
-      "title": "Incorrect Operator Precedence",
+      "title": "ConcurrentModificationException",
       "language": "Java",
-      "difficulty": "Medium",
-      "category": "Methods",
-      "description": "A method to calculate final price with tax gives wrong result.",
-      "brokenCode": "public double calculatePrice(double price, double tax) {\n    return price + price * tax / 100;\n}",
-      "expectedOutput": "110.0 (for price=100, tax=10)",
-      "actualOutput": "100.1",
-      "explanation": "Due to operator precedence, the calculation is evaluated as: price + (price * tax / 100). With price=100 and tax=10, this gives 100 + (100*10/100) = 100 + 10 = 110. Wait, that's correct! Let me reconsider... Actually the bug is that it should multiply first then divide, but division by 100 happens before adding to price due to precedence. The issue is actually more subtle - we want (price * (1 + tax/100)).",
-      "fixedCode": "public double calculatePrice(double price, double tax) {\n    return price * (1 + tax / 100);\n}",
+      "difficulty": "Hard",
+      "category": "Collections",
+      "description": "Removing items while iterating crashes.",
+      "brokenCode": "public void removeNegatives(ArrayList<Integer> nums) {\n    for (Integer num : nums) {\n        if (num < 0) {\n            nums.remove(num);\n        }\n    }\n}",
+      "expectedOutput": "[1, 3, 5]",
+      "actualOutput": "ConcurrentModificationException",
+      "explanation": "Cannot modify collection during for-each. Use removeIf() instead.",
+      "fixedCode": "public void removeNegatives(ArrayList<Integer> nums) {\n    nums.removeIf(num -> num < 0);\n}",
       "isCompleted": false
     },
     {
       "id": 13,
-      "title": "Modifying Collection While Iterating",
-      "language": "Java",
-      "difficulty": "Hard",
-      "category": "Collections",
-      "description": "A method to remove negative numbers from a list crashes.",
-      "brokenCode": "public void removeNegatives(ArrayList<Integer> numbers) {\n    for (Integer num : numbers) {\n        if (num < 0) {\n            numbers.remove(num);\n        }\n    }\n}",
-      "expectedOutput": "List [1, -2, 3, -4, 5] becomes [1, 3, 5]",
-      "actualOutput": "Exception: ConcurrentModificationException",
-      "explanation": "You cannot modify a collection while iterating over it with a for-each loop. This throws ConcurrentModificationException. Use an Iterator with its remove() method, or iterate backwards with a traditional for loop, or use removeIf() method.",
-      "fixedCode": "public void removeNegatives(ArrayList<Integer> numbers) {\n    numbers.removeIf(num -> num < 0);\n}",
-      "isCompleted": false
-    },
-    {
-      "id": 14,
-      "title": "Static vs Instance Confusion",
+      "title": "Static vs Instance",
       "language": "Java",
       "difficulty": "Hard",
       "category": "OOP",
-      "description": "A static method trying to access instance variable fails to compile.",
+      "description": "Static method can't access instance variable.",
       "brokenCode": "public class Calculator {\n    private int result = 0;\n    \n    public static void calculate() {\n        result = 10 + 5;\n    }\n}",
-      "expectedOutput": "Should compile and set result to 15",
-      "actualOutput": "Compilation error: non-static variable result cannot be referenced from a static context",
-      "explanation": "Static methods belong to the class, not to any specific instance. They cannot access instance variables because there's no 'this' object. Either make the method non-static, or make the variable static (if appropriate for your design).",
+      "expectedOutput": "Compiles successfully",
+      "actualOutput": "Compilation error",
+      "explanation": "Static methods can't access instance variables. Remove static keyword.",
       "fixedCode": "public class Calculator {\n    private int result = 0;\n    \n    public void calculate() {\n        result = 10 + 5;\n    }\n}",
       "isCompleted": false
     },
     {
-      "id": 15,
-      "title": "Uninitialized Variable in Condition",
+      "id": 14,
+      "title": "Uninitialized Variable",
       "language": "Java",
       "difficulty": "Medium",
       "category": "Conditionals",
-      "description": "A method with conditional initialization doesn't compile.",
-      "brokenCode": "public String checkScore(int score) {\n    String result;\n    if (score >= 90) {\n        result = \"A\";\n    } else if (score >= 80) {\n        result = \"B\";\n    }\n    return result;\n}",
-      "expectedOutput": "Should compile and return grade",
-      "actualOutput": "Compilation error: variable result might not have been initialized",
-      "explanation": "Java requires local variables to be definitely initialized before use. If score is less than 80, result is never assigned a value, but we try to return it. The compiler detects this potential error. Always ensure all code paths initialize variables, or initialize with a default value.",
-      "fixedCode": "public String checkScore(int score) {\n    String result = \"F\";\n    if (score >= 90) {\n        result = \"A\";\n    } else if (score >= 80) {\n        result = \"B\";\n    }\n    return result;\n}",
+      "description": "Variable might not be initialized.",
+      "brokenCode": "public String getGrade(int score) {\n    String grade;\n    if (score >= 90) grade = \"A\";\n    else if (score >= 80) grade = \"B\";\n    return grade;\n}",
+      "expectedOutput": "Compiles successfully",
+      "actualOutput": "Compilation error",
+      "explanation": "If score < 80, grade is never set. Initialize with default value.",
+      "fixedCode": "public String getGrade(int score) {\n    String grade = \"F\";\n    if (score >= 90) grade = \"A\";\n    else if (score >= 80) grade = \"B\";\n    return grade;\n}",
+      "isCompleted": false
+    },
+    {
+      "id": 15,
+      "title": "StringBuilder vs String Concat",
+      "language": "Java",
+      "difficulty": "Medium",
+      "category": "Strings",
+      "description": "String building is very slow.",
+      "brokenCode": "public String buildString(int n) {\n    String result = \"\";\n    for (int i = 0; i < n; i++) {\n        result = result + i;\n    }\n    return result;\n}",
+      "expectedOutput": "Fast execution",
+      "actualOutput": "Very slow for large n",
+      "explanation": "String concatenation creates new objects. Use StringBuilder for efficiency.",
+      "fixedCode": "public String buildString(int n) {\n    StringBuilder sb = new StringBuilder();\n    for (int i = 0; i < n; i++) {\n        sb.append(i);\n    }\n    return sb.toString();\n}",
+      "isCompleted": false
+    },
+    {
+      "id": 16,
+      "title": "Recursive Stack Overflow",
+      "language": "Java",
+      "difficulty": "Hard",
+      "category": "Recursion",
+      "description": "Factorial function causes StackOverflowError.",
+      "brokenCode": "public int factorial(int n) {\n    return n * factorial(n - 1);\n}",
+      "expectedOutput": "120 for n=5",
+      "actualOutput": "StackOverflowError",
+      "explanation": "Missing base case. Recursion needs a termination condition.",
+      "fixedCode": "public int factorial(int n) {\n    if (n <= 1) return 1;\n    return n * factorial(n - 1);\n}",
+      "isCompleted": false
+    },
+    {
+      "id": 17,
+      "title": "Equals vs HashCode",
+      "language": "Java",
+      "difficulty": "Hard",
+      "category": "OOP",
+      "description": "Object not found in HashSet after adding.",
+      "brokenCode": "public class Person {\n    String name;\n    \n    @Override\n    public boolean equals(Object o) {\n        if (o instanceof Person) {\n            return name.equals(((Person)o).name);\n        }\n        return false;\n    }\n}",
+      "expectedOutput": "Person found in set",
+      "actualOutput": "Person not found",
+      "explanation": "Override hashCode() when overriding equals(). HashSet uses both.",
+      "fixedCode": "public class Person {\n    String name;\n    \n    @Override\n    public boolean equals(Object o) {\n        if (o instanceof Person) {\n            return name.equals(((Person)o).name);\n        }\n        return false;\n    }\n    \n    @Override\n    public int hashCode() {\n        return name.hashCode();\n    }\n}",
+      "isCompleted": false
+    },
+    {
+      "id": 18,
+      "title": "Try-Catch Missing Finally",
+      "language": "Java",
+      "difficulty": "Medium",
+      "category": "Exceptions",
+      "description": "Resource not closed on exception.",
+      "brokenCode": "public void readFile(String path) {\n    FileReader reader = null;\n    try {\n        reader = new FileReader(path);\n        // read file\n    } catch (IOException e) {\n        e.printStackTrace();\n    }\n}",
+      "expectedOutput": "Resource properly closed",
+      "actualOutput": "Resource leak",
+      "explanation": "Use try-with-resources or finally block to ensure cleanup.",
+      "fixedCode": "public void readFile(String path) {\n    try (FileReader reader = new FileReader(path)) {\n        // read file\n    } catch (IOException e) {\n        e.printStackTrace();\n    }\n}",
+      "isCompleted": false
+    },
+    {
+      "id": 19,
+      "title": "Boolean Logic Error",
+      "language": "Java",
+      "difficulty": "Easy",
+      "category": "Conditionals",
+      "description": "Leap year check is wrong.",
+      "brokenCode": "public boolean isLeapYear(int year) {\n    return year % 4 == 0 && year % 100 == 0;\n}",
+      "expectedOutput": "true for 2024",
+      "actualOutput": "false",
+      "explanation": "Leap year: divisible by 4 but NOT by 100, unless also divisible by 400.",
+      "fixedCode": "public boolean isLeapYear(int year) {\n    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);\n}",
+      "isCompleted": false
+    },
+    {
+      "id": 20,
+      "title": "Array Copy Reference",
+      "language": "Java",
+      "difficulty": "Medium",
+      "category": "Arrays",
+      "description": "Modifying copy changes original array.",
+      "brokenCode": "public int[] copyArray(int[] original) {\n    int[] copy = original;\n    return copy;\n}",
+      "expectedOutput": "Independent copy",
+      "actualOutput": "Same reference",
+      "explanation": "Assignment copies reference, not content. Use Arrays.copyOf().",
+      "fixedCode": "public int[] copyArray(int[] original) {\n    return Arrays.copyOf(original, original.length);\n}",
+      "isCompleted": false
+    },
+    {
+      "id": 21,
+      "title": "Double Precision Error",
+      "language": "Java",
+      "difficulty": "Medium",
+      "category": "Methods",
+      "description": "Money calculation is slightly off.",
+      "brokenCode": "public boolean checkPrice() {\n    double price = 0.1 + 0.2;\n    return price == 0.3;\n}",
+      "expectedOutput": "true",
+      "actualOutput": "false",
+      "explanation": "Floating-point precision issues. Use BigDecimal for money.",
+      "fixedCode": "public boolean checkPrice() {\n    BigDecimal price = new BigDecimal(\"0.1\")\n        .add(new BigDecimal(\"0.2\"));\n    return price.compareTo(new BigDecimal(\"0.3\")) == 0;\n}",
+      "isCompleted": false
+    },
+    {
+      "id": 22,
+      "title": "Singleton Not Thread-Safe",
+      "language": "Java",
+      "difficulty": "Hard",
+      "category": "OOP",
+      "description": "Multiple instances created in multithreaded environment.",
+      "brokenCode": "public class Singleton {\n    private static Singleton instance;\n    \n    public static Singleton getInstance() {\n        if (instance == null) {\n            instance = new Singleton();\n        }\n        return instance;\n    }\n}",
+      "expectedOutput": "Single instance",
+      "actualOutput": "Multiple instances possible",
+      "explanation": "Race condition in lazy initialization. Use synchronized or eager init.",
+      "fixedCode": "public class Singleton {\n    private static volatile Singleton instance;\n    \n    public static Singleton getInstance() {\n        if (instance == null) {\n            synchronized (Singleton.class) {\n                if (instance == null) {\n                    instance = new Singleton();\n                }\n            }\n        }\n        return instance;\n    }\n}",
+      "isCompleted": false
+    },
+    {
+      "id": 23,
+      "title": "Substring Index Error",
+      "language": "Java",
+      "difficulty": "Easy",
+      "category": "Strings",
+      "description": "Getting first 3 characters crashes for short strings.",
+      "brokenCode": "public String getFirst3(String s) {\n    return s.substring(0, 3);\n}",
+      "expectedOutput": "Handles short strings",
+      "actualOutput": "StringIndexOutOfBoundsException",
+      "explanation": "Check string length before substring to avoid index errors.",
+      "fixedCode": "public String getFirst3(String s) {\n    if (s == null) return \"\";\n    return s.substring(0, Math.min(3, s.length()));\n}",
+      "isCompleted": false
+    },
+    {
+      "id": 24,
+      "title": "Map Get Before Put",
+      "language": "Java",
+      "difficulty": "Easy",
+      "category": "Collections",
+      "description": "NullPointerException when incrementing map value.",
+      "brokenCode": "public void countWords(String[] words) {\n    Map<String, Integer> counts = new HashMap<>();\n    for (String word : words) {\n        counts.put(word, counts.get(word) + 1);\n    }\n}",
+      "expectedOutput": "Word counts",
+      "actualOutput": "NullPointerException",
+      "explanation": "get() returns null for missing keys. Use getOrDefault().",
+      "fixedCode": "public void countWords(String[] words) {\n    Map<String, Integer> counts = new HashMap<>();\n    for (String word : words) {\n        counts.put(word, counts.getOrDefault(word, 0) + 1);\n    }\n}",
+      "isCompleted": false
+    },
+    {
+      "id": 25,
+      "title": "Binary Search Wrong Comparison",
+      "language": "Java",
+      "difficulty": "Hard",
+      "category": "Algorithms",
+      "description": "Binary search returns wrong index.",
+      "brokenCode": "public int binarySearch(int[] arr, int target) {\n    int left = 0, right = arr.length;\n    while (left < right) {\n        int mid = (left + right) / 2;\n        if (arr[mid] == target) return mid;\n        if (arr[mid] < target) left = mid;\n        else right = mid;\n    }\n    return -1;\n}",
+      "expectedOutput": "Correct index",
+      "actualOutput": "Infinite loop or wrong result",
+      "explanation": "left should be mid+1, and overflow can occur. Use proper bounds.",
+      "fixedCode": "public int binarySearch(int[] arr, int target) {\n    int left = 0, right = arr.length - 1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (arr[mid] == target) return mid;\n        if (arr[mid] < target) left = mid + 1;\n        else right = mid - 1;\n    }\n    return -1;\n}",
+      "isCompleted": false
+    },
+    {
+      "id": 26,
+      "title": "Kotlin Null Safety Miss",
+      "language": "Kotlin",
+      "difficulty": "Easy",
+      "category": "Exceptions",
+      "description": "Forcing unwrap on nullable causes crash.",
+      "brokenCode": "fun processUser(user: User?) {\n    val name = user!!.name\n    println(name)\n}",
+      "expectedOutput": "Handles null gracefully",
+      "actualOutput": "NullPointerException",
+      "explanation": "Don't use !! on nullable. Use safe call ?. or null check.",
+      "fixedCode": "fun processUser(user: User?) {\n    val name = user?.name ?: \"Unknown\"\n    println(name)\n}",
+      "isCompleted": false
+    },
+    {
+      "id": 27,
+      "title": "Python List Mutation",
+      "language": "Python",
+      "difficulty": "Medium",
+      "category": "Collections",
+      "description": "Default argument list mutates across calls.",
+      "brokenCode": "def add_item(item, items=[]):\n    items.append(item)\n    return items",
+      "expectedOutput": "['a'] then ['b']",
+      "actualOutput": "['a'] then ['a', 'b']",
+      "explanation": "Default mutable arguments persist. Use None as default.",
+      "fixedCode": "def add_item(item, items=None):\n    if items is None:\n        items = []\n    items.append(item)\n    return items",
+      "isCompleted": false
+    },
+    {
+      "id": 28,
+      "title": "JavaScript Type Coercion",
+      "language": "JavaScript",
+      "difficulty": "Easy",
+      "category": "Conditionals",
+      "description": "Equality check returns unexpected true.",
+      "brokenCode": "function checkValue(x) {\n    return x == '5';\n}\ncheckValue(5);",
+      "expectedOutput": "false",
+      "actualOutput": "true",
+      "explanation": "== performs type coercion. Use === for strict equality.",
+      "fixedCode": "function checkValue(x) {\n    return x === '5';\n}",
+      "isCompleted": false
+    },
+    {
+      "id": 29,
+      "title": "Android Memory Leak",
+      "language": "Java",
+      "difficulty": "Hard",
+      "category": "Android",
+      "description": "Activity leaks in static reference.",
+      "brokenCode": "public class MyActivity extends Activity {\n    private static Context context;\n    \n    @Override\n    protected void onCreate(Bundle b) {\n        super.onCreate(b);\n        context = this;\n    }\n}",
+      "expectedOutput": "No memory leak",
+      "actualOutput": "Activity leaked",
+      "explanation": "Static reference to Activity prevents garbage collection. Use WeakReference or application context.",
+      "fixedCode": "public class MyActivity extends Activity {\n    private static WeakReference<Context> contextRef;\n    \n    @Override\n    protected void onCreate(Bundle b) {\n        super.onCreate(b);\n        contextRef = new WeakReference<>(this);\n    }\n}",
+      "isCompleted": false
+    },
+    {
+      "id": 30,
+      "title": "Reversed Comparison",
+      "language": "Java",
+      "difficulty": "Easy",
+      "category": "Conditionals",
+      "description": "Age validation allows negative ages.",
+      "brokenCode": "public boolean isValidAge(int age) {\n    return age > 0 || age < 120;\n}",
+      "expectedOutput": "false for -5",
+      "actualOutput": "true",
+      "explanation": "Should be AND (&&), not OR (||). Both conditions must be true.",
+      "fixedCode": "public boolean isValidAge(int age) {\n    return age > 0 && age < 120;\n}",
       "isCompleted": false
     }
   ],
   "hints": [
-    {
-      "bugId": 1,
-      "level": 1,
-      "text": "Look carefully at the loop condition. What number does it stop at?"
-    },
-    {
-      "bugId": 1,
-      "level": 2,
-      "text": "The loop uses < instead of <=. Think about boundary conditions."
-    },
-    {
-      "bugId": 1,
-      "level": 3,
-      "text": "Change the condition from 'i < 10' to 'i <= 10' to include 10."
-    },
-    {
-      "bugId": 2,
-      "level": 1,
-      "text": "What happens when you call a method on a null object?"
-    },
-    {
-      "bugId": 2,
-      "level": 2,
-      "text": "You need to check if the parameter is null before using it."
-    },
-    {
-      "bugId": 2,
-      "level": 3,
-      "text": "Add an if statement to check 'if (name == null)' and return an empty string or default value."
-    },
-    {
-      "bugId": 3,
-      "level": 1,
-      "text": "How does Java compare strings? Is == the right operator?"
-    },
-    {
-      "bugId": 3,
-      "level": 2,
-      "text": "The == operator compares references, not values for objects."
-    },
-    {
-      "bugId": 3,
-      "level": 3,
-      "text": "Use .equals() method instead of == to compare string content."
-    },
-    {
-      "bugId": 4,
-      "level": 1,
-      "text": "What type of division is being performed here?"
-    },
-    {
-      "bugId": 4,
-      "level": 2,
-      "text": "Integer division truncates the decimal part. The result needs to be a double."
-    },
-    {
-      "bugId": 4,
-      "level": 3,
-      "text": "Change the divisor to 2.0 to make it a floating-point division."
-    },
-    {
-      "bugId": 5,
-      "level": 1,
-      "text": "Check what variable is being compared in each if statement."
-    },
-    {
-      "bugId": 5,
-      "level": 2,
-      "text": "The second if compares c with 'a' instead of the current maximum."
-    },
-    {
-      "bugId": 5,
-      "level": 3,
-      "text": "Change 'if (c > a)' to 'if (c > max)' to compare with the current maximum."
-    },
-    {
-      "bugId": 6,
-      "level": 1,
-      "text": "What happens when a switch case doesn't have a break statement?"
-    },
-    {
-      "bugId": 6,
-      "level": 2,
-      "text": "Switch cases have fall-through behavior. Execution continues to the next case."
-    },
-    {
-      "bugId": 6,
-      "level": 3,
-      "text": "Add 'break;' statements after each case to prevent fall-through."
-    },
-    {
-      "bugId": 7,
-      "level": 1,
-      "text": "What are the valid index ranges for an ArrayList?"
-    },
-    {
-      "bugId": 7,
-      "level": 2,
-      "text": "ArrayList indices go from 0 to size()-1, not 0 to size()."
-    },
-    {
-      "bugId": 7,
-      "level": 3,
-      "text": "Change list.get(list.size()) to list.get(list.size() - 1)."
-    },
-    {
-      "bugId": 8,
-      "level": 1,
-      "text": "Look at how the loop variable changes. Is it moving toward the end condition?"
-    },
-    {
-      "bugId": 8,
-      "level": 2,
-      "text": "The loop increments i, but needs to decrement for a countdown."
-    },
-    {
-      "bugId": 8,
-      "level": 3,
-      "text": "Change 'i++' to 'i--' in the loop statement."
-    },
-    {
-      "bugId": 9,
-      "level": 1,
-      "text": "Is the instance variable being updated, or is something else happening?"
-    },
-    {
-      "bugId": 9,
-      "level": 2,
-      "text": "A new local variable 'count' is declared, shadowing the instance variable."
-    },
-    {
-      "bugId": 9,
-      "level": 3,
-      "text": "Remove 'int' from the increment method to update the instance variable instead of creating a new local one."
-    },
-    {
-      "bugId": 10,
-      "level": 1,
-      "text": "What should the method return when the number is odd?"
-    },
-    {
-      "bugId": 10,
-      "level": 2,
-      "text": "Both branches return true. The else case should return false."
-    },
-    {
-      "bugId": 10,
-      "level": 3,
-      "text": "Change the second 'return true;' to 'return false;'."
-    },
-    {
-      "bugId": 11,
-      "level": 1,
-      "text": "What is the index of the last element in an array?"
-    },
-    {
-      "bugId": 11,
-      "level": 2,
-      "text": "Arrays are zero-indexed. The last element is at length-1, not length."
-    },
-    {
-      "bugId": 11,
-      "level": 3,
-      "text": "Change arr[arr.length] to arr[arr.length - 1] in both places."
-    },
-    {
-      "bugId": 12,
-      "level": 1,
-      "text": "Think about how tax should be applied to the price. Should it be additive or multiplicative?"
-    },
-    {
-      "bugId": 12,
-      "level": 2,
-      "text": "The current formula adds the tax amount, but you want the final price including tax."
-    },
-    {
-      "bugId": 12,
-      "level": 3,
-      "text": "Use the formula: price * (1 + tax / 100) to get the correct result."
-    },
-    {
-      "bugId": 13,
-      "level": 1,
-      "text": "Can you modify a collection while iterating over it with a for-each loop?"
-    },
-    {
-      "bugId": 13,
-      "level": 2,
-      "text": "Modifying a collection during iteration causes ConcurrentModificationException."
-    },
-    {
-      "bugId": 13,
-      "level": 3,
-      "text": "Use the removeIf() method: numbers.removeIf(num -> num < 0);"
-    },
-    {
-      "bugId": 14,
-      "level": 1,
-      "text": "Can static methods access instance variables?"
-    },
-    {
-      "bugId": 14,
-      "level": 2,
-      "text": "Static methods belong to the class, not instances. They can't access instance variables."
-    },
-    {
-      "bugId": 14,
-      "level": 3,
-      "text": "Remove the 'static' keyword from the calculate() method."
-    },
-    {
-      "bugId": 15,
-      "level": 1,
-      "text": "What happens if the score is less than 80? Is 'result' assigned a value?"
-    },
-    {
-      "bugId": 15,
-      "level": 2,
-      "text": "The variable might not be initialized in all code paths."
-    },
-    {
-      "bugId": 15,
-      "level": 3,
-      "text": "Initialize 'result' with a default value like 'F' when declaring it."
-    }
+    {"bugId": 1, "level": 1, "text": "Check the loop condition boundary."},
+    {"bugId": 1, "level": 2, "text": "< vs <= makes a difference at the boundary."},
+    {"bugId": 1, "level": 3, "text": "Change i < 10 to i <= 10."},
+    {"bugId": 2, "level": 1, "text": "What if name is null?"},
+    {"bugId": 2, "level": 2, "text": "Add a null check before using name."},
+    {"bugId": 2, "level": 3, "text": "if (name == null) return \"\";"},
+    {"bugId": 3, "level": 1, "text": "How do you compare strings in Java?"},
+    {"bugId": 3, "level": 2, "text": "== compares references, not content."},
+    {"bugId": 3, "level": 3, "text": "Use .equals() method instead."},
+    {"bugId": 4, "level": 1, "text": "What type is the division result?"},
+    {"bugId": 4, "level": 2, "text": "Integer / integer = integer (truncated)."},
+    {"bugId": 4, "level": 3, "text": "Divide by 2.0 for double result."},
+    {"bugId": 5, "level": 1, "text": "Check what's being compared in each if."},
+    {"bugId": 5, "level": 2, "text": "Second if compares wrong variable."},
+    {"bugId": 5, "level": 3, "text": "Change c > a to c > max."},
+    {"bugId": 6, "level": 1, "text": "What happens without break?"},
+    {"bugId": 6, "level": 2, "text": "Switch falls through to next cases."},
+    {"bugId": 6, "level": 3, "text": "Add break after each case."},
+    {"bugId": 7, "level": 1, "text": "What's the valid index range?"},
+    {"bugId": 7, "level": 2, "text": "ArrayList is 0-indexed."},
+    {"bugId": 7, "level": 3, "text": "Use size() - 1 for last element."},
+    {"bugId": 8, "level": 1, "text": "Which direction is i moving?"},
+    {"bugId": 8, "level": 2, "text": "i++ increases, but we want countdown."},
+    {"bugId": 8, "level": 3, "text": "Change i++ to i--."},
+    {"bugId": 9, "level": 1, "text": "Is the field or a local variable being updated?"},
+    {"bugId": 9, "level": 2, "text": "Local variable shadows the field."},
+    {"bugId": 9, "level": 3, "text": "Remove 'int' to update the field."},
+    {"bugId": 10, "level": 1, "text": "What does each branch return?"},
+    {"bugId": 10, "level": 2, "text": "Both branches return true."},
+    {"bugId": 10, "level": 3, "text": "Second return should be false."},
+    {"bugId": 11, "level": 1, "text": "What's the index of the last element?"},
+    {"bugId": 11, "level": 2, "text": "Arrays are 0-indexed."},
+    {"bugId": 11, "level": 3, "text": "Use length - 1 instead of length."},
+    {"bugId": 12, "level": 1, "text": "Can you modify during for-each?"},
+    {"bugId": 12, "level": 2, "text": "Modification causes ConcurrentModificationException."},
+    {"bugId": 12, "level": 3, "text": "Use removeIf() method instead."},
+    {"bugId": 13, "level": 1, "text": "Can static methods access instance variables?"},
+    {"bugId": 13, "level": 2, "text": "Static belongs to class, not instance."},
+    {"bugId": 13, "level": 3, "text": "Remove static keyword."},
+    {"bugId": 14, "level": 1, "text": "Is grade always assigned?"},
+    {"bugId": 14, "level": 2, "text": "If score < 80, grade is never set."},
+    {"bugId": 14, "level": 3, "text": "Initialize with default: String grade = \"F\";"},
+    {"bugId": 15, "level": 1, "text": "What's slow about string concatenation?"},
+    {"bugId": 15, "level": 2, "text": "Each + creates new String object."},
+    {"bugId": 15, "level": 3, "text": "Use StringBuilder for efficiency."},
+    {"bugId": 16, "level": 1, "text": "When does recursion stop?"},
+    {"bugId": 16, "level": 2, "text": "Missing base case causes infinite recursion."},
+    {"bugId": 16, "level": 3, "text": "Add: if (n <= 1) return 1;"},
+    {"bugId": 17, "level": 1, "text": "What does HashSet use to find objects?"},
+    {"bugId": 17, "level": 2, "text": "HashSet needs both equals() and hashCode()."},
+    {"bugId": 17, "level": 3, "text": "Override hashCode() as well."},
+    {"bugId": 18, "level": 1, "text": "What if exception occurs before close?"},
+    {"bugId": 18, "level": 2, "text": "Resource won't be closed on exception."},
+    {"bugId": 18, "level": 3, "text": "Use try-with-resources syntax."},
+    {"bugId": 19, "level": 1, "text": "When is a year a leap year?"},
+    {"bugId": 19, "level": 2, "text": "Divisible by 4, NOT by 100, OR by 400."},
+    {"bugId": 19, "level": 3, "text": "(year%4==0 && year%100!=0) || year%400==0"},
+    {"bugId": 20, "level": 1, "text": "Does = copy the array content?"},
+    {"bugId": 20, "level": 2, "text": "= copies reference, not content."},
+    {"bugId": 20, "level": 3, "text": "Use Arrays.copyOf() for true copy."},
+    {"bugId": 21, "level": 1, "text": "Are doubles always precise?"},
+    {"bugId": 21, "level": 2, "text": "Floating-point has precision errors."},
+    {"bugId": 21, "level": 3, "text": "Use BigDecimal for exact decimal math."},
+    {"bugId": 22, "level": 1, "text": "What if two threads call getInstance() simultaneously?"},
+    {"bugId": 22, "level": 2, "text": "Race condition can create multiple instances."},
+    {"bugId": 22, "level": 3, "text": "Use double-checked locking with volatile."},
+    {"bugId": 23, "level": 1, "text": "What if string is shorter than 3?"},
+    {"bugId": 23, "level": 2, "text": "substring throws if index out of bounds."},
+    {"bugId": 23, "level": 3, "text": "Use Math.min(3, s.length())."},
+    {"bugId": 24, "level": 1, "text": "What does get() return for missing key?"},
+    {"bugId": 24, "level": 2, "text": "get() returns null, then null + 1 fails."},
+    {"bugId": 24, "level": 3, "text": "Use getOrDefault(word, 0)."},
+    {"bugId": 25, "level": 1, "text": "Does left ever advance past mid?"},
+    {"bugId": 25, "level": 2, "text": "left = mid can cause infinite loop."},
+    {"bugId": 25, "level": 3, "text": "Use left = mid + 1 and right = mid - 1."},
+    {"bugId": 26, "level": 1, "text": "Is !! safe on nullable types?"},
+    {"bugId": 26, "level": 2, "text": "!! throws NPE if value is null."},
+    {"bugId": 26, "level": 3, "text": "Use safe call ?. with elvis ?: operator."},
+    {"bugId": 27, "level": 1, "text": "Are default arguments evaluated once or per call?"},
+    {"bugId": 27, "level": 2, "text": "Mutable defaults persist between calls."},
+    {"bugId": 27, "level": 3, "text": "Use None as default, create list inside."},
+    {"bugId": 28, "level": 1, "text": "What's the difference between == and ===?"},
+    {"bugId": 28, "level": 2, "text": "== does type coercion."},
+    {"bugId": 28, "level": 3, "text": "Use === for strict equality."},
+    {"bugId": 29, "level": 1, "text": "What happens to Activity after onDestroy?"},
+    {"bugId": 29, "level": 2, "text": "Static reference prevents GC."},
+    {"bugId": 29, "level": 3, "text": "Use WeakReference or application context."},
+    {"bugId": 30, "level": 1, "text": "What does || mean vs &&?"},
+    {"bugId": 30, "level": 2, "text": "|| means OR - only one needs to be true."},
+    {"bugId": 30, "level": 3, "text": "Use && so BOTH conditions must be true."}
   ]
 }

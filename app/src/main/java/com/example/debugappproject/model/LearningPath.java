@@ -1,6 +1,7 @@
 package com.example.debugappproject.model;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 /**
@@ -23,6 +24,7 @@ public class LearningPath {
     public LearningPath() {
     }
 
+    @Ignore
     public LearningPath(String name, String description, String iconEmoji, String difficultyRange, int sortOrder, boolean isLocked) {
         this.name = name;
         this.description = description;

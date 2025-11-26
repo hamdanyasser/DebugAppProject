@@ -1,69 +1,230 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base colors -->
+    <!-- =======================================================================
+         DEBUGMASTER ULTIMATE - MILLION DOLLAR COLOR PALETTE
+         Mimo-Style Premium Gamified Learning App Colors
+         ======================================================================= -->
+
+    <!-- Base Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00000000</color>
 
-    <!-- Light Theme Colors -->
-    <color name="primary_light">#3F51B5</color>           <!-- Indigo for learning/tech -->
-    <color name="primary_variant_light">#303F9F</color>   <!-- Darker indigo -->
-    <color name="secondary_light">#009688</color>         <!-- Teal for success -->
-    <color name="secondary_variant_light">#00796B</color>
+    <!-- =======================================================================
+         PRIMARY BRAND GRADIENT - Deep Indigo to Vivid Purple
+         ======================================================================= -->
+    <color name="primary_start">#6366F1</color>
+    <color name="primary_mid">#8B5CF6</color>
+    <color name="primary_end">#EC4899</color>
+    
+    <color name="primary_light">#818CF8</color>
+    <color name="primary">#6366F1</color>
+    <color name="primary_dark">#4F46E5</color>
+    <color name="primary_variant_light">#A78BFA</color>
+    <color name="primary_variant_dark">#4338CA</color>
+    
+    <!-- =======================================================================
+         SECONDARY / ACCENT COLORS - Teal Energy
+         ======================================================================= -->
+    <color name="secondary_start">#10B981</color>
+    <color name="secondary_end">#14B8A6</color>
+    
+    <color name="secondary_light">#34D399</color>
+    <color name="secondary">#10B981</color>
+    <color name="secondary_dark">#059669</color>
+    <color name="secondary_variant_light">#2DD4BF</color>
+    <color name="secondary_variant_dark">#0D9488</color>
 
-    <color name="background_light">#FAFAFA</color>        <!-- Very light grey -->
+    <!-- =======================================================================
+         GOLD / PREMIUM COLORS
+         ======================================================================= -->
+    <color name="gold">#FFD700</color>
+    <color name="gold_light">#FFDF4D</color>
+    <color name="gold_dark">#D4AF00</color>
+    <color name="premium_gold">#F59E0B</color>
+    <color name="accent_gold">#F59E0B</color>
+
+    <!-- =======================================================================
+         GAMIFICATION COLORS - XP, Streaks, Achievements
+         ======================================================================= -->
+    <color name="xp_gold_start">#FBBF24</color>
+    <color name="xp_gold_mid">#F59E0B</color>
+    <color name="xp_gold_end">#F97316</color>
+    
+    <color name="streak_orange">#F97316</color>
+    <color name="streak_red">#EF4444</color>
+    
+    <color name="coin_yellow">#FCD34D</color>
+    <color name="coin_gold">#F59E0B</color>
+    
+    <color name="xp_gold">#F59E0B</color>
+    
+    <color name="pro_gold_start">#FBBF24</color>
+    <color name="pro_gold_end">#F97316</color>
+    <color name="pro_background">#1E1B4B</color>
+
+    <!-- =======================================================================
+         DIFFICULTY LEVEL COLORS
+         ======================================================================= -->
+    <color name="difficulty_easy">#22C55E</color>
+    <color name="difficulty_easy_bg">#DCFCE7</color>
+    <color name="difficulty_easy_text">#166534</color>
+    
+    <color name="difficulty_medium">#F59E0B</color>
+    <color name="difficulty_medium_bg">#FEF3C7</color>
+    <color name="difficulty_medium_text">#92400E</color>
+    
+    <color name="difficulty_hard">#EF4444</color>
+    <color name="difficulty_hard_bg">#FEE2E2</color>
+    <color name="difficulty_hard_text">#991B1B</color>
+    
+    <color name="difficulty_expert">#8B5CF6</color>
+    <color name="difficulty_expert_bg">#EDE9FE</color>
+    <color name="difficulty_expert_text">#5B21B6</color>
+
+    <!-- =======================================================================
+         ACHIEVEMENT RARITY COLORS
+         ======================================================================= -->
+    <color name="rarity_common">#94A3B8</color>
+    <color name="rarity_rare">#3B82F6</color>
+    <color name="rarity_epic">#A855F7</color>
+    <color name="rarity_legendary">#F59E0B</color>
+
+    <!-- =======================================================================
+         LEARNING PATH GRADIENTS
+         ======================================================================= -->
+    <color name="path_bugs_start">#10B981</color>
+    <color name="path_bugs_end">#14B8A6</color>
+    
+    <color name="path_loops_start">#8B5CF6</color>
+    <color name="path_loops_end">#A855F7</color>
+    
+    <color name="path_memory_start">#F97316</color>
+    <color name="path_memory_end">#EF4444</color>
+    
+    <color name="path_async_start">#06B6D4</color>
+    <color name="path_async_end">#3B82F6</color>
+    
+    <color name="path_security_start">#F43F5E</color>
+    <color name="path_security_end">#EC4899</color>
+
+    <!-- =======================================================================
+         SURFACE AND BACKGROUND COLORS
+         ======================================================================= -->
+    <color name="background_light">#F8FAFC</color>
+    <color name="background_light_secondary">#F1F5F9</color>
     <color name="surface_light">#FFFFFF</color>
-    <color name="error_light">#D32F2F</color>             <!-- Red for errors -->
+    <color name="surface_light_variant">#F8FAFC</color>
+    
+    <color name="background_dark">#0F172A</color>
+    <color name="background_dark_secondary">#1E293B</color>
+    <color name="surface_dark">#1E293B</color>
+    <color name="surface_dark_variant">#334155</color>
+    <color name="surface_elevated">#374151</color>
+    
+    <color name="glass_white">#CCFFFFFF</color>
+    <color name="glass_white_strong">#E6FFFFFF</color>
+    <color name="glass_dark">#CC0F172A</color>
+    <color name="glass_border">#1AFFFFFF</color>
 
-    <!-- Text colors (light theme) -->
+    <!-- =======================================================================
+         TEXT COLORS
+         ======================================================================= -->
+    <color name="text_primary_light">#0F172A</color>
+    <color name="text_secondary_light">#475569</color>
+    <color name="text_tertiary_light">#94A3B8</color>
+    <color name="text_disabled_light">#CBD5E1</color>
+    
+    <color name="text_primary_dark">#F8FAFC</color>
+    <color name="text_secondary_dark">#CBD5E1</color>
+    <color name="text_tertiary_dark">#94A3B8</color>
+    <color name="text_disabled_dark">#64748B</color>
+    
     <color name="on_primary_light">#FFFFFF</color>
     <color name="on_secondary_light">#FFFFFF</color>
-    <color name="on_background_light">#1C1B1F</color>     <!-- Almost black -->
-    <color name="on_surface_light">#1C1B1F</color>
+    <color name="on_surface_light">#0F172A</color>
+    <color name="on_background_light">#0F172A</color>
     <color name="on_error_light">#FFFFFF</color>
-
-    <!-- Dark Theme Colors -->
-    <color name="primary_dark">#5C6BC0</color>            <!-- Lighter indigo for dark -->
-    <color name="primary_variant_dark">#3949AB</color>
-    <color name="secondary_dark">#26A69A</color>          <!-- Lighter teal -->
-    <color name="secondary_variant_dark">#00897B</color>
-
-    <color name="background_dark">#121212</color>         <!-- Material dark background -->
-    <color name="surface_dark">#1E1E1E</color>            <!-- Elevated surface -->
-    <color name="error_dark">#EF5350</color>              <!-- Lighter red for dark -->
-
-    <!-- Text colors (dark theme) -->
+    
     <color name="on_primary_dark">#FFFFFF</color>
-    <color name="on_secondary_dark">#000000</color>
-    <color name="on_background_dark">#E6E1E5</color>      <!-- Light grey text -->
-    <color name="on_surface_dark">#E6E1E5</color>
-    <color name="on_error_dark">#000000</color>
+    <color name="on_secondary_dark">#FFFFFF</color>
+    <color name="on_surface_dark">#F8FAFC</color>
+    <color name="on_background_dark">#F8FAFC</color>
+    <color name="on_error_dark">#FFFFFF</color>
 
-    <!-- Difficulty Colors (consistent across themes) -->
-    <color name="difficulty_easy">#4CAF50</color>         <!-- Green -->
-    <color name="difficulty_medium">#FF9800</color>       <!-- Orange -->
-    <color name="difficulty_hard">#F44336</color>         <!-- Red -->
+    <!-- =======================================================================
+         SEMANTIC / STATUS COLORS
+         ======================================================================= -->
+    <color name="success">#22C55E</color>
+    <color name="success_light">#DCFCE7</color>
+    <color name="success_dark">#166534</color>
+    <color name="success_background">#DCFCE7</color>
+    
+    <color name="warning">#F59E0B</color>
+    <color name="warning_light">#FEF3C7</color>
+    <color name="warning_dark">#92400E</color>
+    
+    <color name="error">#EF4444</color>
+    <color name="error_light">#FEE2E2</color>
+    <color name="error_dark">#991B1B</color>
+    <color name="error_background">#FEE2E2</color>
+    
+    <color name="info">#3B82F6</color>
+    <color name="info_light">#DBEAFE</color>
+    <color name="info_dark">#1E40AF</color>
 
-    <!-- Special Purpose Colors -->
-    <color name="code_background_light">#F5F5F5</color>   <!-- Light grey for code -->
-    <color name="code_background_dark">#2B2B2B</color>    <!-- Dark grey for code -->
-    <color name="code_editor_background">#E3F2FD</color>  <!-- Light blue for code editor card -->
+    <!-- =======================================================================
+         CODE EDITOR COLORS
+         ======================================================================= -->
+    <color name="code_background_light">#F1F5F9</color>
+    <color name="code_background_dark">#1E293B</color>
+    <color name="code_editor_background">#1E293B</color>
+    <color name="code_keyword">#8B5CF6</color>
+    <color name="code_string">#22C55E</color>
+    <color name="code_number">#F59E0B</color>
+    <color name="code_comment">#94A3B8</color>
+    <color name="code_error">#EF4444</color>
 
-    <color name="output_expected_light">#E8F5E9</color>   <!-- Light green bg -->
-    <color name="output_actual_light">#FFEBEE</color>     <!-- Light red bg -->
-    <color name="output_expected_dark">#1B5E20</color>    <!-- Dark green bg -->
-    <color name="output_actual_dark">#B71C1C</color>      <!-- Dark red bg -->
+    <!-- =======================================================================
+         LEADERBOARD / RANKINGS
+         ======================================================================= -->
+    <color name="leaderboard_gold">#FFD700</color>
+    <color name="leaderboard_silver">#C0C0C0</color>
+    <color name="leaderboard_bronze">#CD7F32</color>
+    <color name="rank_1">#FFD700</color>
+    <color name="rank_2">#C0C0C0</color>
+    <color name="rank_3">#CD7F32</color>
+    
+    <!-- =======================================================================
+         ADDITIONAL UI COLORS
+         ======================================================================= -->
+    <color name="divider_light">#E2E8F0</color>
+    <color name="divider_dark">#334155</color>
+    
+    <color name="progress_track">#E2E8F0</color>
+    <color name="progress_indicator">#6366F1</color>
+    
+    <color name="hint_background_light">#FEF9C3</color>
+    <color name="hint_background_dark">#854D0E</color>
+    <color name="hint_background">#FEF9C3</color>
+    
+    <color name="completed_indicator">#22C55E</color>
 
-    <color name="hint_background_light">#FFF9C4</color>   <!-- Light yellow -->
-    <color name="hint_background_dark">#F57F17</color>    <!-- Dark yellow -->
+    <!-- =======================================================================
+         BATTLE ARENA COLORS
+         ======================================================================= -->
+    <color name="battle_red">#EF4444</color>
+    <color name="battle_blue">#3B82F6</color>
+    <color name="battle_victory">#22C55E</color>
+    <color name="battle_defeat">#EF4444</color>
+    <color name="battle_draw">#F59E0B</color>
 
-    <!-- Semantic color aliases -->
-    <color name="success_background">@color/output_expected_light</color>
-    <color name="error_background">@color/output_actual_light</color>
-    <color name="hint_background">@color/hint_background_light</color>
-
-    <color name="completed_indicator">#4CAF50</color>     <!-- Green checkmark -->
-
-    <!-- Dividers and borders -->
-    <color name="divider_light">#E0E0E0</color>
-    <color name="divider_dark">#3D3D3D</color>
+    <!-- =======================================================================
+         ALIAS COLORS - For backwards compatibility
+         ======================================================================= -->
+    <color name="background">@color/background_light</color>
+    <color name="text_primary">@color/text_primary_light</color>
+    <color name="text_secondary">@color/text_secondary_light</color>
+    <color name="surface">@color/surface_light</color>
+    <color name="divider">@color/divider_light</color>
 </resources>

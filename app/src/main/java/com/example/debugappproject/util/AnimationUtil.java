@@ -318,4 +318,11 @@ public class AnimationUtil {
         });
         animator.start();
     }
+
+    /**
+     * Simple fade out animation without callback.
+     */
+    public static void fadeOut(View view) {
+        fadeOut(view, null);
+    }
 }

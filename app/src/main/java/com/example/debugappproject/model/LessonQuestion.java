@@ -2,6 +2,7 @@ package com.example.debugappproject.model;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -32,6 +33,7 @@ public class LessonQuestion {
     public LessonQuestion() {
     }
 
+    @Ignore
     public LessonQuestion(int lessonId, String questionText, String questionType,
                          String optionsJson, int correctOptionIndex, String explanation, int orderInLesson) {
         this.lessonId = lessonId;

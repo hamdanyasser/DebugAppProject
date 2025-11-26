@@ -1,136 +1,394 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- =======================================================================
+         DEBUGMASTER ULTIMATE - MILLION DOLLAR THEME
+         Mimo-Style Premium Gamified Learning App Theme
+         ======================================================================= -->
+
     <!-- Base application theme (Light) -->
     <style name="Base.Theme.DebugAppProject" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary colors -->
-        <item name="colorPrimary">@color/primary_light</item>
-        <item name="colorPrimaryVariant">@color/primary_variant_light</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
         <item name="colorOnPrimary">@color/on_primary_light</item>
 
         <!-- Secondary colors -->
-        <item name="colorSecondary">@color/secondary_light</item>
-        <item name="colorSecondaryVariant">@color/secondary_variant_light</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondary_dark</item>
         <item name="colorOnSecondary">@color/on_secondary_light</item>
 
         <!-- Error colors -->
-        <item name="colorError">@color/error_light</item>
-        <item name="colorOnError">@color/on_error_light</item>
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/white</item>
 
         <!-- Surface colors -->
         <item name="colorSurface">@color/surface_light</item>
-        <item name="colorOnSurface">@color/on_surface_light</item>
+        <item name="colorOnSurface">@color/text_primary_light</item>
 
         <!-- Background colors -->
         <item name="android:colorBackground">@color/background_light</item>
-        <item name="colorOnBackground">@color/on_background_light</item>
+        <item name="colorOnBackground">@color/text_primary_light</item>
 
-        <!-- Status bar -->
-        <item name="android:statusBarColor">@color/primary_light</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <!-- Status bar - Transparent for immersive feel -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/surface_light</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
 
-        <!-- Material components -->
-        <item name="materialCardViewStyle">@style/Widget.DebugMaster.CardView</item>
-        <item name="materialButtonStyle">@style/Widget.DebugMaster.Button</item>
-        <item name="chipStyle">@style/Widget.DebugMaster.Chip</item>
+        <!-- Edge-to-edge -->
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        
+        <!-- Ripple color -->
+        <item name="android:colorControlHighlight">@color/primary_light</item>
     </style>
 
     <style name="Theme.DebugAppProject" parent="Base.Theme.DebugAppProject" />
 
-    <!-- Text Appearances -->
+    <!-- =======================================================================
+         TEXT APPEARANCES - Premium Typography
+         ======================================================================= -->
+    
+    <!-- Display - Hero titles -->
+    <style name="TextAppearance.DebugMaster.Display" parent="TextAppearance.Material3.DisplaySmall">
+        <item name="android:textSize">36sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_primary_light</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+
+    <!-- Headline 1 - Large numbers, XP counts -->
     <style name="TextAppearance.DebugMaster.Headline1" parent="TextAppearance.Material3.HeadlineLarge">
         <item name="android:textSize">32sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/on_surface_light</item>
+        <item name="android:textColor">@color/text_primary_light</item>
+        <item name="android:letterSpacing">-0.02</item>
     </style>
 
+    <!-- Headline 2 - Section titles, Card titles -->
     <style name="TextAppearance.DebugMaster.Headline2" parent="TextAppearance.Material3.HeadlineMedium">
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/on_surface_light</item>
+        <item name="android:textColor">@color/text_primary_light</item>
+        <item name="android:letterSpacing">-0.01</item>
     </style>
 
+    <!-- Headline 3 - Smaller headings -->
+    <style name="TextAppearance.DebugMaster.Headline3" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_primary_light</item>
+    </style>
+
+    <!-- Subtitle - Labels, categories -->
     <style name="TextAppearance.DebugMaster.Subtitle" parent="TextAppearance.Material3.TitleMedium">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/on_surface_light</item>
+        <item name="android:textColor">@color/text_primary_light</item>
+        <item name="android:letterSpacing">0.01</item>
     </style>
 
+    <!-- Subtitle Small - Overlines, tags -->
+    <style name="TextAppearance.DebugMaster.SubtitleSmall" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_secondary_light</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:letterSpacing">0.1</item>
+    </style>
+
+    <!-- Body 1 - Primary body text -->
     <style name="TextAppearance.DebugMaster.Body1" parent="TextAppearance.Material3.BodyLarge">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/on_surface_light</item>
+        <item name="android:textColor">@color/text_primary_light</item>
+        <item name="android:lineSpacingMultiplier">1.4</item>
     </style>
 
+    <!-- Body 2 - Secondary body text -->
     <style name="TextAppearance.DebugMaster.Body2" parent="TextAppearance.Material3.BodyMedium">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/on_surface_light</item>
+        <item name="android:textColor">@color/text_secondary_light</item>
+        <item name="android:lineSpacingMultiplier">1.4</item>
     </style>
 
+    <!-- Caption - Small labels, timestamps -->
     <style name="TextAppearance.DebugMaster.Caption" parent="TextAppearance.Material3.BodySmall">
         <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/on_surface_light</item>
-        <item name="android:alpha">0.7</item>
+        <item name="android:textColor">@color/text_tertiary_light</item>
     </style>
 
+    <!-- Button Text -->
+    <style name="TextAppearance.DebugMaster.Button" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+
+    <!-- Code - Monospace -->
     <style name="TextAppearance.DebugMaster.Code" parent="TextAppearance.Material3.BodyMedium">
-        <item name="android:textSize">@dimen/code_text_size</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">monospace</item>
-        <item name="android:textColor">@color/on_surface_light</item>
+        <item name="android:textColor">@color/text_primary_light</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
     </style>
 
-    <!-- Material Card View -->
+    <!-- XP Number - For animated XP displays -->
+    <style name="TextAppearance.DebugMaster.XP" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/xp_gold_mid</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+
+    <!-- Streak Number -->
+    <style name="TextAppearance.DebugMaster.Streak" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/streak_orange</item>
+    </style>
+
+    <!-- =======================================================================
+         CARD STYLES - Premium Glassmorphic Cards
+         ======================================================================= -->
+    
+    <!-- Default Card -->
     <style name="Widget.DebugMaster.CardView" parent="Widget.Material3.CardView.Elevated">
-        <item name="cardCornerRadius">@dimen/card_corner_radius</item>
-        <item name="cardElevation">@dimen/card_elevation</item>
-        <item name="contentPadding">@dimen/padding_medium</item>
+        <item name="cardCornerRadius">24dp</item>
+        <item name="cardElevation">8dp</item>
+        <item name="contentPadding">0dp</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="cardBackgroundColor">@color/surface_light</item>
     </style>
 
-    <!-- Material Button -->
+    <!-- Hero Card - Gradient background -->
+    <style name="Widget.DebugMaster.CardView.Hero" parent="Widget.DebugMaster.CardView">
+        <item name="cardCornerRadius">28dp</item>
+        <item name="cardElevation">16dp</item>
+    </style>
+
+    <!-- Stats Card -->
+    <style name="Widget.DebugMaster.CardView.Stats" parent="Widget.DebugMaster.CardView">
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardElevation">4dp</item>
+    </style>
+
+    <!-- Path Card - Learning paths -->
+    <style name="Widget.DebugMaster.CardView.Path" parent="Widget.DebugMaster.CardView">
+        <item name="cardCornerRadius">28dp</item>
+        <item name="cardElevation">12dp</item>
+    </style>
+
+    <!-- Achievement Card -->
+    <style name="Widget.DebugMaster.CardView.Achievement" parent="Widget.DebugMaster.CardView">
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardElevation">6dp</item>
+    </style>
+
+    <!-- Glass Card - Semi-transparent -->
+    <style name="Widget.DebugMaster.CardView.Glass" parent="Widget.DebugMaster.CardView">
+        <item name="cardBackgroundColor">@color/glass_white</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/glass_border</item>
+    </style>
+
+    <!-- =======================================================================
+         BUTTON STYLES - Gaming-style CTAs
+         ======================================================================= -->
+    
+    <!-- Primary Button - Main CTA -->
     <style name="Widget.DebugMaster.Button" parent="Widget.Material3.Button">
-        <item name="cornerRadius">@dimen/button_corner_radius</item>
-        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.DebugMaster.Button</item>
+        <item name="backgroundTint">@color/primary</item>
+        <item name="android:elevation">8dp</item>
     </style>
 
+    <!-- Secondary Button - Outlined -->
     <style name="Widget.DebugMaster.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="cornerRadius">@dimen/button_corner_radius</item>
-        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.DebugMaster.Button</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="strokeColor">@color/primary</item>
     </style>
 
-    <!-- Chip Style -->
+    <!-- Text Button -->
+    <style name="Widget.DebugMaster.Button.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="cornerRadius">12dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.DebugMaster.Button</item>
+    </style>
+
+    <!-- Small Pill Button -->
+    <style name="Widget.DebugMaster.Button.Pill" parent="Widget.Material3.Button">
+        <item name="cornerRadius">24dp</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- Icon Button - Circular -->
+    <style name="Widget.DebugMaster.Button.Icon" parent="Widget.Material3.Button.IconButton">
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="iconSize">24dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.DebugMaster.Circle</item>
+    </style>
+
+    <!-- Floating Play Button -->
+    <style name="Widget.DebugMaster.Button.Play" parent="Widget.Material3.Button">
+        <item name="cornerRadius">16dp</item>
+        <item name="android:minWidth">56dp</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="iconTint">@color/primary</item>
+        <item name="android:elevation">12dp</item>
+    </style>
+
+    <!-- =======================================================================
+         CHIP STYLES - Tags, Badges, Difficulty
+         ======================================================================= -->
+    
     <style name="Widget.DebugMaster.Chip" parent="Widget.Material3.Chip.Suggestion">
-        <item name="chipCornerRadius">@dimen/chip_corner_radius</item>
-        <item name="android:minHeight">@dimen/chip_height</item>
-    </style>
-
-    <!-- Code Block Style -->
-    <style name="CodeBlock">
-        <item name="android:background">@color/code_background_light</item>
-        <item name="android:padding">@dimen/code_padding</item>
-        <item name="android:fontFamily">monospace</item>
-        <item name="android:textSize">@dimen/code_text_size</item>
-        <item name="android:scrollbars">vertical|horizontal</item>
-    </style>
-
-    <!-- Difficulty Chip Styles -->
-    <style name="DifficultyChip" parent="Widget.Material3.Chip.Assist">
-        <item name="chipCornerRadius">@dimen/chip_corner_radius</item>
-        <item name="android:textStyle">bold</item>
+        <item name="chipCornerRadius">12dp</item>
+        <item name="android:minHeight">32dp</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="DifficultyChip.Easy">
+    <!-- Difficulty Chips -->
+    <style name="Widget.DebugMaster.Chip.Difficulty" parent="Widget.DebugMaster.Chip">
+        <item name="chipCornerRadius">8dp</item>
+        <item name="android:minHeight">28dp</item>
+        <item name="chipMinTouchTargetSize">0dp</item>
+    </style>
+
+    <style name="Widget.DebugMaster.Chip.Difficulty.Easy" parent="Widget.DebugMaster.Chip.Difficulty">
         <item name="chipBackgroundColor">@color/difficulty_easy</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="DifficultyChip.Medium">
+    <style name="Widget.DebugMaster.Chip.Difficulty.Medium" parent="Widget.DebugMaster.Chip.Difficulty">
         <item name="chipBackgroundColor">@color/difficulty_medium</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="DifficultyChip.Hard">
+    <style name="Widget.DebugMaster.Chip.Difficulty.Hard" parent="Widget.DebugMaster.Chip.Difficulty">
         <item name="chipBackgroundColor">@color/difficulty_hard</item>
         <item name="android:textColor">@color/white</item>
     </style>
+
+    <style name="Widget.DebugMaster.Chip.Difficulty.Expert" parent="Widget.DebugMaster.Chip.Difficulty">
+        <item name="chipBackgroundColor">@color/difficulty_expert</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- XP Reward Chip -->
+    <style name="Widget.DebugMaster.Chip.XP" parent="Widget.DebugMaster.Chip">
+        <item name="chipBackgroundColor">@color/xp_gold_mid</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="chipCornerRadius">16dp</item>
+    </style>
+
+    <!-- Pro Badge -->
+    <style name="Widget.DebugMaster.Chip.Pro" parent="Widget.DebugMaster.Chip">
+        <item name="chipBackgroundColor">@color/pro_gold_start</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="chipCornerRadius">16dp</item>
+        <item name="chipIconTint">@color/white</item>
+    </style>
+
+    <!-- =======================================================================
+         PROGRESS BAR STYLES - XP Bars, Level Progress
+         ======================================================================= -->
+    
+    <style name="Widget.DebugMaster.ProgressBar" parent="Widget.Material3.LinearProgressIndicator">
+        <item name="trackThickness">12dp</item>
+        <item name="trackCornerRadius">6dp</item>
+        <item name="trackColor">@color/progress_track</item>
+        <item name="indicatorColor">@color/primary</item>
+    </style>
+
+    <style name="Widget.DebugMaster.ProgressBar.XP" parent="Widget.DebugMaster.ProgressBar">
+        <item name="indicatorColor">@color/xp_gold_mid</item>
+    </style>
+
+    <style name="Widget.DebugMaster.ProgressBar.Path" parent="Widget.DebugMaster.ProgressBar">
+        <item name="trackThickness">8dp</item>
+        <item name="trackCornerRadius">4dp</item>
+    </style>
+
+    <!-- Circular Progress -->
+    <style name="Widget.DebugMaster.CircularProgress" parent="Widget.Material3.CircularProgressIndicator">
+        <item name="trackThickness">8dp</item>
+        <item name="indicatorSize">80dp</item>
+        <item name="trackColor">@color/progress_track</item>
+    </style>
+
+    <!-- =======================================================================
+         BOTTOM NAVIGATION - Premium Gaming Style
+         ======================================================================= -->
+    <style name="Widget.DebugMaster.BottomNavigation" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">@color/glass_white_strong</item>
+        <item name="itemIconTint">@color/bottom_nav_color_selector</item>
+        <item name="itemTextColor">@color/bottom_nav_color_selector</item>
+        <item name="android:elevation">8dp</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+
+    <style name="Widget.DebugMaster.BottomNavIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/primary_light</item>
+        <item name="android:width">64dp</item>
+        <item name="android:height">32dp</item>
+    </style>
+
+    <!-- =======================================================================
+         SHAPE APPEARANCES
+         ======================================================================= -->
+    
+    <style name="ShapeAppearance.DebugMaster.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="ShapeAppearance.DebugMaster.Pill" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="ShapeAppearance.DebugMaster.RoundedLarge" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">28dp</item>
+    </style>
+
+    <style name="ShapeAppearance.DebugMaster.RoundedMedium" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+    </style>
+
+    <style name="ShapeAppearance.DebugMaster.RoundedSmall" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <!-- =======================================================================
+         CODE BLOCK STYLE
+         ======================================================================= -->
+    <style name="CodeBlock" parent="">
+        <item name="android:background">@color/code_background_light</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:scrollbars">vertical|horizontal</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+
 </resources>

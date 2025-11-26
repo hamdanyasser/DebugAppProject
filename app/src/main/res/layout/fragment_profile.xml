@@ -1,35 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface">
+    android:background="@color/background"
+    android:fillViewport="true"
+    android:clipToPadding="false">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:paddingBottom="120dp">
 
-        <!-- Header -->
-        <TextView
+        <!-- Header with Settings Button -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Your Progress"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorOnSurface" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="👤"
+                    android:textSize="32sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Your Progress"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary" />
+            </LinearLayout>
+
+            <!-- Settings Button -->
+            <ImageButton
+                android:id="@+id/button_settings"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_glass_circle"
+                android:src="@drawable/ic_settings"
+                android:padding="12dp"
+                android:contentDescription="Settings"
+                app:tint="@color/text_primary" />
+        </LinearLayout>
 
         <!-- Account/Sync Section -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="?attr/colorOutlineVariant">
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/surface"
+            app:strokeWidth="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -55,7 +91,7 @@
                             android:layout_height="wrap_content"
                             android:text="Account"
                             android:textSize="12sp"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            android:textColor="@color/text_secondary" />
 
                         <TextView
                             android:id="@+id/text_account_status"
@@ -64,18 +100,18 @@
                             android:layout_marginTop="2dp"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:textColor="?attr/colorOnSurface"
-                            tools:text="Guest" />
+                            android:textColor="@color/text_primary"
+                            tools:text="Guest Mode" />
 
                     </LinearLayout>
 
                     <!-- Sign In/Out Button -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/button_auth_action"
-                        style="@style/Widget.Material3.Button.TextButton"
+                        style="@style/Widget.Material3.Button.TonalButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="Sign In" />
+                        android:text="Go Pro" />
 
                 </LinearLayout>
 
@@ -86,7 +122,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:textSize="12sp"
-                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textColor="@color/text_secondary"
                     android:visibility="gone"
                     tools:text="Last synced: 2 hours ago"
                     tools:visibility="visible" />
@@ -100,14 +136,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp">
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:strokeWidth="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_hero_gradient"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:padding="24dp">
 
                 <!-- Level Display -->
                 <LinearLayout
@@ -121,16 +159,17 @@
                         android:layout_height="wrap_content"
                         android:text="Level"
                         android:textSize="14sp"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
+                        android:textColor="@color/white"
+                        android:alpha="0.8" />
 
                     <TextView
                         android:id="@+id/text_level"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:textSize="48sp"
+                        android:textSize="56sp"
                         android:textStyle="bold"
-                        android:textColor="?attr/colorPrimary"
+                        android:textColor="@color/white"
                         tools:text="5" />
 
                 </LinearLayout>
@@ -147,17 +186,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
-                        android:textColor="?attr/colorOnSurfaceVariant"
-                        tools:text="450 / 500 XP" />
+                        android:textColor="@color/white"
+                        android:alpha="0.8"
+                        tools:text="45 / 100 XP" />
 
                     <ProgressBar
                         android:id="@+id/progress_xp"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="8dp"
+                        android:layout_height="12dp"
                         android:layout_marginTop="8dp"
                         android:max="100"
-                        tools:progress="90" />
+                        android:progressDrawable="@drawable/progress_xp_gradient"
+                        tools:progress="45" />
 
                 </LinearLayout>
 
@@ -165,7 +206,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="24dp"
                     android:orientation="horizontal"
                     android:weightSum="3">
 
@@ -175,7 +216,15 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_glass_rounded"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🐛"
+                            android:textSize="20sp" />
 
                         <TextView
                             android:id="@+id/text_bugs_solved"
@@ -183,16 +232,16 @@
                             android:layout_height="wrap_content"
                             android:textSize="24sp"
                             android:textStyle="bold"
-                            android:textColor="?attr/colorOnSurface"
+                            android:textColor="@color/white"
                             tools:text="12" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
                             android:text="Bugs Solved"
-                            android:textSize="12sp"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            android:textSize="10sp"
+                            android:textColor="@color/white"
+                            android:alpha="0.7" />
 
                     </LinearLayout>
 
@@ -201,8 +250,17 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:layout_marginHorizontal="8dp"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_glass_rounded"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="⭐"
+                            android:textSize="20sp" />
 
                         <TextView
                             android:id="@+id/text_perfect_fixes"
@@ -210,16 +268,16 @@
                             android:layout_height="wrap_content"
                             android:textSize="24sp"
                             android:textStyle="bold"
-                            android:textColor="?attr/colorOnSurface"
+                            android:textColor="@color/white"
                             tools:text="8" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="Perfect Fixes"
-                            android:textSize="12sp"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            android:text="Perfect"
+                            android:textSize="10sp"
+                            android:textColor="@color/white"
+                            android:alpha="0.7" />
 
                     </LinearLayout>
 
@@ -229,7 +287,15 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_glass_rounded"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🔥"
+                            android:textSize="20sp" />
 
                         <TextView
                             android:id="@+id/text_streak_days"
@@ -237,16 +303,16 @@
                             android:layout_height="wrap_content"
                             android:textSize="24sp"
                             android:textStyle="bold"
-                            android:textColor="?attr/colorOnSurface"
+                            android:textColor="@color/white"
                             tools:text="7" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
                             android:text="Day Streak"
-                            android:textSize="12sp"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
+                            android:textSize="10sp"
+                            android:textColor="@color/white"
+                            android:alpha="0.7" />
 
                     </LinearLayout>
 
@@ -261,10 +327,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Achievements"
+            android:text="🏆 Achievements"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="?attr/colorOnSurface" />
+            android:textColor="@color/text_primary" />
 
         <TextView
             android:id="@+id/text_achievements_count"
@@ -272,7 +338,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:textSize="14sp"
-            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textColor="@color/text_secondary"
             tools:text="5 of 15 unlocked" />
 
         <!-- Achievements RecyclerView (Grid) -->
@@ -281,8 +347,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:nestedScrollingEnabled="false"
             android:clipToPadding="false"
-            tools:listitem="@layout/item_achievement" />
+            tools:listitem="@layout/item_achievement"
+            tools:itemCount="6" />
 
         <!-- Empty State -->
         <LinearLayout
@@ -299,19 +367,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="🏆"
-                android:textSize="48sp" />
+                android:textSize="64sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:text="No achievements yet"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Complete challenges to unlock achievements"
                 android:textSize="14sp"
                 android:textAlignment="center"
-                android:textColor="?attr/colorOnSurfaceVariant" />
+                android:textColor="@color/text_secondary" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

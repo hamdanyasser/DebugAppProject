@@ -1,224 +1,195 @@
-# 🐛 DebugMaster - Production-Ready Android Learning Platform
+# DebugMaster - Learn Debugging Through Play 🐛
 
-<div align="center">
+A gamified Android app to learn debugging skills by finding and fixing bugs in code.
 
-![Platform](https://img.shields.io/badge/Platform-Android-green.svg)
-![Language](https://img.shields.io/badge/Language-Java%2011-orange.svg)
-![Min SDK](https://img.shields.io/badge/Min%20SDK-26-blue.svg)
-![Architecture](https://img.shields.io/badge/Architecture-MVVM-purple.svg)
-![DI](https://img.shields.io/badge/DI-Hilt-red.svg)
-![Test Coverage](https://img.shields.io/badge/Test%20Coverage-70%25-brightgreen.svg)
+## 🎮 Features
 
-**An innovative mobile learning platform for mastering Java debugging through interactive code execution**
+### Free Features
+- **30+ Debugging Challenges** - Real-world bugs to solve
+- **2 Learning Paths** - Java Fundamentals & Loops/Control Flow
+- **Daily Challenges** - New bug every day with bonus XP
+- **Achievement System** - 20+ achievements to unlock
+- **Progress Tracking** - XP, levels, streaks, stats
 
-[Features](#-key-features) • [Architecture](#-architecture) • [Tech Stack](#-tech-stack) • [Setup](#-setup) • [Testing](#-testing)
+### Pro Features ($4.99/month or $39.99/year)
+- **100+ Challenges** - All difficulty levels
+- **6 Learning Paths** - Complete curriculum
+- **Battle Arena** - Multiplayer competition
+- **Unlimited Practice** - No daily limits
+- **Ad-Free Experience**
+- **Detailed Analytics**
+- **Lifetime Option** - $99.99 one-time
 
-</div>
-
----
-
-## 📖 Overview
-
-DebugMaster is a portfolio-worthy, production-ready Android application that revolutionizes programming education by allowing users to **actually compile and execute Java code** on their mobile devices. Unlike traditional learning apps, DebugMaster provides real-time feedback with actual compilation errors, runtime exceptions, and output validation.
-
----
-
-## ✨ Key Features
-
-### 🚀 Interactive Code Execution (Killer Feature)
-- **Real Java Compiler**: Uses Janino to compile and execute user code at runtime
-- **Compilation Errors**: Shows actual errors with line numbers and helpful hints
-- **Runtime Errors**: Catches exceptions (NPE, ArrayIndexOutOfBounds, etc.) with formatted stack traces
-- **Output Comparison**: Compares actual output vs. expected output
-- **Timeout Protection**: 5-second timeout prevents infinite loops
-- **Execution Time**: Displays performance metrics for each run
-
-### 🎨 Exceptional UI/UX
-- **Confetti Celebrations**: 200-particle animation on bug completion
-- **Spring Animations**: Physics-based animations for all card interactions
-- **Animated XP Bar**: Smooth progress animation with easing functions
-- **Level-Up Celebrations**: Multi-layer animations with rotation and scaling
-- **Button Micro-interactions**: Press animations for every button
-- **Card Reveal Animations**: Fade-in with scale for hints, solutions, and results
-- **Shake Animations**: Error states draw attention with shake effect
-
-### 🏗️ Production-Ready Architecture
-- **MVVM Pattern**: Clear separation between UI, logic, and data
-- **Hilt Dependency Injection**: Professional DI setup with modules
-- **Repository Pattern**: Single source of truth for data operations
-- **Room Database v3**: Proper migrations, relationships, and indexes
-- **Offline-First Design**: 100% functional without internet
-- **LiveData + ViewModels**: Reactive data flow with lifecycle awareness
-
-### 🎮 Gamification System
-- **XP & Leveling**: Earn XP for solving bugs (Easy: 10, Medium: 20, Hard: 30)
-- **Bonus XP**: +5 XP for solving without hints
-- **Streak System**: Daily streak tracking with longest streak record
-- **15 Achievements**: Unlock achievements for milestones
-- **Perfect Fixes**: Track bugs solved without hints
-- **Progress Analytics**: Detailed stats by difficulty and category
-
-### 📚 Learning Features
-- **20+ Debugging Challenges**: Bugs across categories (Loops, Arrays, OOP, etc.)
-- **4 Learning Paths**: Structured progression (Basics → Advanced)
-- **Progressive Hints**: 3-level hint system (subtle → explicit)
-- **Explanations**: Detailed explanations with fixed code
-- **User Notes**: Save observations and learnings
-- **Bug of the Day**: Daily challenge with notifications
-
----
-
-## 🏛️ Architecture
-
-### Architecture Diagram
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Presentation Layer                       │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  Fragments   │  │  Activities  │  │   Adapters   │      │
-│  │ @AndroidEP   │  │ @AndroidEP   │  │ RecyclerView │      │
-│  └──────┬───────┘  └──────┬───────┘  └──────────────┘      │
-│         │                  │                                 │
-│         └──────────────────┴─── ViewModels (@HiltViewModel) │
-└─────────────────────────────────────────────────────────────┘
-                              │
-┌─────────────────────────────┴─────────────────────────────┐
-│                     Business Logic Layer                    │
-│  ┌──────────────────┐  ┌──────────────────┐               │
-│  │  BugRepository   │  │ CodeExecution    │               │
-│  │  (Singleton)     │  │     Engine       │               │
-│  └────────┬─────────┘  └──────────────────┘               │
-└───────────┴─────────────────────────────────────────────────┘
-            │
-┌───────────┴─────────────────────────────────────────────────┐
-│                     Data Layer                               │
-│  ┌──────────────────┐  ┌──────────────────┐                │
-│  │  Room Database   │  │      DAOs        │                │
-│  │   (Singleton)    │  │  Bug, Hint, XP   │                │
-│  └──────────────────┘  └──────────────────┘                │
-└─────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 🛠️ Tech Stack
-
-### Core Technologies
-- **Language**: Java 11
-- **Min SDK**: 26 (Android 8.0 - covers 95%+ devices)
-- **Target SDK**: 34 (Android 14)
-- **Build System**: Gradle Kotlin DSL 8.13.0
-
-### Architecture & DI
-- **Pattern**: MVVM (Model-View-ViewModel)
-- **Dependency Injection**: Hilt 2.48.1
-- **Lifecycle**: AndroidX Lifecycle 2.7.0
-- **Navigation**: Navigation Component 2.6.0
-
-### Database & Data
-- **Local Database**: Room 2.6.1
-- **Reactive Data**: LiveData + ViewModel
-- **JSON Parsing**: Gson 2.10.1
-
-### UI & Animations
-- **Design System**: Material Design 3 (1.13.0)
-- **Animations**: Lottie 6.1.0 + Custom AnimatorSet
-- **Shimmer Effects**: Facebook Shimmer 0.5.0
-- **Layout**: ConstraintLayout 2.2.1
-
-### Code Execution
-- **Java Compiler**: Janino 3.1.10
-- **Thread Management**: ExecutorService
-- **Timeout Handling**: Future with TimeoutException
-
-### Testing
-- **Unit Testing**: JUnit 4.13.2
-- **Mocking**: Mockito 5.7.0
-- **UI Testing**: Espresso 3.7.0
-- **Memory Leaks**: LeakCanary 2.12
-
----
-
-## 🚀 Setup
+## 🚀 Getting Started
 
 ### Prerequisites
-- Android Studio Hedgehog (2023.1.1) or later
-- JDK 11 or later
+- Android Studio Hedgehog or newer
+- JDK 11+
 - Android SDK 34
+- A physical device or emulator (API 26+)
 
-### Installation Steps
+### Setup
 
-1. **Clone the repository**
+1. Clone the repository
+2. Open in Android Studio
+3. Sync Gradle files
+4. Run on device/emulator
+
+### First Run
+- The app seeds the database with 30 bugs on first launch
+- Users start at Level 1 with 0 XP
+- Daily challenges reset at midnight local time
+
+## 📱 Play Store Publishing Checklist
+
+### Before Publishing
+
+1. **Change Package Name**
+   - Update `applicationId` in `app/build.gradle.kts`
+   - Example: `com.yourcompany.debugmaster`
+
+2. **Create Signing Key**
    ```bash
-   git clone https://github.com/hamdanyasser/DebugAppProject.git
-   cd DebugAppProject
+   keytool -genkey -v -keystore release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias debugmaster
    ```
 
-2. **Open in Android Studio**
-   - Open Android Studio
-   - Select "Open an Existing Project"
-   - Navigate to the cloned directory
-   - Wait for Gradle sync
-
-3. **Build the project**
-   ```bash
-   ./gradlew clean build
+3. **Configure Signing in Gradle**
+   - Add to `gradle.properties`:
+   ```
+   RELEASE_STORE_FILE=../release-key.jks
+   RELEASE_STORE_PASSWORD=your_password
+   RELEASE_KEY_ALIAS=debugmaster
+   RELEASE_KEY_PASSWORD=your_password
    ```
 
-4. **Run on device/emulator**
-   - Connect Android device OR start an emulator
-   - Click "Run" in Android Studio
-   - App will install and launch
+4. **Update App Icon**
+   - Replace icons in `app/src/main/res/mipmap-*`
+   - Use Android Studio Image Asset Studio
 
----
+5. **Set Up Google Play Console**
+   - Create developer account ($25 one-time)
+   - Create new app listing
+   - Set up internal testing track first
 
-## 🧪 Testing
+### Google Play Billing Setup
 
-### Running Tests
+1. **In Google Play Console:**
+   - Go to Monetize > Products > Subscriptions
+   - Create products with these IDs:
+     - `debugmaster_pro_monthly` - $4.99/month
+     - `debugmaster_pro_yearly` - $39.99/year
+   - Create in-app product:
+     - `debugmaster_lifetime` - $99.99 one-time
 
-**Unit Tests**
-```bash
-./gradlew test
-./gradlew test --tests CodeExecutionEngineTest
+2. **Testing:**
+   - Add license testers in Play Console
+   - Use internal testing track
+   - Test purchase flows
+
+### Required Play Store Assets
+
+1. **Screenshots** (2-8 per device type)
+   - Phone: 1080x1920 or 1920x1080
+   - Tablet 7": 1200x1920
+   - Tablet 10": 1600x2560
+
+2. **Feature Graphic**
+   - 1024x500 PNG/JPEG
+
+3. **App Icon**
+   - 512x512 PNG (32-bit with alpha)
+
+4. **Store Listing**
+   - Short description (80 chars)
+   - Full description (4000 chars)
+   - Category: Education
+   - Tags: coding, programming, debugging, learning
+
+### Privacy Policy
+You must have a privacy policy. Template included at `docs/privacy-policy.md`
+
+## 📁 Project Structure
+
+```
+app/
+├── src/main/
+│   ├── java/com/example/debugappproject/
+│   │   ├── billing/          # Google Play Billing
+│   │   ├── data/            
+│   │   │   ├── local/        # Room database
+│   │   │   ├── repository/   # Data repositories
+│   │   │   └── seeding/      # Initial data
+│   │   ├── model/            # Data classes
+│   │   ├── ui/               # Fragments & ViewModels
+│   │   │   ├── home/
+│   │   │   ├── learn/
+│   │   │   ├── profile/
+│   │   │   ├── subscription/
+│   │   │   └── ...
+│   │   └── util/             # Utilities
+│   ├── assets/
+│   │   └── bugs.json         # Bug database
+│   └── res/                  # Resources
+└── build.gradle.kts
 ```
 
-**Instrumented Tests**
-```bash
-./gradlew connectedAndroidTest
+## 🎯 Technical Details
+
+- **Architecture**: MVVM with Repository pattern
+- **Database**: Room (SQLite)
+- **DI**: Hilt
+- **Navigation**: Jetpack Navigation
+- **Billing**: Google Play Billing Library 6.1.0
+
+## 📊 Analytics Events (Recommended)
+
+Track these for optimization:
+- `bug_started` - User begins challenge
+- `bug_completed` - Challenge solved
+- `hint_used` - Hint requested
+- `path_completed` - Learning path finished
+- `subscription_viewed` - Pro screen opened
+- `subscription_purchased` - Successful purchase
+- `subscription_cancelled` - Purchase cancelled
+
+## 🔧 Customization
+
+### Adding New Bugs
+Edit `app/src/main/assets/bugs.json`:
+
+```json
+{
+  "id": 31,
+  "title": "Your Bug Title",
+  "language": "Java",
+  "difficulty": "Easy|Medium|Hard",
+  "category": "Loops|Strings|etc",
+  "description": "What's wrong?",
+  "brokenCode": "code with bug",
+  "expectedOutput": "what should happen",
+  "actualOutput": "what actually happens",
+  "explanation": "why the bug occurs",
+  "fixedCode": "corrected code"
+}
 ```
 
-### Test Coverage
+### Adding Hints
+```json
+{
+  "bugId": 31,
+  "level": 1,
+  "text": "First hint (vague)"
+}
+```
 
-| Component | Coverage | Tests |
-|-----------|----------|-------|
-| CodeExecutionEngine | 85% | 22 |
-| DateUtils | 90% | 13 |
-| ProfileViewModel | 80% | 15 |
-| **Overall** | **70%** | **58** |
+## 📄 License
 
----
+This project is proprietary. All rights reserved.
 
-## 📊 Performance
+## 🤝 Support
 
-- **APK Size**: ~8 MB (ProGuard enabled)
-- **Startup Time**: < 1 second
-- **Animation Frame Rate**: 60 FPS
-- **Memory Usage**: ~50 MB average
-
----
-
-## 👨‍💻 Author
-
-**Hamdan Yasser**
-- GitHub: [@hamdanyasser](https://github.com/hamdanyasser)
+For issues or feature requests, contact: your-email@example.com
 
 ---
 
-<div align="center">
-
-**Built with ❤️ for learning and portfolio purposes**
-
-⭐ Star this repo if you find it helpful!
-
-</div>
+Made with ❤️ for developers who want to master debugging!

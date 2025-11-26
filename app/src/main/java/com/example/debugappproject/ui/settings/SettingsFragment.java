@@ -1,82 +1,56 @@
 package com.example.debugappproject.ui.settings;
 
-import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
-import com.example.debugappproject.auth.AuthManager;
-import com.example.debugappproject.data.repository.BugRepository;
+import com.example.debugappproject.R;
+import com.example.debugappproject.billing.BillingManager;
 import com.example.debugappproject.databinding.FragmentSettingsBinding;
-import com.example.debugappproject.sync.ProgressSyncManager;
-import com.example.debugappproject.sync.SyncManagerFactory;
-import com.example.debugappproject.util.NotificationHelper;
-import com.example.debugappproject.util.NotificationScheduler;
 
 /**
- * Settings Fragment - Manages app settings and preferences.
- *
- * Features:
- * - Notification preferences (daily reminders, achievements)
- * - Learning preferences (hints enabled)
- * - About section (version, privacy policy)
- * - Reset progress option
+ * Settings Fragment - App configuration and preferences
+ * 
+ * Sections:
+ * - Appearance: Dark mode, sounds, haptic feedback
+ * - Gameplay: Hints, timer, auto-submit
+ * - Notifications: Daily reminders, streak alerts
+ * - Subscription: Pro status management
+ * - Data: Reset progress
+ * - About: Version, privacy, terms
  */
 public class SettingsFragment extends Fragment {
 
+    private static final String PREFS_NAME = "debugmaster_settings";
+    
+    // Appearance settings
+    private static final String KEY_DARK_MODE = "dark_mode";
+    private static final String KEY_SOUNDS = "sounds_enabled";
+    private static final String KEY_HAPTIC = "haptic_enabled";
+    
+    // Gameplay settings
+    private static final String KEY_HINTS = "hints_enabled";
+    private static final String KEY_TIMER = "timer_enabled";
+    private static final String KEY_AUTO_SUBMIT = "auto_submit_enabled";
+    
+    // Notification settings
+    private static final String KEY_REMINDERS = "reminders_enabled";
+    private static final String KEY_STREAK_ALERTS = "streak_alerts_enabled";
+
     private FragmentSettingsBinding binding;
-    private SharedPreferences preferences;
-    private ActivityResultLauncher<String> notificationPermissionLauncher;
-    private AuthManager authManager;
-    private ProgressSyncManager syncManager;
-
-    // Preference keys
-    private static final String PREFS_NAME = "DebugMasterPrefs";
-    private static final String KEY_DAILY_REMINDERS = "daily_reminders";
-    private static final String KEY_ACHIEVEMENT_NOTIFICATIONS = "achievement_notifications";
-    private static final String KEY_HINTS_ENABLED = "hints_enabled";
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Register notification permission launcher (Android 13+)
-        notificationPermissionLauncher = registerForActivityResult(
-            new ActivityResultContracts.RequestPermission(),
-            isGranted -> {
-                if (isGranted) {
-                    // Permission granted - schedule notifications
-                    NotificationScheduler.scheduleBugOfTheDayNotification(requireContext(), 9, 0);
-                    Toast.makeText(requireContext(),
-                        "Daily reminders enabled at 9:00 AM", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Permission denied - disable toggle
-                    binding.switchDailyReminders.setChecked(false);
-                    preferences.edit().putBoolean(KEY_DAILY_REMINDERS, false).apply();
-                    Toast.makeText(requireContext(),
-                        "Notification permission denied. Enable in app settings to receive daily reminders.",
-                        Toast.LENGTH_LONG).show();
-                }
-            }
-        );
-    }
+    private SharedPreferences prefs;
+    private BillingManager billingManager;
 
     @Nullable
     @Override
@@ -90,291 +64,349 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        preferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        authManager = AuthManager.getInstance(requireContext());
+        prefs = requireContext().getSharedPreferences(PREFS_NAME, 0);
+        billingManager = new BillingManager(requireContext());
 
-        BugRepository repository = new BugRepository(requireActivity().getApplication());
-        syncManager = SyncManagerFactory.createSyncManager(requireContext(), repository);
-
-        // Create notification channels (required for Android O+)
-        NotificationHelper.createNotificationChannels(requireContext());
-
-        loadPreferences();
+        loadSettings();
         setupListeners();
-        displayAppVersion();
+        observeProStatus();
     }
 
-    /**
-     * Loads saved preferences and updates UI.
-     */
-    private void loadPreferences() {
-        binding.switchDailyReminders.setChecked(
-            preferences.getBoolean(KEY_DAILY_REMINDERS, true)
-        );
-        binding.switchAchievementNotifications.setChecked(
-            preferences.getBoolean(KEY_ACHIEVEMENT_NOTIFICATIONS, true)
-        );
-        binding.switchHintsEnabled.setChecked(
-            preferences.getBoolean(KEY_HINTS_ENABLED, true)
-        );
+    private void loadSettings() {
+        // Load appearance preferences
+        binding.switchDarkMode.setChecked(prefs.getBoolean(KEY_DARK_MODE, false));
+        binding.switchSounds.setChecked(prefs.getBoolean(KEY_SOUNDS, true));
+        binding.switchHaptic.setChecked(prefs.getBoolean(KEY_HAPTIC, true));
+        
+        // Load gameplay preferences
+        if (binding.switchHints != null) {
+            binding.switchHints.setChecked(prefs.getBoolean(KEY_HINTS, true));
+        }
+        if (binding.switchTimer != null) {
+            binding.switchTimer.setChecked(prefs.getBoolean(KEY_TIMER, true));
+        }
+        if (binding.switchAutoSubmit != null) {
+            binding.switchAutoSubmit.setChecked(prefs.getBoolean(KEY_AUTO_SUBMIT, true));
+        }
+        
+        // Load notification preferences
+        binding.switchReminders.setChecked(prefs.getBoolean(KEY_REMINDERS, true));
+        binding.switchStreakAlerts.setChecked(prefs.getBoolean(KEY_STREAK_ALERTS, true));
     }
 
-    /**
-     * Sets up listeners for switches and buttons.
-     */
     private void setupListeners() {
-        // Daily Reminders Switch
-        binding.switchDailyReminders.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        // Back button
+        binding.buttonBack.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigateUp();
+        });
+
+        // ==================== APPEARANCE ====================
+        
+        // Dark mode toggle
+        binding.switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            prefs.edit().putBoolean(KEY_DARK_MODE, isChecked).apply();
+            
             if (isChecked) {
-                // Check notification permission (Android 13+)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    if (ContextCompat.checkSelfPermission(requireContext(),
-                        Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-                        // Permission already granted - schedule notifications
-                        preferences.edit().putBoolean(KEY_DAILY_REMINDERS, true).apply();
-                        NotificationScheduler.scheduleBugOfTheDayNotification(requireContext(), 9, 0);
-                        Toast.makeText(requireContext(),
-                            "Daily reminders enabled at 9:00 AM", Toast.LENGTH_SHORT).show();
-                    } else {
-                        // Request permission
-                        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
-                        preferences.edit().putBoolean(KEY_DAILY_REMINDERS, true).apply();
-                    }
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }
+        });
+
+        // Sound effects toggle
+        binding.switchSounds.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            prefs.edit().putBoolean(KEY_SOUNDS, isChecked).apply();
+            if (isChecked) {
+                Toast.makeText(getContext(), "🔊 Sounds enabled", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Haptic feedback toggle
+        binding.switchHaptic.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            prefs.edit().putBoolean(KEY_HAPTIC, isChecked).apply();
+        });
+
+        // ==================== GAMEPLAY ====================
+        
+        // Hints toggle
+        if (binding.switchHints != null) {
+            binding.switchHints.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                prefs.edit().putBoolean(KEY_HINTS, isChecked).apply();
+                if (!isChecked) {
+                    Toast.makeText(getContext(), "🎯 Challenge mode: Hints disabled!", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Android 12 and below - no permission needed
-                    preferences.edit().putBoolean(KEY_DAILY_REMINDERS, true).apply();
-                    NotificationScheduler.scheduleBugOfTheDayNotification(requireContext(), 9, 0);
-                    Toast.makeText(requireContext(),
-                        "Daily reminders enabled at 9:00 AM", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "💡 Hints enabled", Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                // Cancel daily notification
-                preferences.edit().putBoolean(KEY_DAILY_REMINDERS, false).apply();
-                NotificationScheduler.cancelBugOfTheDayNotification(requireContext());
-                Toast.makeText(requireContext(),
-                    "Daily reminders disabled", Toast.LENGTH_SHORT).show();
-            }
-        });
+            });
+        }
+        
+        // Timer toggle
+        if (binding.switchTimer != null) {
+            binding.switchTimer.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                prefs.edit().putBoolean(KEY_TIMER, isChecked).apply();
+            });
+        }
+        
+        // Auto-submit toggle
+        if (binding.switchAutoSubmit != null) {
+            binding.switchAutoSubmit.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                prefs.edit().putBoolean(KEY_AUTO_SUBMIT, isChecked).apply();
+            });
+        }
 
-        // Achievement Notifications Switch
-        binding.switchAchievementNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            preferences.edit()
-                .putBoolean(KEY_ACHIEVEMENT_NOTIFICATIONS, isChecked)
-                .apply();
-        });
+        // ==================== NOTIFICATIONS ====================
 
-        // Hints Enabled Switch
-        binding.switchHintsEnabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            preferences.edit()
-                .putBoolean(KEY_HINTS_ENABLED, isChecked)
-                .apply();
-
+        // Daily reminders toggle
+        binding.switchReminders.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            prefs.edit().putBoolean(KEY_REMINDERS, isChecked).apply();
             if (isChecked) {
-                Toast.makeText(requireContext(),
-                    "Hints enabled", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(requireContext(),
-                    "Hints disabled - challenge mode activated!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "🔔 You'll get daily reminders", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Privacy Policy Button
-        binding.buttonPrivacyPolicy.setOnClickListener(v -> {
-            // TODO: In Phase 3, link to actual privacy policy
-            new AlertDialog.Builder(requireContext())
-                .setTitle("Privacy Policy")
-                .setMessage("DebugMaster is an offline-first learning app. All your data is stored locally on your device. We do not collect, transmit, or share any personal information.")
-                .setPositiveButton("OK", null)
-                .show();
+        // Streak alerts toggle
+        binding.switchStreakAlerts.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            prefs.edit().putBoolean(KEY_STREAK_ALERTS, isChecked).apply();
         });
 
-        // Reset Progress Button
-        binding.buttonResetProgress.setOnClickListener(v -> {
-            showResetConfirmationDialog();
+        // ==================== SUBSCRIPTION ====================
+
+        // Set initial state based on current Pro status
+        updateSubscriptionUI(billingManager.isProUserSync());
+
+        // ==================== DATA ====================
+
+        // Reset progress
+        binding.layoutResetProgress.setOnClickListener(v -> showResetDialog());
+
+        // ==================== ABOUT ====================
+
+        // Privacy policy
+        binding.layoutPrivacy.setOnClickListener(v -> {
+            Toast.makeText(getContext(), "Opening Privacy Policy...", Toast.LENGTH_SHORT).show();
+            // In production, open a WebView or browser with privacy policy
         });
 
-        // Sync Now Button
-        binding.buttonSyncNow.setOnClickListener(v -> {
-            handleSyncNow();
-        });
-
-        // Manage Account & Data Button
-        binding.buttonManageAccount.setOnClickListener(v -> {
-            showManageAccountDialog();
+        // Terms of service
+        binding.layoutTerms.setOnClickListener(v -> {
+            Toast.makeText(getContext(), "Opening Terms of Service...", Toast.LENGTH_SHORT).show();
+            // In production, open a WebView or browser with terms
         });
     }
 
-    /**
-     * Displays the app version from PackageInfo.
-     */
-    private void displayAppVersion() {
-        try {
-            PackageInfo packageInfo = requireActivity().getPackageManager()
-                .getPackageInfo(requireActivity().getPackageName(), 0);
-            binding.textVersion.setText(packageInfo.versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            binding.textVersion.setText("Unknown");
+    private void observeProStatus() {
+        billingManager.getIsProUser().observe(getViewLifecycleOwner(), isPro -> {
+            if (binding == null) return;
+            updateSubscriptionUI(isPro);
+        });
+    }
+
+    private void showQuickDemoActivateDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("🧪 Quick Pro Activation")
+                .setMessage("Instantly activate Pro to test premium features:\n\n" +
+                        "✓ All 100+ debugging challenges\n" +
+                        "✓ All 6 learning paths\n" +
+                        "✓ Battle Arena multiplayer\n" +
+                        "✓ Unlimited practice mode\n" +
+                        "✓ Ad-free experience\n\n" +
+                        "This is Demo Mode - no real payment.")
+                .setPositiveButton("🚀 Activate Pro", (dialog, which) -> {
+                    // Use BillingManager to activate demo
+                    billingManager.demoPurchase(BillingManager.PRODUCT_YEARLY);
+                    
+                    // Manually update UI immediately
+                    updateSubscriptionUI(true);
+                    
+                    Toast.makeText(getContext(), "🎉 Pro activated!", Toast.LENGTH_LONG).show();
+                })
+                .setNeutralButton("See Plans", (dialog, which) -> {
+                    try {
+                        Navigation.findNavController(requireView()).navigate(R.id.proSubscriptionFragment);
+                    } catch (Exception e) {
+                        // Ignore
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+    
+    private void updateSubscriptionUI(boolean isPro) {
+        if (binding == null) return;
+        
+        boolean isDemoMode = BillingManager.isDemoMode();
+        
+        if (isPro) {
+            binding.textSubscriptionStatus.setText("👑 Pro Member");
+            binding.textSubscriptionDesc.setText(isDemoMode ? 
+                "Demo Mode - All features unlocked!" : "All features unlocked!");
+            binding.buttonUpgrade.setText("Manage");
+            binding.buttonUpgrade.setOnClickListener(v -> showProMemberInfo());
+            binding.cardSubscription.setOnClickListener(v -> showProMemberInfo());
+        } else {
+            binding.textSubscriptionStatus.setText("Free Plan");
+            binding.textSubscriptionDesc.setText(isDemoMode ? 
+                "Demo Mode - Tap to test Pro features" : "Upgrade to unlock all features");
+            binding.buttonUpgrade.setText(isDemoMode ? "🧪 Try Pro" : "Upgrade");
+            
+            if (isDemoMode) {
+                binding.buttonUpgrade.setOnClickListener(v -> showQuickDemoActivateDialog());
+                binding.cardSubscription.setOnClickListener(v -> showQuickDemoActivateDialog());
+            } else {
+                binding.buttonUpgrade.setOnClickListener(v -> {
+                    try {
+                        Navigation.findNavController(v).navigate(R.id.proSubscriptionFragment);
+                    } catch (Exception e) {
+                        showDemoUpgradeDialog();
+                    }
+                });
+                binding.cardSubscription.setOnClickListener(v -> {
+                    try {
+                        Navigation.findNavController(v).navigate(R.id.proSubscriptionFragment);
+                    } catch (Exception e) {
+                        showDemoUpgradeDialog();
+                    }
+                });
+            }
         }
     }
 
-    /**
-     * Shows confirmation dialog for resetting all progress.
-     */
-    private void showResetConfirmationDialog() {
+    private void showDemoUpgradeDialog() {
         new AlertDialog.Builder(requireContext())
-            .setTitle("Reset All Progress")
-            .setMessage("Are you sure you want to reset all your progress? This will delete:\n\n" +
-                "• All completed bugs\n" +
-                "• All XP and achievements\n" +
-                "• All streak data\n" +
-                "• All user notes\n\n" +
-                "This action cannot be undone!")
-            .setPositiveButton("Reset", (dialog, which) -> {
-                resetAllProgress();
-            })
-            .setNegativeButton("Cancel", null)
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .show();
+                .setTitle("🚀 Demo Mode")
+                .setMessage("This is a demo purchase. In production, this would connect to Google Play Billing.\n\n" +
+                        "Would you like to simulate a Pro upgrade?")
+                .setPositiveButton("Activate Pro", (dialog, which) -> {
+                    // Use BillingManager to activate demo
+                    billingManager.demoPurchase(BillingManager.PRODUCT_YEARLY);
+                    
+                    // Manually update UI immediately
+                    updateSubscriptionUI(true);
+                    
+                    Toast.makeText(getContext(), "🎉 Pro activated! (Demo)", Toast.LENGTH_LONG).show();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
-    /**
-     * Resets all user progress by clearing the database.
-     */
-    private void resetAllProgress() {
-        BugRepository repository = new BugRepository(requireActivity().getApplication());
-
-        repository.getExecutorService().execute(() -> {
-            // Clear all user progress
-            repository.getUserProgressDao().deleteAllProgress();
-
-            // Clear all user achievements
-            repository.getAchievementDao().deleteAllUserAchievements();
-
-            // Reset all bugs to not completed
-            repository.getBugDao().resetAllBugsToNotCompleted();
-
-            // Clear all user notes
-            repository.getBugDao().clearAllUserNotes();
-
-            // Reseed the database with fresh data
-            if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    Toast.makeText(requireContext(),
-                        "All progress has been reset", Toast.LENGTH_LONG).show();
-
-                    // Refresh the UI by restarting the activity
-                    requireActivity().recreate();
-                });
-            }
-        });
+    private void showProMemberInfo() {
+        boolean isDemoMode = BillingManager.isDemoMode();
+        
+        new AlertDialog.Builder(requireContext())
+                .setTitle("👑 Pro Member")
+                .setMessage("You have full access to all features!\n\n" +
+                        "• 100+ debugging challenges\n" +
+                        "• All 6 learning paths\n" +
+                        "• Battle Arena multiplayer\n" +
+                        "• Ad-free experience\n\n" +
+                        (isDemoMode ? "🧪 Demo Mode Active" : "Thank you for your support!"))
+                .setPositiveButton("Awesome!", null)
+                .setNeutralButton(isDemoMode ? "Deactivate Pro" : "Manage in Play Store", (dialog, which) -> {
+                    if (isDemoMode) {
+                        // Deactivate demo pro
+                        billingManager.demoDeactivate();
+                        
+                        // Manually update UI immediately
+                        updateSubscriptionUI(false);
+                        
+                        Toast.makeText(getContext(), "Pro deactivated. Back to free plan.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), 
+                            "Open Google Play Store > Subscriptions to manage", 
+                            Toast.LENGTH_LONG).show();
+                    }
+                })
+                .show();
     }
 
+    private void showResetDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("⚠️ Reset Progress")
+                .setMessage("This will delete all your progress, XP, achievements, and stats.\n\n" +
+                        "This action cannot be undone!")
+                .setPositiveButton("Reset", (dialog, which) -> {
+                    // TODO: Implement actual reset logic with database
+                    Toast.makeText(getContext(), "Progress reset!", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+    
+    // ==================== STATIC HELPER METHODS ====================
+    
     /**
-     * Public method to check if hints are enabled.
+     * Check if hints are enabled in settings.
      * Can be called from other fragments.
      */
     public static boolean areHintsEnabled(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        return prefs.getBoolean(KEY_HINTS_ENABLED, true);
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        return prefs.getBoolean(KEY_HINTS, true);
     }
-
+    
     /**
-     * Public method to check if daily reminders are enabled.
+     * Check if timer is enabled in settings.
+     */
+    public static boolean isTimerEnabled(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        return prefs.getBoolean(KEY_TIMER, true);
+    }
+    
+    /**
+     * Check if auto-submit is enabled in settings.
+     */
+    public static boolean isAutoSubmitEnabled(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        return prefs.getBoolean(KEY_AUTO_SUBMIT, true);
+    }
+    
+    /**
+     * Check if sounds are enabled in settings.
+     */
+    public static boolean areSoundsEnabled(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        return prefs.getBoolean(KEY_SOUNDS, true);
+    }
+    
+    /**
+     * Check if haptic feedback is enabled in settings.
+     */
+    public static boolean isHapticEnabled(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        return prefs.getBoolean(KEY_HAPTIC, true);
+    }
+    
+    /**
+     * Check if daily reminders are enabled in settings.
      */
     public static boolean areDailyRemindersEnabled(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        return prefs.getBoolean(KEY_DAILY_REMINDERS, true);
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        return prefs.getBoolean(KEY_REMINDERS, true);
     }
-
+    
     /**
-     * Public method to check if achievement notifications are enabled.
+     * Check if streak alerts are enabled in settings.
+     */
+    public static boolean areStreakAlertsEnabled(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        return prefs.getBoolean(KEY_STREAK_ALERTS, true);
+    }
+    
+    /**
+     * Check if achievement notifications are enabled in settings.
+     * Uses streak alerts setting as achievement notifications.
      */
     public static boolean areAchievementNotificationsEnabled(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        return prefs.getBoolean(KEY_ACHIEVEMENT_NOTIFICATIONS, true);
-    }
-
-    /**
-     * Handles manual sync request.
-     */
-    private void handleSyncNow() {
-        if (!authManager.isSignedIn()) {
-            Toast.makeText(requireContext(),
-                "Sign in required to sync progress to the cloud",
-                Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (!authManager.isFirebaseAvailable()) {
-            Toast.makeText(requireContext(),
-                "Firebase not configured. Add google-services.json to enable sync.",
-                Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        // Show progress feedback
-        Toast.makeText(requireContext(), "Syncing progress...", Toast.LENGTH_SHORT).show();
-
-        syncManager.fullSync(new ProgressSyncManager.SyncCallback() {
-            @Override
-            public void onSuccess() {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        Toast.makeText(requireContext(),
-                            "Sync complete! Your progress is backed up.",
-                            Toast.LENGTH_SHORT).show();
-                    });
-                }
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        Toast.makeText(requireContext(),
-                            "Sync failed: " + errorMessage,
-                            Toast.LENGTH_LONG).show();
-                    });
-                }
-            }
-        });
-    }
-
-    /**
-     * Shows dialog for managing account and cloud data.
-     */
-    private void showManageAccountDialog() {
-        String message;
-        if (authManager.isSignedIn()) {
-            message = "Account: " + authManager.getUserEmail() + "\n\n" +
-                "Cloud Data Deletion:\n" +
-                "• Cloud-synced data will be deletable via a web dashboard (coming soon)\n" +
-                "• For now, contact support to request cloud data deletion\n\n" +
-                "Local Data:\n" +
-                "• Use 'Reset Progress' button below to clear all local data\n" +
-                "• Local reset does NOT affect cloud-synced data\n\n" +
-                "Account Deletion:\n" +
-                "• To delete your account and all associated data, contact support";
-        } else {
-            message = "You are currently in Guest mode.\n\n" +
-                "Local Data:\n" +
-                "• All your progress is stored locally on this device\n" +
-                "• Use 'Reset Progress' button below to clear all local data\n\n" +
-                "Cloud Sync:\n" +
-                "• Sign in with Google to sync your progress to the cloud\n" +
-                "• Your data will be backed up and accessible across devices";
-        }
-
-        new AlertDialog.Builder(requireContext())
-            .setTitle("Manage Account & Data")
-            .setMessage(message)
-            .setPositiveButton("OK", null)
-            .show();
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        // Use streak alerts as achievement notifications setting
+        return prefs.getBoolean(KEY_STREAK_ALERTS, true);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (billingManager != null) {
+            billingManager.destroy();
+        }
         binding = null;
     }
 }

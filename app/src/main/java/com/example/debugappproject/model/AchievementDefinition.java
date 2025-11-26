@@ -2,6 +2,7 @@ package com.example.debugappproject.model;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 /**
@@ -25,6 +26,7 @@ public class AchievementDefinition {
     public AchievementDefinition() {
     }
 
+    @Ignore
     public AchievementDefinition(String id, String name, String description, String iconEmoji,
                                 int xpReward, String category, int sortOrder) {
         this.id = id;

@@ -175,7 +175,7 @@ public class SplashFragment extends Fragment {
             if (OnboardingActivity.hasSeenOnboarding(requireContext())) {
                 // User has seen onboarding - go to main app
                 Navigation.findNavController(binding.getRoot()).navigate(
-                    R.id.action_splash_to_learn
+                    R.id.action_splash_to_home
                 );
             } else {
                 // First launch - show onboarding
