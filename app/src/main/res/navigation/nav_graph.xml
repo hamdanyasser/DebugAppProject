@@ -13,13 +13,55 @@
         tools:layout="@layout/fragment_splash">
 
         <action
-            android:id="@+id/action_splash_to_learn"
-            app:destination="@id/learningPathsFragment"
+            android:id="@+id/action_splash_to_home"
+            app:destination="@id/homeFragment"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
     </fragment>
 
-    <!-- Bottom Nav Destinations -->
+    <!-- ============================================== -->
+    <!-- BOTTOM NAVIGATION DESTINATIONS                -->
+    <!-- ============================================== -->
+
+    <!-- Home Screen (Main Dashboard) -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.debugappproject.ui.home.HomeFragment"
+        android:label="DebugMaster"
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_home_to_bugList"
+            app:destination="@id/bugListFragment" />
+
+        <action
+            android:id="@+id/action_home_to_bugDetail"
+            app:destination="@id/bugDetailFragment" />
+
+        <action
+            android:id="@+id/action_home_to_progress"
+            app:destination="@id/progressFragment" />
+
+        <action
+            android:id="@+id/action_home_to_practice"
+            app:destination="@id/practiceFragment" />
+
+        <action
+            android:id="@+id/action_home_to_battle"
+            app:destination="@id/battleArenaFragment" />
+
+        <action
+            android:id="@+id/action_home_to_learn"
+            app:destination="@id/learningPathsFragment" />
+
+        <action
+            android:id="@+id/action_home_to_premium"
+            app:destination="@id/premiumFragment" />
+
+        <action
+            android:id="@+id/action_home_to_subscription"
+            app:destination="@id/proSubscriptionFragment" />
+    </fragment>
 
     <!-- Learning Paths Screen (Learn Tab) -->
     <fragment
@@ -35,7 +77,84 @@
         <action
             android:id="@+id/action_paths_to_bugDetail"
             app:destination="@id/bugDetailFragment" />
+
+        <action
+            android:id="@+id/action_paths_to_premium"
+            app:destination="@id/premiumFragment" />
+
+        <action
+            android:id="@+id/action_paths_to_subscription"
+            app:destination="@id/proSubscriptionFragment" />
     </fragment>
+
+    <!-- Leaderboard/Rank Screen (Rank Tab) -->
+    <fragment
+        android:id="@+id/leaderboardFragment"
+        android:name="com.example.debugappproject.ui.leaderboard.LeaderboardFragment"
+        android:label="Leaderboard"
+        tools:layout="@layout/fragment_leaderboard">
+
+        <action
+            android:id="@+id/action_leaderboard_to_profile"
+            app:destination="@id/profileFragment" />
+    </fragment>
+
+    <!-- Profile Screen (Profile Tab) -->
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.debugappproject.ui.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile">
+
+        <action
+            android:id="@+id/action_profile_to_settings"
+            app:destination="@id/settingsFragment" />
+
+        <action
+            android:id="@+id/action_profile_to_premium"
+            app:destination="@id/premiumFragment" />
+
+        <action
+            android:id="@+id/action_profile_to_subscription"
+            app:destination="@id/proSubscriptionFragment" />
+    </fragment>
+
+    <!-- ============================================== -->
+    <!-- SECONDARY DESTINATIONS                        -->
+    <!-- ============================================== -->
+
+    <!-- Pro Subscription Screen -->
+    <fragment
+        android:id="@+id/proSubscriptionFragment"
+        android:name="com.example.debugappproject.ui.subscription.ProSubscriptionFragment"
+        android:label="Go Pro"
+        tools:layout="@layout/fragment_pro_subscription" />
+
+    <!-- Premium/Subscription Screen (legacy) -->
+    <fragment
+        android:id="@+id/premiumFragment"
+        android:name="com.example.debugappproject.ui.premium.PremiumFragment"
+        android:label="Go Pro"
+        tools:layout="@layout/fragment_premium" />
+
+    <!-- Practice Mode Screen -->
+    <fragment
+        android:id="@+id/practiceFragment"
+        android:name="com.example.debugappproject.ui.practice.PracticeFragment"
+        android:label="Practice Mode"
+        tools:layout="@layout/fragment_practice">
+
+        <action
+            android:id="@+id/action_practice_to_bugDetail"
+            app:destination="@id/bugDetailFragment" />
+    </fragment>
+
+    <!-- Battle Arena Screen -->
+    <fragment
+        android:id="@+id/battleArenaFragment"
+        android:name="com.example.debugappproject.ui.battle.BattleArenaFragment"
+        android:label="Battle Arena"
+        tools:layout="@layout/fragment_battle_arena" />
 
     <!-- Bug of the Day Screen -->
     <fragment
@@ -49,21 +168,12 @@
             app:destination="@id/bugDetailFragment" />
     </fragment>
 
-    <!-- Profile Screen -->
-    <fragment
-        android:id="@+id/profileFragment"
-        android:name="com.example.debugappproject.ui.profile.ProfileFragment"
-        android:label="Profile"
-        tools:layout="@layout/fragment_profile" />
-
     <!-- Settings Screen -->
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.debugappproject.ui.settings.SettingsFragment"
         android:label="Settings"
         tools:layout="@layout/fragment_settings" />
-
-    <!-- Secondary Destinations -->
 
     <!-- Path Detail Screen -->
     <fragment
@@ -82,7 +192,7 @@
             app:destination="@id/bugDetailFragment" />
     </fragment>
 
-    <!-- Bug Detail Screen (Enhanced) -->
+    <!-- Bug Detail Screen -->
     <fragment
         android:id="@+id/bugDetailFragment"
         android:name="com.example.debugappproject.ui.bugdetail.BugDetailFragment"
@@ -95,29 +205,7 @@
             android:defaultValue="1" />
     </fragment>
 
-    <!-- Legacy Screens (kept for compatibility) -->
-
-    <!-- Home/Dashboard Screen (Legacy) -->
-    <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.example.debugappproject.ui.home.HomeFragment"
-        android:label="DebugMaster"
-        tools:layout="@layout/fragment_home">
-
-        <action
-            android:id="@+id/action_home_to_bugList"
-            app:destination="@id/bugListFragment" />
-
-        <action
-            android:id="@+id/action_home_to_bugDetail"
-            app:destination="@id/bugDetailFragment" />
-
-        <action
-            android:id="@+id/action_home_to_progress"
-            app:destination="@id/progressFragment" />
-    </fragment>
-
-    <!-- Bug List Screen (Legacy) -->
+    <!-- Bug List Screen -->
     <fragment
         android:id="@+id/bugListFragment"
         android:name="com.example.debugappproject.ui.buglist.BugListFragment"
@@ -129,7 +217,7 @@
             app:destination="@id/bugDetailFragment" />
     </fragment>
 
-    <!-- Progress Screen (Legacy) -->
+    <!-- Progress Screen -->
     <fragment
         android:id="@+id/progressFragment"
         android:name="com.example.debugappproject.ui.progress.ProgressFragment"

@@ -2,6 +2,7 @@ package com.example.debugappproject.model;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -27,6 +28,7 @@ public class UserAchievement {
     public UserAchievement() {
     }
 
+    @Ignore
     public UserAchievement(String achievementId, long unlockedTimestamp, boolean notificationShown) {
         this.achievementId = achievementId;
         this.unlockedTimestamp = unlockedTimestamp;

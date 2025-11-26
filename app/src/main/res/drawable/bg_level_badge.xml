@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Level Badge - Gold Gradient Circle -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:type="linear"
+        android:angle="135"
+        android:startColor="@color/xp_gold_start"
+        android:endColor="@color/xp_gold_end" />
+    <size
+        android:width="@dimen/level_badge_size"
+        android:height="@dimen/level_badge_size" />
+</shape>

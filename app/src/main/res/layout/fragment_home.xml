@@ -1,325 +1,811 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- DEBUGMASTER ULTIMATE - HOME SCREEN
+     Million Dollar Mimo-Style Gamified Learning Experience -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="?android:attr/colorBackground">
+    android:background="@color/background"
+    android:fitsSystemWindows="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/padding_medium">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="100dp">
 
-        <!-- Welcome Header -->
-        <TextView
-            android:id="@+id/text_welcome"
-            style="@style/TextAppearance.DebugMaster.Headline2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/welcome_debugger"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- Bug of the Day Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_bug_of_day"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_medium"
-            android:layout_marginBottom="@dimen/spacing_medium"
-            app:cardElevation="@dimen/card_elevation"
-            app:cardCornerRadius="@dimen/card_corner_radius"
-            app:cardBackgroundColor="?attr/colorPrimary"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_welcome">
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/screen_padding_horizontal"
+            android:paddingTop="@dimen/spacing_medium"
+            android:paddingBottom="@dimen/spacing_xxl">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <!-- HERO WELCOME CARD - Gradient Background -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_hero"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/padding_medium">
+                android:layout_marginBottom="@dimen/spacing_medium"
+                app:cardCornerRadius="@dimen/card_hero_corner_radius"
+                app:cardElevation="@dimen/card_elevation_high"
+                app:strokeWidth="0dp">
 
-                <TextView
-                    android:id="@+id/label_bug_of_day"
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/bug_of_the_day"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnPrimary"
-                    android:alpha="0.9"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:background="@drawable/bg_hero_gradient"
+                    android:padding="@dimen/card_padding_large">
 
-                <TextView
-                    android:id="@+id/text_bug_of_day_title"
-                    style="@style/TextAppearance.DebugMaster.Headline2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:text="@string/loading"
-                    android:textColor="?attr/colorOnPrimary"
-                    android:maxLines="2"
-                    android:ellipsize="end"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/label_bug_of_day"
-                    tools:text="Off-by-One Error in Loop" />
+                    <!-- Decorative Blob Top Right -->
+                    <View
+                        android:layout_width="@dimen/decoration_blob_size"
+                        android:layout_height="@dimen/decoration_blob_size"
+                        android:background="@drawable/bg_blob_decoration"
+                        android:alpha="0.15"
+                        android:translationX="40dp"
+                        android:translationY="-40dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- Chips Container -->
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chip_group_bug_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_normal"
-                    app:singleLine="true"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/text_bug_of_day_title">
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_difficulty"
-                        android:layout_width="wrap_content"
+                    <!-- Welcome Header Row -->
+                    <LinearLayout
+                        android:id="@+id/layout_welcome_header"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/easy"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/text_greeting"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/good_morning"
+                                android:textColor="@color/white"
+                                android:textSize="14sp"
+                                android:alpha="0.85" />
+
+                            <TextView
+                                android:id="@+id/text_user_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/welcome_debugger"
+                                android:textColor="@color/white"
+                                android:textSize="24sp"
+                                android:textStyle="bold"
+                                tools:text="Alex!" />
+
+                        </LinearLayout>
+
+                        <!-- Coins Display -->
+                        <LinearLayout
+                            android:id="@+id/layout_coins"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_glass_pill"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="@dimen/spacing_medium"
+                            android:paddingVertical="@dimen/spacing_small">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="💎"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/text_coins"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/spacing_xs"
+                                android:textColor="@color/white"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:text="850" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- XP Progress Section -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_xp_progress"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_medium"
+                        app:cardBackgroundColor="@color/glass_white"
+                        app:cardCornerRadius="@dimen/card_corner_radius_small"
+                        app:cardElevation="0dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/layout_welcome_header">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/spacing_medium">
+
+                            <!-- Level Badge -->
+                            <FrameLayout
+                                android:id="@+id/frame_level_badge"
+                                android:layout_width="@dimen/level_badge_size"
+                                android:layout_height="@dimen/level_badge_size"
+                                android:background="@drawable/bg_level_badge"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
+
+                                <TextView
+                                    android:id="@+id/text_level_number"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:text="1" />
+                            </FrameLayout>
+
+                            <!-- Level Info -->
+                            <LinearLayout
+                                android:id="@+id/layout_level_info"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/spacing_normal"
+                                android:orientation="vertical"
+                                app:layout_constraintBottom_toTopOf="@id/progress_xp"
+                                app:layout_constraintEnd_toStartOf="@id/layout_xp_numbers"
+                                app:layout_constraintStart_toEndOf="@id/frame_level_badge"
+                                app:layout_constraintTop_toTopOf="parent">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/level"
+                                    android:textColor="@color/white"
+                                    android:textSize="12sp"
+                                    android:alpha="0.7" />
+
+                                <TextView
+                                    android:id="@+id/text_level_title"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/white"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:text="Debug Novice" />
+                            </LinearLayout>
+
+                            <!-- XP Numbers -->
+                            <LinearLayout
+                                android:id="@+id/layout_xp_numbers"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="end"
+                                android:orientation="vertical"
+                                app:layout_constraintBottom_toTopOf="@id/progress_xp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
+
+                                <TextView
+                                    android:id="@+id/text_xp_current"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/white"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    android:text="0 XP" />
+
+                                <TextView
+                                    android:id="@+id/text_xp_remaining"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/white"
+                                    android:textSize="11sp"
+                                    android:alpha="0.6"
+                                    android:text="100 to level up" />
+                            </LinearLayout>
+
+                            <!-- XP Progress Bar -->
+                            <ProgressBar
+                                android:id="@+id/progress_xp"
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="0dp"
+                                android:layout_height="@dimen/progress_bar_height"
+                                android:layout_marginTop="@dimen/spacing_normal"
+                                android:max="100"
+                                android:progress="0"
+                                android:progressDrawable="@drawable/progress_xp_gradient"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/frame_level_badge" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Stats Row -->
+                    <LinearLayout
+                        android:id="@+id/layout_stats_row"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_medium"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/card_xp_progress">
+
+                        <!-- Streak Stat -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="@dimen/spacing_small"
+                            android:background="@drawable/bg_glass_rounded"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="@dimen/spacing_normal">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="🔥"
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/text_streak_days"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:textColor="@color/white"
+                                    android:textSize="22sp"
+                                    android:textStyle="bold"
+                                    android:text="0" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/day_streak"
+                                android:textColor="@color/white"
+                                android:textSize="11sp"
+                                android:alpha="0.7" />
+                        </LinearLayout>
+
+                        <!-- Bugs Fixed Stat -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginHorizontal="@dimen/spacing_xs"
+                            android:background="@drawable/bg_glass_rounded"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="@dimen/spacing_normal">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="🐛"
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/text_solved_count"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:textColor="@color/white"
+                                    android:textSize="22sp"
+                                    android:textStyle="bold"
+                                    android:text="0" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/bugs_fixed"
+                                android:textColor="@color/white"
+                                android:textSize="11sp"
+                                android:alpha="0.7" />
+                        </LinearLayout>
+
+                        <!-- Rank Stat -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="@dimen/spacing_small"
+                            android:background="@drawable/bg_glass_rounded"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="@dimen/spacing_normal">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="🏆"
+                                    android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/text_rank"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:textColor="@color/white"
+                                    android:textSize="22sp"
+                                    android:textStyle="bold"
+                                    android:text="#1" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/global_rank"
+                                android:textColor="@color/white"
+                                android:textSize="11sp"
+                                android:alpha="0.7" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- DAILY CHALLENGE CARD -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_daily_challenge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="@dimen/card_elevation"
+                app:strokeWidth="0dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_daily_challenge_gradient"
+                    android:padding="@dimen/card_padding">
+
+                    <!-- Decoration -->
+                    <View
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/bg_blob_decoration"
+                        android:alpha="0.1"
+                        android:translationX="30dp"
+                        android:translationY="-20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <!-- Header Row -->
+                    <LinearLayout
+                        android:id="@+id/layout_challenge_header"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <FrameLayout
+                            android:layout_width="@dimen/daily_challenge_icon_size"
+                            android:layout_height="@dimen/daily_challenge_icon_size"
+                            android:background="@drawable/bg_glass_circle">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="🎯"
+                                android:textSize="20sp" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/spacing_normal"
+                            android:layout_weight="1"
+                            android:text="@string/daily_challenge"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.1"
+                            android:alpha="0.85" />
+
+                        <!-- XP Reward Badge -->
+                        <TextView
+                            android:id="@+id/text_challenge_xp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_glass_pill"
+                            android:paddingHorizontal="@dimen/spacing_normal"
+                            android:paddingVertical="@dimen/spacing_xs"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:text="+75 XP" />
+                    </LinearLayout>
+
+                    <!-- Challenge Title -->
+                    <TextView
+                        android:id="@+id/text_bug_of_day_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_normal"
                         android:textColor="@color/white"
-                        app:chipBackgroundColor="@color/difficulty_easy"
-                        app:chipCornerRadius="@dimen/chip_corner_radius"
-                        style="@style/Widget.Material3.Chip.Assist"
-                        tools:text="Easy" />
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/layout_challenge_header"
+                        android:text="Memory Leak Detective" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_category"
+                    <!-- Challenge Info Chips -->
+                    <LinearLayout
+                        android:id="@+id/layout_challenge_chips"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/category"
-                        android:textColor="?attr/colorOnPrimary"
-                        app:chipBackgroundColor="@android:color/transparent"
-                        app:chipStrokeColor="?attr/colorOnPrimary"
-                        app:chipStrokeWidth="1dp"
-                        app:chipCornerRadius="@dimen/chip_corner_radius"
-                        style="@style/Widget.Material3.Chip.Assist"
-                        tools:text="Loops" />
-                </com.google.android.material.chip.ChipGroup>
+                        android:layout_marginTop="@dimen/spacing_normal"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/text_bug_of_day_title">
 
-                <Button
-                    android:id="@+id/button_solve_now"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_medium"
-                    android:text="@string/solve_now"
-                    android:textColor="?attr/colorPrimary"
-                    app:backgroundTint="?attr/colorOnPrimary"
-                    app:cornerRadius="@dimen/button_corner_radius"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/chip_group_bug_info" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_difficulty"
+                            style="@style/Widget.DebugMaster.Chip.Difficulty.Medium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/chip_height_small"
+                            android:text="@string/medium"
+                            android:textColor="@color/white"
+                            app:chipBackgroundColor="@color/difficulty_medium"
+                            app:chipCornerRadius="@dimen/chip_corner_radius_small" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
+                        <TextView
+                            android:id="@+id/text_challenge_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/spacing_normal"
+                            android:gravity="center_vertical"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:alpha="0.85"
+                            android:text="⏱️ 15:00" />
 
-        <!-- Quick Stats Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_stats"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_medium"
-            app:cardElevation="@dimen/card_elevation"
-            app:cardCornerRadius="@dimen/card_corner_radius"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_bug_of_day">
+                        <TextView
+                            android:id="@+id/text_challenge_category"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/spacing_normal"
+                            android:gravity="center_vertical"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:alpha="0.85"
+                            android:text="📁 Memory" />
+                    </LinearLayout>
 
+                    <!-- Bottom Row: Progress + Button -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_medium"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/layout_challenge_chips">
+
+                        <!-- Progress Dots -->
+                        <LinearLayout
+                            android:id="@+id/layout_progress_dots"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <View
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:background="@drawable/bg_progress_dot_complete" />
+
+                            <View
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginStart="@dimen/spacing_xs"
+                                android:background="@drawable/bg_progress_dot_complete" />
+
+                            <View
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginStart="@dimen/spacing_xs"
+                                android:background="@drawable/bg_progress_dot_incomplete" />
+
+                            <TextView
+                                android:id="@+id/text_challenge_progress"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/spacing_small"
+                                android:textColor="@color/white"
+                                android:textSize="13sp"
+                                android:alpha="0.85"
+                                android:text="2/3 today" />
+                        </LinearLayout>
+
+                        <!-- Start Button -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/button_solve_now"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/button_height_small"
+                            android:text="@string/start"
+                            android:textColor="@color/streak_orange"
+                            android:textStyle="bold"
+                            app:backgroundTint="@color/white"
+                            app:cornerRadius="@dimen/button_corner_radius"
+                            app:elevation="@dimen/card_elevation"
+                            app:icon="@drawable/ic_play"
+                            app:iconGravity="start"
+                            app:iconTint="@color/streak_orange" />
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- CONTINUE LEARNING SECTION -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_medium">
+                android:layout_marginBottom="@dimen/spacing_normal"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextAppearance.DebugMaster.Subtitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/quick_stats"
-                    android:textColor="?attr/colorPrimary" />
+                    android:layout_weight="1"
+                    android:text="@string/continue_learning"
+                    android:textColor="@color/text_primary_light"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_medium"
-                    android:orientation="horizontal"
-                    android:weightSum="3"
-                    android:baselineAligned="false">
-
-                    <!-- Solved Stats -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/text_solved_count"
-                            style="@style/TextAppearance.DebugMaster.Headline1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textColor="?attr/colorSecondary"
-                            tools:text="5" />
-
-                        <TextView
-                            style="@style/TextAppearance.DebugMaster.Caption"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/solved" />
-                    </LinearLayout>
-
-                    <!-- Total Stats -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/text_total_bugs"
-                            style="@style/TextAppearance.DebugMaster.Headline1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="15"
-                            android:textColor="?attr/colorPrimary"
-                            tools:text="15" />
-
-                        <TextView
-                            style="@style/TextAppearance.DebugMaster.Caption"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/total" />
-                    </LinearLayout>
-
-                    <!-- Streak Stats -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/text_streak_days"
-                            style="@style/TextAppearance.DebugMaster.Headline1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="0"
-                            android:textColor="#FF9800"
-                            tools:text="3" />
-
-                        <TextView
-                            style="@style/TextAppearance.DebugMaster.Caption"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/day_streak" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!-- Level & XP Section -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/spacing_medium"
-                    android:layout_marginBottom="@dimen/spacing_medium"
-                    android:background="?android:attr/listDivider" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        style="@style/TextAppearance.DebugMaster.Subtitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Level"
-                        android:textColor="?attr/colorPrimary" />
-
-                    <TextView
-                        android:id="@+id/text_level"
-                        style="@style/TextAppearance.DebugMaster.Headline1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="1"
-                        android:textColor="?attr/colorPrimary"
-                        tools:text="5" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1" />
-
-                    <TextView
-                        android:id="@+id/text_xp_progress"
-                        style="@style/TextAppearance.DebugMaster.Caption"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0 / 100 XP"
-                        tools:text="45 / 100 XP" />
-                </LinearLayout>
-
-                <ProgressBar
-                    android:id="@+id/progress_bar_xp"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:max="100"
-                    android:progress="0" />
-
-                <!-- Motivational Text -->
                 <TextView
-                    android:id="@+id/text_motivation"
-                    style="@style/TextAppearance.DebugMaster.Caption"
+                    android:id="@+id/text_view_all_paths"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_medium"
-                    android:layout_gravity="center"
-                    android:text="@string/keep_going"
-                    android:textStyle="italic"
-                    tools:text="Keep your streak alive! 🔥" />
+                    android:paddingVertical="@dimen/spacing_small"
+                    android:text="@string/view_all"
+                    android:textColor="@color/primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="4dp" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
-        <!-- Primary Action Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_all_bugs"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/button_height"
-            android:layout_marginBottom="@dimen/spacing_normal"
-            android:text="@string/practice_all_bugs"
-            android:textSize="16sp"
-            app:icon="@android:drawable/ic_menu_view"
-            app:iconGravity="start"
-            app:cornerRadius="@dimen/button_corner_radius"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_stats" />
+            <!-- Learning Paths List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_learning_paths"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:overScrollMode="never"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_learning_path" />
 
-        <!-- Secondary Action Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_my_progress"
-            style="@style/Widget.DebugMaster.Button.Outlined"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/button_height"
-            android:text="@string/view_my_progress"
-            android:textSize="16sp"
-            app:icon="@android:drawable/ic_menu_info_details"
-            app:iconGravity="start"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/button_all_bugs" />
+            <!-- QUICK ACTIONS GRID -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:orientation="horizontal">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+                <!-- Practice Mode Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_practice_mode"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/spacing_small"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="@dimen/card_corner_radius"
+                    app:cardElevation="@dimen/card_elevation"
+                    app:strokeWidth="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_practice_mode_gradient"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="@dimen/card_padding">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🐛"
+                            android:textSize="32sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_small"
+                            android:text="@string/practice_mode"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/random_bugs"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:alpha="0.7" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Battle Arena Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_battle_arena"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_small"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="@dimen/card_corner_radius"
+                    app:cardElevation="@dimen/card_elevation"
+                    app:strokeWidth="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_battle_arena_gradient"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="@dimen/card_padding">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="⚔️"
+                            android:textSize="32sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_small"
+                            android:text="@string/battle_arena"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/challenge_friends"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:alpha="0.7" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- PRO UPSELL BANNER -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_pro_upsell"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="@dimen/card_elevation"
+                app:strokeWidth="0dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_pro_upsell"
+                    android:padding="@dimen/card_padding">
+
+                    <!-- Crown Icon -->
+                    <FrameLayout
+                        android:id="@+id/frame_pro_icon"
+                        android:layout_width="@dimen/avatar_size_medium"
+                        android:layout_height="@dimen/avatar_size_medium"
+                        android:background="@drawable/bg_pro_icon"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="👑"
+                            android:textSize="24sp" />
+                    </FrameLayout>
+
+                    <!-- Pro Text -->
+                    <LinearLayout
+                        android:id="@+id/layout_pro_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_medium"
+                        android:layout_marginEnd="@dimen/spacing_small"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/button_upgrade"
+                        app:layout_constraintStart_toEndOf="@id/frame_pro_icon"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/unlock_pro"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/pro_description"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:alpha="0.7" />
+                    </LinearLayout>
+
+                    <!-- Upgrade Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_upgrade"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/button_height_small"
+                        android:text="@string/upgrade"
+                        android:textColor="@color/text_primary_light"
+                        android:textStyle="bold"
+                        app:backgroundTint="@null"
+                        android:background="@drawable/bg_upgrade_button"
+                        app:cornerRadius="@dimen/button_corner_radius"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

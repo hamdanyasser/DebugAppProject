@@ -9,32 +9,41 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.debugappproject.R;
+import com.example.debugappproject.billing.BillingManager;
 import com.example.debugappproject.databinding.FragmentHomeBinding;
-import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.model.UserProgress;
-import com.example.debugappproject.util.AnimationUtil;
+
+import java.util.Calendar;
 
 /**
- * HomeFragment - Dashboard/home screen of the app.
- *
- * Displays:
- * - Bug of the Day with difficulty/category chips
- * - Quick stats (bugs solved, total, streak)
- * - Motivational messages based on progress
- * - Navigation buttons to other screens
- *
- * Features:
- * - Material 3 design with cards and chips
- * - Dynamic difficulty chip coloring
- * - Progress-based motivational text
+ * HomeFragment - The main dashboard of DebugMaster!
  */
 public class HomeFragment extends Fragment {
 
+    private static final String TAG = "HomeFragment";
     private FragmentHomeBinding binding;
     private HomeViewModel viewModel;
+    private BillingManager billingManager;
+
+    private static final String[] MORNING_GREETINGS = {
+        "Good morning! Ready to squash some bugs? 🌅",
+        "Rise and debug! ☀️",
+        "Early bird catches the bug! 🐦"
+    };
+    private static final String[] AFTERNOON_GREETINGS = {
+        "Good afternoon! Keep the momentum going! 💪",
+        "Debugging time! Let's go! 🚀",
+        "Afternoon bug hunt begins! 🎯"
+    };
+    private static final String[] EVENING_GREETINGS = {
+        "Good evening! Perfect time for coding! 🌙",
+        "Night owl debugging session! 🦉",
+        "Evening bug patrol! ⭐"
+    };
 
     @Nullable
     @Override
@@ -49,173 +58,192 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        billingManager = new BillingManager(requireContext());
 
+        setupGreeting();
         setupObservers();
         setupClickListeners();
+        
+        billingManager.getIsProUser().observe(getViewLifecycleOwner(), this::updateProStatus);
+    }
+
+    private void setupGreeting() {
+        if (binding.textGreeting != null) {
+            int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+            String[] greetings;
+            
+            if (hour < 12) {
+                greetings = MORNING_GREETINGS;
+            } else if (hour < 18) {
+                greetings = AFTERNOON_GREETINGS;
+            } else {
+                greetings = EVENING_GREETINGS;
+            }
+            
+            int randomIndex = (int) (Math.random() * greetings.length);
+            binding.textGreeting.setText(greetings[randomIndex]);
+        }
     }
 
     private void setupObservers() {
-        // Observe Bug of the Day
-        viewModel.getBugOfTheDay().observe(getViewLifecycleOwner(), bug -> {
-            if (bug != null) {
-                updateBugOfTheDay(bug);
-            }
-        });
-
-        // Observe User Progress for stats
         viewModel.getUserProgress().observe(getViewLifecycleOwner(), progress -> {
             if (progress != null) {
-                updateStats(progress);
+                updateUserStats(progress);
             }
         });
 
-        // Observe all bugs for total count
-        viewModel.getAllBugs().observe(getViewLifecycleOwner(), bugs -> {
-            if (bugs != null && binding.textTotalBugs != null) {
-                binding.textTotalBugs.setText(String.valueOf(bugs.size()));
+        viewModel.getDailyChallenge().observe(getViewLifecycleOwner(), bug -> {
+            if (bug != null && binding.textBugOfDayTitle != null) {
+                binding.textBugOfDayTitle.setText(bug.getTitle());
             }
         });
     }
 
-    /**
-     * Updates Bug of the Day card with bug information.
-     * Sets chip colors based on difficulty level.
-     */
-    private void updateBugOfTheDay(Bug bug) {
-        binding.textBugOfDayTitle.setText(bug.getTitle());
+    private void updateUserStats(UserProgress progress) {
+        try {
+            int level = progress.getLevel();
+            int xpInLevel = progress.getXpProgressInLevel();
+            int xpToNextLevel = 100;
 
-        // Set difficulty chip
-        binding.chipDifficulty.setText(bug.getDifficulty());
-        setDifficultyChipColor(bug.getDifficulty());
+            if (binding.textLevelNumber != null) {
+                binding.textLevelNumber.setText(String.valueOf(level));
+            }
 
-        // Set category chip
-        binding.chipCategory.setText(bug.getCategory());
+            if (binding.textXpCurrent != null) {
+                binding.textXpCurrent.setText(progress.getTotalXp() + " XP");
+            }
 
-        // Store bug ID for navigation
-        binding.cardBugOfDay.setTag(bug.getId());
-        binding.buttonSolveNow.setTag(bug.getId());
-    }
+            if (binding.textXpRemaining != null) {
+                int remaining = xpToNextLevel - xpInLevel;
+                binding.textXpRemaining.setText(remaining + " to level up");
+            }
 
-    /**
-     * Sets chip background color based on difficulty level.
-     */
-    private void setDifficultyChipColor(String difficulty) {
-        int colorRes;
-        switch (difficulty.toLowerCase()) {
-            case "easy":
-                colorRes = R.color.difficulty_easy;
-                break;
-            case "medium":
-                colorRes = R.color.difficulty_medium;
-                break;
-            case "hard":
-                colorRes = R.color.difficulty_hard;
-                break;
-            default:
-                colorRes = R.color.difficulty_easy;
-        }
-        binding.chipDifficulty.setChipBackgroundColorResource(colorRes);
-    }
+            if (binding.progressXp != null) {
+                binding.progressXp.setMax(xpToNextLevel);
+                binding.progressXp.setProgress(xpInLevel);
+            }
 
-    /**
-     * Updates stats display with user progress.
-     * Shows motivational message based on progress.
-     * Displays level, XP, and XP progress bar.
-     */
-    private void updateStats(UserProgress progress) {
-        binding.textSolvedCount.setText(String.valueOf(progress.getTotalSolved()));
-        binding.textStreakDays.setText(String.valueOf(progress.getStreakDays()));
+            if (binding.textStreakDays != null) {
+                int streak = progress.getStreakDays();
+                binding.textStreakDays.setText(String.valueOf(streak));
+            }
 
-        // Update level and XP
-        int level = progress.getLevel();
-        int xpInLevel = progress.getXpProgressInLevel();
-        int xpToNextLevel = 100; // Each level requires 100 XP
+            if (binding.textSolvedCount != null) {
+                binding.textSolvedCount.setText(String.valueOf(progress.getTotalSolved()));
+            }
 
-        binding.textLevel.setText(String.valueOf(level));
-        binding.textXpProgress.setText(xpInLevel + " / " + xpToNextLevel + " XP");
-        binding.progressBarXp.setProgress(xpInLevel);
-
-        // Set motivational message based on progress
-        String motivation = getMotivationalMessage(progress);
-        binding.textMotivation.setText(motivation);
-    }
-
-    /**
-     * Returns motivational message based on user progress.
-     */
-    private String getMotivationalMessage(UserProgress progress) {
-        int solved = progress.getTotalSolved();
-        int streak = progress.getStreakDays();
-
-        if (streak >= 7) {
-            return "Amazing! 7-day streak! Keep it up! 🔥";
-        } else if (streak >= 3) {
-            return "Great streak! You're on fire! 🔥";
-        } else if (solved >= 10) {
-            return "Double digits! You're a debugging pro! 🎯";
-        } else if (solved >= 5) {
-            return "Halfway there! Keep going! 💪";
-        } else if (solved >= 1) {
-            return "Great start! Keep practicing! 🚀";
-        } else {
-            return getString(R.string.keep_going);
+            // Update level title
+            if (binding.textLevelTitle != null) {
+                binding.textLevelTitle.setText(getTitleForLevel(level));
+            }
+            
+        } catch (Exception e) {
+            android.util.Log.e(TAG, "Error updating user stats", e);
         }
     }
 
-    /**
-     * Sets up click listeners for navigation.
-     * All buttons have press animations for tactile feedback.
-     */
+    private String getTitleForLevel(int level) {
+        if (level < 5) return "Novice Debugger";
+        if (level < 10) return "Bug Hunter";
+        if (level < 20) return "Code Inspector";
+        if (level < 35) return "Debug Expert";
+        if (level < 50) return "Debug Master";
+        if (level < 75) return "Debug Legend";
+        return "Debug God";
+    }
+
+    private void updateProStatus(boolean isPro) {
+        if (binding.cardProUpsell != null) {
+            binding.cardProUpsell.setVisibility(isPro ? View.GONE : View.VISIBLE);
+        }
+    }
+
     private void setupClickListeners() {
-        // Bug of the Day - "Solve Now" button click
-        binding.buttonSolveNow.setOnClickListener(v -> {
-            AnimationUtil.animatePress(v, () -> {
-                Integer bugId = (Integer) v.getTag();
-                if (bugId != null) {
-                    navigateToBugDetail(bugId, v);
-                }
+        // Daily Challenge
+        if (binding.cardDailyChallenge != null) {
+            binding.cardDailyChallenge.setOnClickListener(v -> 
+                navigateToDestination(R.id.action_home_to_bugDetail, "Daily Challenge"));
+        }
+
+        if (binding.buttonSolveNow != null) {
+            binding.buttonSolveNow.setOnClickListener(v -> 
+                navigateToDestination(R.id.action_home_to_bugDetail, "Daily Challenge"));
+        }
+
+        // Learning Paths
+        if (binding.textViewAllPaths != null) {
+            binding.textViewAllPaths.setOnClickListener(v -> 
+                navigateToDestination(R.id.action_home_to_learn, "Learning Paths"));
+        }
+
+        // Practice Mode
+        if (binding.cardPracticeMode != null) {
+            binding.cardPracticeMode.setOnClickListener(v -> 
+                navigateToDestination(R.id.action_home_to_practice, "Practice Mode"));
+        }
+
+        // Battle Arena
+        if (binding.cardBattleArena != null) {
+            binding.cardBattleArena.setOnClickListener(v -> {
+                // Allow access in demo mode regardless of Pro status
+                // In production, you might want to restrict this
+                navigateToDestination(R.id.action_home_to_battle, "Battle Arena");
             });
-        });
+        }
 
-        // Bug of the Day card click (for convenience)
-        binding.cardBugOfDay.setOnClickListener(v -> {
-            AnimationUtil.animatePress(v, () -> {
-                Integer bugId = (Integer) v.getTag();
-                if (bugId != null) {
-                    navigateToBugDetail(bugId, v);
-                }
-            });
-        });
+        // Pro Upgrade
+        if (binding.cardProUpsell != null) {
+            binding.cardProUpsell.setOnClickListener(v -> navigateToPremium());
+        }
 
-        // All Bugs button
-        binding.buttonAllBugs.setOnClickListener(v -> {
-            AnimationUtil.animatePress(v, () ->
-                Navigation.findNavController(v).navigate(R.id.action_home_to_bugList)
-            );
-        });
-
-        // My Progress button
-        binding.buttonMyProgress.setOnClickListener(v -> {
-            AnimationUtil.animatePress(v, () ->
-                Navigation.findNavController(v).navigate(R.id.action_home_to_progress)
-            );
-        });
+        if (binding.buttonUpgrade != null) {
+            binding.buttonUpgrade.setOnClickListener(v -> navigateToPremium());
+        }
     }
 
-    /**
-     * Navigates to bug detail screen with the given bug ID.
-     */
-    private void navigateToBugDetail(int bugId, View view) {
-        Bundle args = new Bundle();
-        args.putInt("bugId", bugId);
-        Navigation.findNavController(view).navigate(
-            R.id.action_home_to_bugDetail, args
-        );
+    private void navigateToDestination(int actionId, String destinationName) {
+        try {
+            if (getView() == null) return;
+            NavController navController = Navigation.findNavController(requireView());
+            navController.navigate(actionId);
+        } catch (IllegalArgumentException e) {
+            showToast("Coming soon: " + destinationName + " 🚀");
+        } catch (Exception e) {
+            android.util.Log.e(TAG, "Navigation error", e);
+        }
+    }
+
+    private void navigateToPremium() {
+        try {
+            if (getView() == null) return;
+            NavController navController = Navigation.findNavController(requireView());
+            navController.navigate(R.id.action_home_to_subscription);
+        } catch (Exception e) {
+            android.util.Log.e(TAG, "Navigation to premium failed", e);
+            showToast("✨ Pro features coming soon!");
+        }
+    }
+
+    private void showToast(String message) {
+        if (getContext() != null) {
+            android.widget.Toast.makeText(getContext(), message, android.widget.Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (billingManager != null) {
+            billingManager.refreshPurchases();
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (billingManager != null) {
+            billingManager.destroy();
+        }
         binding = null;
     }
 }

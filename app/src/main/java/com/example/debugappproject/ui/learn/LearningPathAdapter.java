@@ -1,5 +1,6 @@
 package com.example.debugappproject.ui.learn;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,23 +8,31 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.debugappproject.R;
 import com.example.debugappproject.model.LearningPath;
-import com.example.debugappproject.util.AnimationUtil;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Adapter for displaying learning paths as cards.
- * Uses DiffUtil for efficient, animated list updates.
+ * 
+ * IMPORTANT: View IDs must match item_learning_path.xml:
+ * - text_path_emoji
+ * - text_path_name  
+ * - text_path_description
+ * - text_path_progress_percent
+ * - progress_path
+ * - text_lessons_count
+ * - button_continue_path
  */
 public class LearningPathAdapter extends RecyclerView.Adapter<LearningPathAdapter.PathViewHolder> {
 
-    private List<PathWithProgress> paths = new ArrayList<>();
+    private static final String TAG = "LearningPathAdapter";
+    private final List<PathWithProgress> paths = new ArrayList<>();
     private OnPathClickListener listener;
 
     public interface OnPathClickListener {
@@ -34,60 +43,19 @@ public class LearningPathAdapter extends RecyclerView.Adapter<LearningPathAdapte
         this.listener = listener;
     }
 
-    /**
-     * Updates paths using DiffUtil for smooth animations.
-     */
     public void setPaths(List<PathWithProgress> newPaths) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
-                new PathDiffCallback(this.paths, newPaths)
-        );
-        this.paths = new ArrayList<>(newPaths);
-        diffResult.dispatchUpdatesTo(this);
-    }
-
-    /**
-     * DiffUtil callback for efficient path list updates.
-     */
-    private static class PathDiffCallback extends DiffUtil.Callback {
-        private final List<PathWithProgress> oldList;
-        private final List<PathWithProgress> newList;
-
-        public PathDiffCallback(List<PathWithProgress> oldList, List<PathWithProgress> newList) {
-            this.oldList = oldList;
-            this.newList = newList;
+        Log.d(TAG, "setPaths called with " + (newPaths != null ? newPaths.size() : 0) + " paths");
+        paths.clear();
+        if (newPaths != null) {
+            paths.addAll(newPaths);
         }
-
-        @Override
-        public int getOldListSize() {
-            return oldList.size();
-        }
-
-        @Override
-        public int getNewListSize() {
-            return newList.size();
-        }
-
-        @Override
-        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            LearningPath oldPath = oldList.get(oldItemPosition).getPath();
-            LearningPath newPath = newList.get(newItemPosition).getPath();
-            return oldPath.getId() == newPath.getId();
-        }
-
-        @Override
-        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            PathWithProgress oldItem = oldList.get(oldItemPosition);
-            PathWithProgress newItem = newList.get(newItemPosition);
-
-            return oldItem.getCompletedBugs() == newItem.getCompletedBugs() &&
-                   oldItem.getTotalBugs() == newItem.getTotalBugs() &&
-                   oldItem.getPath().getName().equals(newItem.getPath().getName());
-        }
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public PathViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.d(TAG, "onCreateViewHolder");
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_learning_path, parent, false);
         return new PathViewHolder(view);
@@ -95,8 +63,13 @@ public class LearningPathAdapter extends RecyclerView.Adapter<LearningPathAdapte
 
     @Override
     public void onBindViewHolder(@NonNull PathViewHolder holder, int position) {
-        PathWithProgress pathWithProgress = paths.get(position);
-        holder.bind(pathWithProgress, listener);
+        Log.d(TAG, "onBindViewHolder position=" + position);
+        if (position >= 0 && position < paths.size()) {
+            PathWithProgress item = paths.get(position);
+            if (item != null) {
+                holder.bind(item, listener);
+            }
+        }
     }
 
     @Override
@@ -105,43 +78,121 @@ public class LearningPathAdapter extends RecyclerView.Adapter<LearningPathAdapte
     }
 
     static class PathViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textIcon;
+        // Declare views as nullable to handle potential layout mismatches
+        private final TextView textEmoji;
         private final TextView textName;
-        private final TextView textDifficulty;
         private final TextView textDescription;
-        private final TextView textProgress;
+        private final TextView textPercent;
         private final ProgressBar progressBar;
+        private final TextView textLessons;
+        private final MaterialButton buttonContinue;
 
-        public PathViewHolder(@NonNull View itemView) {
+        PathViewHolder(@NonNull View itemView) {
             super(itemView);
-            textIcon = itemView.findViewById(R.id.text_icon);
-            textName = itemView.findViewById(R.id.text_name);
-            textDifficulty = itemView.findViewById(R.id.text_difficulty);
-            textDescription = itemView.findViewById(R.id.text_description);
-            textProgress = itemView.findViewById(R.id.text_progress);
-            progressBar = itemView.findViewById(R.id.progress_bar);
+            
+            // Find all views with explicit IDs from item_learning_path.xml
+            textEmoji = itemView.findViewById(R.id.text_path_emoji);
+            textName = itemView.findViewById(R.id.text_path_name);
+            textDescription = itemView.findViewById(R.id.text_path_description);
+            textPercent = itemView.findViewById(R.id.text_path_progress_percent);
+            progressBar = itemView.findViewById(R.id.progress_path);
+            textLessons = itemView.findViewById(R.id.text_lessons_count);
+            buttonContinue = itemView.findViewById(R.id.button_continue_path);
+
+            // Debug logging
+            Log.d(TAG, "ViewHolder created - emoji:" + (textEmoji != null) + 
+                    " name:" + (textName != null) + 
+                    " desc:" + (textDescription != null) +
+                    " percent:" + (textPercent != null) +
+                    " progress:" + (progressBar != null) +
+                    " lessons:" + (textLessons != null) +
+                    " button:" + (buttonContinue != null));
         }
 
-        public void bind(PathWithProgress pathWithProgress, OnPathClickListener listener) {
-            LearningPath path = pathWithProgress.getPath();
+        void bind(PathWithProgress item, OnPathClickListener listener) {
+            Log.d(TAG, "bind() called");
+            
+            try {
+                LearningPath path = item.getPath();
+                if (path == null) {
+                    Log.e(TAG, "Path is null in bind()");
+                    return;
+                }
 
-            textIcon.setText(path.getIconEmoji());
-            textName.setText(path.getName());
-            textDifficulty.setText(path.getDifficultyRange());
-            textDescription.setText(path.getDescription());
+                // Safely set emoji
+                if (textEmoji != null) {
+                    String emoji = path.getIconEmoji();
+                    textEmoji.setText(emoji != null && !emoji.isEmpty() ? emoji : "📚");
+                }
 
-            int completed = pathWithProgress.getCompletedBugs();
-            int total = pathWithProgress.getTotalBugs();
-            textProgress.setText(completed + " / " + total + " bugs completed");
-            progressBar.setProgress(pathWithProgress.getProgressPercentage());
+                // Safely set name
+                if (textName != null) {
+                    String name = path.getName();
+                    textName.setText(name != null && !name.isEmpty() ? name : "Learning Path");
+                }
 
-            itemView.setOnClickListener(v -> {
-                AnimationUtil.animatePress(v, () -> {
+                // Safely set description
+                if (textDescription != null) {
+                    String desc = path.getDescription();
+                    textDescription.setText(desc != null ? desc : "");
+                }
+
+                // Get progress values
+                int completed = item.getCompletedBugs();
+                int total = item.getTotalBugs();
+                int percent = item.getProgressPercentage();
+
+                // Safely set percentage
+                if (textPercent != null) {
+                    textPercent.setText(percent + "%");
+                }
+
+                // Safely set progress bar
+                if (progressBar != null) {
+                    progressBar.setMax(100);
+                    progressBar.setProgress(percent);
+                }
+
+                // Safely set lessons count
+                if (textLessons != null) {
+                    if (total > 0) {
+                        textLessons.setText(completed + " / " + total + " bugs");
+                    } else {
+                        textLessons.setText("Start learning");
+                    }
+                }
+
+                // Safely set button
+                if (buttonContinue != null) {
+                    String btnText;
+                    if (percent == 0) {
+                        btnText = "Start";
+                    } else if (percent >= 100) {
+                        btnText = "Review";
+                    } else {
+                        btnText = "Continue";
+                    }
+                    buttonContinue.setText(btnText);
+                    
+                    buttonContinue.setOnClickListener(v -> {
+                        if (listener != null) {
+                            listener.onPathClick(path);
+                        }
+                    });
+                }
+
+                // Card click
+                itemView.setOnClickListener(v -> {
                     if (listener != null) {
                         listener.onPathClick(path);
                     }
                 });
-            });
+
+                Log.d(TAG, "bind() completed for: " + path.getName());
+
+            } catch (Exception e) {
+                Log.e(TAG, "Error in bind()", e);
+            }
         }
     }
 }

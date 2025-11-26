@@ -210,6 +210,26 @@
 -allowaccessmodification
 
 # ===================================
+# Google Play Billing
+# ===================================
+
+# Keep Billing classes
+-keep class com.android.vending.billing.** { *; }
+-keep class com.android.billingclient.** { *; }
+
+# Keep our billing manager
+-keep class com.example.debugappproject.billing.** { *; }
+
+# ===================================
+# Hilt Dependency Injection
+# ===================================
+
+-keep class dagger.hilt.** { *; }
+-keep class javax.inject.** { *; }
+-keep class * extends dagger.hilt.android.internal.managers.ComponentSupplier { *; }
+-keep class * extends dagger.hilt.android.internal.managers.ViewComponentManager$FragmentContextWrapper { *; }
+
+# ===================================
 # Warnings to Ignore
 # ===================================
 

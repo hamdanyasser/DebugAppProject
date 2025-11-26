@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark Theme Color Overrides -->
+    <color name="background">@color/background_dark</color>
+    <color name="text_primary">@color/text_primary_dark</color>
+    <color name="text_secondary">@color/text_secondary_dark</color>
+    <color name="surface">@color/surface_dark</color>
+    <color name="divider">@color/divider_dark</color>
+    
+    <!-- Glass colors for dark mode -->
+    <color name="glass_white">#33FFFFFF</color>
+    <color name="glass_white_strong">#66FFFFFF</color>
+</resources>
