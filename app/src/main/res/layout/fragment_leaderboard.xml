@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_cyber_main"
     android:fillViewport="true"
-    android:clipToPadding="false">
+    android:clipToPadding="false"
+    android:overScrollMode="never">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,13 +16,15 @@
         android:orientation="vertical"
         android:paddingBottom="120dp">
 
-        <!-- Header with gradient - no bottom corners for seamless look -->
+        <!-- Header with gradient - Full bleed, no corners -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_leaderboard_header"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:background="@drawable/bg_leaderboard_header_flat"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="24dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -40,76 +43,72 @@
                 android:textSize="14sp"
                 android:alpha="0.8" />
 
-            <!-- Time Filter Buttons -->
+            <!-- Time Filter Buttons - Custom styled -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_marginTop="16dp"
                 android:orientation="horizontal"
-                android:background="@drawable/bg_tab_container"
-                android:padding="4dp">
+                android:background="@drawable/bg_tab_selector_container"
+                android:padding="4dp"
+                android:gravity="center">
 
-                <com.google.android.material.button.MaterialButton
+                <TextView
                     android:id="@+id/btn_weekly"
-                    style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:gravity="center"
                     android:text="Weekly"
                     android:textColor="@color/primary"
                     android:textSize="13sp"
                     android:textStyle="bold"
-                    android:backgroundTint="@color/white"
-                    app:cornerRadius="12dp"
-                    app:strokeWidth="0dp"
-                    app:rippleColor="@color/primary_light" />
+                    android:background="@drawable/bg_tab_selected"
+                    android:clickable="true"
+                    android:focusable="true" />
 
-                <com.google.android.material.button.MaterialButton
+                <TextView
                     android:id="@+id/btn_monthly"
-                    style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:gravity="center"
                     android:text="Monthly"
                     android:textColor="@color/white"
                     android:textSize="13sp"
                     android:textStyle="bold"
-                    android:backgroundTint="@android:color/transparent"
-                    app:cornerRadius="12dp"
-                    app:strokeWidth="0dp"
-                    app:rippleColor="@color/white" />
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:focusable="true" />
 
-                <com.google.android.material.button.MaterialButton
+                <TextView
                     android:id="@+id/btn_all_time"
-                    style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:gravity="center"
                     android:text="All Time"
                     android:textColor="@color/white"
                     android:textSize="13sp"
                     android:textStyle="bold"
-                    android:backgroundTint="@android:color/transparent"
-                    app:cornerRadius="12dp"
-                    app:strokeWidth="0dp"
-                    app:rippleColor="@color/white" />
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:focusable="true" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Your Rank Card -->
-        <com.google.android.material.card.MaterialCardView
+        <!-- Your Rank Card - Using FrameLayout instead of MaterialCardView -->
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="0dp"
-            app:cardBackgroundColor="@android:color/transparent">
-
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="16dp">
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_daily_challenge_gradient"
+                android:background="@drawable/bg_your_rank_card"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="16dp">
@@ -176,18 +175,15 @@
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </FrameLayout>
 
         <!-- Top 3 Podium -->
-        <com.google.android.material.card.MaterialCardView
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="16dp"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="4dp"
-            app:strokeWidth="0dp"
-            app:cardBackgroundColor="@color/surface">
+            android:background="@drawable/bg_podium_card">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -314,7 +310,7 @@
                         android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </FrameLayout>
 
         <!-- Rankings Header -->
         <TextView

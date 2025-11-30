@@ -84,9 +84,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 textXpScore.setText(numberFormat.format(entry.xp) + " XP");
             }
             if (textBugsCount != null) {
-                // Estimate bugs fixed based on XP (roughly 50 XP per bug)
-                int bugsEstimate = entry.xp / 50;
-                textBugsCount.setText(bugsEstimate + " bugs");
+                textBugsCount.setText(entry.bugsFixed + " bugs");
             }
         }
     }

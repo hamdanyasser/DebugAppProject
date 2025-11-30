@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -44,7 +46,7 @@ public class LeaderboardFragment extends Fragment {
     }
 
     private void setupUI() {
-        // Setup tab selection (Weekly/Monthly/All Time)
+        // Setup tab selection (Weekly/Monthly/All Time) using TextViews
         if (binding.btnWeekly != null) {
             binding.btnWeekly.setOnClickListener(v -> selectTimeFilter("weekly"));
         }
@@ -70,37 +72,29 @@ public class LeaderboardFragment extends Fragment {
     private void selectTimeFilter(String filter) {
         currentFilter = filter;
         
-        // Update button states visually - no stroke, clean design
-        int selectedBgColor = getResources().getColor(R.color.white, null);
-        int unselectedBgColor = android.graphics.Color.TRANSPARENT;
-        int selectedTextColor = getResources().getColor(R.color.primary, null);
-        int unselectedTextColor = getResources().getColor(R.color.white, null);
+        // Get colors
+        int selectedTextColor = ContextCompat.getColor(requireContext(), R.color.primary);
+        int unselectedTextColor = ContextCompat.getColor(requireContext(), R.color.white);
         
         // Weekly button
         if (binding.btnWeekly != null) {
             boolean isSelected = "weekly".equals(filter);
-            binding.btnWeekly.setBackgroundTintList(
-                android.content.res.ColorStateList.valueOf(isSelected ? selectedBgColor : unselectedBgColor));
+            binding.btnWeekly.setBackgroundResource(isSelected ? R.drawable.bg_tab_selected : android.R.color.transparent);
             binding.btnWeekly.setTextColor(isSelected ? selectedTextColor : unselectedTextColor);
-            binding.btnWeekly.setStrokeWidth(0); // No stroke
         }
         
         // Monthly button
         if (binding.btnMonthly != null) {
             boolean isSelected = "monthly".equals(filter);
-            binding.btnMonthly.setBackgroundTintList(
-                android.content.res.ColorStateList.valueOf(isSelected ? selectedBgColor : unselectedBgColor));
+            binding.btnMonthly.setBackgroundResource(isSelected ? R.drawable.bg_tab_selected : android.R.color.transparent);
             binding.btnMonthly.setTextColor(isSelected ? selectedTextColor : unselectedTextColor);
-            binding.btnMonthly.setStrokeWidth(0); // No stroke
         }
         
         // All Time button
         if (binding.btnAllTime != null) {
             boolean isSelected = "alltime".equals(filter);
-            binding.btnAllTime.setBackgroundTintList(
-                android.content.res.ColorStateList.valueOf(isSelected ? selectedBgColor : unselectedBgColor));
+            binding.btnAllTime.setBackgroundResource(isSelected ? R.drawable.bg_tab_selected : android.R.color.transparent);
             binding.btnAllTime.setTextColor(isSelected ? selectedTextColor : unselectedTextColor);
-            binding.btnAllTime.setStrokeWidth(0); // No stroke
         }
         
         // Reload data with new filter
@@ -113,40 +107,40 @@ public class LeaderboardFragment extends Fragment {
         
         switch (currentFilter) {
             case "weekly":
-                entries.add(new LeaderboardEntry(4, "JavaMaster", 4250, 15, "🔥"));
-                entries.add(new LeaderboardEntry(5, "ByteHunter", 4100, 22, "⚡"));
-                entries.add(new LeaderboardEntry(6, "CodeWizard", 3890, 18, "🎯"));
-                entries.add(new LeaderboardEntry(7, "BugCatcher", 3750, 12, "🐛"));
-                entries.add(new LeaderboardEntry(8, "DebugPro", 3620, 20, "💎"));
-                entries.add(new LeaderboardEntry(9, "FixerUpper", 3500, 14, "🔧"));
-                entries.add(new LeaderboardEntry(10, "ErrorSeeker", 3380, 16, "🔍"));
-                entries.add(new LeaderboardEntry(11, "CrashFixer", 3200, 11, "💥"));
-                entries.add(new LeaderboardEntry(12, "NullPointer", 3050, 19, "⭐"));
-                entries.add(new LeaderboardEntry(13, "LogicLord", 2900, 13, "🧠"));
+                entries.add(new LeaderboardEntry(4, "JavaMaster", 4250, 15, "🔥", 85));
+                entries.add(new LeaderboardEntry(5, "ByteHunter", 4100, 22, "⚡", 82));
+                entries.add(new LeaderboardEntry(6, "CodeWizard", 3890, 18, "🎯", 75));
+                entries.add(new LeaderboardEntry(7, "BugCatcher", 3750, 12, "🐛", 68));
+                entries.add(new LeaderboardEntry(8, "DebugPro", 3620, 20, "💎", 62));
+                entries.add(new LeaderboardEntry(9, "FixerUpper", 3500, 14, "🔧", 55));
+                entries.add(new LeaderboardEntry(10, "ErrorSeeker", 3380, 16, "🔍", 48));
+                entries.add(new LeaderboardEntry(11, "CrashFixer", 3200, 11, "💥", 42));
+                entries.add(new LeaderboardEntry(12, "NullPointer", 3050, 19, "⭐", 38));
+                entries.add(new LeaderboardEntry(13, "LogicLord", 2900, 13, "🧠", 35));
                 break;
             case "monthly":
-                entries.add(new LeaderboardEntry(4, "ByteHunter", 15200, 22, "⚡"));
-                entries.add(new LeaderboardEntry(5, "JavaMaster", 14800, 15, "🔥"));
-                entries.add(new LeaderboardEntry(6, "DebugPro", 13500, 20, "💎"));
-                entries.add(new LeaderboardEntry(7, "CodeWizard", 12900, 18, "🎯"));
-                entries.add(new LeaderboardEntry(8, "CrashFixer", 11800, 11, "💥"));
-                entries.add(new LeaderboardEntry(9, "NullPointer", 11200, 19, "⭐"));
-                entries.add(new LeaderboardEntry(10, "BugCatcher", 10750, 12, "🐛"));
-                entries.add(new LeaderboardEntry(11, "FixerUpper", 10500, 14, "🔧"));
-                entries.add(new LeaderboardEntry(12, "LogicLord", 9900, 13, "🧠"));
-                entries.add(new LeaderboardEntry(13, "ErrorSeeker", 9380, 16, "🔍"));
+                entries.add(new LeaderboardEntry(4, "ByteHunter", 15200, 22, "⚡", 304));
+                entries.add(new LeaderboardEntry(5, "JavaMaster", 14800, 15, "🔥", 296));
+                entries.add(new LeaderboardEntry(6, "DebugPro", 13500, 20, "💎", 258));
+                entries.add(new LeaderboardEntry(7, "CodeWizard", 12900, 18, "🎯", 245));
+                entries.add(new LeaderboardEntry(8, "CrashFixer", 11800, 11, "💥", 220));
+                entries.add(new LeaderboardEntry(9, "NullPointer", 11200, 19, "⭐", 198));
+                entries.add(new LeaderboardEntry(10, "BugCatcher", 10750, 12, "🐛", 185));
+                entries.add(new LeaderboardEntry(11, "FixerUpper", 10500, 14, "🔧", 175));
+                entries.add(new LeaderboardEntry(12, "LogicLord", 9900, 13, "🧠", 162));
+                entries.add(new LeaderboardEntry(13, "ErrorSeeker", 9380, 16, "🔍", 148));
                 break;
             case "alltime":
-                entries.add(new LeaderboardEntry(4, "DebugPro", 125000, 35, "💎"));
-                entries.add(new LeaderboardEntry(5, "ByteHunter", 118000, 32, "⚡"));
-                entries.add(new LeaderboardEntry(6, "JavaMaster", 112000, 30, "🔥"));
-                entries.add(new LeaderboardEntry(7, "NullPointer", 98000, 28, "⭐"));
-                entries.add(new LeaderboardEntry(8, "CrashFixer", 89000, 26, "💥"));
-                entries.add(new LeaderboardEntry(9, "CodeWizard", 85000, 25, "🎯"));
-                entries.add(new LeaderboardEntry(10, "LogicLord", 78000, 24, "🧠"));
-                entries.add(new LeaderboardEntry(11, "BugCatcher", 72000, 22, "🐛"));
-                entries.add(new LeaderboardEntry(12, "FixerUpper", 68000, 21, "🔧"));
-                entries.add(new LeaderboardEntry(13, "ErrorSeeker", 62000, 20, "🔍"));
+                entries.add(new LeaderboardEntry(4, "DebugPro", 125000, 35, "💎", 2580));
+                entries.add(new LeaderboardEntry(5, "ByteHunter", 118000, 32, "⚡", 2450));
+                entries.add(new LeaderboardEntry(6, "JavaMaster", 112000, 30, "🔥", 2320));
+                entries.add(new LeaderboardEntry(7, "NullPointer", 98000, 28, "⭐", 1980));
+                entries.add(new LeaderboardEntry(8, "CrashFixer", 89000, 26, "💥", 1850));
+                entries.add(new LeaderboardEntry(9, "CodeWizard", 85000, 25, "🎯", 1720));
+                entries.add(new LeaderboardEntry(10, "LogicLord", 78000, 24, "🧠", 1580));
+                entries.add(new LeaderboardEntry(11, "BugCatcher", 72000, 22, "🐛", 1450));
+                entries.add(new LeaderboardEntry(12, "FixerUpper", 68000, 21, "🔧", 1380));
+                entries.add(new LeaderboardEntry(13, "ErrorSeeker", 62000, 20, "🔍", 1250));
                 break;
         }
         
@@ -168,6 +162,7 @@ public class LeaderboardFragment extends Fragment {
         public int xp;
         public int level;
         public String badge;
+        public int bugsFixed;
 
         public LeaderboardEntry(int rank, String username, int xp, int level, String badge) {
             this.rank = rank;
@@ -175,6 +170,16 @@ public class LeaderboardFragment extends Fragment {
             this.xp = xp;
             this.level = level;
             this.badge = badge;
+            this.bugsFixed = xp / 50; // Estimate bugs based on XP
+        }
+        
+        public LeaderboardEntry(int rank, String username, int xp, int level, String badge, int bugsFixed) {
+            this.rank = rank;
+            this.username = username;
+            this.xp = xp;
+            this.level = level;
+            this.badge = badge;
+            this.bugsFixed = bugsFixed;
         }
     }
 }
