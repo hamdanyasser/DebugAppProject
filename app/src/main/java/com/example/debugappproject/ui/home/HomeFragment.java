@@ -1,9 +1,18 @@
 package com.example.debugappproject.ui.home;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,11 +25,21 @@ import com.example.debugappproject.R;
 import com.example.debugappproject.billing.BillingManager;
 import com.example.debugappproject.databinding.FragmentHomeBinding;
 import com.example.debugappproject.model.UserProgress;
+import com.example.debugappproject.util.SoundManager;
 
 import java.util.Calendar;
 
 /**
- * HomeFragment - The main dashboard of DebugMaster!
+ * ╔══════════════════════════════════════════════════════════════════════════════╗
+ * ║           DEBUGMASTER - PREMIUM HOME DASHBOARD                               ║
+ * ║              AAA Mobile Game Quality Experience                              ║
+ * ╚══════════════════════════════════════════════════════════════════════════════╝
+ *
+ * The main hub of the DebugMaster experience with:
+ * • Premium entrance animations
+ * • Sound effects on all interactions
+ * • Haptic feedback
+ * • Dynamic stat updates with visual flair
  */
 public class HomeFragment extends Fragment {
 
@@ -28,6 +47,8 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private HomeViewModel viewModel;
     private BillingManager billingManager;
+    private SoundManager soundManager;
+    private Handler animationHandler;
 
     private static final String[] MORNING_GREETINGS = {
         "Good morning! Ready to squash some bugs? 🌅",
@@ -57,14 +78,108 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        android.util.Log.d("HomeFragment", "onViewCreated: Initializing");
         viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        billingManager = new BillingManager(requireContext());
+        billingManager = BillingManager.getInstance(requireContext());
+        soundManager = SoundManager.getInstance(requireContext());
+        animationHandler = new Handler(Looper.getMainLooper());
+        
+        android.util.Log.d("HomeFragment", "onViewCreated: BillingManager initialized, isPro=" + billingManager.isProUserSync());
 
+        // Play entrance sound
+        soundManager.playSound(SoundManager.Sound.TRANSITION);
+        
         setupGreeting();
         setupObservers();
         setupClickListeners();
         
+        // Start entrance animations
+        startEntranceAnimations();
+
         billingManager.getIsProUser().observe(getViewLifecycleOwner(), this::updateProStatus);
+    }
+
+    /**
+     * ═══════════════════════════════════════════════════════════════════════════
+     *                         ENTRANCE ANIMATIONS
+     * ═══════════════════════════════════════════════════════════════════════════
+     */
+    private void startEntranceAnimations() {
+        // Animate hero card
+        if (binding.cardHero != null) {
+            binding.cardHero.setAlpha(0f);
+            binding.cardHero.setTranslationY(-50f);
+            
+            ObjectAnimator fadeIn = ObjectAnimator.ofFloat(binding.cardHero, "alpha", 0f, 1f);
+            ObjectAnimator slideDown = ObjectAnimator.ofFloat(binding.cardHero, "translationY", -50f, 0f);
+            
+            AnimatorSet heroAnim = new AnimatorSet();
+            heroAnim.playTogether(fadeIn, slideDown);
+            heroAnim.setDuration(500);
+            heroAnim.setInterpolator(new DecelerateInterpolator(2f));
+            heroAnim.start();
+        }
+
+        // Animate daily challenge card
+        if (binding.cardDailyChallenge != null) {
+            binding.cardDailyChallenge.setAlpha(0f);
+            binding.cardDailyChallenge.setScaleX(0.9f);
+            binding.cardDailyChallenge.setScaleY(0.9f);
+            
+            animationHandler.postDelayed(() -> {
+                if (binding == null || !isAdded()) return;
+                
+                ObjectAnimator fadeIn = ObjectAnimator.ofFloat(binding.cardDailyChallenge, "alpha", 0f, 1f);
+                ObjectAnimator scaleX = ObjectAnimator.ofFloat(binding.cardDailyChallenge, "scaleX", 0.9f, 1f);
+                ObjectAnimator scaleY = ObjectAnimator.ofFloat(binding.cardDailyChallenge, "scaleY", 0.9f, 1f);
+                
+                AnimatorSet anim = new AnimatorSet();
+                anim.playTogether(fadeIn, scaleX, scaleY);
+                anim.setDuration(400);
+                anim.setInterpolator(new OvershootInterpolator(1.2f));
+                anim.start();
+            }, 200);
+        }
+
+        // Animate quick action cards
+        animateQuickActionCards();
+        
+        // Animate pro upsell
+        if (binding.cardProUpsell != null && binding.cardProUpsell.getVisibility() == View.VISIBLE) {
+            binding.cardProUpsell.setAlpha(0f);
+            animationHandler.postDelayed(() -> {
+                if (binding == null || !isAdded()) return;
+                ObjectAnimator fadeIn = ObjectAnimator.ofFloat(binding.cardProUpsell, "alpha", 0f, 1f);
+                fadeIn.setDuration(500);
+                fadeIn.start();
+            }, 600);
+        }
+    }
+
+    private void animateQuickActionCards() {
+        View[] cards = {binding.cardPracticeMode, binding.cardBattleArena};
+        
+        for (int i = 0; i < cards.length; i++) {
+            View card = cards[i];
+            if (card == null) continue;
+            
+            card.setAlpha(0f);
+            card.setTranslationY(30f);
+            
+            final int delay = 350 + (i * 100);
+            animationHandler.postDelayed(() -> {
+                if (binding == null || !isAdded()) return;
+                
+                ObjectAnimator fadeIn = ObjectAnimator.ofFloat(card, "alpha", 0f, 1f);
+                ObjectAnimator slideUp = ObjectAnimator.ofFloat(card, "translationY", 30f, 0f);
+                
+                AnimatorSet anim = new AnimatorSet();
+                anim.playTogether(fadeIn, slideUp);
+                anim.setDuration(400);
+                anim.setInterpolator(new DecelerateInterpolator(1.5f));
+                anim.start();
+            }, delay);
+        }
     }
 
     private void setupGreeting() {
@@ -120,12 +235,17 @@ public class HomeFragment extends Fragment {
 
             if (binding.progressXp != null) {
                 binding.progressXp.setMax(xpToNextLevel);
-                binding.progressXp.setProgress(xpInLevel);
+                // Animate progress bar
+                animateProgress(binding.progressXp, xpInLevel);
             }
 
             if (binding.textStreakDays != null) {
                 int streak = progress.getStreakDays();
                 binding.textStreakDays.setText(String.valueOf(streak));
+                // Animate streak number if > 0
+                if (streak > 0) {
+                    animateStat(binding.textStreakDays);
+                }
             }
 
             if (binding.textSolvedCount != null) {
@@ -142,6 +262,32 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    /**
+     * Animate progress bar filling
+     */
+    private void animateProgress(android.widget.ProgressBar progressBar, int targetProgress) {
+        ValueAnimator animator = ValueAnimator.ofInt(0, targetProgress);
+        animator.setDuration(800);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.addUpdateListener(animation -> {
+            int value = (int) animation.getAnimatedValue();
+            progressBar.setProgress(value);
+        });
+        animator.start();
+    }
+
+    /**
+     * Pulse animation for stat numbers
+     */
+    private void animateStat(View view) {
+        ObjectAnimator pulse = ObjectAnimator.ofPropertyValuesHolder(view,
+                PropertyValuesHolder.ofFloat("scaleX", 1f, 1.2f, 1f),
+                PropertyValuesHolder.ofFloat("scaleY", 1f, 1.2f, 1f));
+        pulse.setDuration(500);
+        pulse.setInterpolator(new OvershootInterpolator(2f));
+        pulse.start();
+    }
+
     private String getTitleForLevel(int level) {
         if (level < 5) return "Novice Debugger";
         if (level < 10) return "Bug Hunter";
@@ -153,52 +299,155 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateProStatus(boolean isPro) {
+        android.util.Log.d(TAG, "updateProStatus: isPro=" + isPro);
+        
         if (binding.cardProUpsell != null) {
-            binding.cardProUpsell.setVisibility(isPro ? View.GONE : View.VISIBLE);
+            if (isPro) {
+                // Hide upsell card for Pro users
+                binding.cardProUpsell.setVisibility(View.GONE);
+            } else {
+                binding.cardProUpsell.setVisibility(View.VISIBLE);
+            }
+        }
+        
+        // Show Pro badge next to greeting if Pro user
+        if (binding.textGreeting != null && isPro) {
+            String currentGreeting = binding.textGreeting.getText().toString();
+            if (!currentGreeting.contains("👑")) {
+                binding.textGreeting.setText("👑 " + currentGreeting);
+            }
+        }
+        
+        // Update level title to show Pro status
+        if (binding.textLevelTitle != null && isPro) {
+            String currentTitle = binding.textLevelTitle.getText().toString();
+            if (!currentTitle.contains("Pro")) {
+                binding.textLevelTitle.setText(currentTitle + " • Pro");
+            }
         }
     }
 
+    /**
+     * ═══════════════════════════════════════════════════════════════════════════
+     *                         CLICK LISTENERS WITH SOUND
+     * ═══════════════════════════════════════════════════════════════════════════
+     */
     private void setupClickListeners() {
         // Daily Challenge
         if (binding.cardDailyChallenge != null) {
-            binding.cardDailyChallenge.setOnClickListener(v -> 
-                navigateToDestination(R.id.action_home_to_bugDetail, "Daily Challenge"));
+            binding.cardDailyChallenge.setOnClickListener(v -> {
+                animateCardPress(v);
+                soundManager.playSound(SoundManager.Sound.CHALLENGE_START);
+                navigateToDestination(R.id.action_home_to_bugDetail, "Daily Challenge");
+            });
         }
 
         if (binding.buttonSolveNow != null) {
-            binding.buttonSolveNow.setOnClickListener(v -> 
-                navigateToDestination(R.id.action_home_to_bugDetail, "Daily Challenge"));
+            binding.buttonSolveNow.setOnClickListener(v -> {
+                animateButtonPress(v);
+                soundManager.playSound(SoundManager.Sound.BUTTON_START);
+                navigateToDestination(R.id.action_home_to_bugDetail, "Daily Challenge");
+            });
         }
 
         // Learning Paths
         if (binding.textViewAllPaths != null) {
-            binding.textViewAllPaths.setOnClickListener(v -> 
-                navigateToDestination(R.id.action_home_to_learn, "Learning Paths"));
+            binding.textViewAllPaths.setOnClickListener(v -> {
+                soundManager.playButtonClick();
+                navigateToDestination(R.id.action_home_to_learn, "Learning Paths");
+            });
         }
 
         // Practice Mode
         if (binding.cardPracticeMode != null) {
-            binding.cardPracticeMode.setOnClickListener(v -> 
-                navigateToDestination(R.id.action_home_to_practice, "Practice Mode"));
+            binding.cardPracticeMode.setOnClickListener(v -> {
+                animateCardPress(v);
+                soundManager.playSound(SoundManager.Sound.BUTTON_CLICK);
+                navigateToDestination(R.id.action_home_to_practice, "Practice Mode");
+            });
         }
 
         // Battle Arena
         if (binding.cardBattleArena != null) {
             binding.cardBattleArena.setOnClickListener(v -> {
-                // Allow access in demo mode regardless of Pro status
-                // In production, you might want to restrict this
+                animateCardPress(v);
+                soundManager.playSound(SoundManager.Sound.CHALLENGE_START);
                 navigateToDestination(R.id.action_home_to_battle, "Battle Arena");
             });
         }
 
         // Pro Upgrade
         if (binding.cardProUpsell != null) {
-            binding.cardProUpsell.setOnClickListener(v -> navigateToPremium());
+            binding.cardProUpsell.setOnClickListener(v -> {
+                animateCardPress(v);
+                soundManager.playSound(SoundManager.Sound.POWER_UP);
+                navigateToPremium();
+            });
         }
 
         if (binding.buttonUpgrade != null) {
-            binding.buttonUpgrade.setOnClickListener(v -> navigateToPremium());
+            binding.buttonUpgrade.setOnClickListener(v -> {
+                animateButtonPress(v);
+                soundManager.playSound(SoundManager.Sound.BUTTON_START);
+                navigateToPremium();
+            });
         }
+
+        // Coins tap (easter egg - satisfying feedback)
+        if (binding.layoutCoins != null) {
+            binding.layoutCoins.setOnClickListener(v -> {
+                soundManager.playSound(SoundManager.Sound.COIN_COLLECT);
+                animateCoinCollect(v);
+            });
+        }
+    }
+
+    /**
+     * Card press animation
+     */
+    private void animateCardPress(View card) {
+        ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(card, "scaleX", 1f, 0.95f);
+        ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(card, "scaleY", 1f, 0.95f);
+        
+        AnimatorSet pressDown = new AnimatorSet();
+        pressDown.playTogether(scaleDownX, scaleDownY);
+        pressDown.setDuration(80);
+        
+        ObjectAnimator scaleUpX = ObjectAnimator.ofFloat(card, "scaleX", 0.95f, 1f);
+        ObjectAnimator scaleUpY = ObjectAnimator.ofFloat(card, "scaleY", 0.95f, 1f);
+        
+        AnimatorSet release = new AnimatorSet();
+        release.playTogether(scaleUpX, scaleUpY);
+        release.setDuration(150);
+        release.setInterpolator(new OvershootInterpolator(2f));
+        
+        AnimatorSet fullAnim = new AnimatorSet();
+        fullAnim.playSequentially(pressDown, release);
+        fullAnim.start();
+    }
+
+    /**
+     * Button press animation
+     */
+    private void animateButtonPress(View button) {
+        ObjectAnimator pulse = ObjectAnimator.ofPropertyValuesHolder(button,
+                PropertyValuesHolder.ofFloat("scaleX", 1f, 0.9f, 1.05f, 1f),
+                PropertyValuesHolder.ofFloat("scaleY", 1f, 0.9f, 1.05f, 1f));
+        pulse.setDuration(250);
+        pulse.start();
+    }
+
+    /**
+     * Coin collect easter egg animation
+     */
+    private void animateCoinCollect(View view) {
+        ObjectAnimator bounce = ObjectAnimator.ofPropertyValuesHolder(view,
+                PropertyValuesHolder.ofFloat("scaleX", 1f, 1.3f, 1f),
+                PropertyValuesHolder.ofFloat("scaleY", 1f, 1.3f, 1f),
+                PropertyValuesHolder.ofFloat("rotation", 0f, 15f, -15f, 0f));
+        bounce.setDuration(400);
+        bounce.setInterpolator(new OvershootInterpolator(2f));
+        bounce.start();
     }
 
     private void navigateToDestination(int actionId, String destinationName) {
@@ -207,6 +456,7 @@ public class HomeFragment extends Fragment {
             NavController navController = Navigation.findNavController(requireView());
             navController.navigate(actionId);
         } catch (IllegalArgumentException e) {
+            soundManager.playSound(SoundManager.Sound.NOTIFICATION);
             showToast("Coming soon: " + destinationName + " 🚀");
         } catch (Exception e) {
             android.util.Log.e(TAG, "Navigation error", e);
@@ -220,6 +470,7 @@ public class HomeFragment extends Fragment {
             navController.navigate(R.id.action_home_to_subscription);
         } catch (Exception e) {
             android.util.Log.e(TAG, "Navigation to premium failed", e);
+            soundManager.playSound(SoundManager.Sound.NOTIFICATION);
             showToast("✨ Pro features coming soon!");
         }
     }
@@ -236,11 +487,27 @@ public class HomeFragment extends Fragment {
         if (billingManager != null) {
             billingManager.refreshPurchases();
         }
+        // Resume sounds if paused
+        if (soundManager != null) {
+            soundManager.resumeAll();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Pause sounds when leaving
+        if (soundManager != null) {
+            soundManager.pauseAll();
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (animationHandler != null) {
+            animationHandler.removeCallbacksAndMessages(null);
+        }
         if (billingManager != null) {
             billingManager.destroy();
         }

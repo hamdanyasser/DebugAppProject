@@ -17,13 +17,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * ╔══════════════════════════════════════════════════════════════════════════════╗
+ * ║           DEBUGMASTER - ACHIEVEMENT ADAPTER                                  ║
+ * ║              Premium Achievement Display with Sound Support                  ║
+ * ╚══════════════════════════════════════════════════════════════════════════════╝
+ * 
  * RecyclerView adapter for displaying achievements in a grid.
- * Shows both locked and unlocked achievements.
+ * Shows both locked and unlocked achievements with animations.
  * Uses DiffUtil for animated unlock transitions.
  */
 public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.AchievementViewHolder> {
 
     private List<AchievementWithStatus> achievements = new ArrayList<>();
+    private OnAchievementClickListener clickListener;
+
+    /**
+     * Interface for achievement click events
+     */
+    public interface OnAchievementClickListener {
+        void onAchievementClick(AchievementWithStatus achievement);
+    }
+
+    /**
+     * Default constructor
+     */
+    public AchievementAdapter() {
+        this.clickListener = null;
+    }
+
+    /**
+     * Constructor with click listener for sound effects
+     */
+    public AchievementAdapter(OnAchievementClickListener listener) {
+        this.clickListener = listener;
+    }
+
+    /**
+     * Set click listener after construction
+     */
+    public void setOnAchievementClickListener(OnAchievementClickListener listener) {
+        this.clickListener = listener;
+    }
 
     @NonNull
     @Override
@@ -36,7 +70,7 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
     @Override
     public void onBindViewHolder(@NonNull AchievementViewHolder holder, int position) {
         AchievementWithStatus achievement = achievements.get(position);
-        holder.bind(achievement);
+        holder.bind(achievement, clickListener);
     }
 
     @Override
@@ -82,7 +116,6 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
 
         @Override
         public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            // Same achievement if IDs match
             return oldList.get(oldItemPosition).getDefinition().getId() ==
                    newList.get(newItemPosition).getDefinition().getId();
         }
@@ -92,7 +125,6 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
             AchievementWithStatus oldItem = oldList.get(oldItemPosition);
             AchievementWithStatus newItem = newList.get(newItemPosition);
 
-            // Compare unlock status and achievement properties
             return oldItem.isUnlocked() == newItem.isUnlocked() &&
                    oldItem.getDefinition().getName().equals(newItem.getDefinition().getName()) &&
                    oldItem.getDefinition().getDescription().equals(newItem.getDefinition().getDescription()) &&
@@ -101,7 +133,7 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
     }
 
     /**
-     * ViewHolder for achievement items.
+     * ViewHolder for achievement items with premium animations.
      */
     static class AchievementViewHolder extends RecyclerView.ViewHolder {
         private final TextView textIcon;
@@ -122,9 +154,9 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
         }
 
         /**
-         * Binds achievement data to the views.
+         * Binds achievement data to the views with click handling.
          */
-        public void bind(AchievementWithStatus achievementWithStatus) {
+        public void bind(AchievementWithStatus achievementWithStatus, OnAchievementClickListener listener) {
             AchievementDefinition achievement = achievementWithStatus.getDefinition();
 
             textIcon.setText(achievement.getIconEmoji());
@@ -146,6 +178,27 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
                 textName.setAlpha(0.5f);
                 textDescription.setAlpha(0.5f);
             }
+
+            // Click listener with press animation
+            itemView.setOnClickListener(v -> {
+                // Press animation
+                v.animate()
+                    .scaleX(0.95f)
+                    .scaleY(0.95f)
+                    .setDuration(100)
+                    .withEndAction(() -> {
+                        v.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(100)
+                            .start();
+                    })
+                    .start();
+
+                if (listener != null) {
+                    listener.onAchievementClick(achievementWithStatus);
+                }
+            });
         }
     }
 }

@@ -2,11 +2,13 @@ package com.example.debugappproject.ui.battle;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -17,22 +19,28 @@ import androidx.navigation.Navigation;
 
 import com.example.debugappproject.R;
 import com.example.debugappproject.billing.BillingManager;
+import com.example.debugappproject.data.local.BugDao;
+import com.example.debugappproject.data.local.DebugMasterDatabase;
 import com.example.debugappproject.databinding.FragmentBattleArenaBinding;
+import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.util.AnimationUtil;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.debugappproject.util.SoundManager;
+
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
- * BattleArenaFragment - Premium PvP debugging battles.
- * Challenge friends or random opponents in timed debugging challenges.
+ * ╔══════════════════════════════════════════════════════════════════════════════╗
+ * ║           DEBUGMASTER - BATTLE ARENA (REAL GAMEPLAY)                         ║
+ * ║              Actual Bug Challenges - Not Random Win/Lose!                    ║
+ * ╚══════════════════════════════════════════════════════════════════════════════╝
  * 
- * Features:
- * - Quick Match: Find random opponents
- * - Challenge Friend: Battle with friends
- * - Create Room: Private battle rooms
- * - Join Room: Join via room code
- * - Battle History: Track wins/losses
+ * FIXED: Now shows actual bugs that the user must solve to win.
+ * Win = Correct fix submitted
+ * Lose = Wrong fix or time runs out
  */
 @AndroidEntryPoint
 public class BattleArenaFragment extends Fragment {
@@ -40,13 +48,23 @@ public class BattleArenaFragment extends Fragment {
     private static final String TAG = "BattleArenaFragment";
     private FragmentBattleArenaBinding binding;
     private BillingManager billingManager;
+    private SoundManager soundManager;
+    private BugDao bugDao;
+    private ExecutorService executor;
     private Handler handler = new Handler(Looper.getMainLooper());
     private boolean isMatchmaking = false;
-
-    // Sample stats (would come from server in production)
-    private int wins = 47;
-    private int losses = 12;
-    private int trophies = 1250;
+    private boolean isInBattle = false;
+    
+    // Current battle state
+    private Bug currentBug;
+    private CountDownTimer battleTimer;
+    private String opponentName;
+    private int timeRemaining = 180; // 3 minutes
+    
+    // Stats (stored in SharedPreferences)
+    private int wins = 0;
+    private int losses = 0;
+    private int trophies = 100;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -59,18 +77,64 @@ public class BattleArenaFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         
-        billingManager = new BillingManager(requireContext());
+        billingManager = BillingManager.getInstance(requireContext());
+        soundManager = SoundManager.getInstance(requireContext());
+        bugDao = DebugMasterDatabase.getInstance(requireContext()).bugDao();
+        executor = Executors.newSingleThreadExecutor();
+        
+        // Load saved stats
+        loadSavedStats();
         
         setupUI();
         loadStats();
-        observeProStatus();
+        playEntranceAnimations();
+    }
+
+    private void loadSavedStats() {
+        android.content.SharedPreferences prefs = requireContext()
+            .getSharedPreferences("battle_stats", android.content.Context.MODE_PRIVATE);
+        wins = prefs.getInt("wins", 0);
+        losses = prefs.getInt("losses", 0);
+        trophies = prefs.getInt("trophies", 100);
+    }
+    
+    private void saveStats() {
+        android.content.SharedPreferences prefs = requireContext()
+            .getSharedPreferences("battle_stats", android.content.Context.MODE_PRIVATE);
+        prefs.edit()
+            .putInt("wins", wins)
+            .putInt("losses", losses)
+            .putInt("trophies", trophies)
+            .apply();
+    }
+
+    private void playEntranceAnimations() {
+        View[] buttons = {binding.buttonQuickMatch, binding.buttonChallengeFriend, 
+                          binding.buttonCreateRoom, binding.buttonJoinRoom};
+        for (int i = 0; i < buttons.length; i++) {
+            View button = buttons[i];
+            if (button != null) {
+                button.setAlpha(0f);
+                button.setTranslationX(-100f);
+                button.animate()
+                        .alpha(1f)
+                        .translationX(0f)
+                        .setStartDelay(200 + (i * 100L))
+                        .setDuration(400)
+                        .setInterpolator(new DecelerateInterpolator())
+                        .start();
+            }
+        }
     }
 
     private void setupUI() {
         // Back button
         if (binding.buttonBack != null) {
             binding.buttonBack.setOnClickListener(v -> {
-                if (isMatchmaking) {
+                soundManager.playButtonClick();
+                if (isInBattle) {
+                    confirmExitBattle();
+                } else if (isMatchmaking) {
                     cancelMatchmaking();
                 } else {
                     Navigation.findNavController(v).navigateUp();
@@ -81,6 +145,7 @@ public class BattleArenaFragment extends Fragment {
         // Quick Match button
         if (binding.buttonQuickMatch != null) {
             binding.buttonQuickMatch.setOnClickListener(v -> {
+                soundManager.playButtonClick();
                 AnimationUtil.animatePress(v, this::startMatchmaking);
             });
         }
@@ -88,41 +153,37 @@ public class BattleArenaFragment extends Fragment {
         // Challenge Friend button
         if (binding.buttonChallengeFriend != null) {
             binding.buttonChallengeFriend.setOnClickListener(v -> {
-                AnimationUtil.animatePress(v, this::showFriendsList);
+                soundManager.playButtonClick();
+                Toast.makeText(requireContext(), "Coming soon! Use Quick Match for now.", Toast.LENGTH_SHORT).show();
             });
         }
 
         // Create Room button
         if (binding.buttonCreateRoom != null) {
             binding.buttonCreateRoom.setOnClickListener(v -> {
-                AnimationUtil.animatePress(v, this::createBattleRoom);
+                soundManager.playButtonClick();
+                Toast.makeText(requireContext(), "Coming soon! Use Quick Match for now.", Toast.LENGTH_SHORT).show();
             });
         }
 
         // Join Room button
         if (binding.buttonJoinRoom != null) {
             binding.buttonJoinRoom.setOnClickListener(v -> {
-                AnimationUtil.animatePress(v, this::showJoinRoomDialog);
+                soundManager.playButtonClick();
+                Toast.makeText(requireContext(), "Coming soon! Use Quick Match for now.", Toast.LENGTH_SHORT).show();
             });
         }
 
         // Cancel matchmaking button
         if (binding.buttonCancelMatchmaking != null) {
             binding.buttonCancelMatchmaking.setOnClickListener(v -> {
+                soundManager.playButtonClick();
                 cancelMatchmaking();
-            });
-        }
-
-        // View all battles
-        if (binding.textViewAllBattles != null) {
-            binding.textViewAllBattles.setOnClickListener(v -> {
-                Toast.makeText(requireContext(), "Battle history coming soon!", Toast.LENGTH_SHORT).show();
             });
         }
     }
 
     private void loadStats() {
-        // Update UI with stats
         if (binding.textWins != null) {
             binding.textWins.setText(String.valueOf(wins));
         }
@@ -139,17 +200,10 @@ public class BattleArenaFragment extends Fragment {
         }
     }
 
-    private void observeProStatus() {
-        billingManager.getIsProUser().observe(getViewLifecycleOwner(), isPro -> {
-            // Battle Arena could be Pro-only feature
-            // For now, it's available to all users with some restrictions
-        });
-    }
-
     private void startMatchmaking() {
         isMatchmaking = true;
         
-        // Show matchmaking overlay with animation
+        // Show matchmaking overlay
         if (binding.layoutMatchmaking != null) {
             binding.layoutMatchmaking.setVisibility(View.VISIBLE);
             AnimationUtil.fadeIn(binding.layoutMatchmaking);
@@ -158,17 +212,55 @@ public class BattleArenaFragment extends Fragment {
             AnimationUtil.fadeOut(binding.layoutMainMenu);
         }
         
-        // Simulate matchmaking process
-        simulateMatchmaking();
+        // Load a random bug from database
+        loadRandomBugForBattle();
+    }
+    
+    private void loadRandomBugForBattle() {
+        executor.execute(() -> {
+            try {
+                int bugCount = bugDao.getBugCount();
+                if (bugCount > 0) {
+                    // Pick a random bug ID (1 to bugCount)
+                    Random random = new Random();
+                    int randomId = random.nextInt(bugCount) + 1;
+                    currentBug = bugDao.getBugByIdSync(randomId);
+                    
+                    // If null, try another one
+                    if (currentBug == null) {
+                        for (int i = 1; i <= bugCount && currentBug == null; i++) {
+                            currentBug = bugDao.getBugByIdSync(i);
+                        }
+                    }
+                    
+                    handler.post(() -> {
+                        if (isMatchmaking && currentBug != null) {
+                            simulateMatchmaking();
+                        } else {
+                            Toast.makeText(requireContext(), "No bugs available.", Toast.LENGTH_SHORT).show();
+                            cancelMatchmaking();
+                        }
+                    });
+                } else {
+                    handler.post(() -> {
+                        Toast.makeText(requireContext(), "No bugs available. Please try again later.", Toast.LENGTH_SHORT).show();
+                        cancelMatchmaking();
+                    });
+                }
+            } catch (Exception e) {
+                handler.post(() -> {
+                    Toast.makeText(requireContext(), "Error loading bug: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    cancelMatchmaking();
+                });
+            }
+        });
     }
 
     private void simulateMatchmaking() {
         String[] statusMessages = {
-            "Searching for players at your level...",
-            "Found 3 potential matches...",
-            "Checking connection quality...",
-            "Almost there...",
-            "Opponent found!"
+            "Searching for opponent...",
+            "Found match!",
+            "Loading challenge..."
         };
 
         for (int i = 0; i < statusMessages.length; i++) {
@@ -177,37 +269,32 @@ public class BattleArenaFragment extends Fragment {
                 if (isMatchmaking && binding != null && binding.textMatchmakingStatus != null) {
                     binding.textMatchmakingStatus.setText(statusMessages[index]);
                     
-                    // On the last message, show found opponent
                     if (index == statusMessages.length - 1) {
-                        handler.postDelayed(() -> {
-                            if (isMatchmaking) {
-                                showOpponentFound();
-                            }
-                        }, 1000);
+                        handler.postDelayed(this::showBattleChallenge, 1000);
                     }
                 }
-            }, (i + 1) * 1500L);
+            }, (i + 1) * 1000L);
         }
     }
 
-    private void showOpponentFound() {
-        if (getContext() == null || !isMatchmaking) return;
+    private void showBattleChallenge() {
+        if (getContext() == null || !isMatchmaking || currentBug == null) return;
 
-        // Generate random opponent
-        String[] opponents = {"CodeNinja42", "BugSlayer99", "DebugQueen", "JavaMaster", "ByteHunter"};
-        String opponent = opponents[(int) (Math.random() * opponents.length)];
-        int opponentLevel = 10 + (int) (Math.random() * 25);
+        // Generate opponent
+        String[] opponents = {"CodeNinja", "BugSlayer", "DebugQueen", "JavaMaster", "ByteHunter"};
+        opponentName = opponents[new Random().nextInt(opponents.length)] + new Random().nextInt(100);
 
         new AlertDialog.Builder(requireContext())
-            .setTitle("⚔️ Opponent Found!")
-            .setMessage("Ready to battle?\n\n" +
-                "👤 " + opponent + "\n" +
-                "📊 Level " + opponentLevel + "\n" +
-                "🏆 Win Rate: " + (60 + (int)(Math.random() * 30)) + "%\n\n" +
-                "Bug Type: Memory Leak\n" +
-                "Time Limit: 5 minutes")
+            .setTitle("⚔️ Battle Found!")
+            .setMessage("Opponent: " + opponentName + "\n\n" +
+                "Challenge: " + currentBug.getTitle() + "\n" +
+                "Difficulty: " + currentBug.getDifficulty() + "\n" +
+                "Category: " + currentBug.getCategory() + "\n\n" +
+                "Time Limit: 3 minutes\n\n" +
+                "Fix the bug before time runs out to WIN!")
             .setPositiveButton("Start Battle!", (dialog, which) -> {
-                startBattle(opponent);
+                soundManager.playSound(SoundManager.Sound.CHALLENGE_START);
+                startActualBattle();
             })
             .setNegativeButton("Cancel", (dialog, which) -> {
                 cancelMatchmaking();
@@ -216,70 +303,248 @@ public class BattleArenaFragment extends Fragment {
             .show();
     }
 
-    private void startBattle(String opponent) {
-        cancelMatchmaking();
+    private void startActualBattle() {
+        isMatchmaking = false;
+        isInBattle = true;
         
-        // In production, this would navigate to a live battle screen
-        Toast.makeText(requireContext(), 
-            "⚔️ Battle starting vs " + opponent + "!", 
-            Toast.LENGTH_LONG).show();
-        
-        // Simulate a quick battle result for demo
-        handler.postDelayed(() -> {
-            if (getContext() != null) {
-                boolean won = Math.random() > 0.4; // 60% chance to win
-                showBattleResult(won, opponent);
-            }
-        }, 2000);
-    }
-
-    private void showBattleResult(boolean won, String opponent) {
-        if (getContext() == null) return;
-
-        int trophyChange = won ? 35 + (int)(Math.random() * 20) : -(15 + (int)(Math.random() * 10));
-        int xpEarned = won ? 75 + (int)(Math.random() * 50) : 25;
-
-        String title = won ? "🎉 Victory!" : "😢 Defeat";
-        String message = won ? 
-            "You defeated " + opponent + "!\n\n" +
-            "🏆 +" + trophyChange + " Trophies\n" +
-            "⭐ +" + xpEarned + " XP" :
-            "You lost to " + opponent + ".\n\n" +
-            "🏆 " + trophyChange + " Trophies\n" +
-            "⭐ +" + xpEarned + " XP (participation)";
-
-        // Update stats
-        if (won) {
-            wins++;
-            trophies += trophyChange;
-        } else {
-            losses++;
-            trophies += trophyChange; // trophyChange is negative for loss
+        // Hide matchmaking, show battle UI
+        if (binding.layoutMatchmaking != null) {
+            binding.layoutMatchmaking.setVisibility(View.GONE);
         }
-        loadStats();
-
-        new AlertDialog.Builder(requireContext())
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton("Play Again", (dialog, which) -> {
-                startMatchmaking();
+        
+        // Show the battle dialog with the actual bug
+        showBugChallengeDialog();
+    }
+    
+    private void showBugChallengeDialog() {
+        if (getContext() == null || currentBug == null) return;
+        
+        // Create input for solution
+        EditText inputFix = new EditText(requireContext());
+        inputFix.setHint("Type your fixed code here...");
+        inputFix.setMinLines(5);
+        inputFix.setGravity(android.view.Gravity.TOP);
+        inputFix.setText(currentBug.getBrokenCode());
+        inputFix.setTypeface(android.graphics.Typeface.MONOSPACE);
+        inputFix.setTextSize(12);
+        
+        int padding = (int) (16 * getResources().getDisplayMetrics().density);
+        inputFix.setPadding(padding, padding, padding, padding);
+        
+        // Build the challenge text
+        String challengeText = "👤 VS " + opponentName + "\n" +
+            "⏱️ Time: 3:00\n\n" +
+            "📋 " + currentBug.getTitle() + "\n\n" +
+            currentBug.getDescription() + "\n\n" +
+            "🔴 BUGGY CODE:\n" + currentBug.getBrokenCode() + "\n\n" +
+            "Fix the code below:";
+        
+        AlertDialog battleDialog = new AlertDialog.Builder(requireContext())
+            .setTitle("⚔️ BATTLE: Fix The Bug!")
+            .setMessage(challengeText)
+            .setView(inputFix)
+            .setPositiveButton("Submit Fix", null) // Set later to prevent auto-dismiss
+            .setNegativeButton("Give Up", (dialog, which) -> {
+                endBattle(false, "You gave up!");
             })
-            .setNegativeButton("Done", null)
+            .setCancelable(false)
+            .create();
+        
+        battleDialog.setOnShowListener(dialog -> {
+            // Start the countdown timer
+            startBattleTimer(battleDialog);
+            
+            // Override submit button to check answer
+            battleDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+                String userFix = inputFix.getText().toString().trim();
+                checkSolution(userFix, battleDialog);
+            });
+        });
+        
+        battleDialog.show();
+    }
+    
+    private void startBattleTimer(AlertDialog dialog) {
+        timeRemaining = 180; // 3 minutes
+        
+        battleTimer = new CountDownTimer(180000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeRemaining = (int) (millisUntilFinished / 1000);
+                int minutes = timeRemaining / 60;
+                int seconds = timeRemaining % 60;
+                
+                // Update dialog title with timer
+                if (dialog.isShowing()) {
+                    dialog.setTitle(String.format("⚔️ BATTLE: %d:%02d remaining", minutes, seconds));
+                }
+            }
+            
+            @Override
+            public void onFinish() {
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                endBattle(false, "Time ran out!");
+            }
+        }.start();
+    }
+    
+    private void checkSolution(String userFix, AlertDialog battleDialog) {
+        if (currentBug == null) return;
+        
+        String correctSolution = currentBug.getFixedCode().trim();
+        String normalizedUserFix = normalizeCode(userFix);
+        String normalizedCorrect = normalizeCode(correctSolution);
+        
+        // Cancel timer
+        if (battleTimer != null) {
+            battleTimer.cancel();
+        }
+        
+        battleDialog.dismiss();
+        
+        // Check if solution is correct (flexible matching)
+        boolean isCorrect = checkCodeMatch(normalizedUserFix, normalizedCorrect);
+        
+        if (isCorrect) {
+            endBattle(true, "Your fix was correct!");
+        } else {
+            // Show correct answer and mark as loss
+            showCorrectAnswerAndLose(correctSolution);
+        }
+    }
+    
+    private String normalizeCode(String code) {
+        // Remove extra whitespace, normalize line endings
+        return code.replaceAll("\\s+", " ")
+                   .replaceAll("\\s*;\\s*", ";")
+                   .replaceAll("\\s*\\{\\s*", "{")
+                   .replaceAll("\\s*\\}\\s*", "}")
+                   .replaceAll("\\s*\\(\\s*", "(")
+                   .replaceAll("\\s*\\)\\s*", ")")
+                   .trim()
+                   .toLowerCase();
+    }
+    
+    private boolean checkCodeMatch(String userCode, String correctCode) {
+        // Exact match
+        if (userCode.equals(correctCode)) return true;
+        
+        // Check similarity (at least 75% similar)
+        int maxLen = Math.max(userCode.length(), correctCode.length());
+        if (maxLen == 0) return false;
+        
+        int distance = levenshteinDistance(userCode, correctCode);
+        double similarity = 1.0 - ((double) distance / maxLen);
+        
+        return similarity >= 0.75; // 75% similarity threshold
+    }
+    
+    private int levenshteinDistance(String s1, String s2) {
+        int[][] dp = new int[s1.length() + 1][s2.length() + 1];
+        
+        for (int i = 0; i <= s1.length(); i++) {
+            for (int j = 0; j <= s2.length(); j++) {
+                if (i == 0) {
+                    dp[i][j] = j;
+                } else if (j == 0) {
+                    dp[i][j] = i;
+                } else {
+                    int cost = s1.charAt(i - 1) == s2.charAt(j - 1) ? 0 : 1;
+                    dp[i][j] = Math.min(Math.min(
+                        dp[i - 1][j] + 1,
+                        dp[i][j - 1] + 1),
+                        dp[i - 1][j - 1] + cost);
+                }
+            }
+        }
+        return dp[s1.length()][s2.length()];
+    }
+    
+    private void showCorrectAnswerAndLose(String correctSolution) {
+        if (getContext() == null) return;
+        
+        new AlertDialog.Builder(requireContext())
+            .setTitle("❌ Incorrect!")
+            .setMessage("Your fix was wrong.\n\n" +
+                "✅ CORRECT SOLUTION:\n" + correctSolution + "\n\n" +
+                "📖 Explanation:\n" + (currentBug != null ? currentBug.getExplanation() : ""))
+            .setPositiveButton("Got it", (dialog, which) -> {
+                endBattle(false, "Wrong answer");
+            })
+            .setCancelable(false)
             .show();
     }
-
-    private void cancelMatchmaking() {
-        isMatchmaking = false;
-        handler.removeCallbacksAndMessages(null);
+    
+    private void endBattle(boolean won, String reason) {
+        isInBattle = false;
         
-        // Hide matchmaking overlay
-        if (binding.layoutMatchmaking != null) {
-            AnimationUtil.fadeOut(binding.layoutMatchmaking);
-            handler.postDelayed(() -> {
-                if (binding != null && binding.layoutMatchmaking != null) {
-                    binding.layoutMatchmaking.setVisibility(View.GONE);
+        if (battleTimer != null) {
+            battleTimer.cancel();
+            battleTimer = null;
+        }
+        
+        int trophyChange = won ? (25 + new Random().nextInt(15)) : -(10 + new Random().nextInt(10));
+        int xpEarned = won ? 50 : 10;
+        
+        if (won) {
+            wins++;
+            soundManager.playSound(SoundManager.Sound.VICTORY);
+        } else {
+            losses++;
+            soundManager.playSound(SoundManager.Sound.DEFEAT);
+        }
+        trophies = Math.max(0, trophies + trophyChange);
+        saveStats();
+        loadStats();
+        
+        // Show result
+        if (getContext() != null) {
+            String title = won ? "🎉 VICTORY!" : "😢 Defeat";
+            String message = won ? 
+                "You beat " + opponentName + "!\n" + reason + "\n\n" +
+                "🏆 +" + trophyChange + " Trophies\n" +
+                "⭐ +" + xpEarned + " XP" :
+                "You lost to " + opponentName + ".\n" + reason + "\n\n" +
+                "🏆 " + trophyChange + " Trophies\n" +
+                "⭐ +" + xpEarned + " XP (participation)";
+            
+            new AlertDialog.Builder(requireContext())
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("Play Again", (dialog, which) -> {
+                    startMatchmaking();
+                })
+                .setNegativeButton("Done", (dialog, which) -> {
+                    showMainMenu();
+                })
+                .show();
+        }
+        
+        currentBug = null;
+        opponentName = null;
+    }
+    
+    private void confirmExitBattle() {
+        if (getContext() == null) return;
+        
+        new AlertDialog.Builder(requireContext())
+            .setTitle("Exit Battle?")
+            .setMessage("If you leave now, you will lose this battle.")
+            .setPositiveButton("Leave (Lose)", (dialog, which) -> {
+                if (battleTimer != null) {
+                    battleTimer.cancel();
                 }
-            }, 300);
+                endBattle(false, "You left the battle");
+            })
+            .setNegativeButton("Stay", null)
+            .show();
+    }
+    
+    private void showMainMenu() {
+        if (binding.layoutMatchmaking != null) {
+            binding.layoutMatchmaking.setVisibility(View.GONE);
         }
         if (binding.layoutMainMenu != null) {
             binding.layoutMainMenu.setVisibility(View.VISIBLE);
@@ -287,122 +552,21 @@ public class BattleArenaFragment extends Fragment {
         }
     }
 
-    private void showFriendsList() {
-        if (getContext() == null) return;
-
-        // Sample friends list
-        String[] friends = {"Alex_Dev", "Sam_Coder", "Jordan_JS", "Casey_Python", "Morgan_Swift"};
-        
-        new AlertDialog.Builder(requireContext())
-            .setTitle("👥 Challenge a Friend")
-            .setItems(friends, (dialog, which) -> {
-                String friend = friends[which];
-                Toast.makeText(requireContext(), 
-                    "📤 Challenge sent to " + friend + "!", 
-                    Toast.LENGTH_SHORT).show();
-            })
-            .setNegativeButton("Cancel", null)
-            .show();
-    }
-
-    private void createBattleRoom() {
-        // Create a private room with a code
-        String roomCode = generateRoomCode();
-        
-        if (getContext() == null) return;
-
-        new AlertDialog.Builder(requireContext())
-            .setTitle("🏟️ Room Created!")
-            .setMessage("Share this code with your friend:\n\n" +
-                "📋 " + roomCode + "\n\n" +
-                "Waiting for opponent to join...")
-            .setPositiveButton("Copy Code", (dialog, which) -> {
-                // Copy to clipboard
-                android.content.ClipboardManager clipboard = 
-                    (android.content.ClipboardManager) requireContext()
-                        .getSystemService(android.content.Context.CLIPBOARD_SERVICE);
-                android.content.ClipData clip = 
-                    android.content.ClipData.newPlainText("Room Code", roomCode);
-                clipboard.setPrimaryClip(clip);
-                Toast.makeText(requireContext(), "Code copied!", Toast.LENGTH_SHORT).show();
-            })
-            .setNegativeButton("Cancel Room", null)
-            .show();
-    }
-
-    private void showJoinRoomDialog() {
-        if (getContext() == null) return;
-
-        EditText input = new EditText(requireContext());
-        input.setHint("Enter room code");
-        input.setInputType(android.text.InputType.TYPE_CLASS_TEXT | 
-                          android.text.InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
-        input.setFilters(new android.text.InputFilter[] { 
-            new android.text.InputFilter.LengthFilter(6),
-            new android.text.InputFilter.AllCaps()
-        });
-
-        int padding = (int) (20 * getResources().getDisplayMetrics().density);
-        input.setPadding(padding, padding, padding, padding);
-
-        new AlertDialog.Builder(requireContext())
-            .setTitle("🔑 Join Room")
-            .setMessage("Enter the 6-character room code:")
-            .setView(input)
-            .setPositiveButton("Join", (dialog, which) -> {
-                String code = input.getText().toString().trim().toUpperCase();
-                if (code.length() == 6) {
-                    joinRoom(code);
-                } else {
-                    Toast.makeText(requireContext(), 
-                        "Invalid code. Must be 6 characters.", 
-                        Toast.LENGTH_SHORT).show();
-                }
-            })
-            .setNegativeButton("Cancel", null)
-            .show();
-    }
-
-    private void joinRoom(String code) {
-        // Simulate joining a room
-        Toast.makeText(requireContext(), 
-            "Joining room " + code + "...", 
-            Toast.LENGTH_SHORT).show();
-        
-        handler.postDelayed(() -> {
-            if (getContext() != null) {
-                // 50% chance to find the room (for demo)
-                if (Math.random() > 0.5) {
-                    Toast.makeText(requireContext(), 
-                        "✅ Joined room! Battle starting...", 
-                        Toast.LENGTH_LONG).show();
-                    startBattle("RoomHost");
-                } else {
-                    Toast.makeText(requireContext(), 
-                        "❌ Room not found or expired.", 
-                        Toast.LENGTH_SHORT).show();
-                }
-            }
-        }, 1500);
-    }
-
-    private String generateRoomCode() {
-        // Generate a 6-character room code
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        StringBuilder code = new StringBuilder();
-        java.util.Random random = new java.util.Random();
-        for (int i = 0; i < 6; i++) {
-            code.append(chars.charAt(random.nextInt(chars.length())));
-        }
-        return code.toString();
+    private void cancelMatchmaking() {
+        isMatchmaking = false;
+        handler.removeCallbacksAndMessages(null);
+        showMainMenu();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         handler.removeCallbacksAndMessages(null);
-        if (billingManager != null) {
-            billingManager.destroy();
+        if (battleTimer != null) {
+            battleTimer.cancel();
+        }
+        if (executor != null) {
+            executor.shutdown();
         }
         binding = null;
     }

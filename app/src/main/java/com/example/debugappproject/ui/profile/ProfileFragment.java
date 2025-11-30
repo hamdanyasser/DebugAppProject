@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,11 +20,16 @@ import com.example.debugappproject.databinding.FragmentProfileBinding;
 import com.example.debugappproject.model.UserProgress;
 import com.example.debugappproject.util.AnimationUtil;
 import com.example.debugappproject.util.DateUtils;
-
-import android.widget.Toast;
+import com.example.debugappproject.util.SoundManager;
 
 /**
- * Profile Fragment - Displays user progress, stats, achievements, and Pro status.
+ * ╔══════════════════════════════════════════════════════════════════════════════╗
+ * ║           DEBUGMASTER - PROFILE & ACHIEVEMENTS                               ║
+ * ║              Track Progress with Sound Effects                               ║
+ * ╚══════════════════════════════════════════════════════════════════════════════╝
+ * 
+ * Note: Google Sign-In is disabled for this demo version.
+ * All features work in local/guest mode.
  */
 public class ProfileFragment extends Fragment {
 
@@ -32,6 +38,7 @@ public class ProfileFragment extends Fragment {
     private ProfileViewModel viewModel;
     private AchievementAdapter achievementAdapter;
     private BillingManager billingManager;
+    private SoundManager soundManager;
     private int previousLevel = -1;
 
     @Nullable
@@ -47,7 +54,11 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        billingManager = new BillingManager(requireContext());
+        billingManager = BillingManager.getInstance(requireContext());
+        soundManager = SoundManager.getInstance(requireContext());
+
+        // Play entrance sound
+        soundManager.playSound(SoundManager.Sound.TRANSITION);
 
         setupUI();
         setupAchievementsRecyclerView();
@@ -57,19 +68,14 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setupUI() {
-        // Account status
-        if (binding.textAccountStatus != null) {
-            binding.textAccountStatus.setText("Free Account");
-        }
+        boolean isPro = billingManager.isProUserSync();
+        android.util.Log.d(TAG, "setupUI: Pro status = " + isPro);
 
-        // Pro button
-        if (binding.buttonAuthAction != null) {
-            binding.buttonAuthAction.setOnClickListener(v -> navigateToSubscription());
-        }
+        updateAccountUI();
 
-        // Settings button
         if (binding.buttonSettings != null) {
             binding.buttonSettings.setOnClickListener(v -> {
+                soundManager.playButtonClick();
                 try {
                     Navigation.findNavController(v).navigate(R.id.action_profile_to_settings);
                 } catch (Exception e) {
@@ -78,30 +84,99 @@ public class ProfileFragment extends Fragment {
             });
         }
 
-        // Observe Pro status
+        // Google Sign-In button (demo - just show message)
+        if (binding.buttonGoogleSignIn != null) {
+            binding.buttonGoogleSignIn.setOnClickListener(v -> {
+                soundManager.playButtonClick();
+                showSignInDemoMessage();
+            });
+        }
+
+        // Sign Out button (hidden by default in demo)
+        if (binding.buttonSignOut != null) {
+            binding.buttonSignOut.setVisibility(View.GONE);
+        }
+
         billingManager.getIsProUser().observe(getViewLifecycleOwner(), this::updateProUI);
+    }
+
+    /**
+     * Update account section UI
+     */
+    private void updateAccountUI() {
+        if (binding == null) return;
+        
+        boolean isPro = billingManager.isProUserSync();
+        
+        // Guest mode display
+        if (binding.textUserName != null) {
+            binding.textUserName.setText("Debug Master");
+            binding.textUserName.setVisibility(View.VISIBLE);
+        }
+        
+        if (binding.textUserEmail != null) {
+            binding.textUserEmail.setText("Local Progress Mode");
+            binding.textUserEmail.setVisibility(View.VISIBLE);
+        }
+        
+        if (binding.textAccountStatus != null) {
+            binding.textAccountStatus.setText(isPro ? "👑 Pro Member" : "Guest Mode");
+        }
+        
+        // Show sign in button
+        if (binding.buttonGoogleSignIn != null) {
+            binding.buttonGoogleSignIn.setVisibility(View.VISIBLE);
+        }
+        if (binding.buttonSignOut != null) {
+            binding.buttonSignOut.setVisibility(View.GONE);
+        }
+        
+        // Update auth action button
+        if (binding.buttonAuthAction != null) {
+            if (isPro) {
+                binding.buttonAuthAction.setText("Manage");
+                binding.buttonAuthAction.setOnClickListener(v -> {
+                    soundManager.playButtonClick();
+                    showProMemberDialog();
+                });
+            } else {
+                binding.buttonAuthAction.setText("🚀 Go Pro");
+                binding.buttonAuthAction.setOnClickListener(v -> {
+                    soundManager.playSound(SoundManager.Sound.POWER_UP);
+                    navigateToSubscription();
+                });
+            }
+        }
+    }
+
+    /**
+     * Show message when Google Sign-In is tapped (demo mode)
+     */
+    private void showSignInDemoMessage() {
+        if (getContext() == null) return;
+        
+        soundManager.playSound(SoundManager.Sound.NOTIFICATION);
+        
+        new AlertDialog.Builder(requireContext())
+            .setTitle("🔐 Google Sign-In")
+            .setMessage("Google Sign-In is available in the full release!\n\n" +
+                    "Benefits of signing in:\n" +
+                    "• Sync progress across devices\n" +
+                    "• Cloud backup of achievements\n" +
+                    "• Compete on global leaderboards\n" +
+                    "• Restore progress on new device\n\n" +
+                    "For now, all your progress is saved locally on this device.")
+            .setPositiveButton("Got it!", (dialog, which) -> {
+                soundManager.playButtonClick();
+            })
+            .show();
     }
 
     private void updateProUI(boolean isPro) {
         if (binding == null) return;
-        
-        if (isPro) {
-            if (binding.textAccountStatus != null) {
-                binding.textAccountStatus.setText("👑 Pro Member");
-            }
-            if (binding.buttonAuthAction != null) {
-                binding.buttonAuthAction.setText("Manage");
-                binding.buttonAuthAction.setOnClickListener(v -> showProMemberDialog());
-            }
-        } else {
-            if (binding.textAccountStatus != null) {
-                binding.textAccountStatus.setText("Free Account");
-            }
-            if (binding.buttonAuthAction != null) {
-                binding.buttonAuthAction.setText("🚀 Go Pro");
-                binding.buttonAuthAction.setOnClickListener(v -> navigateToSubscription());
-            }
-        }
+
+        android.util.Log.d(TAG, "updateProUI: isPro=" + isPro);
+        updateAccountUI();
     }
 
     private void navigateToSubscription() {
@@ -111,7 +186,6 @@ public class ProfileFragment extends Fragment {
             }
         } catch (Exception e) {
             android.util.Log.e(TAG, "Navigation to subscription failed", e);
-            // Show dialog as fallback
             showUpgradeDialog();
         }
     }
@@ -119,39 +193,46 @@ public class ProfileFragment extends Fragment {
     private void showUpgradeDialog() {
         if (getContext() == null) return;
 
+        soundManager.playSound(SoundManager.Sound.NOTIFICATION);
         new AlertDialog.Builder(requireContext())
                 .setTitle("🚀 Upgrade to Pro")
                 .setMessage("Unlock all features with DebugMaster Pro!\n\n" +
                         "✓ 100+ debugging challenges\n" +
-                        "✓ All 6 learning paths\n" +
+                        "✓ All 15 learning paths\n" +
                         "✓ Battle Arena multiplayer\n" +
                         "✓ Unlimited practice\n" +
                         "✓ Ad-free experience\n" +
                         "✓ Detailed analytics\n\n" +
                         "Starting at just $4.99/month!")
                 .setPositiveButton("See Plans", (dialog, which) -> {
-                    // Try navigation again
+                    soundManager.playButtonClick();
                     navigateToSubscription();
                 })
-                .setNegativeButton("Maybe Later", null)
+                .setNegativeButton("Maybe Later", (dialog, which) -> {
+                    soundManager.playSound(SoundManager.Sound.BUTTON_BACK);
+                })
                 .show();
     }
 
     private void showProMemberDialog() {
         if (getContext() == null) return;
 
+        soundManager.playSound(SoundManager.Sound.COIN_COLLECT);
         new AlertDialog.Builder(requireContext())
                 .setTitle("👑 Pro Member")
                 .setMessage("You're a DebugMaster Pro member!\n\n" +
                         "All premium features are unlocked:\n" +
                         "• 100+ debugging challenges\n" +
-                        "• All learning paths\n" +
+                        "• All 15 learning paths\n" +
                         "• Battle Arena access\n" +
                         "• No ads\n" +
                         "• Priority support\n\n" +
                         "Thank you for your support! 💚")
-                .setPositiveButton("Awesome!", null)
+                .setPositiveButton("Awesome!", (dialog, which) -> {
+                    soundManager.playButtonClick();
+                })
                 .setNeutralButton("Manage in Play Store", (dialog, which) -> {
+                    soundManager.playButtonClick();
                     Toast.makeText(getContext(), 
                         "Open Google Play Store > Subscriptions to manage", 
                         Toast.LENGTH_LONG).show();
@@ -162,7 +243,10 @@ public class ProfileFragment extends Fragment {
     private void setupAchievementsRecyclerView() {
         if (binding == null || binding.recyclerAchievements == null) return;
         
-        achievementAdapter = new AchievementAdapter();
+        achievementAdapter = new AchievementAdapter(achievement -> {
+            // Achievement click handler with sound
+            soundManager.playSound(SoundManager.Sound.BLIP);
+        });
         binding.recyclerAchievements.setAdapter(achievementAdapter);
         GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 2);
         binding.recyclerAchievements.setLayoutManager(layoutManager);
@@ -214,18 +298,16 @@ public class ProfileFragment extends Fragment {
         try {
             int level = viewModel.calculateLevel(progress.getTotalXp());
 
-            // Level up celebration
+            // Level up celebration with SOUND!
             if (previousLevel > 0 && level > previousLevel) {
                 celebrateLevelUp(level);
             }
             previousLevel = level;
 
-            // Display level
             if (binding.textLevel != null) {
                 binding.textLevel.setText(String.valueOf(level));
             }
 
-            // XP progress
             int xpInLevel = viewModel.getXpProgressInLevel(progress.getTotalXp());
             if (binding.textXp != null) {
                 binding.textXp.setText(xpInLevel + " / 100 XP");
@@ -236,7 +318,6 @@ public class ProfileFragment extends Fragment {
                 AnimationUtil.animateProgress(binding.progressXp, xpInLevel, 800);
             }
 
-            // Stats
             if (binding.textPerfectFixes != null) {
                 binding.textPerfectFixes.setText(String.valueOf(progress.getBugsSolvedWithoutHints()));
             }
@@ -249,7 +330,6 @@ public class ProfileFragment extends Fragment {
                 binding.textStreakDays.setText(String.valueOf(currentStreak));
             }
 
-            // Bugs solved
             viewModel.getTotalBugsCompleted(count -> {
                 if (getActivity() != null && binding != null) {
                     getActivity().runOnUiThread(() -> {
@@ -265,8 +345,14 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    /**
+     * Celebrate level up with EPIC sound and animation!
+     */
     private void celebrateLevelUp(int newLevel) {
         if (getContext() == null || binding == null) return;
+        
+        // Play LEVEL UP sound!
+        soundManager.playLevelUp();
         
         Toast.makeText(requireContext(),
                 "🎉 Level Up! You reached Level " + newLevel + "!",
@@ -275,13 +361,31 @@ public class ProfileFragment extends Fragment {
         if (binding.textLevel != null) {
             AnimationUtil.bounceView(binding.textLevel);
         }
+        
+        // Play star sound after delay
+        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+            soundManager.playSound(SoundManager.Sound.STAR_EARNED);
+        }, 500);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        android.util.Log.d(TAG, "onResume: checking Pro status");
         if (billingManager != null) {
             billingManager.refreshPurchases();
+            android.util.Log.d(TAG, "onResume: Pro status after refresh = " + billingManager.isProUserSync());
+        }
+        if (soundManager != null) {
+            soundManager.resumeAll();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (soundManager != null) {
+            soundManager.pauseAll();
         }
     }
 
@@ -289,8 +393,9 @@ public class ProfileFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         if (billingManager != null) {
-            billingManager.destroy();
+            billingManager.clearCallback();
         }
+        achievementAdapter = null;
         binding = null;
     }
 }

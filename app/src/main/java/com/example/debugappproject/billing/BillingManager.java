@@ -45,6 +45,9 @@ public class BillingManager implements PurchasesUpdatedListener {
     // Demo mode - set to true to bypass Play Store
     private static final boolean DEMO_MODE = true;
 
+    // Singleton instance
+    private static BillingManager instance;
+
     private final Context context;
     private BillingClient billingClient;
     private final MutableLiveData<Boolean> isProUser = new MutableLiveData<>(false);
@@ -62,7 +65,17 @@ public class BillingManager implements PurchasesUpdatedListener {
         default void onProductsLoaded(List<ProductDetails> products) {}
     }
 
-    public BillingManager(Context context) {
+    /**
+     * Get singleton instance of BillingManager
+     */
+    public static synchronized BillingManager getInstance(Context context) {
+        if (instance == null) {
+            instance = new BillingManager(context);
+        }
+        return instance;
+    }
+
+    private BillingManager(Context context) {
         this.context = context.getApplicationContext();
         loadProStatus();
         initBillingClient();
@@ -374,6 +387,10 @@ public class BillingManager implements PurchasesUpdatedListener {
 
     public void setCallback(BillingCallback callback) {
         this.callback = callback;
+    }
+
+    public void clearCallback() {
+        this.callback = null;
     }
 
     public LiveData<Boolean> getIsProUser() { return isProUser; }

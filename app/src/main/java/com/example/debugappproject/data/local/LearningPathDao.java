@@ -3,6 +3,7 @@ package com.example.debugappproject.data.local;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
@@ -30,11 +31,14 @@ public interface LearningPathDao {
     @Query("SELECT COUNT(*) FROM learning_paths")
     int getPathCountSync();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertPath(LearningPath path);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAllPaths(List<LearningPath> paths);
+    
+    @Query("DELETE FROM learning_paths")
+    void clearAllPaths();
 
     // BugInPath queries
     @Query("SELECT bugId FROM bug_in_path WHERE pathId = :pathId ORDER BY orderInPath ASC")
@@ -48,19 +52,21 @@ public interface LearningPathDao {
 
     @Query("SELECT COUNT(*) FROM bug_in_path WHERE pathId = :pathId")
     LiveData<Integer> getBugCountInPath(int pathId);
+    
+    @Query("SELECT COUNT(*) FROM bug_in_path")
+    int getBugInPathCountSync();
 
     @Query("SELECT COUNT(DISTINCT b.id) FROM bugs b " +
            "INNER JOIN bug_in_path bip ON b.id = bip.bugId " +
            "WHERE bip.pathId = :pathId AND b.isCompleted = 1")
     LiveData<Integer> getCompletedBugCountInPath(int pathId);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertBugInPath(BugInPath bugInPath);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAllBugInPath(List<BugInPath> bugInPaths);
 
-    @Transaction
     @Query("DELETE FROM bug_in_path")
     void clearAllBugInPath();
 }

@@ -1,5 +1,6 @@
 package com.example.debugappproject.ui.learn;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,22 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Adapter for displaying learning paths as cards.
- * 
- * IMPORTANT: View IDs must match item_learning_path.xml:
- * - text_path_emoji
- * - text_path_name  
- * - text_path_description
- * - text_path_progress_percent
- * - progress_path
- * - text_lessons_count
- * - button_continue_path
+ * ╔══════════════════════════════════════════════════════════════════════════════╗
+ * ║           DEBUGMASTER - LEARNING PATH ADAPTER                                ║
+ * ║         Duolingo/Mimo-Inspired Path Cards with Pro Features                 ║
+ * ╚══════════════════════════════════════════════════════════════════════════════╝
  */
 public class LearningPathAdapter extends RecyclerView.Adapter<LearningPathAdapter.PathViewHolder> {
 
     private static final String TAG = "LearningPathAdapter";
     private final List<PathWithProgress> paths = new ArrayList<>();
     private OnPathClickListener listener;
+    private boolean isProUser = false;
 
     public interface OnPathClickListener {
         void onPathClick(LearningPath path);
@@ -52,10 +48,17 @@ public class LearningPathAdapter extends RecyclerView.Adapter<LearningPathAdapte
         notifyDataSetChanged();
     }
 
+    public void setProStatus(boolean isPro) {
+        if (this.isProUser != isPro) {
+            Log.d(TAG, "setProStatus: isPro=" + isPro);
+            this.isProUser = isPro;
+            notifyDataSetChanged();
+        }
+    }
+
     @NonNull
     @Override
     public PathViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d(TAG, "onCreateViewHolder");
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_learning_path, parent, false);
         return new PathViewHolder(view);
@@ -63,11 +66,10 @@ public class LearningPathAdapter extends RecyclerView.Adapter<LearningPathAdapte
 
     @Override
     public void onBindViewHolder(@NonNull PathViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder position=" + position);
         if (position >= 0 && position < paths.size()) {
             PathWithProgress item = paths.get(position);
             if (item != null) {
-                holder.bind(item, listener);
+                holder.bind(item, listener, isProUser);
             }
         }
     }
@@ -78,40 +80,39 @@ public class LearningPathAdapter extends RecyclerView.Adapter<LearningPathAdapte
     }
 
     static class PathViewHolder extends RecyclerView.ViewHolder {
-        // Declare views as nullable to handle potential layout mismatches
         private final TextView textEmoji;
         private final TextView textName;
         private final TextView textDescription;
         private final TextView textPercent;
         private final ProgressBar progressBar;
         private final TextView textLessons;
+        private final TextView textTimeEstimate;
+        private final TextView textXpReward;
+        private final TextView textDifficulty;
+        private final TextView textCategory;
+        private final TextView badgeNew;
+        private final TextView badgePro;
         private final MaterialButton buttonContinue;
 
         PathViewHolder(@NonNull View itemView) {
             super(itemView);
             
-            // Find all views with explicit IDs from item_learning_path.xml
             textEmoji = itemView.findViewById(R.id.text_path_emoji);
             textName = itemView.findViewById(R.id.text_path_name);
             textDescription = itemView.findViewById(R.id.text_path_description);
             textPercent = itemView.findViewById(R.id.text_path_progress_percent);
             progressBar = itemView.findViewById(R.id.progress_path);
             textLessons = itemView.findViewById(R.id.text_lessons_count);
+            textTimeEstimate = itemView.findViewById(R.id.text_time_estimate);
+            textXpReward = itemView.findViewById(R.id.text_xp_reward);
+            textDifficulty = itemView.findViewById(R.id.text_difficulty);
+            textCategory = itemView.findViewById(R.id.text_category);
+            badgeNew = itemView.findViewById(R.id.badge_new);
+            badgePro = itemView.findViewById(R.id.badge_pro);
             buttonContinue = itemView.findViewById(R.id.button_continue_path);
-
-            // Debug logging
-            Log.d(TAG, "ViewHolder created - emoji:" + (textEmoji != null) + 
-                    " name:" + (textName != null) + 
-                    " desc:" + (textDescription != null) +
-                    " percent:" + (textPercent != null) +
-                    " progress:" + (progressBar != null) +
-                    " lessons:" + (textLessons != null) +
-                    " button:" + (buttonContinue != null));
         }
 
-        void bind(PathWithProgress item, OnPathClickListener listener) {
-            Log.d(TAG, "bind() called");
-            
+        void bind(PathWithProgress item, OnPathClickListener listener, boolean isProUser) {
             try {
                 LearningPath path = item.getPath();
                 if (path == null) {
@@ -119,61 +120,145 @@ public class LearningPathAdapter extends RecyclerView.Adapter<LearningPathAdapte
                     return;
                 }
 
-                // Safely set emoji
+                // Check if path is locked (requires Pro)
+                boolean isLocked = path.isLocked() && !isProUser;
+
+                // Emoji
                 if (textEmoji != null) {
                     String emoji = path.getIconEmoji();
                     textEmoji.setText(emoji != null && !emoji.isEmpty() ? emoji : "📚");
                 }
 
-                // Safely set name
+                // Name
                 if (textName != null) {
                     String name = path.getName();
                     textName.setText(name != null && !name.isEmpty() ? name : "Learning Path");
                 }
 
-                // Safely set description
+                // Description
                 if (textDescription != null) {
                     String desc = path.getDescription();
                     textDescription.setText(desc != null ? desc : "");
                 }
 
-                // Get progress values
+                // Progress
                 int completed = item.getCompletedBugs();
                 int total = item.getTotalBugs();
                 int percent = item.getProgressPercentage();
 
-                // Safely set percentage
                 if (textPercent != null) {
                     textPercent.setText(percent + "%");
                 }
 
-                // Safely set progress bar
                 if (progressBar != null) {
                     progressBar.setMax(100);
                     progressBar.setProgress(percent);
                 }
 
-                // Safely set lessons count
+                // Lessons count
                 if (textLessons != null) {
-                    if (total > 0) {
-                        textLessons.setText(completed + " / " + total + " bugs");
+                    int lessons = path.getTotalLessons();
+                    if (lessons > 0) {
+                        textLessons.setText(lessons + " lessons");
+                    } else if (total > 0) {
+                        textLessons.setText(completed + "/" + total + " bugs");
                     } else {
                         textLessons.setText("Start learning");
                     }
                 }
 
-                // Safely set button
-                if (buttonContinue != null) {
-                    String btnText;
-                    if (percent == 0) {
-                        btnText = "Start";
-                    } else if (percent >= 100) {
-                        btnText = "Review";
+                // Time estimate
+                if (textTimeEstimate != null) {
+                    int minutes = path.getEstimatedMinutes();
+                    if (minutes > 0) {
+                        if (minutes >= 60) {
+                            textTimeEstimate.setText("⏱️ " + (minutes / 60) + "h " + (minutes % 60) + "m");
+                        } else {
+                            textTimeEstimate.setText("⏱️ " + minutes + " min");
+                        }
                     } else {
-                        btnText = "Continue";
+                        textTimeEstimate.setText("⏱️ ~30 min");
                     }
-                    buttonContinue.setText(btnText);
+                }
+
+                // XP Reward
+                if (textXpReward != null) {
+                    int xp = path.getXpReward();
+                    textXpReward.setText("⭐ " + (xp > 0 ? xp : 100) + " XP");
+                }
+
+                // Difficulty
+                if (textDifficulty != null) {
+                    String diff = path.getDifficultyRange();
+                    textDifficulty.setText(diff != null ? diff : "Beginner");
                     
+                    // Color based on difficulty
+                    if (diff != null) {
+                        switch (diff) {
+                            case "Beginner":
+                                textDifficulty.setBackgroundColor(Color.parseColor("#2210B981"));
+                                break;
+                            case "Intermediate":
+                                textDifficulty.setBackgroundColor(Color.parseColor("#22F59E0B"));
+                                break;
+                            case "Advanced":
+                                textDifficulty.setBackgroundColor(Color.parseColor("#22EF4444"));
+                                break;
+                            case "Expert":
+                                textDifficulty.setBackgroundColor(Color.parseColor("#228B5CF6"));
+                                break;
+                        }
+                    }
+                }
+
+                // Category
+                if (textCategory != null) {
+                    String category = path.getCategory();
+                    textCategory.setText(category != null ? category : "Programming");
+                }
+
+                // NEW badge
+                if (badgeNew != null) {
+                    badgeNew.setVisibility(path.isNew() ? View.VISIBLE : View.GONE);
+                }
+
+                // PRO badge (show if locked)
+                if (badgePro != null) {
+                    badgePro.setVisibility(path.isLocked() ? View.VISIBLE : View.GONE);
+                }
+
+                // Button styling based on state
+                if (buttonContinue != null) {
+                    if (isLocked) {
+                        // Locked - show unlock prompt
+                        buttonContinue.setText("🔒 Unlock");
+                        buttonContinue.setIconResource(0);
+                        buttonContinue.setBackgroundTintList(
+                            android.content.res.ColorStateList.valueOf(Color.parseColor("#FFD700")));
+                        buttonContinue.setTextColor(Color.parseColor("#1A1A2E"));
+                    } else if (percent == 0) {
+                        // Not started
+                        buttonContinue.setText("Start");
+                        buttonContinue.setIconResource(R.drawable.ic_arrow_right);
+                        buttonContinue.setBackgroundTintList(
+                            android.content.res.ColorStateList.valueOf(Color.WHITE));
+                        buttonContinue.setTextColor(Color.parseColor("#6366F1"));
+                    } else if (percent >= 100) {
+                        // Completed
+                        buttonContinue.setText("Review ✓");
+                        buttonContinue.setIconResource(0);
+                        buttonContinue.setBackgroundTintList(
+                            android.content.res.ColorStateList.valueOf(Color.parseColor("#10B981")));
+                        buttonContinue.setTextColor(Color.WHITE);
+                    } else {
+                        // In progress
+                        buttonContinue.setText("Continue");
+                        buttonContinue.setIconResource(R.drawable.ic_arrow_right);
+                        buttonContinue.setBackgroundTintList(
+                            android.content.res.ColorStateList.valueOf(Color.WHITE));
+                        buttonContinue.setTextColor(Color.parseColor("#6366F1"));
+                    }
+
                     buttonContinue.setOnClickListener(v -> {
                         if (listener != null) {
                             listener.onPathClick(path);
@@ -188,7 +273,23 @@ public class LearningPathAdapter extends RecyclerView.Adapter<LearningPathAdapte
                     }
                 });
 
-                Log.d(TAG, "bind() completed for: " + path.getName());
+                // Visual state for locked vs unlocked
+                if (isLocked) {
+                    // Dim but still attractive to encourage upgrade
+                    itemView.setAlpha(0.85f);
+                    if (progressBar != null) {
+                        progressBar.setProgress(0);
+                    }
+                    if (textPercent != null) {
+                        textPercent.setText("PRO");
+                        textPercent.setTextColor(Color.parseColor("#FFD700"));
+                    }
+                } else {
+                    itemView.setAlpha(1.0f);
+                    if (textPercent != null) {
+                        textPercent.setTextColor(Color.WHITE);
+                    }
+                }
 
             } catch (Exception e) {
                 Log.e(TAG, "Error in bind()", e);

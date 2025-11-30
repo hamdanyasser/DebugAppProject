@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Yellow Decorative Blob -->
+<!-- Premium Yellow/Gold Decorative Blob with Gradient -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
-    <solid android:color="@color/xp_gold_start" />
+    <gradient
+        android:angle="45"
+        android:startColor="#40F59E0B"
+        android:centerColor="#30FBBF24"
+        android:endColor="#20F97316"
+        android:type="linear" />
 </shape>

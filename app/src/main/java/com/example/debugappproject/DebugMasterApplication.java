@@ -2,6 +2,11 @@ package com.example.debugappproject;
 
 import android.app.Application;
 
+import com.example.debugappproject.data.repository.BugRepository;
+import com.example.debugappproject.data.seeding.DatabaseSeeder;
+
+import java.util.concurrent.Executors;
+
 import dagger.hilt.android.HiltAndroidApp;
 
 /**
@@ -10,13 +15,7 @@ import dagger.hilt.android.HiltAndroidApp;
  * Annotated with @HiltAndroidApp to enable Hilt dependency injection
  * throughout the application.
  *
- * Hilt will generate:
- * - Application-level component
- * - Component managers
- * - Base classes for injection
- *
- * This serves as the root of the dependency graph and initializes
- * Hilt's code generation.
+ * Initializes the database with seed data on first run.
  */
 @HiltAndroidApp
 public class DebugMasterApplication extends Application {
@@ -25,7 +24,16 @@ public class DebugMasterApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        // Hilt automatically initializes components here
-        // Additional app-wide initialization can go here
+        // Seed database on background thread
+        Executors.newSingleThreadExecutor().execute(() -> {
+            try {
+                android.util.Log.i("DebugMasterApp", "🚀 Starting database seeding...");
+                BugRepository repository = new BugRepository(this);
+                DatabaseSeeder.seedDatabase(this, repository);
+                android.util.Log.i("DebugMasterApp", "✅ Database seeding complete!");
+            } catch (Exception e) {
+                android.util.Log.e("DebugMasterApp", "❌ Database seeding failed", e);
+            }
+        });
     }
 }

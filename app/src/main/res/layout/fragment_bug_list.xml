@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- DEBUGMASTER - CYBER BUG LIST SCREEN -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground"
+    android:background="@drawable/bg_cyber_main"
     android:padding="@dimen/padding_medium">
 
     <!-- Header -->
     <TextView
         android:id="@+id/text_header"
-        style="@style/TextAppearance.DebugMaster.Headline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/all_bugs"
+        android:text="🐛 All Bugs"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,8 +27,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_medium"
         android:hint="Search bugs..."
+        app:hintTextColor="@color/cyber_neon_blue"
         app:startIconDrawable="@android:drawable/ic_menu_search"
+        app:startIconTint="@color/cyber_neon_purple"
         app:endIconMode="clear_text"
+        app:endIconTint="@color/cyber_neon_pink"
+        app:boxStrokeColor="@color/cyber_neon_purple"
+        app:boxBackgroundColor="@color/cyber_surface"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,6 +45,7 @@
             android:layout_height="wrap_content"
             android:inputType="text"
             android:maxLines="1"
+            android:textColor="@color/white"
             android:imeOptions="actionSearch" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -46,8 +55,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_medium"
-        app:cardElevation="@dimen/card_elevation"
-        app:cardCornerRadius="@dimen/card_corner_radius"
+        app:cardElevation="0dp"
+        app:cardCornerRadius="16dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/cyber_glow_purple"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_bar_layout">
@@ -56,24 +68,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:background="@drawable/bg_cyber_card"
             android:padding="@dimen/padding_medium">
 
             <!-- Filters Label -->
             <TextView
-                style="@style/TextAppearance.DebugMaster.Subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/filters"
-                android:textColor="?attr/colorPrimary" />
+                android:text="⚙️ Filters"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/cyber_neon_purple" />
 
             <!-- Difficulty Filter -->
             <TextView
-                style="@style/TextAppearance.DebugMaster.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_medium"
-                android:text="@string/difficulty"
-                android:textStyle="bold" />
+                android:text="Difficulty"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/cyber_neon_blue" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chip_group_difficulty"
@@ -89,8 +104,12 @@
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/all_bugs"
+                    android:text="All"
+                    android:textColor="@color/white"
                     android:checked="true"
+                    app:chipBackgroundColor="@color/cyber_surface"
+                    app:chipStrokeColor="@color/cyber_neon_purple"
+                    app:chipStrokeWidth="1dp"
                     app:chipCornerRadius="@dimen/chip_corner_radius" />
 
                 <com.google.android.material.chip.Chip
@@ -98,7 +117,11 @@
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/easy"
+                    android:text="🟢 Easy"
+                    android:textColor="@color/white"
+                    app:chipBackgroundColor="@color/cyber_surface"
+                    app:chipStrokeColor="@color/cyber_neon_green"
+                    app:chipStrokeWidth="1dp"
                     app:chipCornerRadius="@dimen/chip_corner_radius" />
 
                 <com.google.android.material.chip.Chip
@@ -106,7 +129,11 @@
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/medium"
+                    android:text="🟡 Medium"
+                    android:textColor="@color/white"
+                    app:chipBackgroundColor="@color/cyber_surface"
+                    app:chipStrokeColor="@color/cyber_neon_gold"
+                    app:chipStrokeWidth="1dp"
                     app:chipCornerRadius="@dimen/chip_corner_radius" />
 
                 <com.google.android.material.chip.Chip
@@ -114,18 +141,23 @@
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/hard"
+                    android:text="🔴 Hard"
+                    android:textColor="@color/white"
+                    app:chipBackgroundColor="@color/cyber_surface"
+                    app:chipStrokeColor="@color/cyber_neon_pink"
+                    app:chipStrokeWidth="1dp"
                     app:chipCornerRadius="@dimen/chip_corner_radius" />
             </com.google.android.material.chip.ChipGroup>
 
             <!-- Category Filter -->
             <TextView
-                style="@style/TextAppearance.DebugMaster.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_medium"
-                android:text="@string/category"
-                android:textStyle="bold" />
+                android:text="Category"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/cyber_neon_blue" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chip_group_category"
@@ -141,8 +173,12 @@
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/all_bugs"
+                    android:text="All"
+                    android:textColor="@color/white"
                     android:checked="true"
+                    app:chipBackgroundColor="@color/cyber_surface"
+                    app:chipStrokeColor="@color/cyber_neon_purple"
+                    app:chipStrokeWidth="1dp"
                     app:chipCornerRadius="@dimen/chip_corner_radius" />
 
                 <com.google.android.material.chip.Chip
@@ -150,7 +186,11 @@
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Loops"
+                    android:text="🔄 Loops"
+                    android:textColor="@color/white"
+                    app:chipBackgroundColor="@color/cyber_surface"
+                    app:chipStrokeColor="@color/cyber_neon_blue"
+                    app:chipStrokeWidth="1dp"
                     app:chipCornerRadius="@dimen/chip_corner_radius" />
 
                 <com.google.android.material.chip.Chip
@@ -158,7 +198,11 @@
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Arrays"
+                    android:text="📊 Arrays"
+                    android:textColor="@color/white"
+                    app:chipBackgroundColor="@color/cyber_surface"
+                    app:chipStrokeColor="@color/cyber_neon_blue"
+                    app:chipStrokeWidth="1dp"
                     app:chipCornerRadius="@dimen/chip_corner_radius" />
 
                 <com.google.android.material.chip.Chip
@@ -166,7 +210,11 @@
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="OOP"
+                    android:text="🏗️ OOP"
+                    android:textColor="@color/white"
+                    app:chipBackgroundColor="@color/cyber_surface"
+                    app:chipStrokeColor="@color/cyber_neon_blue"
+                    app:chipStrokeWidth="1dp"
                     app:chipCornerRadius="@dimen/chip_corner_radius" />
 
                 <com.google.android.material.chip.Chip
@@ -174,7 +222,11 @@
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Strings"
+                    android:text="📝 Strings"
+                    android:textColor="@color/white"
+                    app:chipBackgroundColor="@color/cyber_surface"
+                    app:chipStrokeColor="@color/cyber_neon_blue"
+                    app:chipStrokeWidth="1dp"
                     app:chipCornerRadius="@dimen/chip_corner_radius" />
 
                 <com.google.android.material.chip.Chip
@@ -182,7 +234,11 @@
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Conditionals"
+                    android:text="❓ Conditionals"
+                    android:textColor="@color/white"
+                    app:chipBackgroundColor="@color/cyber_surface"
+                    app:chipStrokeColor="@color/cyber_neon_blue"
+                    app:chipStrokeWidth="1dp"
                     app:chipCornerRadius="@dimen/chip_corner_radius" />
 
                 <com.google.android.material.chip.Chip
@@ -190,7 +246,11 @@
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Exceptions"
+                    android:text="⚠️ Exceptions"
+                    android:textColor="@color/white"
+                    app:chipBackgroundColor="@color/cyber_surface"
+                    app:chipStrokeColor="@color/cyber_neon_blue"
+                    app:chipStrokeWidth="1dp"
                     app:chipCornerRadius="@dimen/chip_corner_radius" />
 
                 <com.google.android.material.chip.Chip
@@ -198,7 +258,11 @@
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Collections"
+                    android:text="📦 Collections"
+                    android:textColor="@color/white"
+                    app:chipBackgroundColor="@color/cyber_surface"
+                    app:chipStrokeColor="@color/cyber_neon_blue"
+                    app:chipStrokeWidth="1dp"
                     app:chipCornerRadius="@dimen/chip_corner_radius" />
 
                 <com.google.android.material.chip.Chip
@@ -206,7 +270,11 @@
                     style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Methods"
+                    android:text="⚡ Methods"
+                    android:textColor="@color/white"
+                    app:chipBackgroundColor="@color/cyber_surface"
+                    app:chipStrokeColor="@color/cyber_neon_blue"
+                    app:chipStrokeWidth="1dp"
                     app:chipCornerRadius="@dimen/chip_corner_radius" />
             </com.google.android.material.chip.ChipGroup>
         </LinearLayout>
@@ -219,7 +287,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/spacing_medium"
         android:clipToPadding="false"
-        android:paddingBottom="@dimen/spacing_medium"
+        android:paddingBottom="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -247,19 +315,22 @@
             android:textSize="48sp" />
 
         <TextView
-            style="@style/TextAppearance.DebugMaster.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_medium"
-            android:text="@string/no_bugs_found"
+            android:text="No bugs found"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
             android:textAlignment="center" />
 
         <TextView
-            style="@style/TextAppearance.DebugMaster.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_small"
             android:text="Try adjusting your filters"
+            android:textSize="14sp"
+            android:textColor="@color/cyber_neon_blue"
             android:textAlignment="center" />
     </LinearLayout>
 

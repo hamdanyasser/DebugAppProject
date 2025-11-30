@@ -38,12 +38,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     buildFeatures {
         viewBinding = true
     }
 }
 
 dependencies {
+    // Android UI
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
@@ -61,34 +63,33 @@ dependencies {
     // RecyclerView
     implementation(libs.recyclerview)
 
-    // Gson for JSON parsing
+    // Gson
     implementation(libs.gson)
 
-    // WorkManager for notifications
+    // WorkManager
     implementation("androidx.work:work-runtime:2.9.0")
 
-    // Animation & UI libraries
+    // Animation UI
     implementation(libs.lottie)
     implementation(libs.shimmer)
 
-    // Dependency Injection - Hilt
+    // Hilt DI
     implementation(libs.hilt.android)
     annotationProcessor(libs.hilt.compiler)
 
-    // Code Execution - Janino
+    // Janino (code execution)
     implementation(libs.janino)
 
-    // Memory Leak Detection - LeakCanary (debug only)
+    // LeakCanary (debug only)
     debugImplementation(libs.leakcanary)
 
-    // Google Play Billing for Subscriptions
+    // Google Play Billing
     implementation("com.android.billingclient:billing:6.1.0")
 
-    // Firebase (OPTIONAL - requires google-services.json)
+    // Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     // Testing
     testImplementation(libs.junit)

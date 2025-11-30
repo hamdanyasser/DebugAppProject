@@ -32,7 +32,7 @@ public class Constants {
 
     // UI constants
     public static final int MAX_HINT_LEVEL = 3;
-    public static final int SPLASH_DELAY_MS = 3000;  // 3 seconds for splash animation and database seeding
+    public static final int SPLASH_DELAY_MS = 5500;  // 5.5 seconds for premium game-like splash animation
 
     private Constants() {
         // Prevent instantiation

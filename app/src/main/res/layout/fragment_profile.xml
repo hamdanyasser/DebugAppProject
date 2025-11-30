@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- DEBUGMASTER - CYBER PROFILE SCREEN with Google Sign-In -->
 <androidx.core.widget.NestedScrollView 
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@drawable/bg_cyber_main"
     android:fillViewport="true"
     android:clipToPadding="false">
 
@@ -43,7 +44,7 @@
                     android:text="Your Progress"
                     android:textSize="28sp"
                     android:textStyle="bold"
-                    android:textColor="@color/text_primary" />
+                    android:textColor="@color/white" />
             </LinearLayout>
 
             <!-- Settings Button -->
@@ -51,78 +52,140 @@
                 android:id="@+id/button_settings"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="@drawable/bg_glass_circle"
+                android:background="@drawable/bg_cyber_card"
                 android:src="@drawable/ic_settings"
                 android:padding="12dp"
                 android:contentDescription="Settings"
-                app:tint="@color/text_primary" />
+                app:tint="@color/cyber_neon_purple" />
         </LinearLayout>
 
-        <!-- Account/Sync Section -->
+        <!-- Account/Sync Section with Google Sign-In -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@color/surface"
-            app:strokeWidth="0dp">
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/cyber_glow_purple">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:background="@drawable/bg_cyber_card"
                 android:padding="16dp">
 
-                <!-- Account Status -->
+                <!-- User Profile Row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
+                    <!-- Profile Photo -->
+                    <ImageView
+                        android:id="@+id/image_user_photo"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:src="@drawable/ic_profile_placeholder"
+                        android:background="@drawable/bg_circle_gradient"
+                        android:padding="4dp"
+                        android:scaleType="centerCrop" />
+
+                    <!-- User Info -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:layout_marginStart="12dp"
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/text_user_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Account"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/white"
+                            tools:text="Guest User" />
+
+                        <TextView
+                            android:id="@+id/text_user_email"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
                             android:textSize="12sp"
-                            android:textColor="@color/text_secondary" />
+                            android:textColor="@color/cyber_neon_blue"
+                            android:alpha="0.8"
+                            tools:text="Sign in to sync progress" />
 
                         <TextView
                             android:id="@+id/text_account_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_primary"
+                            android:layout_marginTop="4dp"
+                            android:textSize="11sp"
+                            android:textColor="@color/cyber_neon_green"
                             tools:text="Guest Mode" />
 
                     </LinearLayout>
 
-                    <!-- Sign In/Out Button -->
+                    <!-- Action Button (Go Pro / Manage) -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/button_auth_action"
-                        style="@style/Widget.Material3.Button.TonalButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Go Pro" />
+                        android:layout_height="36dp"
+                        android:text="Go Pro"
+                        android:textSize="12sp"
+                        android:textColor="@color/cyber_bg_deep"
+                        app:backgroundTint="@color/cyber_neon_gold"
+                        app:cornerRadius="18dp" />
 
                 </LinearLayout>
 
-                <!-- Last Sync Time (only shown when signed in) -->
+                <!-- Google Sign-In Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_google_sign_in"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="16dp"
+                    android:text="Sign in with Google"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    app:backgroundTint="#4285F4"
+                    app:cornerRadius="24dp"
+                    app:icon="@drawable/ic_google"
+                    app:iconGravity="textStart"
+                    app:iconPadding="8dp"
+                    app:iconTint="@null"
+                    android:visibility="visible" />
+
+                <!-- Sign Out Button (shown when signed in) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_sign_out"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="12dp"
+                    android:text="Sign Out"
+                    android:textColor="@color/cyber_neon_pink"
+                    android:textSize="12sp"
+                    app:cornerRadius="20dp"
+                    app:strokeColor="@color/cyber_neon_pink"
+                    app:strokeWidth="1dp"
+                    android:visibility="gone" />
+
+                <!-- Sync Info (only shown when signed in) -->
                 <TextView
                     android:id="@+id/text_last_sync"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp"
+                    android:textColor="@color/cyber_neon_blue"
+                    android:alpha="0.7"
                     android:visibility="gone"
                     tools:text="Last synced: 2 hours ago"
                     tools:visibility="visible" />
@@ -137,13 +200,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:cardCornerRadius="20dp"
-            app:cardElevation="8dp"
-            app:strokeWidth="0dp">
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/cyber_glow_purple"
+            app:cardBackgroundColor="@android:color/transparent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_hero_gradient"
+                android:background="@drawable/bg_cyber_hero_card"
                 android:orientation="vertical"
                 android:padding="24dp">
 
@@ -157,10 +222,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Level"
+                        android:text="LEVEL"
                         android:textSize="14sp"
-                        android:textColor="@color/white"
-                        android:alpha="0.8" />
+                        android:textColor="@color/cyber_neon_blue"
+                        android:letterSpacing="0.2" />
 
                     <TextView
                         android:id="@+id/text_level"
@@ -169,7 +234,9 @@
                         android:layout_marginTop="4dp"
                         android:textSize="56sp"
                         android:textStyle="bold"
-                        android:textColor="@color/white"
+                        android:textColor="@color/cyber_neon_purple"
+                        android:shadowColor="@color/cyber_glow_purple"
+                        android:shadowRadius="20"
                         tools:text="5" />
 
                 </LinearLayout>
@@ -197,7 +264,7 @@
                         android:layout_height="12dp"
                         android:layout_marginTop="8dp"
                         android:max="100"
-                        android:progressDrawable="@drawable/progress_xp_gradient"
+                        android:progressDrawable="@drawable/bg_cyber_loading_bar"
                         tools:progress="45" />
 
                 </LinearLayout>
@@ -217,7 +284,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:background="@drawable/bg_glass_rounded"
+                        android:background="@drawable/bg_cyber_stats_card"
                         android:padding="12dp">
 
                         <TextView
@@ -232,7 +299,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="24sp"
                             android:textStyle="bold"
-                            android:textColor="@color/white"
+                            android:textColor="@color/cyber_neon_green"
                             tools:text="12" />
 
                         <TextView
@@ -253,7 +320,7 @@
                         android:layout_marginHorizontal="8dp"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:background="@drawable/bg_glass_rounded"
+                        android:background="@drawable/bg_cyber_stats_card"
                         android:padding="12dp">
 
                         <TextView
@@ -268,7 +335,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="24sp"
                             android:textStyle="bold"
-                            android:textColor="@color/white"
+                            android:textColor="@color/cyber_neon_gold"
                             tools:text="8" />
 
                         <TextView
@@ -288,7 +355,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:background="@drawable/bg_glass_rounded"
+                        android:background="@drawable/bg_cyber_stats_card"
                         android:padding="12dp">
 
                         <TextView
@@ -303,7 +370,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="24sp"
                             android:textStyle="bold"
-                            android:textColor="@color/white"
+                            android:textColor="@color/cyber_neon_pink"
                             tools:text="7" />
 
                         <TextView
@@ -330,7 +397,7 @@
             android:text="🏆 Achievements"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@color/text_primary" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/text_achievements_count"
@@ -338,7 +405,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:textSize="14sp"
-            android:textColor="@color/text_secondary"
+            android:textColor="@color/cyber_neon_blue"
             tools:text="5 of 15 unlocked" />
 
         <!-- Achievements RecyclerView (Grid) -->
@@ -376,7 +443,7 @@
                 android:text="No achievements yet"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/text_primary" />
+                android:textColor="@color/white" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -385,7 +452,7 @@
                 android:text="Complete challenges to unlock achievements"
                 android:textSize="14sp"
                 android:textAlignment="center"
-                android:textColor="@color/text_secondary" />
+                android:textColor="@color/cyber_neon_blue" />
 
         </LinearLayout>
 

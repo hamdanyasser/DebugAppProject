@@ -34,6 +34,12 @@ import com.example.debugappproject.model.UserProgress;
  * - AchievementDefinition: achievement definitions
  * - UserAchievement: unlocked achievements tracking
  * - UserProgress: longestStreakDays field
+ *
+ * Version 4 adds (Enhanced Learning Platform):
+ * - LearningPath: category, estimatedMinutes, totalLessons, xpReward, prerequisites,
+ *                 isFeatured, isNew, colorHex, skillTags fields
+ * - More comprehensive learning paths (15 total)
+ * - Many more achievements
  */
 @Database(
     entities = {
@@ -47,7 +53,7 @@ import com.example.debugappproject.model.UserProgress;
         AchievementDefinition.class,
         UserAchievement.class
     },
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 public abstract class DebugMasterDatabase extends RoomDatabase {
@@ -151,6 +157,32 @@ public abstract class DebugMasterDatabase extends RoomDatabase {
     };
 
     /**
+     * Migration from version 3 to 4.
+     * Adds new columns to learning_paths for enhanced learning experience.
+     */
+    static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            // Add new columns to learning_paths
+            database.execSQL("ALTER TABLE learning_paths ADD COLUMN category TEXT DEFAULT 'Programming'");
+            database.execSQL("ALTER TABLE learning_paths ADD COLUMN estimatedMinutes INTEGER NOT NULL DEFAULT 30");
+            database.execSQL("ALTER TABLE learning_paths ADD COLUMN totalLessons INTEGER NOT NULL DEFAULT 10");
+            database.execSQL("ALTER TABLE learning_paths ADD COLUMN xpReward INTEGER NOT NULL DEFAULT 100");
+            database.execSQL("ALTER TABLE learning_paths ADD COLUMN prerequisites TEXT");
+            database.execSQL("ALTER TABLE learning_paths ADD COLUMN isFeatured INTEGER NOT NULL DEFAULT 0");
+            database.execSQL("ALTER TABLE learning_paths ADD COLUMN isNew INTEGER NOT NULL DEFAULT 0");
+            database.execSQL("ALTER TABLE learning_paths ADD COLUMN colorHex TEXT DEFAULT '#6366F1'");
+            database.execSQL("ALTER TABLE learning_paths ADD COLUMN skillTags TEXT");
+            
+            // Clear old paths and achievements to reseed with new comprehensive content
+            database.execSQL("DELETE FROM bug_in_path");
+            database.execSQL("DELETE FROM learning_paths");
+            database.execSQL("DELETE FROM user_achievements");
+            database.execSQL("DELETE FROM achievement_definitions");
+        }
+    };
+
+    /**
      * Get singleton instance of database.
      * Now uses proper migrations instead of destructive migration.
      */
@@ -163,7 +195,7 @@ public abstract class DebugMasterDatabase extends RoomDatabase {
                             DebugMasterDatabase.class,
                             "debug_master_database"
                     )
-                    .addMigrations(MIGRATION_2_3)
+                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4)
                     .fallbackToDestructiveMigration() // Fallback for dev builds
                     .build();
                 }

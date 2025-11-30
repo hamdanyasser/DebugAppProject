@@ -6,6 +6,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,22 +20,28 @@ import com.example.debugappproject.R;
 import com.example.debugappproject.databinding.FragmentBugListBinding;
 import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.util.Constants;
+import com.example.debugappproject.util.SoundManager;
 import com.google.android.material.chip.Chip;
 
 /**
- * BugListFragment - Displays list of all bugs with Material 3 chip-based filtering.
+ * ╔══════════════════════════════════════════════════════════════════════════════╗
+ * ║           DEBUGMASTER - BUG LIST FRAGMENT                                    ║
+ * ║              Browse Challenges with Sound Effects                            ║
+ * ╚══════════════════════════════════════════════════════════════════════════════╝
  *
  * Features:
- * - Chip group filters for difficulty and category
+ * - Chip group filters for difficulty and category with sounds
  * - Real-time filtering with visual feedback
  * - Enhanced empty state with helpful message
- * - Material 3 design with cards and proper spacing
+ * - Premium entrance animations
+ * - Sound effects for all interactions
  */
 public class BugListFragment extends Fragment {
 
     private FragmentBugListBinding binding;
     private BugListViewModel viewModel;
     private BugAdapter adapter;
+    private SoundManager soundManager;
 
     @Nullable
     @Override
@@ -48,15 +56,68 @@ public class BugListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(BugListViewModel.class);
+        soundManager = SoundManager.getInstance(requireContext());
+
+        // Play entrance sound
+        soundManager.playSound(SoundManager.Sound.TRANSITION);
 
         setupRecyclerView();
         setupSearchBar();
         setupFilters();
         setupObservers();
+        playEntranceAnimations();
+    }
+
+    /**
+     * Premium entrance animations for the bug list
+     */
+    private void playEntranceAnimations() {
+        // Search bar slides down
+        binding.searchBarLayout.setAlpha(0f);
+        binding.searchBarLayout.setTranslationY(-50f);
+        binding.searchBarLayout.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(400)
+                .setInterpolator(new DecelerateInterpolator())
+                .start();
+
+        // Difficulty chips slide in from left
+        binding.chipGroupDifficulty.setAlpha(0f);
+        binding.chipGroupDifficulty.setTranslationX(-100f);
+        binding.chipGroupDifficulty.animate()
+                .alpha(1f)
+                .translationX(0f)
+                .setStartDelay(150)
+                .setDuration(400)
+                .setInterpolator(new DecelerateInterpolator())
+                .start();
+
+        // Category chips slide in from right
+        binding.chipGroupCategory.setAlpha(0f);
+        binding.chipGroupCategory.setTranslationX(100f);
+        binding.chipGroupCategory.animate()
+                .alpha(1f)
+                .translationX(0f)
+                .setStartDelay(250)
+                .setDuration(400)
+                .setInterpolator(new DecelerateInterpolator())
+                .start();
+
+        // RecyclerView fades in
+        binding.recyclerViewBugs.setAlpha(0f);
+        binding.recyclerViewBugs.animate()
+                .alpha(1f)
+                .setStartDelay(350)
+                .setDuration(500)
+                .start();
     }
 
     private void setupRecyclerView() {
         adapter = new BugAdapter(bug -> {
+            // Play sound on bug selection
+            soundManager.playSound(SoundManager.Sound.BUTTON_CLICK);
+            
             // Navigate to bug detail
             Bundle args = new Bundle();
             args.putInt("bugId", bug.getId());
@@ -70,7 +131,7 @@ public class BugListFragment extends Fragment {
     }
 
     /**
-     * Sets up the search bar with real-time text filtering.
+     * Sets up the search bar with real-time text filtering and sounds.
      */
     private void setupSearchBar() {
         binding.editSearch.addTextChangedListener(new TextWatcher() {
@@ -81,6 +142,10 @@ public class BugListFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Play subtle typing sound for significant changes
+                if (count > 0 && s.length() > 0) {
+                    soundManager.playSound(SoundManager.Sound.TICK);
+                }
                 // Update search query in ViewModel
                 viewModel.setSearchQuery(s.toString());
             }
@@ -93,12 +158,15 @@ public class BugListFragment extends Fragment {
     }
 
     /**
-     * Sets up chip-based filters for difficulty and category.
+     * Sets up chip-based filters with sound effects.
      */
     private void setupFilters() {
-        // Difficulty filter chips
+        // Difficulty filter chips with sound
         binding.chipGroupDifficulty.setOnCheckedStateChangeListener((group, checkedIds) -> {
             if (checkedIds.isEmpty()) return;
+
+            // Play chip selection sound
+            soundManager.playSound(SoundManager.Sound.BLIP);
 
             int checkedId = checkedIds.get(0);
             String filter;
@@ -116,11 +184,20 @@ public class BugListFragment extends Fragment {
             }
 
             viewModel.setDifficultyFilter(filter);
+            
+            // Animate the selected chip
+            Chip selectedChip = group.findViewById(checkedId);
+            if (selectedChip != null) {
+                animateChipSelection(selectedChip);
+            }
         });
 
-        // Category filter chips
+        // Category filter chips with sound
         binding.chipGroupCategory.setOnCheckedStateChangeListener((group, checkedIds) -> {
             if (checkedIds.isEmpty()) return;
+
+            // Play chip selection sound
+            soundManager.playSound(SoundManager.Sound.BLIP);
 
             int checkedId = checkedIds.get(0);
             String filter;
@@ -148,12 +225,36 @@ public class BugListFragment extends Fragment {
             }
 
             viewModel.setCategoryFilter(filter);
+            
+            // Animate the selected chip
+            Chip selectedChip = group.findViewById(checkedId);
+            if (selectedChip != null) {
+                animateChipSelection(selectedChip);
+            }
         });
     }
 
     /**
-     * Sets up observers for filtered bugs list.
-     * Shows/hides empty state based on results.
+     * Animates chip selection with a bounce effect
+     */
+    private void animateChipSelection(Chip chip) {
+        chip.animate()
+                .scaleX(1.1f)
+                .scaleY(1.1f)
+                .setDuration(100)
+                .setInterpolator(new OvershootInterpolator())
+                .withEndAction(() -> {
+                    chip.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(100)
+                            .start();
+                })
+                .start();
+    }
+
+    /**
+     * Sets up observers for filtered bugs list with animations.
      */
     private void setupObservers() {
         viewModel.getFilteredBugs().observe(getViewLifecycleOwner(), bugs -> {
@@ -163,11 +264,42 @@ public class BugListFragment extends Fragment {
             if (bugs == null || bugs.isEmpty()) {
                 binding.layoutEmptyState.setVisibility(View.VISIBLE);
                 binding.recyclerViewBugs.setVisibility(View.GONE);
+                
+                // Play notification sound for empty state
+                soundManager.playSound(SoundManager.Sound.NOTIFICATION);
+                
+                // Animate empty state
+                binding.layoutEmptyState.setAlpha(0f);
+                binding.layoutEmptyState.setScaleX(0.8f);
+                binding.layoutEmptyState.setScaleY(0.8f);
+                binding.layoutEmptyState.animate()
+                        .alpha(1f)
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .setDuration(300)
+                        .setInterpolator(new OvershootInterpolator())
+                        .start();
             } else {
                 binding.layoutEmptyState.setVisibility(View.GONE);
                 binding.recyclerViewBugs.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (soundManager != null) {
+            soundManager.resumeAll();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (soundManager != null) {
+            soundManager.pauseAll();
+        }
     }
 
     @Override

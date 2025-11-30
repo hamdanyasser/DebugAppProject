@@ -18,9 +18,13 @@ import androidx.navigation.Navigation;
 import com.example.debugappproject.R;
 import com.example.debugappproject.billing.BillingManager;
 import com.example.debugappproject.databinding.FragmentSettingsBinding;
+import com.example.debugappproject.util.SoundManager;
 
 /**
- * Settings Fragment - App configuration and preferences
+ * ╔══════════════════════════════════════════════════════════════════════════════╗
+ * ║           DEBUGMASTER - SETTINGS & PREFERENCES                               ║
+ * ║              Control Sound, Haptics, and Game Options                        ║
+ * ╚══════════════════════════════════════════════════════════════════════════════╝
  * 
  * Sections:
  * - Appearance: Dark mode, sounds, haptic feedback
@@ -51,6 +55,7 @@ public class SettingsFragment extends Fragment {
     private FragmentSettingsBinding binding;
     private SharedPreferences prefs;
     private BillingManager billingManager;
+    private SoundManager soundManager;
 
     @Nullable
     @Override
@@ -65,7 +70,8 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         prefs = requireContext().getSharedPreferences(PREFS_NAME, 0);
-        billingManager = new BillingManager(requireContext());
+        billingManager = BillingManager.getInstance(requireContext());
+        soundManager = SoundManager.getInstance(requireContext());
 
         loadSettings();
         setupListeners();
@@ -75,8 +81,8 @@ public class SettingsFragment extends Fragment {
     private void loadSettings() {
         // Load appearance preferences
         binding.switchDarkMode.setChecked(prefs.getBoolean(KEY_DARK_MODE, false));
-        binding.switchSounds.setChecked(prefs.getBoolean(KEY_SOUNDS, true));
-        binding.switchHaptic.setChecked(prefs.getBoolean(KEY_HAPTIC, true));
+        binding.switchSounds.setChecked(soundManager.isSoundEnabled());
+        binding.switchHaptic.setChecked(soundManager.isHapticEnabled());
         
         // Load gameplay preferences
         if (binding.switchHints != null) {
@@ -95,8 +101,9 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setupListeners() {
-        // Back button
+        // Back button with sound
         binding.buttonBack.setOnClickListener(v -> {
+            soundManager.playSound(SoundManager.Sound.BUTTON_BACK);
             Navigation.findNavController(v).navigateUp();
         });
 
@@ -104,6 +111,7 @@ public class SettingsFragment extends Fragment {
         
         // Dark mode toggle
         binding.switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            soundManager.playButtonClick();
             prefs.edit().putBoolean(KEY_DARK_MODE, isChecked).apply();
             
             if (isChecked) {
@@ -113,17 +121,38 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        // Sound effects toggle
+        // Sound effects toggle - controls SoundManager
         binding.switchSounds.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            // Play sound BEFORE disabling if turning off
+            if (!isChecked) {
+                soundManager.playButtonClick();
+            }
+            
+            soundManager.setSoundEnabled(isChecked);
             prefs.edit().putBoolean(KEY_SOUNDS, isChecked).apply();
+            
             if (isChecked) {
-                Toast.makeText(getContext(), "🔊 Sounds enabled", Toast.LENGTH_SHORT).show();
+                // Play sound AFTER enabling
+                soundManager.playSound(SoundManager.Sound.SUCCESS);
+                Toast.makeText(getContext(), "🔊 Sound effects enabled!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "🔇 Sound effects disabled", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Haptic feedback toggle
+        // Haptic feedback toggle - controls SoundManager
         binding.switchHaptic.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            soundManager.playButtonClick();
+            soundManager.setHapticEnabled(isChecked);
             prefs.edit().putBoolean(KEY_HAPTIC, isChecked).apply();
+            
+            if (isChecked) {
+                // Give immediate haptic feedback to show it's working
+                soundManager.vibrate(SoundManager.Haptic.SUCCESS);
+                Toast.makeText(getContext(), "📳 Haptic feedback enabled!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Haptic feedback disabled", Toast.LENGTH_SHORT).show();
+            }
         });
 
         // ==================== GAMEPLAY ====================
@@ -131,10 +160,13 @@ public class SettingsFragment extends Fragment {
         // Hints toggle
         if (binding.switchHints != null) {
             binding.switchHints.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                soundManager.playButtonClick();
                 prefs.edit().putBoolean(KEY_HINTS, isChecked).apply();
                 if (!isChecked) {
+                    soundManager.playSound(SoundManager.Sound.CHALLENGE_START);
                     Toast.makeText(getContext(), "🎯 Challenge mode: Hints disabled!", Toast.LENGTH_SHORT).show();
                 } else {
+                    soundManager.playSound(SoundManager.Sound.HINT_REVEAL);
                     Toast.makeText(getContext(), "💡 Hints enabled", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -143,6 +175,7 @@ public class SettingsFragment extends Fragment {
         // Timer toggle
         if (binding.switchTimer != null) {
             binding.switchTimer.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                soundManager.playButtonClick();
                 prefs.edit().putBoolean(KEY_TIMER, isChecked).apply();
             });
         }
@@ -150,6 +183,7 @@ public class SettingsFragment extends Fragment {
         // Auto-submit toggle
         if (binding.switchAutoSubmit != null) {
             binding.switchAutoSubmit.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                soundManager.playButtonClick();
                 prefs.edit().putBoolean(KEY_AUTO_SUBMIT, isChecked).apply();
             });
         }
@@ -158,14 +192,17 @@ public class SettingsFragment extends Fragment {
 
         // Daily reminders toggle
         binding.switchReminders.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            soundManager.playButtonClick();
             prefs.edit().putBoolean(KEY_REMINDERS, isChecked).apply();
             if (isChecked) {
+                soundManager.playSound(SoundManager.Sound.NOTIFICATION);
                 Toast.makeText(getContext(), "🔔 You'll get daily reminders", Toast.LENGTH_SHORT).show();
             }
         });
 
         // Streak alerts toggle
         binding.switchStreakAlerts.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            soundManager.playButtonClick();
             prefs.edit().putBoolean(KEY_STREAK_ALERTS, isChecked).apply();
         });
 
@@ -177,20 +214,23 @@ public class SettingsFragment extends Fragment {
         // ==================== DATA ====================
 
         // Reset progress
-        binding.layoutResetProgress.setOnClickListener(v -> showResetDialog());
+        binding.layoutResetProgress.setOnClickListener(v -> {
+            soundManager.playSound(SoundManager.Sound.WARNING);
+            showResetDialog();
+        });
 
         // ==================== ABOUT ====================
 
         // Privacy policy
         binding.layoutPrivacy.setOnClickListener(v -> {
+            soundManager.playButtonClick();
             Toast.makeText(getContext(), "Opening Privacy Policy...", Toast.LENGTH_SHORT).show();
-            // In production, open a WebView or browser with privacy policy
         });
 
         // Terms of service
         binding.layoutTerms.setOnClickListener(v -> {
+            soundManager.playButtonClick();
             Toast.makeText(getContext(), "Opening Terms of Service...", Toast.LENGTH_SHORT).show();
-            // In production, open a WebView or browser with terms
         });
     }
 
@@ -202,6 +242,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void showQuickDemoActivateDialog() {
+        soundManager.playSound(SoundManager.Sound.POWER_UP);
         new AlertDialog.Builder(requireContext())
                 .setTitle("🧪 Quick Pro Activation")
                 .setMessage("Instantly activate Pro to test premium features:\n\n" +
@@ -212,22 +253,22 @@ public class SettingsFragment extends Fragment {
                         "✓ Ad-free experience\n\n" +
                         "This is Demo Mode - no real payment.")
                 .setPositiveButton("🚀 Activate Pro", (dialog, which) -> {
-                    // Use BillingManager to activate demo
+                    soundManager.playSound(SoundManager.Sound.ACHIEVEMENT_UNLOCK);
                     billingManager.demoPurchase(BillingManager.PRODUCT_YEARLY);
-                    
-                    // Manually update UI immediately
                     updateSubscriptionUI(true);
-                    
                     Toast.makeText(getContext(), "🎉 Pro activated!", Toast.LENGTH_LONG).show();
                 })
                 .setNeutralButton("See Plans", (dialog, which) -> {
+                    soundManager.playButtonClick();
                     try {
                         Navigation.findNavController(requireView()).navigate(R.id.proSubscriptionFragment);
                     } catch (Exception e) {
                         // Ignore
                     }
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    soundManager.playSound(SoundManager.Sound.BUTTON_BACK);
+                })
                 .show();
     }
     
@@ -241,8 +282,14 @@ public class SettingsFragment extends Fragment {
             binding.textSubscriptionDesc.setText(isDemoMode ? 
                 "Demo Mode - All features unlocked!" : "All features unlocked!");
             binding.buttonUpgrade.setText("Manage");
-            binding.buttonUpgrade.setOnClickListener(v -> showProMemberInfo());
-            binding.cardSubscription.setOnClickListener(v -> showProMemberInfo());
+            binding.buttonUpgrade.setOnClickListener(v -> {
+                soundManager.playButtonClick();
+                showProMemberInfo();
+            });
+            binding.cardSubscription.setOnClickListener(v -> {
+                soundManager.playButtonClick();
+                showProMemberInfo();
+            });
         } else {
             binding.textSubscriptionStatus.setText("Free Plan");
             binding.textSubscriptionDesc.setText(isDemoMode ? 
@@ -254,6 +301,7 @@ public class SettingsFragment extends Fragment {
                 binding.cardSubscription.setOnClickListener(v -> showQuickDemoActivateDialog());
             } else {
                 binding.buttonUpgrade.setOnClickListener(v -> {
+                    soundManager.playButtonClick();
                     try {
                         Navigation.findNavController(v).navigate(R.id.proSubscriptionFragment);
                     } catch (Exception e) {
@@ -261,6 +309,7 @@ public class SettingsFragment extends Fragment {
                     }
                 });
                 binding.cardSubscription.setOnClickListener(v -> {
+                    soundManager.playButtonClick();
                     try {
                         Navigation.findNavController(v).navigate(R.id.proSubscriptionFragment);
                     } catch (Exception e) {
@@ -272,25 +321,26 @@ public class SettingsFragment extends Fragment {
     }
 
     private void showDemoUpgradeDialog() {
+        soundManager.playSound(SoundManager.Sound.NOTIFICATION);
         new AlertDialog.Builder(requireContext())
                 .setTitle("🚀 Demo Mode")
                 .setMessage("This is a demo purchase. In production, this would connect to Google Play Billing.\n\n" +
                         "Would you like to simulate a Pro upgrade?")
                 .setPositiveButton("Activate Pro", (dialog, which) -> {
-                    // Use BillingManager to activate demo
+                    soundManager.playSound(SoundManager.Sound.ACHIEVEMENT_UNLOCK);
                     billingManager.demoPurchase(BillingManager.PRODUCT_YEARLY);
-                    
-                    // Manually update UI immediately
                     updateSubscriptionUI(true);
-                    
                     Toast.makeText(getContext(), "🎉 Pro activated! (Demo)", Toast.LENGTH_LONG).show();
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    soundManager.playSound(SoundManager.Sound.BUTTON_BACK);
+                })
                 .show();
     }
 
     private void showProMemberInfo() {
         boolean isDemoMode = BillingManager.isDemoMode();
+        soundManager.playSound(SoundManager.Sound.COIN_COLLECT);
         
         new AlertDialog.Builder(requireContext())
                 .setTitle("👑 Pro Member")
@@ -300,17 +350,17 @@ public class SettingsFragment extends Fragment {
                         "• Battle Arena multiplayer\n" +
                         "• Ad-free experience\n\n" +
                         (isDemoMode ? "🧪 Demo Mode Active" : "Thank you for your support!"))
-                .setPositiveButton("Awesome!", null)
+                .setPositiveButton("Awesome!", (dialog, which) -> {
+                    soundManager.playButtonClick();
+                })
                 .setNeutralButton(isDemoMode ? "Deactivate Pro" : "Manage in Play Store", (dialog, which) -> {
                     if (isDemoMode) {
-                        // Deactivate demo pro
+                        soundManager.playSound(SoundManager.Sound.BUTTON_BACK);
                         billingManager.demoDeactivate();
-                        
-                        // Manually update UI immediately
                         updateSubscriptionUI(false);
-                        
                         Toast.makeText(getContext(), "Pro deactivated. Back to free plan.", Toast.LENGTH_SHORT).show();
                     } else {
+                        soundManager.playButtonClick();
                         Toast.makeText(getContext(), 
                             "Open Google Play Store > Subscriptions to manage", 
                             Toast.LENGTH_LONG).show();
@@ -325,10 +375,13 @@ public class SettingsFragment extends Fragment {
                 .setMessage("This will delete all your progress, XP, achievements, and stats.\n\n" +
                         "This action cannot be undone!")
                 .setPositiveButton("Reset", (dialog, which) -> {
+                    soundManager.playSound(SoundManager.Sound.DEFEAT);
                     // TODO: Implement actual reset logic with database
                     Toast.makeText(getContext(), "Progress reset!", Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    soundManager.playSound(SoundManager.Sound.BUTTON_BACK);
+                })
                 .show();
     }
     
@@ -336,7 +389,6 @@ public class SettingsFragment extends Fragment {
     
     /**
      * Check if hints are enabled in settings.
-     * Can be called from other fragments.
      */
     public static boolean areHintsEnabled(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
@@ -392,12 +444,10 @@ public class SettingsFragment extends Fragment {
     }
     
     /**
-     * Check if achievement notifications are enabled in settings.
-     * Uses streak alerts setting as achievement notifications.
+     * Check if achievement notifications are enabled.
      */
     public static boolean areAchievementNotificationsEnabled(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        // Use streak alerts as achievement notifications setting
         return prefs.getBoolean(KEY_STREAK_ALERTS, true);
     }
 

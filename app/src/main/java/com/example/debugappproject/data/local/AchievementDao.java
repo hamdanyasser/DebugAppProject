@@ -3,6 +3,7 @@ package com.example.debugappproject.data.local;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.example.debugappproject.model.AchievementDefinition;
@@ -29,11 +30,14 @@ public interface AchievementDao {
     @Query("SELECT * FROM achievement_definitions WHERE category = :category ORDER BY sortOrder ASC")
     LiveData<List<AchievementDefinition>> getAchievementsByCategory(String category);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAchievementDefinition(AchievementDefinition achievement);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAllAchievementDefinitions(List<AchievementDefinition> achievements);
+    
+    @Query("DELETE FROM achievement_definitions")
+    void clearAllAchievementDefinitions();
 
     // User Achievement queries
     @Query("SELECT * FROM user_achievements")
@@ -51,7 +55,7 @@ public interface AchievementDao {
     @Query("SELECT COUNT(*) FROM user_achievements")
     LiveData<Integer> getUnlockedAchievementCount();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertUserAchievement(UserAchievement userAchievement);
 
     @Query("UPDATE user_achievements SET notificationShown = 1 WHERE achievementId = :achievementId")

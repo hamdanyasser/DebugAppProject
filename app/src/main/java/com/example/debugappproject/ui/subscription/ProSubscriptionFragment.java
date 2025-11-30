@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,20 +18,25 @@ import com.android.billingclient.api.ProductDetails;
 import com.example.debugappproject.R;
 import com.example.debugappproject.billing.BillingManager;
 import com.example.debugappproject.databinding.FragmentProSubscriptionBinding;
+import com.example.debugappproject.util.SoundManager;
 
 import java.util.List;
 
 /**
- * Pro Subscription screen with Google Play Billing integration.
- * Offers monthly, yearly, and lifetime plans.
+ * ╔══════════════════════════════════════════════════════════════════════════════╗
+ * ║           DEBUGMASTER - PRO SUBSCRIPTION                                     ║
+ * ║              Premium Purchase with Sound Effects                             ║
+ * ╚══════════════════════════════════════════════════════════════════════════════╝
  * 
- * In Demo Mode: Simulates purchases for testing without Play Store.
+ * Pro Subscription screen with Google Play Billing integration.
+ * Offers monthly, yearly, and lifetime plans with immersive audio.
  */
 public class ProSubscriptionFragment extends Fragment implements BillingManager.BillingCallback {
 
     private FragmentProSubscriptionBinding binding;
     private BillingManager billingManager;
-    private String selectedPlan = BillingManager.PRODUCT_YEARLY; // Default to best value
+    private SoundManager soundManager;
+    private String selectedPlan = BillingManager.PRODUCT_YEARLY;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,36 +48,101 @@ public class ProSubscriptionFragment extends Fragment implements BillingManager.
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Initialize billing
-        billingManager = new BillingManager(requireContext());
+        billingManager = BillingManager.getInstance(requireContext());
         billingManager.setCallback(this);
+        soundManager = SoundManager.getInstance(requireContext());
+
+        // Play premium entrance sound
+        soundManager.playSound(SoundManager.Sound.POWER_UP);
 
         setupUI();
         observeBilling();
+        playEntranceAnimations();
+    }
+
+    /**
+     * Premium entrance animations for the subscription screen
+     */
+    private void playEntranceAnimations() {
+        // Plan cards animate in staggered
+        View[] cards = {binding.cardMonthly, binding.cardYearly, binding.cardLifetime};
+        for (int i = 0; i < cards.length; i++) {
+            View card = cards[i];
+            if (card != null) {
+                card.setAlpha(0f);
+                card.setScaleX(0.9f);
+                card.setScaleY(0.9f);
+                card.animate()
+                        .alpha(1f)
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .setStartDelay(400 + (i * 150L))
+                        .setDuration(400)
+                        .setInterpolator(new OvershootInterpolator())
+                        .start();
+            }
+        }
+
+        // Subscribe button pops in
+        if (binding.buttonSubscribe != null) {
+            binding.buttonSubscribe.setAlpha(0f);
+            binding.buttonSubscribe.setScaleX(0.8f);
+            binding.buttonSubscribe.setScaleY(0.8f);
+            binding.buttonSubscribe.animate()
+                    .alpha(1f)
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setStartDelay(900)
+                    .setDuration(400)
+                    .setInterpolator(new OvershootInterpolator())
+                    .start();
+        }
     }
 
     private void setupUI() {
         // Close button
         binding.buttonClose.setOnClickListener(v -> {
+            soundManager.playSound(SoundManager.Sound.BUTTON_BACK);
             Navigation.findNavController(v).popBackStack();
         });
 
-        // Plan selection
-        binding.cardMonthly.setOnClickListener(v -> selectPlan(BillingManager.PRODUCT_MONTHLY));
-        binding.cardYearly.setOnClickListener(v -> selectPlan(BillingManager.PRODUCT_YEARLY));
-        binding.cardLifetime.setOnClickListener(v -> selectPlan(BillingManager.PRODUCT_LIFETIME));
+        // Plan selection with sounds
+        binding.cardMonthly.setOnClickListener(v -> {
+            soundManager.playSound(SoundManager.Sound.BLIP);
+            animateCardSelection(v);
+            selectPlan(BillingManager.PRODUCT_MONTHLY);
+        });
+        binding.cardYearly.setOnClickListener(v -> {
+            soundManager.playSound(SoundManager.Sound.BLIP);
+            animateCardSelection(v);
+            selectPlan(BillingManager.PRODUCT_YEARLY);
+        });
+        binding.cardLifetime.setOnClickListener(v -> {
+            soundManager.playSound(SoundManager.Sound.COIN_COLLECT);
+            animateCardSelection(v);
+            selectPlan(BillingManager.PRODUCT_LIFETIME);
+        });
 
-        binding.radioMonthly.setOnClickListener(v -> selectPlan(BillingManager.PRODUCT_MONTHLY));
-        binding.radioYearly.setOnClickListener(v -> selectPlan(BillingManager.PRODUCT_YEARLY));
-        binding.radioLifetime.setOnClickListener(v -> selectPlan(BillingManager.PRODUCT_LIFETIME));
+        binding.radioMonthly.setOnClickListener(v -> {
+            soundManager.playSound(SoundManager.Sound.BLIP);
+            selectPlan(BillingManager.PRODUCT_MONTHLY);
+        });
+        binding.radioYearly.setOnClickListener(v -> {
+            soundManager.playSound(SoundManager.Sound.BLIP);
+            selectPlan(BillingManager.PRODUCT_YEARLY);
+        });
+        binding.radioLifetime.setOnClickListener(v -> {
+            soundManager.playSound(SoundManager.Sound.COIN_COLLECT);
+            selectPlan(BillingManager.PRODUCT_LIFETIME);
+        });
 
-        // Subscribe button - handles both demo and real purchases
+        // Subscribe button
         binding.buttonSubscribe.setOnClickListener(v -> {
+            soundManager.playSound(SoundManager.Sound.BUTTON_START);
+            animateButton(v);
             if (BillingManager.isDemoMode()) {
-                // Demo mode - show confirmation dialog
                 showDemoPurchaseDialog();
             } else {
-                // Real purchase through Play Store
                 if (getActivity() != null) {
                     binding.buttonSubscribe.setEnabled(false);
                     binding.buttonSubscribe.setText("Processing...");
@@ -81,8 +153,8 @@ public class ProSubscriptionFragment extends Fragment implements BillingManager.
 
         // Restore purchases
         binding.textRestore.setOnClickListener(v -> {
+            soundManager.playButtonClick();
             if (BillingManager.isDemoMode()) {
-                // In demo mode, show option to deactivate pro
                 showDemoRestoreDialog();
             } else {
                 Toast.makeText(getContext(), "Checking for existing purchases...", Toast.LENGTH_SHORT).show();
@@ -90,16 +162,49 @@ public class ProSubscriptionFragment extends Fragment implements BillingManager.
             }
         });
 
-        // Default selection
         selectPlan(BillingManager.PRODUCT_YEARLY);
-        
-        // Update button text for demo mode
         updateButtonForDemoMode();
+    }
+
+    /**
+     * Animate button press
+     */
+    private void animateButton(View button) {
+        button.animate()
+                .scaleX(0.95f)
+                .scaleY(0.95f)
+                .setDuration(100)
+                .withEndAction(() -> {
+                    button.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(100)
+                            .start();
+                })
+                .start();
+    }
+
+    /**
+     * Animate card selection
+     */
+    private void animateCardSelection(View card) {
+        card.animate()
+                .scaleX(1.03f)
+                .scaleY(1.03f)
+                .setDuration(100)
+                .withEndAction(() -> {
+                    card.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(100)
+                            .setInterpolator(new OvershootInterpolator())
+                            .start();
+                })
+                .start();
     }
 
     private void updateButtonForDemoMode() {
         if (BillingManager.isDemoMode()) {
-            // Show demo mode indicator in button
             if (selectedPlan.equals(BillingManager.PRODUCT_LIFETIME)) {
                 binding.buttonSubscribe.setText("🧪 Demo: Activate Lifetime");
             } else {
@@ -109,6 +214,8 @@ public class ProSubscriptionFragment extends Fragment implements BillingManager.
     }
 
     private void showDemoPurchaseDialog() {
+        soundManager.playSound(SoundManager.Sound.NOTIFICATION);
+        
         String planName;
         String planDetails;
         
@@ -144,16 +251,17 @@ public class ProSubscriptionFragment extends Fragment implements BillingManager.
                 "✓ Ad-free experience\n\n" +
                 "Activate Pro now?")
             .setPositiveButton("🚀 Activate Pro", (dialog, which) -> {
-                // Demo purchase
+                soundManager.playSound(SoundManager.Sound.BUTTON_START);
                 binding.buttonSubscribe.setEnabled(false);
                 binding.buttonSubscribe.setText("Activating...");
                 
-                // Simulate a small delay for realism
                 binding.buttonSubscribe.postDelayed(() -> {
                     billingManager.demoPurchase(selectedPlan);
                 }, 800);
             })
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton("Cancel", (dialog, which) -> {
+                soundManager.playSound(SoundManager.Sound.BUTTON_BACK);
+            })
             .show();
     }
 
@@ -161,24 +269,29 @@ public class ProSubscriptionFragment extends Fragment implements BillingManager.
         boolean isPro = billingManager.isProUserSync();
         
         if (isPro) {
-            // Already pro - offer to deactivate
+            soundManager.playSound(SoundManager.Sound.COIN_COLLECT);
             new AlertDialog.Builder(requireContext())
                 .setTitle("👑 Pro Status Active")
                 .setMessage("You currently have Pro access (Demo Mode).\n\n" +
                     "Would you like to deactivate it to test the free version again?")
                 .setPositiveButton("Deactivate Pro", (dialog, which) -> {
+                    soundManager.playSound(SoundManager.Sound.BUTTON_BACK);
                     billingManager.demoDeactivate();
                     Toast.makeText(getContext(), "Pro deactivated. You're now on free plan.", Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("Keep Pro", null)
+                .setNegativeButton("Keep Pro", (dialog, which) -> {
+                    soundManager.playButtonClick();
+                })
                 .show();
         } else {
-            // Not pro - offer to activate
+            soundManager.playSound(SoundManager.Sound.NOTIFICATION);
             new AlertDialog.Builder(requireContext())
                 .setTitle("🧪 Demo Mode")
                 .setMessage("No Pro subscription found.\n\n" +
                     "Select a plan above and tap the subscribe button to activate Pro for testing.")
-                .setPositiveButton("OK", null)
+                .setPositiveButton("OK", (dialog, which) -> {
+                    soundManager.playButtonClick();
+                })
                 .show();
         }
     }
@@ -186,12 +299,10 @@ public class ProSubscriptionFragment extends Fragment implements BillingManager.
     private void selectPlan(String productId) {
         selectedPlan = productId;
 
-        // Update radio buttons
         binding.radioMonthly.setChecked(productId.equals(BillingManager.PRODUCT_MONTHLY));
         binding.radioYearly.setChecked(productId.equals(BillingManager.PRODUCT_YEARLY));
         binding.radioLifetime.setChecked(productId.equals(BillingManager.PRODUCT_LIFETIME));
 
-        // Update card strokes
         int selectedStroke = (int) (2 * getResources().getDisplayMetrics().density);
         int unselectedStroke = 0;
 
@@ -199,7 +310,6 @@ public class ProSubscriptionFragment extends Fragment implements BillingManager.
         binding.cardYearly.setStrokeWidth(productId.equals(BillingManager.PRODUCT_YEARLY) ? selectedStroke : unselectedStroke);
         binding.cardLifetime.setStrokeWidth(productId.equals(BillingManager.PRODUCT_LIFETIME) ? selectedStroke : unselectedStroke);
 
-        // Update button text
         if (BillingManager.isDemoMode()) {
             updateButtonForDemoMode();
         } else {
@@ -212,10 +322,20 @@ public class ProSubscriptionFragment extends Fragment implements BillingManager.
     }
 
     private void observeBilling() {
-        // Observe pro status
         billingManager.getIsProUser().observe(getViewLifecycleOwner(), isPro -> {
             if (isPro && isAdded()) {
-                // User is now pro - show success and close
+                // Play EPIC purchase success sounds!
+                soundManager.playSound(SoundManager.Sound.ACHIEVEMENT_UNLOCK);
+                soundManager.vibrate(SoundManager.Haptic.SUCCESS);
+                
+                // Delayed celebration sounds
+                binding.buttonSubscribe.postDelayed(() -> {
+                    soundManager.playSound(SoundManager.Sound.VICTORY);
+                }, 500);
+                binding.buttonSubscribe.postDelayed(() -> {
+                    soundManager.playSound(SoundManager.Sound.STAR_EARNED);
+                }, 1000);
+                
                 Toast.makeText(getContext(), "🎉 Welcome to DebugMaster Pro!", Toast.LENGTH_LONG).show();
                 if (getView() != null) {
                     Navigation.findNavController(getView()).popBackStack();
@@ -223,7 +343,6 @@ public class ProSubscriptionFragment extends Fragment implements BillingManager.
             }
         });
 
-        // Observe products (for real Play Store mode)
         billingManager.getProductDetails().observe(getViewLifecycleOwner(), products -> {
             if (products != null && !products.isEmpty()) {
                 updatePrices();
@@ -244,8 +363,6 @@ public class ProSubscriptionFragment extends Fragment implements BillingManager.
         getActivity().runOnUiThread(() -> {
             binding.buttonSubscribe.setEnabled(true);
             updateButtonForDemoMode();
-            
-            // The observer will handle navigation
         });
     }
 
@@ -254,9 +371,9 @@ public class ProSubscriptionFragment extends Fragment implements BillingManager.
         if (getActivity() == null) return;
         
         getActivity().runOnUiThread(() -> {
+            soundManager.playSound(SoundManager.Sound.ERROR);
             binding.buttonSubscribe.setEnabled(true);
             updateButtonForDemoMode();
-            
             Toast.makeText(getContext(), "Purchase failed: " + error, Toast.LENGTH_LONG).show();
         });
     }
@@ -264,22 +381,36 @@ public class ProSubscriptionFragment extends Fragment implements BillingManager.
     @Override
     public void onBillingReady() {
         if (getActivity() == null) return;
-        
         getActivity().runOnUiThread(this::updatePrices);
     }
 
     @Override
     public void onProductsLoaded(List<ProductDetails> products) {
         if (getActivity() == null) return;
-        
         getActivity().runOnUiThread(this::updatePrices);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (soundManager != null) {
+            soundManager.resumeAll();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (soundManager != null) {
+            soundManager.pauseAll();
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (billingManager != null) {
-            billingManager.destroy();
+            billingManager.clearCallback();
         }
         binding = null;
     }

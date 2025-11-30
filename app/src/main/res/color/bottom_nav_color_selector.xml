@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Bottom Navigation Color Selector -->
+<!-- Bottom Navigation Color Selector - Cyber Theme -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="@color/primary" android:state_checked="true" />
-    <item android:color="@color/text_tertiary_light" android:state_checked="false" />
+    <item android:color="@color/cyber_neon_purple" android:state_checked="true" />
+    <item android:color="#99FFFFFF" android:state_checked="false" />
 </selector>

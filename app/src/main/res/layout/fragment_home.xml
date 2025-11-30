@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@drawable/bg_cyber_main"
     android:fitsSystemWindows="true">
 
     <androidx.core.widget.NestedScrollView
@@ -599,7 +599,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/continue_learning"
-                    android:textColor="@color/text_primary_light"
+                    android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 

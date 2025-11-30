@@ -1,53 +1,431 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- ╔══════════════════════════════════════════════════════════════════════════╗
+     ║           DEBUGMASTER - ULTRA PREMIUM GAME SPLASH SCREEN               ║
+     ║     A Million-Dollar AAA Mobile Game Welcome Experience                ║
+     ╚══════════════════════════════════════════════════════════════════════════╝ -->
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/splash_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorPrimary"
-    android:padding="@dimen/padding_large">
+    android:background="@drawable/bg_splash_cyber_gradient"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
-    <!-- App Icon Placeholder (would be an ImageView in real app) -->
-    <TextView
-        android:id="@+id/text_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="🐞"
-        android:textSize="72sp"
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              BACKGROUND EFFECTS LAYER
+         ════════════════════════════════════════════════════════════════════════ -->
+
+    <!-- Hexagon Grid Pattern Overlay -->
+    <ImageView
+        android:id="@+id/hex_pattern_1"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
         android:alpha="0"
-        app:layout_constraintBottom_toTopOf="@+id/text_app_name"
+        android:rotation="-15"
+        android:src="@drawable/pattern_hexagon_grid"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="-100dp"
+        android:layout_marginStart="-100dp"
+        android:importantForAccessibility="no" />
+
+    <ImageView
+        android:id="@+id/hex_pattern_2"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:alpha="0"
+        android:rotation="15"
+        android:src="@drawable/pattern_hexagon_grid"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="-100dp"
+        android:layout_marginEnd="-100dp"
+        android:importantForAccessibility="no" />
+
+    <!-- Floating Particles Container -->
+    <FrameLayout
+        android:id="@+id/particles_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Code Rain Container (Matrix effect) -->
+    <FrameLayout
+        android:id="@+id/code_rain_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.15"
+        android:clipChildren="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              DECORATIVE BLOBS
+         ════════════════════════════════════════════════════════════════════════ -->
+
+    <View
+        android:id="@+id/decoration_top_left"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:alpha="0"
+        android:background="@drawable/bg_blob_decoration"
+        android:rotation="-30"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="-80dp"
+        android:layout_marginTop="-80dp" />
+
+    <View
+        android:id="@+id/decoration_top_right"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:alpha="0"
+        android:background="@drawable/bg_blob_yellow"
+        android:rotation="45"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="-50dp"
+        android:layout_marginTop="80dp" />
+
+    <View
+        android:id="@+id/decoration_bottom_left"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:alpha="0"
+        android:background="@drawable/bg_blob_yellow"
+        android:rotation="20"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="-40dp"
+        android:layout_marginBottom="200dp" />
+
+    <View
+        android:id="@+id/decoration_bottom_right"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:alpha="0"
+        android:background="@drawable/bg_blob_decoration"
+        android:rotation="60"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="-100dp"
+        android:layout_marginBottom="-100dp" />
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              MAIN LOGO SECTION
+         ════════════════════════════════════════════════════════════════════════ -->
+
+    <!-- Energy Wave Ring 3 (Outermost) -->
+    <View
+        android:id="@+id/energy_wave_3"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:alpha="0"
+        android:background="@drawable/bg_neon_glow_ring"
+        app:layout_constraintBottom_toTopOf="@+id/title_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <TextView
-        android:id="@+id/text_app_name"
+    <!-- Energy Wave Ring 2 -->
+    <View
+        android:id="@+id/energy_wave_2"
+        android:layout_width="240dp"
+        android:layout_height="240dp"
+        android:alpha="0"
+        android:background="@drawable/bg_neon_glow_ring"
+        app:layout_constraintBottom_toBottomOf="@id/energy_wave_3"
+        app:layout_constraintEnd_toEndOf="@id/energy_wave_3"
+        app:layout_constraintStart_toStartOf="@id/energy_wave_3"
+        app:layout_constraintTop_toTopOf="@id/energy_wave_3" />
+
+    <!-- Energy Wave Ring 1 (Innermost) -->
+    <View
+        android:id="@+id/energy_wave_1"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:alpha="0"
+        android:background="@drawable/bg_neon_glow_ring"
+        app:layout_constraintBottom_toBottomOf="@id/energy_wave_3"
+        app:layout_constraintEnd_toEndOf="@id/energy_wave_3"
+        app:layout_constraintStart_toStartOf="@id/energy_wave_3"
+        app:layout_constraintTop_toTopOf="@id/energy_wave_3" />
+
+    <!-- Pulsing Glow Background for Logo -->
+    <View
+        android:id="@+id/logo_glow_pulse"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:alpha="0"
+        android:background="@drawable/bg_logo_glow_ring"
+        app:layout_constraintBottom_toBottomOf="@id/energy_wave_3"
+        app:layout_constraintEnd_toEndOf="@id/energy_wave_3"
+        app:layout_constraintStart_toStartOf="@id/energy_wave_3"
+        app:layout_constraintTop_toTopOf="@id/energy_wave_3" />
+
+    <!-- Premium Ladybug Logo -->
+    <ImageView
+        android:id="@+id/image_logo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:alpha="0"
+        android:contentDescription="@string/app_name_full"
+        android:elevation="16dp"
+        android:scaleX="0"
+        android:scaleY="0"
+        android:src="@drawable/ic_ladybug_premium"
+        app:layout_constraintBottom_toBottomOf="@id/energy_wave_3"
+        app:layout_constraintEnd_toEndOf="@id/energy_wave_3"
+        app:layout_constraintStart_toStartOf="@id/energy_wave_3"
+        app:layout_constraintTop_toTopOf="@id/energy_wave_3" />
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              TITLE SECTION
+         ════════════════════════════════════════════════════════════════════════ -->
+
+    <LinearLayout
+        android:id="@+id/title_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_medium"
-        android:text="@string/app_name_full"
-        android:textColor="?attr/colorOnPrimary"
-        android:textSize="48sp"
-        android:textStyle="bold"
-        android:alpha="0"
-        app:layout_constraintBottom_toTopOf="@+id/text_tagline"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_icon" />
+        app:layout_constraintTop_toBottomOf="@id/energy_wave_3">
 
+        <!-- "DEBUG" text with cyber styling -->
+        <TextView
+            android:id="@+id/text_debug"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            android:fontFamily="sans-serif-black"
+            android:letterSpacing="0.08"
+            android:shadowColor="#80000000"
+            android:shadowDx="0"
+            android:shadowDy="4"
+            android:shadowRadius="8"
+            android:text="DEBUG"
+            android:textColor="#FFFFFF"
+            android:textSize="38sp"
+            android:translationX="-50dp" />
+
+        <!-- "MASTER" text with neon pink -->
+        <TextView
+            android:id="@+id/text_master"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            android:fontFamily="sans-serif-black"
+            android:letterSpacing="0.08"
+            android:shadowColor="#60EC4899"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="16"
+            android:text="MASTER"
+            android:textColor="#EC4899"
+            android:textSize="38sp"
+            android:translationX="50dp" />
+
+    </LinearLayout>
+
+    <!-- Subtitle/Tagline with typing cursor effect -->
     <TextView
         android:id="@+id/text_tagline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_medium"
-        android:text="@string/app_tagline"
-        android:textColor="?attr/colorOnPrimary"
-        android:textSize="18sp"
-        android:textAlignment="center"
+        android:layout_marginTop="12dp"
         android:alpha="0"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:fontFamily="monospace"
+        android:letterSpacing="0.15"
+        android:text="[ LEARN • DEBUG • MASTER ]"
+        android:textColor="#A78BFA"
+        android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_app_name" />
+        app:layout_constraintTop_toBottomOf="@id/title_container" />
+
+    <!-- Typing cursor (blinking) -->
+    <View
+        android:id="@+id/typing_cursor"
+        android:layout_width="2dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="4dp"
+        android:alpha="0"
+        android:background="#A78BFA"
+        app:layout_constraintBottom_toBottomOf="@id/text_tagline"
+        app:layout_constraintStart_toEndOf="@id/text_tagline"
+        app:layout_constraintTop_toTopOf="@id/text_tagline" />
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              LOADING SECTION
+         ════════════════════════════════════════════════════════════════════════ -->
+
+    <!-- Status text with terminal styling -->
+    <TextView
+        android:id="@+id/text_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:alpha="0"
+        android:fontFamily="monospace"
+        android:letterSpacing="0.1"
+        android:text="INITIALIZING SYSTEM..."
+        android:textColor="#60FFFFFF"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@id/progress_loading"
+        app:layout_constraintStart_toStartOf="@id/progress_loading" />
+
+    <!-- Cyber loading bar -->
+    <ProgressBar
+        android:id="@+id/progress_loading"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="280dp"
+        android:layout_height="10dp"
+        android:layout_marginBottom="80dp"
+        android:alpha="0"
+        android:max="100"
+        android:progress="0"
+        android:progressDrawable="@drawable/bg_cyber_loading_bar"
+        app:layout_constraintBottom_toTopOf="@id/btn_start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Progress percentage with brackets -->
+    <TextView
+        android:id="@+id/text_progress_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0"
+        android:fontFamily="monospace"
+        android:text="[  0% ]"
+        android:textColor="#C4B5FD"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/progress_loading"
+        app:layout_constraintTop_toBottomOf="@id/progress_loading"
+        android:layout_marginTop="8dp" />
+
+    <!-- Loading items status -->
+    <TextView
+        android:id="@+id/text_loading_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0"
+        android:fontFamily="monospace"
+        android:text="> Loading assets..."
+        android:textColor="#40FFFFFF"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@id/progress_loading"
+        app:layout_constraintTop_toBottomOf="@id/progress_loading"
+        android:layout_marginTop="8dp" />
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              START BUTTON SECTION
+         ════════════════════════════════════════════════════════════════════════ -->
+
+    <!-- Glow effect behind button -->
+    <View
+        android:id="@+id/btn_start_glow"
+        android:layout_width="240dp"
+        android:layout_height="72dp"
+        android:alpha="0"
+        android:background="@drawable/bg_blob_decoration"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/btn_start"
+        app:layout_constraintEnd_toEndOf="@id/btn_start"
+        app:layout_constraintStart_toStartOf="@id/btn_start"
+        app:layout_constraintTop_toTopOf="@id/btn_start" />
+
+    <!-- Main START button -->
+    <TextView
+        android:id="@+id/btn_start"
+        android:layout_width="220dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="100dp"
+        android:alpha="0"
+        android:background="@drawable/bg_cyber_start_button"
+        android:elevation="12dp"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        android:letterSpacing="0.2"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        android:text="▶  PLAY"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/text_version"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
+
+    <!-- Tap hint text -->
+    <TextView
+        android:id="@+id/text_tap_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:alpha="0"
+        android:fontFamily="monospace"
+        android:letterSpacing="0.2"
+        android:text="[ TAP TO START ]"
+        android:textColor="#40FFFFFF"
+        android:textSize="10sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_start" />
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              FOOTER SECTION
+         ════════════════════════════════════════════════════════════════════════ -->
+
+    <!-- Version badge with cyber styling -->
+    <TextView
+        android:id="@+id/text_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:alpha="0"
+        android:background="@drawable/bg_glass_pill"
+        android:fontFamily="monospace"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="4dp"
+        android:text="v1.0.0"
+        android:textColor="#60FFFFFF"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@id/text_copyright"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Copyright with subtle styling -->
+    <TextView
+        android:id="@+id/text_copyright"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:alpha="0"
+        android:fontFamily="sans-serif"
+        android:text="© 2024 DEBUGMASTER"
+        android:textColor="#25FFFFFF"
+        android:textSize="9sp"
+        android:letterSpacing="0.15"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

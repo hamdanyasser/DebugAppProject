@@ -39,7 +39,7 @@ public class PremiumFragment extends Fragment implements BillingManager.BillingC
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        billingManager = new BillingManager(requireContext());
+        billingManager = BillingManager.getInstance(requireContext());
         billingManager.setCallback(this);
 
         radioMonthly = view.findViewById(R.id.radio_monthly);
@@ -144,6 +144,8 @@ public class PremiumFragment extends Fragment implements BillingManager.BillingC
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (billingManager != null) billingManager.destroy();
+        if (billingManager != null) {
+            billingManager.clearCallback();
+        }
     }
 }

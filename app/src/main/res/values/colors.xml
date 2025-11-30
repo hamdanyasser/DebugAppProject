@@ -2,13 +2,32 @@
 <resources>
     <!-- =======================================================================
          DEBUGMASTER ULTIMATE - MILLION DOLLAR COLOR PALETTE
-         Mimo-Style Premium Gamified Learning App Colors
+         Cyber Gaming Premium Experience
          ======================================================================= -->
 
     <!-- Base Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00000000</color>
+
+    <!-- =======================================================================
+         CYBER THEME - Deep Space with Neon Accents
+         ======================================================================= -->
+    <color name="cyber_bg_deep">#050714</color>
+    <color name="cyber_bg_dark">#0A0F1E</color>
+    <color name="cyber_bg_medium">#12082F</color>
+    <color name="cyber_surface">#1A1A2E</color>
+    <color name="cyber_surface_elevated">#252540</color>
+    
+    <color name="cyber_neon_purple">#8B5CF6</color>
+    <color name="cyber_neon_pink">#EC4899</color>
+    <color name="cyber_neon_blue">#06B6D4</color>
+    <color name="cyber_neon_green">#22C55E</color>
+    <color name="cyber_neon_gold">#F59E0B</color>
+    
+    <color name="cyber_glow_purple">#406366F1</color>
+    <color name="cyber_glow_pink">#40EC4899</color>
+    <color name="cyber_glow_blue">#4006B6D4</color>
 
     <!-- =======================================================================
          PRIMARY BRAND GRADIENT - Deep Indigo to Vivid Purple
