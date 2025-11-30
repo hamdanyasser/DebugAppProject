@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ULTRA PREMIUM GAME START BUTTON -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Deep shadow for 3D effect -->
+    <item
+        android:left="0dp"
+        android:top="6dp"
+        android:right="0dp"
+        android:bottom="0dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="32dp" />
+            <solid android:color="#30000000" />
+        </shape>
+    </item>
+    
+    <!-- Outer glow -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="32dp" />
+            <stroke
+                android:width="2dp"
+                android:color="#50EC4899" />
+            <gradient
+                android:angle="135"
+                android:startColor="#8B5CF6"
+                android:centerColor="#6366F1"
+                android:endColor="#4F46E5"
+                android:type="linear" />
+        </shape>
+    </item>
+    
+    <!-- Inner highlight glass effect -->
+    <item
+        android:left="1dp"
+        android:top="1dp"
+        android:right="1dp"
+        android:bottom="1dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="31dp" />
+            <gradient
+                android:angle="270"
+                android:startColor="#40FFFFFF"
+                android:centerColor="#10FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:type="linear" />
+        </shape>
+    </item>
+    
+    <!-- Neon edge -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="32dp" />
+            <stroke
+                android:width="1dp"
+                android:color="#80C4B5FD" />
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+    
+</layer-list>

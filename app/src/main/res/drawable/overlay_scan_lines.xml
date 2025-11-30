@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SCAN LINES OVERLAY FOR RETRO/CYBER EFFECT -->
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:src="@drawable/pattern_scan_lines_tile"
+    android:tileMode="repeat"
+    android:alpha="0.03" />

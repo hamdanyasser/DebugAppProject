@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ULTRA PREMIUM NEON GLOW RINGS -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Outer soft glow -->
+    <item>
+        <shape android:shape="oval">
+            <stroke
+                android:width="6dp"
+                android:color="#158B5CF6" />
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+    
+    <!-- Middle glow ring 1 -->
+    <item
+        android:left="8dp"
+        android:top="8dp"
+        android:right="8dp"
+        android:bottom="8dp">
+        <shape android:shape="oval">
+            <stroke
+                android:width="4dp"
+                android:color="#25A78BFA" />
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+    
+    <!-- Middle glow ring 2 -->
+    <item
+        android:left="14dp"
+        android:top="14dp"
+        android:right="14dp"
+        android:bottom="14dp">
+        <shape android:shape="oval">
+            <stroke
+                android:width="3dp"
+                android:color="#40C4B5FD" />
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+    
+    <!-- Inner bright ring -->
+    <item
+        android:left="20dp"
+        android:top="20dp"
+        android:right="20dp"
+        android:bottom="20dp">
+        <shape android:shape="oval">
+            <stroke
+                android:width="2dp"
+                android:color="#60EC4899" />
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+    
+    <!-- Core energy ring -->
+    <item
+        android:left="26dp"
+        android:top="26dp"
+        android:right="26dp"
+        android:bottom="26dp">
+        <shape android:shape="oval">
+            <stroke
+                android:width="2dp"
+                android:color="#80FFFFFF" />
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+    
+</layer-list>

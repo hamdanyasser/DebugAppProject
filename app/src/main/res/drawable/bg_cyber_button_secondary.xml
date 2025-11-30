@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     DEBUGMASTER - CYBER SECONDARY BUTTON
+     Outlined neon button style
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Glow effect -->
+    <item android:bottom="1dp" android:left="1dp" android:right="1dp" android:top="1dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#206366F1"/>
+            <corners android:radius="12dp"/>
+        </shape>
+    </item>
+    
+    <!-- Main button background -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#10FFFFFF"/>
+            <corners android:radius="12dp"/>
+            <stroke
+                android:width="1.5dp"
+                android:color="#6366F1"/>
+        </shape>
+    </item>
+</layer-list>

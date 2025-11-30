@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- FLOATING PARTICLE ANIMATION -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fillAfter="true"
+    android:interpolator="@android:anim/linear_interpolator">
+    
+    <translate
+        android:duration="6000"
+        android:fromYDelta="100%p"
+        android:toYDelta="-100%p" />
+        
+    <alpha
+        android:duration="2000"
+        android:fromAlpha="0.0"
+        android:toAlpha="0.7" />
+        
+    <alpha
+        android:startOffset="4000"
+        android:duration="2000"
+        android:fromAlpha="0.7"
+        android:toAlpha="0.0" />
+        
+</set>

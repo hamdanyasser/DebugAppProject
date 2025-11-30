@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     DEBUGMASTER - PROFILE BACKGROUND
+     Gold/premium gradient for achievements
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Deep space base -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="160"
+                android:startColor="#050714"
+                android:centerColor="#1A140A"
+                android:endColor="#12082F"
+                android:type="linear"/>
+        </shape>
+    </item>
+    
+    <!-- Gold achievement glow - top center -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="350dp"
+                android:centerX="0.5"
+                android:centerY="0.1"
+                android:startColor="#20F59E0B"
+                android:endColor="#00000000"/>
+        </shape>
+    </item>
+    
+    <!-- Purple accent - bottom left -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="300dp"
+                android:centerX="0.1"
+                android:centerY="0.8"
+                android:startColor="#158B5CF6"
+                android:endColor="#00000000"/>
+        </shape>
+    </item>
+    
+    <!-- Pink glow - bottom right -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="250dp"
+                android:centerX="0.9"
+                android:centerY="0.9"
+                android:startColor="#10EC4899"
+                android:endColor="#00000000"/>
+        </shape>
+    </item>
+</layer-list>

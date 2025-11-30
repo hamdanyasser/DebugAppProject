@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Premium Animated Glow Ring for Logo -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Outermost glow - very subtle -->
+    <item
+        android:left="0dp"
+        android:top="0dp"
+        android:right="0dp"
+        android:bottom="0dp">
+        <shape android:shape="oval">
+            <stroke
+                android:width="2dp"
+                android:color="#306366F1" />
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+    
+    <!-- Middle glow ring -->
+    <item
+        android:left="6dp"
+        android:top="6dp"
+        android:right="6dp"
+        android:bottom="6dp">
+        <shape android:shape="oval">
+            <stroke
+                android:width="2dp"
+                android:color="#508B5CF6" />
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+    
+    <!-- Inner bright ring -->
+    <item
+        android:left="12dp"
+        android:top="12dp"
+        android:right="12dp"
+        android:bottom="12dp">
+        <shape android:shape="oval">
+            <stroke
+                android:width="3dp"
+                android:color="#80A78BFA" />
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+    
+    <!-- Innermost highlight -->
+    <item
+        android:left="18dp"
+        android:top="18dp"
+        android:right="18dp"
+        android:bottom="18dp">
+        <shape android:shape="oval">
+            <stroke
+                android:width="1dp"
+                android:color="#A0EC4899" />
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+    
+</layer-list>

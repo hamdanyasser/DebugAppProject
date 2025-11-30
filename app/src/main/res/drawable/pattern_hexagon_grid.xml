@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- HEXAGON GRID PATTERN FOR TECH/GAME AESTHETIC -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200"
+    android:alpha="0.05">
+    
+    <!-- Hexagon pattern row 1 -->
+    <path
+        android:pathData="M30,10 L50,10 L60,27 L50,44 L30,44 L20,27 Z"
+        android:strokeColor="#8B5CF6"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+    
+    <path
+        android:pathData="M70,10 L90,10 L100,27 L90,44 L70,44 L60,27 Z"
+        android:strokeColor="#8B5CF6"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+        
+    <path
+        android:pathData="M110,10 L130,10 L140,27 L130,44 L110,44 L100,27 Z"
+        android:strokeColor="#8B5CF6"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+        
+    <path
+        android:pathData="M150,10 L170,10 L180,27 L170,44 L150,44 L140,27 Z"
+        android:strokeColor="#8B5CF6"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+    
+    <!-- Hexagon pattern row 2 (offset) -->
+    <path
+        android:pathData="M10,44 L30,44 L40,61 L30,78 L10,78 L0,61 Z"
+        android:strokeColor="#EC4899"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+        
+    <path
+        android:pathData="M50,44 L70,44 L80,61 L70,78 L50,78 L40,61 Z"
+        android:strokeColor="#EC4899"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+        
+    <path
+        android:pathData="M90,44 L110,44 L120,61 L110,78 L90,78 L80,61 Z"
+        android:strokeColor="#EC4899"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+        
+    <path
+        android:pathData="M130,44 L150,44 L160,61 L150,78 L130,78 L120,61 Z"
+        android:strokeColor="#EC4899"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+        
+    <path
+        android:pathData="M170,44 L190,44 L200,61 L190,78 L170,78 L160,61 Z"
+        android:strokeColor="#EC4899"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+    
+    <!-- Hexagon pattern row 3 -->
+    <path
+        android:pathData="M30,78 L50,78 L60,95 L50,112 L30,112 L20,95 Z"
+        android:strokeColor="#6366F1"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+        
+    <path
+        android:pathData="M70,78 L90,78 L100,95 L90,112 L70,112 L60,95 Z"
+        android:strokeColor="#6366F1"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+        
+    <path
+        android:pathData="M110,78 L130,78 L140,95 L130,112 L110,112 L100,95 Z"
+        android:strokeColor="#6366F1"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+        
+    <path
+        android:pathData="M150,78 L170,78 L180,95 L170,112 L150,112 L140,95 Z"
+        android:strokeColor="#6366F1"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+    
+    <!-- Continue pattern -->
+    <path
+        android:pathData="M10,112 L30,112 L40,129 L30,146 L10,146 L0,129 Z"
+        android:strokeColor="#A78BFA"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+        
+    <path
+        android:pathData="M50,112 L70,112 L80,129 L70,146 L50,146 L40,129 Z"
+        android:strokeColor="#A78BFA"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+        
+    <path
+        android:pathData="M90,112 L110,112 L120,129 L110,146 L90,146 L80,129 Z"
+        android:strokeColor="#A78BFA"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+        
+    <path
+        android:pathData="M130,112 L150,112 L160,129 L150,146 L130,146 L120,129 Z"
+        android:strokeColor="#A78BFA"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+        
+    <path
+        android:pathData="M170,112 L190,112 L200,129 L190,146 L170,146 L160,129 Z"
+        android:strokeColor="#A78BFA"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+        
+    <path
+        android:pathData="M30,146 L50,146 L60,163 L50,180 L30,180 L20,163 Z"
+        android:strokeColor="#C4B5FD"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+        
+    <path
+        android:pathData="M70,146 L90,146 L100,163 L90,180 L70,180 L60,163 Z"
+        android:strokeColor="#C4B5FD"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+        
+    <path
+        android:pathData="M110,146 L130,146 L140,163 L130,180 L110,180 L100,163 Z"
+        android:strokeColor="#C4B5FD"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+        
+    <path
+        android:pathData="M150,146 L170,146 L180,163 L170,180 L150,180 L140,163 Z"
+        android:strokeColor="#C4B5FD"
+        android:strokeWidth="0.5"
+        android:fillColor="@android:color/transparent"/>
+    
+</vector>

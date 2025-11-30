@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     DEBUGMASTER - CYBER CHIP UNSELECTED
+     Subtle dark chip for unselected state
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    
+    <solid android:color="#252540"/>
+    <corners android:radius="20dp"/>
+    <stroke
+        android:width="1dp"
+        android:color="#40A78BFA"/>
+</shape>

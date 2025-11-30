@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CYBER HERO CARD GRADIENT - Premium Neon Style -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Base gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="135"
+                android:startColor="#6366F1"
+                android:centerColor="#8B5CF6"
+                android:endColor="#A855F7"
+                android:type="linear" />
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+    
+    <!-- Inner glow overlay -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:gradientRadius="200dp"
+                android:startColor="#30FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:centerX="20%"
+                android:centerY="20%"
+                android:type="radial" />
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+    
+    <!-- Pink accent bottom -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:gradientRadius="180dp"
+                android:startColor="#40EC4899"
+                android:endColor="#00000000"
+                android:centerX="80%"
+                android:centerY="100%"
+                android:type="radial" />
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+    
+    <!-- Subtle noise/grain effect simulation -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="45"
+                android:startColor="#05FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:type="linear" />
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+    
+</layer-list>

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ╔══════════════════════════════════════════════════════════════════════════╗
+     ║           DEBUGMASTER - ULTRA PREMIUM LADYBUG MASCOT                    ║
+     ║                    AAA Game Quality Vector Art                          ║
+     ╚══════════════════════════════════════════════════════════════════════════╝ -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="150dp"
+    android:height="150dp"
+    android:viewportWidth="150"
+    android:viewportHeight="150">
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              OUTER GLOW / AURA
+         ════════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Soft outer glow -->
+    <path
+        android:pathData="M75,18 A57,57 0 1,1 75,132 A57,57 0 1,1 75,18 Z"
+        android:fillColor="#15EF4444"
+        android:strokeWidth="0"/>
+    
+    <!-- Secondary glow ring -->
+    <path
+        android:pathData="M75,22 A53,53 0 1,1 75,128 A53,53 0 1,1 75,22 Z"
+        android:fillColor="#10F87171"
+        android:strokeWidth="0"/>
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              LADYBUG BODY
+         ════════════════════════════════════════════════════════════════════════ -->
+
+    <!-- Body shadow (for depth) -->
+    <path
+        android:pathData="M75,32 A45,45 0 1,1 75,122 A45,45 0 1,1 75,32 Z"
+        android:fillColor="#B91C1C"
+        android:strokeWidth="0"/>
+    
+    <!-- Main body - bright red -->
+    <path
+        android:pathData="M75,30 A43,43 0 1,1 75,116 A43,43 0 1,1 75,30 Z"
+        android:fillColor="#EF4444"
+        android:strokeWidth="0"/>
+    
+    <!-- Body gradient overlay - darker bottom -->
+    <path
+        android:pathData="M75,73 A43,43 0 0,0 32,73 A43,43 0 0,0 75,116 A43,43 0 0,0 118,73 A43,43 0 0,0 75,73 Z"
+        android:fillColor="#DC2626"
+        android:strokeWidth="0"/>
+    
+    <!-- Top highlight reflection -->
+    <path
+        android:pathData="M75,32 Q55,40 48,58 Q70,42 75,35 Q80,42 102,58 Q95,40 75,32 Z"
+        android:fillColor="#25FFFFFF"
+        android:strokeWidth="0"/>
+    
+    <!-- Subtle rim light -->
+    <path
+        android:pathData="M75,30 A43,43 0 1,1 75,116 A43,43 0 1,1 75,30 Z"
+        android:strokeColor="#20FFFFFF"
+        android:strokeWidth="1"
+        android:fillColor="@android:color/transparent"/>
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              WING DIVIDER
+         ════════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Center line shadow -->
+    <path
+        android:pathData="M75,36 L75,114"
+        android:strokeColor="#0F172A"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"/>
+    
+    <!-- Center line -->
+    <path
+        android:pathData="M75,36 L75,114"
+        android:strokeColor="#1E293B"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"/>
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              WING DETAILS (Left)
+         ════════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Left wing shadow accent -->
+    <path
+        android:pathData="M75,36 Q40,52 32,73 Q40,98 75,114 L75,36 Z"
+        android:fillColor="#B91C1C"
+        android:strokeWidth="0"/>
+    
+    <!-- Left wing highlight -->
+    <path
+        android:pathData="M73,38 Q52,48 46,62 Q60,50 73,42 Z"
+        android:fillColor="#20FFFFFF"
+        android:strokeWidth="0"/>
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              WING DETAILS (Right)
+         ════════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Right wing shadow accent -->
+    <path
+        android:pathData="M75,36 Q110,52 118,73 Q110,98 75,114 L75,36 Z"
+        android:fillColor="#B91C1C"
+        android:strokeWidth="0"/>
+    
+    <!-- Right wing highlight -->
+    <path
+        android:pathData="M77,38 Q98,48 104,62 Q90,50 77,42 Z"
+        android:fillColor="#20FFFFFF"
+        android:strokeWidth="0"/>
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              SPOTS (Left Wing)
+         ════════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Spot 1 - Top left -->
+    <circle cx="50" cy="54" r="9" android:fillColor="#12000000"/>
+    <circle cx="49" cy="52" r="9" android:fillColor="#1E293B"/>
+    <circle cx="47" cy="50" r="2" android:fillColor="#30FFFFFF"/>
+    
+    <!-- Spot 2 - Middle left -->
+    <circle cx="50" cy="78" r="9" android:fillColor="#12000000"/>
+    <circle cx="49" cy="76" r="9" android:fillColor="#1E293B"/>
+    <circle cx="47" cy="74" r="2" android:fillColor="#30FFFFFF"/>
+    
+    <!-- Spot 3 - Bottom left -->
+    <circle cx="50" cy="102" r="8" android:fillColor="#12000000"/>
+    <circle cx="49" cy="100" r="8" android:fillColor="#1E293B"/>
+    <circle cx="47" cy="98" r="2" android:fillColor="#30FFFFFF"/>
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              SPOTS (Right Wing)
+         ════════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Spot 4 - Top right -->
+    <circle cx="102" cy="54" r="9" android:fillColor="#12000000"/>
+    <circle cx="101" cy="52" r="9" android:fillColor="#1E293B"/>
+    <circle cx="99" cy="50" r="2" android:fillColor="#30FFFFFF"/>
+    
+    <!-- Spot 5 - Middle right -->
+    <circle cx="102" cy="78" r="9" android:fillColor="#12000000"/>
+    <circle cx="101" cy="76" r="9" android:fillColor="#1E293B"/>
+    <circle cx="99" cy="74" r="2" android:fillColor="#30FFFFFF"/>
+    
+    <!-- Spot 6 - Bottom right -->
+    <circle cx="102" cy="102" r="8" android:fillColor="#12000000"/>
+    <circle cx="101" cy="100" r="8" android:fillColor="#1E293B"/>
+    <circle cx="99" cy="98" r="2" android:fillColor="#30FFFFFF"/>
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              HEAD
+         ════════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Head shadow -->
+    <path
+        android:pathData="M75,8 A17,17 0 1,1 75,42 A17,17 0 1,1 75,8 Z"
+        android:fillColor="#0F172A"
+        android:strokeWidth="0"/>
+    
+    <!-- Head main -->
+    <path
+        android:pathData="M75,6 A16,16 0 1,1 75,38 A16,16 0 1,1 75,6 Z"
+        android:fillColor="#1E293B"
+        android:strokeWidth="0"/>
+    
+    <!-- Head highlight -->
+    <path
+        android:pathData="M75,8 Q68,12 66,18 Q72,12 75,10 Q78,12 84,18 Q82,12 75,8 Z"
+        android:fillColor="#15FFFFFF"
+        android:strokeWidth="0"/>
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              EYES
+         ════════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Left eye glow -->
+    <circle cx="66" cy="22" r="5" android:fillColor="#40FFFFFF"/>
+    <!-- Left eye white -->
+    <circle cx="66" cy="22" r="4" android:fillColor="#FFFFFF"/>
+    <!-- Left eye pupil -->
+    <circle cx="67" cy="21" r="1.5" android:fillColor="#1E293B"/>
+    <!-- Left eye sparkle -->
+    <circle cx="64" cy="20" r="1" android:fillColor="#FFFFFF"/>
+    
+    <!-- Right eye glow -->
+    <circle cx="84" cy="22" r="5" android:fillColor="#40FFFFFF"/>
+    <!-- Right eye white -->
+    <circle cx="84" cy="22" r="4" android:fillColor="#FFFFFF"/>
+    <!-- Right eye pupil -->
+    <circle cx="85" cy="21" r="1.5" android:fillColor="#1E293B"/>
+    <!-- Right eye sparkle -->
+    <circle cx="82" cy="20" r="1" android:fillColor="#FFFFFF"/>
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              ANTENNAE
+         ════════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Left antenna -->
+    <path
+        android:pathData="M66,10 Q58,2 52,0"
+        android:strokeColor="#1E293B"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"/>
+    
+    <!-- Left antenna tip glow -->
+    <circle cx="52" cy="0" r="5" android:fillColor="#25EC4899"/>
+    <circle cx="52" cy="0" r="4" android:fillColor="#1E293B"/>
+    <circle cx="51" cy="-1" r="1" android:fillColor="#40FFFFFF"/>
+    
+    <!-- Right antenna -->
+    <path
+        android:pathData="M84,10 Q92,2 98,0"
+        android:strokeColor="#1E293B"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"/>
+    
+    <!-- Right antenna tip glow -->
+    <circle cx="98" cy="0" r="5" android:fillColor="#25EC4899"/>
+    <circle cx="98" cy="0" r="4" android:fillColor="#1E293B"/>
+    <circle cx="97" cy="-1" r="1" android:fillColor="#40FFFFFF"/>
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              CUTE SMILE
+         ════════════════════════════════════════════════════════════════════════ -->
+    
+    <path
+        android:pathData="M70,28 Q75,32 80,28"
+        android:strokeColor="#0F172A"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent"/>
+
+    <!-- ════════════════════════════════════════════════════════════════════════
+                              OUTER ACCENT RING
+         ════════════════════════════════════════════════════════════════════════ -->
+    
+    <path
+        android:pathData="M75,24 A51,51 0 1,1 75,126 A51,51 0 1,1 75,24 Z"
+        android:strokeColor="#20F87171"
+        android:strokeWidth="2"
+        android:fillColor="@android:color/transparent"/>
+
+</vector>

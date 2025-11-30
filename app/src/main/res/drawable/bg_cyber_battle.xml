@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     DEBUGMASTER - BATTLE ARENA BACKGROUND
+     Epic red/purple gradient for PvP battles
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Deep space base -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="160"
+                android:startColor="#050714"
+                android:centerColor="#1A0A1E"
+                android:endColor="#12082F"
+                android:type="linear"/>
+        </shape>
+    </item>
+    
+    <!-- Red battle glow - top right -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="350dp"
+                android:centerX="0.9"
+                android:centerY="0.1"
+                android:startColor="#25EF4444"
+                android:endColor="#00000000"/>
+        </shape>
+    </item>
+    
+    <!-- Blue battle glow - bottom left -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="350dp"
+                android:centerX="0.1"
+                android:centerY="0.9"
+                android:startColor="#253B82F6"
+                android:endColor="#00000000"/>
+        </shape>
+    </item>
+    
+    <!-- Purple accent center -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="200dp"
+                android:centerX="0.5"
+                android:centerY="0.5"
+                android:startColor="#108B5CF6"
+                android:endColor="#00000000"/>
+        </shape>
+    </item>
+</layer-list>

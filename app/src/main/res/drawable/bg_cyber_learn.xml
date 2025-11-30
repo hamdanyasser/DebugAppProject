@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     DEBUGMASTER - LEARNING PATHS BACKGROUND
+     Teal/green gradient for education focus
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Deep space base -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="160"
+                android:startColor="#050714"
+                android:centerColor="#0A1F1E"
+                android:endColor="#12082F"
+                android:type="linear"/>
+        </shape>
+    </item>
+    
+    <!-- Teal knowledge glow - top left -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="400dp"
+                android:centerX="0.1"
+                android:centerY="0.1"
+                android:startColor="#2010B981"
+                android:endColor="#00000000"/>
+        </shape>
+    </item>
+    
+    <!-- Purple accent - bottom right -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="350dp"
+                android:centerX="0.9"
+                android:centerY="0.9"
+                android:startColor="#158B5CF6"
+                android:endColor="#00000000"/>
+        </shape>
+    </item>
+    
+    <!-- Cyan center glow -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="250dp"
+                android:centerX="0.5"
+                android:centerY="0.4"
+                android:startColor="#0806B6D4"
+                android:endColor="#00000000"/>
+        </shape>
+    </item>
+</layer-list>

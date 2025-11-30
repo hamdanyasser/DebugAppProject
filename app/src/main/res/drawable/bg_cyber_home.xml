@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DEBUGMASTER CYBER HOME GRADIENT - Premium Game Background -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Base deep space gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="160"
+                android:startColor="#050714"
+                android:centerColor="#0A0F1E"
+                android:endColor="#12082F"
+                android:type="linear" />
+        </shape>
+    </item>
+    
+    <!-- Subtle purple glow top-right -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:gradientRadius="400dp"
+                android:startColor="#156366F1"
+                android:endColor="#00000000"
+                android:centerX="85%"
+                android:centerY="10%"
+                android:type="radial" />
+        </shape>
+    </item>
+    
+    <!-- Subtle pink glow bottom-left -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:gradientRadius="350dp"
+                android:startColor="#10EC4899"
+                android:endColor="#00000000"
+                android:centerX="15%"
+                android:centerY="90%"
+                android:type="radial" />
+        </shape>
+    </item>
+    
+    <!-- Very subtle cyan accent -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:gradientRadius="250dp"
+                android:startColor="#0806B6D4"
+                android:endColor="#00000000"
+                android:centerX="50%"
+                android:centerY="50%"
+                android:type="radial" />
+        </shape>
+    </item>
+    
+</layer-list>

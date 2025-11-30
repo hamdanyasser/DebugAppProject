@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Premium Animated Gradient Background for Game-Like Splash Screen -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Base dark gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="135"
+                android:startColor="#0F0B2E"
+                android:centerColor="#1A1145"
+                android:endColor="#2D1B69"
+                android:type="linear" />
+        </shape>
+    </item>
+    
+    <!-- Radial glow from center -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:gradientRadius="400dp"
+                android:centerX="50%"
+                android:centerY="40%"
+                android:startColor="#408B5CF6"
+                android:endColor="#00000000"
+                android:type="radial" />
+        </shape>
+    </item>
+    
+    <!-- Secondary glow -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:gradientRadius="300dp"
+                android:centerX="50%"
+                android:centerY="35%"
+                android:startColor="#30EC4899"
+                android:endColor="#00000000"
+                android:type="radial" />
+        </shape>
+    </item>
+    
+</layer-list>

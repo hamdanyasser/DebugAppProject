@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ULTRA PREMIUM CYBER GAME BACKGROUND -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Deep space base -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="180"
+                android:startColor="#050714"
+                android:centerColor="#0A0F1E"
+                android:endColor="#12082F"
+                android:type="linear" />
+        </shape>
+    </item>
+    
+    <!-- Primary radial glow - Purple -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:gradientRadius="600dp"
+                android:centerX="50%"
+                android:centerY="35%"
+                android:startColor="#356366F1"
+                android:centerColor="#158B5CF6"
+                android:endColor="#00000000"
+                android:type="radial" />
+        </shape>
+    </item>
+    
+    <!-- Secondary radial glow - Pink -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:gradientRadius="400dp"
+                android:centerX="70%"
+                android:centerY="60%"
+                android:startColor="#25EC4899"
+                android:endColor="#00000000"
+                android:type="radial" />
+        </shape>
+    </item>
+    
+    <!-- Tertiary accent - Cyan -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:gradientRadius="300dp"
+                android:centerX="30%"
+                android:centerY="70%"
+                android:startColor="#1506B6D4"
+                android:endColor="#00000000"
+                android:type="radial" />
+        </shape>
+    </item>
+    
+    <!-- Top edge glow -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#208B5CF6"
+                android:centerColor="#00000000"
+                android:endColor="#00000000"
+                android:type="linear" />
+        </shape>
+    </item>
+    
+</layer-list>

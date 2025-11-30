@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Premium Glowing Start Button -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Outer glow shadow -->
+    <item
+        android:left="4dp"
+        android:top="4dp"
+        android:right="4dp"
+        android:bottom="4dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="28dp" />
+            <solid android:color="#206366F1" />
+        </shape>
+    </item>
+    
+    <!-- Main button gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="28dp" />
+            <gradient
+                android:angle="135"
+                android:startColor="#6366F1"
+                android:centerColor="#8B5CF6"
+                android:endColor="#A855F7"
+                android:type="linear" />
+        </shape>
+    </item>
+    
+    <!-- Inner highlight -->
+    <item
+        android:left="2dp"
+        android:top="2dp"
+        android:right="2dp"
+        android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="26dp" />
+            <gradient
+                android:angle="135"
+                android:startColor="#20FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:type="linear" />
+        </shape>
+    </item>
+    
+</layer-list>

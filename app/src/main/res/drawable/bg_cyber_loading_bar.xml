@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CYBER LOADING BAR - GAME STYLE -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Track with cyber styling -->
+    <item android:id="@android:id/background">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="8dp" />
+                    <solid android:color="#15FFFFFF" />
+                    <stroke
+                        android:width="1dp"
+                        android:color="#20FFFFFF" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+    
+    <!-- Secondary progress for buffer effect -->
+    <item android:id="@android:id/secondaryProgress">
+        <clip>
+            <shape android:shape="rectangle">
+                <corners android:radius="8dp" />
+                <solid android:color="#308B5CF6" />
+            </shape>
+        </clip>
+    </item>
+    
+    <!-- Main progress with neon gradient -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <layer-list>
+                <item>
+                    <shape android:shape="rectangle">
+                        <corners android:radius="8dp" />
+                        <gradient
+                            android:angle="0"
+                            android:startColor="#6366F1"
+                            android:centerColor="#A855F7"
+                            android:endColor="#EC4899"
+                            android:type="linear" />
+                    </shape>
+                </item>
+                <!-- Animated shine effect overlay -->
+                <item>
+                    <shape android:shape="rectangle">
+                        <corners android:radius="8dp" />
+                        <gradient
+                            android:angle="0"
+                            android:startColor="#00FFFFFF"
+                            android:centerColor="#40FFFFFF"
+                            android:endColor="#00FFFFFF"
+                            android:type="linear" />
+                    </shape>
+                </item>
+            </layer-list>
+        </clip>
+    </item>
+    
+</layer-list>

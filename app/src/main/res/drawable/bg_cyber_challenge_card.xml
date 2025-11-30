@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CYBER DAILY CHALLENGE CARD GRADIENT -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Base gradient - Orange/Gold theme -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="135"
+                android:startColor="#F59E0B"
+                android:centerColor="#D97706"
+                android:endColor="#B45309"
+                android:type="linear" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+    
+    <!-- Hot glow top -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:gradientRadius="150dp"
+                android:startColor="#40FBBF24"
+                android:endColor="#00000000"
+                android:centerX="30%"
+                android:centerY="0%"
+                android:type="radial" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+    
+    <!-- Ember glow bottom -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:gradientRadius="120dp"
+                android:startColor="#30EF4444"
+                android:endColor="#00000000"
+                android:centerX="90%"
+                android:centerY="100%"
+                android:type="radial" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+    
+</layer-list>
