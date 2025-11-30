@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Leaderboard Header - Seamless gradient without bottom corners -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Base gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="linear"
+                android:angle="135"
+                android:startColor="#6366F1"
+                android:centerColor="#8B5CF6"
+                android:endColor="#EC4899" />
+            <!-- Only round top corners for seamless transition -->
+            <corners 
+                android:topLeftRadius="0dp"
+                android:topRightRadius="0dp"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="0dp" />
+        </shape>
+    </item>
+    
+    <!-- Subtle glow overlay -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="300dp"
+                android:centerX="100%"
+                android:centerY="0%"
+                android:startColor="#2006B6D4"
+                android:endColor="#00000000" />
+        </shape>
+    </item>
+    
+</layer-list>
