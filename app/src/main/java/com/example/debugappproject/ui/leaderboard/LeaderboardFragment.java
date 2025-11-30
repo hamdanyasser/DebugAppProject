@@ -70,30 +70,37 @@ public class LeaderboardFragment extends Fragment {
     private void selectTimeFilter(String filter) {
         currentFilter = filter;
         
-        // Update button states visually
-        int selectedColor = getResources().getColor(R.color.white, null);
-        int unselectedColor = android.graphics.Color.TRANSPARENT;
+        // Update button states visually - no stroke, clean design
+        int selectedBgColor = getResources().getColor(R.color.white, null);
+        int unselectedBgColor = android.graphics.Color.TRANSPARENT;
+        int selectedTextColor = getResources().getColor(R.color.primary, null);
+        int unselectedTextColor = getResources().getColor(R.color.white, null);
         
+        // Weekly button
         if (binding.btnWeekly != null) {
-            binding.btnWeekly.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
-                "weekly".equals(filter) ? selectedColor : unselectedColor));
-            binding.btnWeekly.setTextColor("weekly".equals(filter) ? 
-                getResources().getColor(R.color.primary, null) : 
-                getResources().getColor(R.color.white, null));
+            boolean isSelected = "weekly".equals(filter);
+            binding.btnWeekly.setBackgroundTintList(
+                android.content.res.ColorStateList.valueOf(isSelected ? selectedBgColor : unselectedBgColor));
+            binding.btnWeekly.setTextColor(isSelected ? selectedTextColor : unselectedTextColor);
+            binding.btnWeekly.setStrokeWidth(0); // No stroke
         }
+        
+        // Monthly button
         if (binding.btnMonthly != null) {
-            binding.btnMonthly.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
-                "monthly".equals(filter) ? selectedColor : unselectedColor));
-            binding.btnMonthly.setTextColor("monthly".equals(filter) ? 
-                getResources().getColor(R.color.primary, null) : 
-                getResources().getColor(R.color.white, null));
+            boolean isSelected = "monthly".equals(filter);
+            binding.btnMonthly.setBackgroundTintList(
+                android.content.res.ColorStateList.valueOf(isSelected ? selectedBgColor : unselectedBgColor));
+            binding.btnMonthly.setTextColor(isSelected ? selectedTextColor : unselectedTextColor);
+            binding.btnMonthly.setStrokeWidth(0); // No stroke
         }
+        
+        // All Time button
         if (binding.btnAllTime != null) {
-            binding.btnAllTime.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
-                "alltime".equals(filter) ? selectedColor : unselectedColor));
-            binding.btnAllTime.setTextColor("alltime".equals(filter) ? 
-                getResources().getColor(R.color.primary, null) : 
-                getResources().getColor(R.color.white, null));
+            boolean isSelected = "alltime".equals(filter);
+            binding.btnAllTime.setBackgroundTintList(
+                android.content.res.ColorStateList.valueOf(isSelected ? selectedBgColor : unselectedBgColor));
+            binding.btnAllTime.setTextColor(isSelected ? selectedTextColor : unselectedTextColor);
+            binding.btnAllTime.setStrokeWidth(0); // No stroke
         }
         
         // Reload data with new filter
