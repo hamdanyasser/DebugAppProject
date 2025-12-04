@@ -1,0 +1,349 @@
+{
+  "gameModes": [
+    {
+      "id": "debug_challenge",
+      "name": "Debug Challenge",
+      "description": "Find and fix bugs in code",
+      "iconEmoji": "🐛",
+      "isDefault": true,
+      "isProOnly": false
+    },
+    {
+      "id": "code_golf",
+      "name": "Code Golf",
+      "description": "Write the shortest solution",
+      "iconEmoji": "⛳",
+      "isDefault": false,
+      "isProOnly": false
+    },
+    {
+      "id": "speed_coding",
+      "name": "Speed Coding",
+      "description": "Solve as fast as possible",
+      "iconEmoji": "⚡",
+      "isDefault": false,
+      "isProOnly": false
+    },
+    {
+      "id": "code_review",
+      "name": "Code Review",
+      "description": "Find all issues in code",
+      "iconEmoji": "🔍",
+      "isDefault": false,
+      "isProOnly": true
+    },
+    {
+      "id": "algorithm_arena",
+      "name": "Algorithm Arena",
+      "description": "Solve algorithm challenges",
+      "iconEmoji": "🧮",
+      "isDefault": false,
+      "isProOnly": true
+    },
+    {
+      "id": "daily_challenge",
+      "name": "Daily Challenge",
+      "description": "New challenge every day",
+      "iconEmoji": "📅",
+      "isDefault": false,
+      "isProOnly": false
+    }
+  ],
+  "dailyChallenges": [
+    {
+      "id": "dc_001",
+      "title": "Monday Motivation",
+      "type": "debug",
+      "difficulty": "Easy",
+      "xpReward": 50,
+      "description": "Start your week strong! Fix 3 easy bugs.",
+      "requirements": {"bugCount": 3, "difficulty": "Easy"}
+    },
+    {
+      "id": "dc_002", 
+      "title": "Speed Tuesday",
+      "type": "speed",
+      "difficulty": "Medium",
+      "xpReward": 75,
+      "description": "Race against the clock! Solve 5 bugs in under 10 minutes.",
+      "requirements": {"bugCount": 5, "timeLimit": 600}
+    },
+    {
+      "id": "dc_003",
+      "title": "No Hints Wednesday",
+      "type": "skill",
+      "difficulty": "Medium",
+      "xpReward": 100,
+      "description": "Test your skills! Solve 3 bugs without using hints.",
+      "requirements": {"bugCount": 3, "noHints": true}
+    },
+    {
+      "id": "dc_004",
+      "title": "Battle Thursday",
+      "type": "battle",
+      "difficulty": "Medium",
+      "xpReward": 100,
+      "description": "Prove yourself! Win 3 battles.",
+      "requirements": {"battleWins": 3}
+    },
+    {
+      "id": "dc_005",
+      "title": "Hard Friday",
+      "type": "debug",
+      "difficulty": "Hard",
+      "xpReward": 150,
+      "description": "Challenge yourself! Solve 2 hard bugs.",
+      "requirements": {"bugCount": 2, "difficulty": "Hard"}
+    },
+    {
+      "id": "dc_006",
+      "title": "Weekend Warrior",
+      "type": "marathon",
+      "difficulty": "Variable",
+      "xpReward": 200,
+      "description": "Marathon session! Solve 10 bugs of any difficulty.",
+      "requirements": {"bugCount": 10}
+    },
+    {
+      "id": "dc_007",
+      "title": "Perfect Sunday",
+      "type": "skill",
+      "difficulty": "Variable",
+      "xpReward": 250,
+      "description": "Achieve perfection! Complete 5 bugs without any wrong submissions.",
+      "requirements": {"bugCount": 5, "perfectSubmissions": true}
+    }
+  ],
+  "weeklyLeagues": [
+    {
+      "id": "bronze",
+      "name": "Bronze League",
+      "minTrophies": 0,
+      "maxTrophies": 299,
+      "color": "#CD7F32",
+      "iconEmoji": "🥉",
+      "rewards": {"xp": 50, "coins": 10}
+    },
+    {
+      "id": "silver",
+      "name": "Silver League",
+      "minTrophies": 300,
+      "maxTrophies": 999,
+      "color": "#C0C0C0",
+      "iconEmoji": "🥈",
+      "rewards": {"xp": 100, "coins": 25}
+    },
+    {
+      "id": "gold",
+      "name": "Gold League",
+      "minTrophies": 1000,
+      "maxTrophies": 2499,
+      "color": "#FFD700",
+      "iconEmoji": "🥇",
+      "rewards": {"xp": 200, "coins": 50}
+    },
+    {
+      "id": "platinum",
+      "name": "Platinum League",
+      "minTrophies": 2500,
+      "maxTrophies": 4999,
+      "color": "#E5E4E2",
+      "iconEmoji": "💿",
+      "rewards": {"xp": 350, "coins": 100}
+    },
+    {
+      "id": "diamond",
+      "name": "Diamond League",
+      "minTrophies": 5000,
+      "maxTrophies": 9999,
+      "color": "#B9F2FF",
+      "iconEmoji": "💎",
+      "rewards": {"xp": 500, "coins": 200}
+    },
+    {
+      "id": "master",
+      "name": "Master League",
+      "minTrophies": 10000,
+      "maxTrophies": 24999,
+      "color": "#9B59B6",
+      "iconEmoji": "👑",
+      "rewards": {"xp": 750, "coins": 350}
+    },
+    {
+      "id": "grandmaster",
+      "name": "Grandmaster",
+      "minTrophies": 25000,
+      "maxTrophies": 99999999,
+      "color": "#E74C3C",
+      "iconEmoji": "🏆",
+      "rewards": {"xp": 1000, "coins": 500}
+    }
+  ],
+  "seasons": [
+    {
+      "id": "s1_2024",
+      "name": "Season 1: Origins",
+      "theme": "Classic Debugging",
+      "startDate": "2024-01-01",
+      "endDate": "2024-03-31",
+      "rewards": {
+        "participation": {"xp": 100, "badge": "S1 Participant"},
+        "top100": {"xp": 500, "badge": "S1 Top 100", "title": "Pioneer"},
+        "top10": {"xp": 1000, "badge": "S1 Top 10", "title": "Elite Pioneer"},
+        "winner": {"xp": 2500, "badge": "S1 Champion", "title": "The First"}
+      }
+    }
+  ],
+  "codeGolfChallenges": [
+    {
+      "id": "golf_1",
+      "title": "Hello World Golf",
+      "description": "Print 'Hello World' in the shortest code possible",
+      "language": "Java",
+      "targetOutput": "Hello World",
+      "parScore": 50,
+      "xpReward": 30,
+      "difficulty": "Easy"
+    },
+    {
+      "id": "golf_2",
+      "title": "FizzBuzz Golf",
+      "description": "Classic FizzBuzz in minimal characters",
+      "language": "Java",
+      "targetOutput": "1,2,Fizz,4,Buzz,Fizz,7,8,Fizz,Buzz,11,Fizz,13,14,FizzBuzz",
+      "parScore": 150,
+      "xpReward": 75,
+      "difficulty": "Medium"
+    },
+    {
+      "id": "golf_3",
+      "title": "Sum of Digits",
+      "description": "Sum digits of a number, shortest code wins",
+      "language": "Java",
+      "testCases": [
+        {"input": "123", "output": "6"},
+        {"input": "9999", "output": "36"}
+      ],
+      "parScore": 80,
+      "xpReward": 50,
+      "difficulty": "Easy"
+    }
+  ],
+  "algorithmChallenges": [
+    {
+      "id": "algo_1",
+      "title": "Two Sum",
+      "description": "Find two numbers that add up to target",
+      "difficulty": "Easy",
+      "category": "Arrays",
+      "xpReward": 50,
+      "timeLimit": 300,
+      "starterCode": "public int[] twoSum(int[] nums, int target) {\n    // Your code here\n    return new int[]{0, 0};\n}",
+      "testCases": [
+        {"input": "[2,7,11,15], 9", "expected": "[0,1]"},
+        {"input": "[3,2,4], 6", "expected": "[1,2]"}
+      ]
+    },
+    {
+      "id": "algo_2",
+      "title": "Reverse String",
+      "description": "Reverse a string in-place",
+      "difficulty": "Easy",
+      "category": "Strings",
+      "xpReward": 40,
+      "timeLimit": 180,
+      "starterCode": "public void reverseString(char[] s) {\n    // Your code here\n}",
+      "testCases": [
+        {"input": "[\"h\",\"e\",\"l\",\"l\",\"o\"]", "expected": "[\"o\",\"l\",\"l\",\"e\",\"h\"]"}
+      ]
+    },
+    {
+      "id": "algo_3",
+      "title": "Valid Parentheses",
+      "description": "Check if parentheses are valid",
+      "difficulty": "Easy",
+      "category": "Stacks",
+      "xpReward": 60,
+      "timeLimit": 300,
+      "starterCode": "public boolean isValid(String s) {\n    // Your code here\n    return false;\n}",
+      "testCases": [
+        {"input": "\"()\"", "expected": "true"},
+        {"input": "\"()[]{}\"", "expected": "true"},
+        {"input": "\"(]\"", "expected": "false"}
+      ]
+    },
+    {
+      "id": "algo_4",
+      "title": "Maximum Subarray",
+      "description": "Find contiguous subarray with largest sum",
+      "difficulty": "Medium",
+      "category": "Dynamic Programming",
+      "xpReward": 100,
+      "timeLimit": 600,
+      "starterCode": "public int maxSubArray(int[] nums) {\n    // Your code here\n    return 0;\n}",
+      "testCases": [
+        {"input": "[-2,1,-3,4,-1,2,1,-5,4]", "expected": "6"}
+      ]
+    },
+    {
+      "id": "algo_5",
+      "title": "Binary Search",
+      "description": "Implement binary search",
+      "difficulty": "Easy",
+      "category": "Searching",
+      "xpReward": 50,
+      "timeLimit": 300,
+      "starterCode": "public int search(int[] nums, int target) {\n    // Your code here\n    return -1;\n}",
+      "testCases": [
+        {"input": "[-1,0,3,5,9,12], 9", "expected": "4"},
+        {"input": "[-1,0,3,5,9,12], 2", "expected": "-1"}
+      ]
+    }
+  ],
+  "codeReviewChallenges": [
+    {
+      "id": "review_1",
+      "title": "Security Audit",
+      "description": "Find security vulnerabilities in this login code",
+      "difficulty": "Medium",
+      "xpReward": 100,
+      "code": "public boolean login(String user, String pass) {\n    String query = \"SELECT * FROM users WHERE name='\" + user + \"' AND pass='\" + pass + \"'\";\n    ResultSet rs = db.execute(query);\n    return rs.next();\n}",
+      "issues": [
+        {"line": 2, "type": "SQL_INJECTION", "severity": "CRITICAL"},
+        {"line": 3, "type": "NO_PASSWORD_HASHING", "severity": "HIGH"}
+      ]
+    },
+    {
+      "id": "review_2",
+      "title": "Performance Review",
+      "description": "Find performance issues in this code",
+      "difficulty": "Medium",
+      "xpReward": 80,
+      "code": "public String concat(List<String> items) {\n    String result = \"\";\n    for (String s : items) {\n        result = result + s;\n    }\n    return result;\n}",
+      "issues": [
+        {"line": 4, "type": "STRING_CONCAT_IN_LOOP", "severity": "MEDIUM"}
+      ]
+    }
+  ],
+  "proFeatures": {
+    "unlimitedHearts": true,
+    "noAds": true,
+    "offlineMode": true,
+    "advancedAnalytics": true,
+    "exclusiveChallenges": true,
+    "prioritySupport": true,
+    "customThemes": true,
+    "doubleXP": false,
+    "exclusiveBadges": true,
+    "earlyAccess": true,
+    "codeReviewMode": true,
+    "algorithmChallenges": true,
+    "teamBattles": true,
+    "monthlyTournaments": true,
+    "personalizedLearning": true,
+    "certificateGeneration": true,
+    "resumeExport": true,
+    "interviewPrep": true,
+    "companySpecificPractice": true
+  }
+}
