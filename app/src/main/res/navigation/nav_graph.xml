@@ -17,6 +17,46 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_splash_to_auth"
+            app:destination="@id/authFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_splash_to_onboarding"
+            app:destination="@id/onboardingFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- Auth Screen (Login/Register) -->
+    <fragment
+        android:id="@+id/authFragment"
+        android:name="com.example.debugappproject.ui.auth.AuthFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_auth">
+
+        <action
+            android:id="@+id/action_auth_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/authFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!-- Onboarding Screen -->
+    <fragment
+        android:id="@+id/onboardingFragment"
+        android:name="com.example.debugappproject.ui.onboarding.OnboardingFragment"
+        android:label="Welcome"
+        tools:layout="@layout/fragment_onboarding">
+
+        <action
+            android:id="@+id/action_onboarding_to_auth"
+            app:destination="@id/authFragment"
+            app:popUpTo="@id/onboardingFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <!-- ============================================== -->
@@ -61,6 +101,10 @@
         <action
             android:id="@+id/action_home_to_subscription"
             app:destination="@id/proSubscriptionFragment" />
+
+        <action
+            android:id="@+id/action_home_to_gameModes"
+            app:destination="@id/gameModesFragment" />
     </fragment>
 
     <!-- Learning Paths Screen (Learn Tab) -->
@@ -117,6 +161,12 @@
         <action
             android:id="@+id/action_profile_to_subscription"
             app:destination="@id/proSubscriptionFragment" />
+
+        <action
+            android:id="@+id/action_profile_to_auth"
+            app:destination="@id/authFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <!-- ============================================== -->
@@ -223,5 +273,55 @@
         android:name="com.example.debugappproject.ui.progress.ProgressFragment"
         android:label="My Progress"
         tools:layout="@layout/fragment_progress" />
+
+    <!-- Game Modes Hub -->
+    <fragment
+        android:id="@+id/gameModesFragment"
+        android:name="com.example.debugappproject.ui.gamemodes.GameModesFragment"
+        android:label="Game Modes"
+        tools:layout="@layout/fragment_game_modes">
+
+        <action
+            android:id="@+id/action_gameModes_to_session"
+            app:destination="@id/gameSessionFragment" />
+
+        <action
+            android:id="@+id/action_gameModes_to_battle"
+            app:destination="@id/battleArenaFragment" />
+
+        <action
+            android:id="@+id/action_gameModes_to_learn"
+            app:destination="@id/learningPathsFragment" />
+
+        <action
+            android:id="@+id/action_gameModes_to_subscription"
+            app:destination="@id/proSubscriptionFragment" />
+    </fragment>
+
+    <!-- Interactive Lesson -->
+    <fragment
+        android:id="@+id/interactiveLessonFragment"
+        android:name="com.example.debugappproject.ui.lesson.InteractiveLessonFragment"
+        android:label="Interactive Lesson"
+        tools:layout="@layout/fragment_interactive_lesson">
+
+        <argument
+            android:name="lessonId"
+            app:argType="integer"
+            android:defaultValue="1" />
+    </fragment>
+
+    <!-- Game Session -->
+    <fragment
+        android:id="@+id/gameSessionFragment"
+        android:name="com.example.debugappproject.ui.gamemodes.GameSessionFragment"
+        android:label="Game Session"
+        tools:layout="@layout/fragment_game_session">
+
+        <argument
+            android:name="gameMode"
+            app:argType="string"
+            android:defaultValue="quick_fix" />
+    </fragment>
 
 </navigation>

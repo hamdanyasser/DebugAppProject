@@ -32,6 +32,7 @@ public class LearningPath {
     private boolean isNew;                  // Show "NEW" badge
     private String colorHex;                // Accent color for the path card
     private String skillTags;               // Comma-separated skills learned (e.g., "loops,arrays,debugging")
+    private String tutorialContent;         // Interactive tutorial description for engaging lessons
 
     public LearningPath() {
     }
@@ -199,5 +200,13 @@ public class LearningPath {
 
     public void setSkillTags(String skillTags) {
         this.skillTags = skillTags;
+    }
+
+    public String getTutorialContent() {
+        return tutorialContent;
+    }
+
+    public void setTutorialContent(String tutorialContent) {
+        this.tutorialContent = tutorialContent;
     }
 }

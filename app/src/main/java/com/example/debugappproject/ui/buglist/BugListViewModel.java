@@ -105,4 +105,20 @@ public class BugListViewModel extends AndroidViewModel {
     public void setSearchQuery(String query) {
         searchQuery.setValue(query);
     }
+
+    /**
+     * Get all bugs without filters.
+     */
+    public LiveData<List<Bug>> getBugs() {
+        return allBugs;
+    }
+
+    /**
+     * Trigger loading all bugs from repository.
+     * This is used by game modes that need to load bugs.
+     */
+    public void loadAllBugs() {
+        // The allBugs LiveData is already observing the repository
+        // This method exists for consistency with other ViewModels
+    }
 }

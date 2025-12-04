@@ -66,6 +66,13 @@ public class BugInPathAdapter extends RecyclerView.Adapter<BugInPathAdapter.BugV
         this.bugs = new ArrayList<>(newBugs);
         diffResult.dispatchUpdatesTo(this);
     }
+    
+    /**
+     * Returns the current list of bugs.
+     */
+    public List<BugInPathWithDetails> getBugs() {
+        return bugs;
+    }
 
     /**
      * DiffUtil callback for calculating list differences efficiently.

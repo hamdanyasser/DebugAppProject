@@ -389,10 +389,14 @@ public class LearningPathsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (billingManager != null) {
-            billingManager.destroy();
+        // Prevent memory leaks
+        if (binding != null && binding.recyclerPaths != null) {
+            binding.recyclerPaths.setAdapter(null);
         }
-        binding = null;
+        if (billingManager != null) {
+            billingManager.clearCallback();
+        }
         adapter = null;
+        binding = null;
     }
 }

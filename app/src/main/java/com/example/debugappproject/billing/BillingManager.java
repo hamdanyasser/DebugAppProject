@@ -53,7 +53,7 @@ public class BillingManager implements PurchasesUpdatedListener {
     private final MutableLiveData<Boolean> isProUser = new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
     private final MutableLiveData<List<ProductDetails>> productDetails = new MutableLiveData<>(new ArrayList<>());
-    private boolean isConnected = false;
+    private boolean isConnecting = false;
     
     private BillingCallback callback;
 
@@ -95,6 +95,14 @@ public class BillingManager implements PurchasesUpdatedListener {
     }
 
     private void initBillingClient() {
+        if (billingClient != null) {
+            try {
+                billingClient.endConnection();
+            } catch (Exception e) {
+                // Ignore - client might already be disconnected
+            }
+        }
+        
         billingClient = BillingClient.newBuilder(context)
                 .setListener(this)
                 .enablePendingPurchases()
@@ -104,41 +112,70 @@ public class BillingManager implements PurchasesUpdatedListener {
     }
 
     private void startConnection() {
+        if (billingClient == null) {
+            initBillingClient();
+            return;
+        }
+        
         if (billingClient.isReady()) {
-            isConnected = true;
+            android.util.Log.d(TAG, "Billing client already ready");
+            return;
+        }
+        
+        if (isConnecting) {
+            android.util.Log.d(TAG, "Already connecting...");
             return;
         }
 
-        billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    isConnected = true;
-                    android.util.Log.d(TAG, "Billing client connected");
-                    queryProducts();
-                    queryExistingPurchases();
-                    if (callback != null) {
-                        callback.onBillingReady();
+        isConnecting = true;
+        
+        try {
+            billingClient.startConnection(new BillingClientStateListener() {
+                @Override
+                public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
+                    isConnecting = false;
+                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                        android.util.Log.d(TAG, "Billing client connected");
+                        queryProducts();
+                        queryExistingPurchases();
+                        if (callback != null) {
+                            callback.onBillingReady();
+                        }
+                    } else {
+                        android.util.Log.e(TAG, "Billing setup failed: " + billingResult.getDebugMessage());
                     }
-                } else {
-                    isConnected = false;
-                    android.util.Log.e(TAG, "Billing setup failed: " + billingResult.getDebugMessage());
                 }
-            }
 
-            @Override
-            public void onBillingServiceDisconnected() {
-                isConnected = false;
-                android.util.Log.w(TAG, "Billing client disconnected");
-                // Retry after delay
-                new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
-                    if (!isConnected) startConnection();
-                }, 5000);
-            }
-        });
+                @Override
+                public void onBillingServiceDisconnected() {
+                    isConnecting = false;
+                    android.util.Log.w(TAG, "Billing client disconnected");
+                    // Don't auto-retry to prevent loops
+                }
+            });
+        } catch (Exception e) {
+            isConnecting = false;
+            android.util.Log.e(TAG, "Error starting billing connection", e);
+        }
+    }
+    
+    /**
+     * Ensure billing client is ready, reconnecting if necessary
+     */
+    private void ensureConnected() {
+        if (billingClient == null) {
+            initBillingClient();
+        } else if (!billingClient.isReady() && !isConnecting) {
+            // Client exists but not ready - try to reinitialize
+            initBillingClient();
+        }
     }
 
     private void queryProducts() {
+        if (billingClient == null || !billingClient.isReady()) {
+            return;
+        }
+        
         List<QueryProductDetailsParams.Product> productList = new ArrayList<>();
         
         // Subscriptions
@@ -190,6 +227,10 @@ public class BillingManager implements PurchasesUpdatedListener {
     }
 
     private void queryExistingPurchases() {
+        if (billingClient == null || !billingClient.isReady()) {
+            return;
+        }
+        
         // Check subscriptions
         billingClient.queryPurchasesAsync(
                 QueryPurchasesParams.newBuilder()
@@ -223,6 +264,10 @@ public class BillingManager implements PurchasesUpdatedListener {
     }
 
     private void checkLifetimePurchase() {
+        if (billingClient == null || !billingClient.isReady()) {
+            return;
+        }
+        
         billingClient.queryPurchasesAsync(
                 QueryPurchasesParams.newBuilder()
                         .setProductType(BillingClient.ProductType.INAPP)
@@ -253,9 +298,10 @@ public class BillingManager implements PurchasesUpdatedListener {
     }
 
     public void purchaseSubscription(Activity activity, String productId) {
-        if (!isConnected) {
+        ensureConnected();
+        
+        if (billingClient == null || !billingClient.isReady()) {
             if (callback != null) callback.onPurchaseFailed("Not connected to Play Store");
-            startConnection();
             return;
         }
 
@@ -345,6 +391,10 @@ public class BillingManager implements PurchasesUpdatedListener {
     }
 
     private void acknowledgePurchase(Purchase purchase) {
+        if (billingClient == null || !billingClient.isReady()) {
+            return;
+        }
+        
         AcknowledgePurchaseParams params = AcknowledgePurchaseParams.newBuilder()
                 .setPurchaseToken(purchase.getPurchaseToken())
                 .build();
@@ -403,16 +453,38 @@ public class BillingManager implements PurchasesUpdatedListener {
     }
 
     public void refreshPurchases() {
+        ensureConnected();
         if (billingClient != null && billingClient.isReady()) {
             queryExistingPurchases();
-        } else {
-            startConnection();
         }
     }
 
+    /**
+     * Called when a fragment is destroyed.
+     * Does NOT end the billing connection since this is a singleton.
+     * The connection will be maintained for the app lifecycle.
+     */
     public void destroy() {
-        if (billingClient != null) {
-            billingClient.endConnection();
+        // Don't actually destroy the connection - this is a singleton
+        // Just clear the callback to prevent leaks
+        callback = null;
+        android.util.Log.d(TAG, "BillingManager callback cleared (singleton connection maintained)");
+    }
+    
+    /**
+     * Actually end the billing connection. 
+     * Call this only when the app is being fully destroyed.
+     */
+    public static void destroyInstance() {
+        if (instance != null) {
+            if (instance.billingClient != null) {
+                try {
+                    instance.billingClient.endConnection();
+                } catch (Exception e) {
+                    // Ignore
+                }
+            }
+            instance = null;
         }
     }
 

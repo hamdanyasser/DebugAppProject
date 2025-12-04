@@ -1,536 +1,972 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    ╔══════════════════════════════════════════════════════════════════════════════╗
+    ║           DEBUGMASTER - PREMIUM BUG DETAIL SCREEN                            ║
+    ║              World-Class Design with Glass Morphism                          ║
+    ╚══════════════════════════════════════════════════════════════════════════════╝
+-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-<ScrollView
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@drawable/bg_cyber_main">
+    android:background="#0D0D1A">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/padding_medium">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
 
-        <!-- Bug Header Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_medium"
-            app:cardElevation="@dimen/card_elevation"
-            app:cardCornerRadius="@dimen/card_corner_radius">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_medium">
-
-                <TextView
-                    android:id="@+id/text_bug_title"
-                    style="@style/TextAppearance.DebugMaster.Headline2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:text="Off-by-One Error in Array Loop" />
-
-                <com.google.android.material.chip.ChipGroup
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_normal"
-                    app:singleLine="true">
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_difficulty"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        app:chipBackgroundColor="@color/difficulty_easy"
-                        app:chipCornerRadius="@dimen/chip_corner_radius"
-                        style="@style/Widget.Material3.Chip.Assist"
-                        tools:text="Easy" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_category"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:chipBackgroundColor="?attr/colorSurfaceVariant"
-                        app:chipCornerRadius="@dimen/chip_corner_radius"
-                        style="@style/Widget.Material3.Chip.Assist"
-                        tools:text="Loops" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_completed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Completed ✓"
-                        android:textColor="@color/white"
-                        android:visibility="gone"
-                        app:chipBackgroundColor="@color/completed_indicator"
-                        app:chipCornerRadius="@dimen/chip_corner_radius"
-                        style="@style/Widget.Material3.Chip.Assist"
-                        tools:ignore="HardcodedText" />
-                </com.google.android.material.chip.ChipGroup>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Description Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_medium"
-            app:cardElevation="@dimen/card_elevation"
-            app:cardCornerRadius="@dimen/card_corner_radius">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_medium">
-
-                <TextView
-                    style="@style/TextAppearance.DebugMaster.Subtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/description"
-                    android:textColor="?attr/colorPrimary" />
-
-                <TextView
-                    android:id="@+id/text_bug_description"
-                    style="@style/TextAppearance.DebugMaster.Body1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    tools:text="This bug demonstrates a common off-by-one error..." />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Broken Code Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_medium"
-            app:cardElevation="@dimen/card_elevation"
-            app:cardCornerRadius="@dimen/card_corner_radius">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_medium">
-
-                <TextView
-                    style="@style/TextAppearance.DebugMaster.Subtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/broken_code"
-                    android:textColor="?attr/colorError" />
-
-                <TextView
-                    android:id="@+id/text_broken_code"
-                    style="@style/CodeBlock"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    tools:text="for (int i = 0; i &lt;= arr.length; i++) { ... }" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Your Fix Editor Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_medium"
-            app:cardElevation="@dimen/card_elevation"
-            app:cardCornerRadius="@dimen/card_corner_radius"
-            app:cardBackgroundColor="@color/code_editor_background">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_medium">
-
-                <TextView
-                    style="@style/TextAppearance.DebugMaster.Subtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Your Fix"
-                    android:textColor="?attr/colorPrimary" />
-
-                <EditText
-                    android:id="@+id/edit_user_code"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:minHeight="150dp"
-                    android:gravity="top|start"
-                    android:padding="@dimen/padding_small"
-                    android:background="@color/white"
-                    android:textColor="@color/black"
-                    android:fontFamily="monospace"
-                    android:textSize="14sp"
-                    android:inputType="textMultiLine"
-                    android:scrollbars="vertical"
-                    android:hint="Enter your fixed code here..."
-                    android:importantForAutofill="no"
-                    tools:ignore="HardcodedText,LabelFor" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/button_check_fix"
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/button_height"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="@dimen/spacing_small"
-                        android:text="Run Tests"
-                        app:icon="@android:drawable/ic_menu_send"
-                        app:iconGravity="start"
-                        app:cornerRadius="@dimen/button_corner_radius"
-                        style="@style/Widget.Material3.Button"
-                        tools:ignore="HardcodedText" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/button_reset_code"
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/button_height"
-                        android:layout_weight="1"
-                        android:layout_marginStart="@dimen/spacing_small"
-                        android:text="Reset Code"
-                        app:icon="@android:drawable/ic_menu_revert"
-                        app:iconGravity="start"
-                        app:cornerRadius="@dimen/button_corner_radius"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        tools:ignore="HardcodedText" />
-                </LinearLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Test Results Card (initially hidden) -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_test_results"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_medium"
-            android:visibility="gone"
-            app:cardElevation="@dimen/card_elevation"
-            app:cardCornerRadius="@dimen/card_corner_radius"
-            tools:visibility="visible">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_medium">
-
-                <TextView
-                    android:id="@+id/text_test_result_title"
-                    style="@style/TextAppearance.DebugMaster.Subtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Test Results"
-                    tools:ignore="HardcodedText" />
-
-                <TextView
-                    android:id="@+id/text_test_result_message"
-                    style="@style/TextAppearance.DebugMaster.Body1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    tools:text="All tests passed! 🎉" />
-
-                <LinearLayout
-                    android:id="@+id/layout_test_cases"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:orientation="vertical" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_medium"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:orientation="vertical">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_run_code"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/button_height"
-                android:layout_weight="1"
-                android:layout_marginEnd="@dimen/spacing_small"
-                android:text="@string/run_code"
-                app:icon="@android:drawable/ic_media_play"
-                app:iconGravity="start"
-                app:cornerRadius="@dimen/button_corner_radius"
-                style="@style/Widget.Material3.Button.TonalButton" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/button_show_hint"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/button_height"
-                android:layout_weight="1"
-                android:layout_marginStart="@dimen/spacing_small"
-                android:text="@string/show_hint"
-                app:icon="@android:drawable/ic_dialog_info"
-                app:iconGravity="start"
-                app:cornerRadius="@dimen/button_corner_radius"
-                style="@style/Widget.Material3.Button.OutlinedButton" />
-        </LinearLayout>
-
-        <!-- Output Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_output"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_medium"
-            android:visibility="gone"
-            app:cardElevation="@dimen/card_elevation"
-            app:cardCornerRadius="@dimen/card_corner_radius"
-            tools:visibility="visible">
-
-            <LinearLayout
+            <!-- ═══════════════════════════════════════════════════════════════════
+                 EPIC HEADER WITH GRADIENT BACKGROUND
+                 ═══════════════════════════════════════════════════════════════════ -->
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_medium">
-
-                <TextView
-                    style="@style/TextAppearance.DebugMaster.Subtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/output"
-                    android:textColor="?attr/colorPrimary" />
-
-                <!-- Expected Output -->
-                <TextView
-                    style="@style/TextAppearance.DebugMaster.Caption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_medium"
-                    android:text="Expected Output:"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/text_expected_output"
-                    style="@style/CodeBlock"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:background="@color/success_background"
-                    tools:text="[0, 1, 2, 3, 4]" />
-
-                <!-- Actual Output -->
-                <TextView
-                    style="@style/TextAppearance.DebugMaster.Caption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_medium"
-                    android:text="Actual Output (with bug):"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/text_actual_output"
-                    style="@style/CodeBlock"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:background="@color/error_background"
-                    tools:text="ArrayIndexOutOfBoundsException" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Hints Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_hints"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_medium"
-            android:visibility="gone"
-            app:cardElevation="@dimen/card_elevation"
-            app:cardCornerRadius="@dimen/card_corner_radius"
-            app:cardBackgroundColor="@color/hint_background"
-            tools:visibility="visible">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_medium">
-
-                <TextView
-                    style="@style/TextAppearance.DebugMaster.Subtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/hints"
-                    android:textColor="?attr/colorPrimary" />
+                android:background="@drawable/bg_hero_gradient">
 
                 <LinearLayout
-                    android:id="@+id/layout_hints_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:orientation="vertical" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:paddingTop="24dp"
+                    android:paddingBottom="32dp">
 
-        <!-- Solution Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_solution"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_medium"
-            android:visibility="gone"
-            app:cardElevation="@dimen/card_elevation"
-            app:cardCornerRadius="@dimen/card_corner_radius"
-            app:cardBackgroundColor="@color/success_background"
-            tools:visibility="visible">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_medium">
-
-                <TextView
-                    style="@style/TextAppearance.DebugMaster.Subtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/solution"
-                    android:textColor="?attr/colorSecondary" />
-
-                <TextView
-                    style="@style/TextAppearance.DebugMaster.Caption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_medium"
-                    android:text="@string/explanation"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/text_explanation"
-                    style="@style/TextAppearance.DebugMaster.Body1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    tools:text="The loop condition should use &lt; instead of &lt;=..." />
-
-                <TextView
-                    style="@style/TextAppearance.DebugMaster.Caption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_medium"
-                    android:text="@string/fixed_code"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/text_fixed_code"
-                    style="@style/CodeBlock"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    tools:text="for (int i = 0; i &lt; arr.length; i++) { ... }" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- User Notes Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_notes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_medium"
-            app:cardElevation="@dimen/card_elevation"
-            app:cardCornerRadius="@dimen/card_corner_radius">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_medium">
-
-                <TextView
-                    style="@style/TextAppearance.DebugMaster.Subtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="My Notes"
-                    android:textColor="?attr/colorPrimary" />
-
-                <TextView
-                    style="@style/TextAppearance.DebugMaster.Caption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Save your thoughts and observations about this bug"
-                    android:alpha="0.7" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_medium"
-                    android:hint="Type your notes here..."
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_user_notes"
+                    <!-- Back Button Row -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:minHeight="100dp"
-                        android:gravity="top|start"
-                        android:inputType="textMultiLine|textCapSentences"
-                        android:maxLines="10" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button_save_notes"
-                    android:layout_width="wrap_content"
+                        <ImageView
+                            android:id="@+id/button_back"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_glass_circle"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_arrow_back"
+                            android:contentDescription="Back"
+                            app:tint="@color/white" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <!-- Completed Badge -->
+                        <TextView
+                            android:id="@+id/chip_completed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:background="@drawable/bg_success_pill"
+                            android:gravity="center"
+                            android:paddingHorizontal="16dp"
+                            android:text="✓ COMPLETED"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:fontFamily="sans-serif-medium"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+                    </LinearLayout>
+
+                    <!-- Bug Title -->
+                    <TextView
+                        android:id="@+id/text_bug_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="@color/white"
+                        android:textSize="26sp"
+                        android:lineSpacingExtra="4dp"
+                        tools:text="The Missing Semicolon Mystery" />
+
+                    <!-- Tags Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <!-- Difficulty Chip -->
+                        <TextView
+                            android:id="@+id/chip_difficulty"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:background="@drawable/bg_difficulty_easy"
+                            android:gravity="center"
+                            android:paddingHorizontal="14dp"
+                            android:text="EASY"
+                            android:textColor="@color/white"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:fontFamily="sans-serif-medium"
+                            android:letterSpacing="0.1" />
+
+                        <!-- Category Chip -->
+                        <TextView
+                            android:id="@+id/chip_category"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:layout_marginStart="10dp"
+                            android:background="@drawable/bg_glass_pill"
+                            android:gravity="center"
+                            android:paddingHorizontal="14dp"
+                            android:text="Syntax"
+                            android:textColor="@color/white"
+                            android:textSize="11sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:alpha="0.9" />
+
+                        <!-- Language Chip -->
+                        <TextView
+                            android:id="@+id/chip_language"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:layout_marginStart="10dp"
+                            android:background="@drawable/bg_glass_pill"
+                            android:gravity="center"
+                            android:paddingHorizontal="14dp"
+                            android:drawableStart="@drawable/ic_code_small"
+                            android:drawablePadding="6dp"
+                            android:text="Java"
+                            android:textColor="@color/white"
+                            android:textSize="11sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:alpha="0.9" />
+                    </LinearLayout>
+
+                    <!-- XP Reward Info -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/bg_glass_pill"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="⚡"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/text_xp_reward"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
+                            android:text="+25 XP"
+                            android:textColor="#FFD54F"
+                            android:textSize="13sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="on completion"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:alpha="0.7" />
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
+
+            <!-- Main Content Area -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:paddingTop="20dp">
+
+                <!-- ═══════════════════════════════════════════════════════════════════
+                     MISSION BRIEFING CARD
+                     ═══════════════════════════════════════════════════════════════════ -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:text="Save Notes"
-                    app:icon="@android:drawable/ic_menu_save"
-                    app:iconGravity="start"
-                    style="@style/Widget.Material3.Button.OutlinedButton" />
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="#1A1A2E"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#2D2D44"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🎯"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="Mission Briefing"
+                                android:textColor="@color/white"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/text_bug_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:lineSpacingExtra="4dp"
+                            android:textColor="#B8B8D0"
+                            android:textSize="14sp"
+                            tools:text="A junior developer wrote this code but something's wrong. The program compiles but crashes at runtime. Can you spot and fix the bug?" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ═══════════════════════════════════════════════════════════════════
+                     BROKEN CODE CARD - THE BUG
+                     ═══════════════════════════════════════════════════════════════════ -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="#1A1A2E"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#FF5252"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <!-- Header -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical">
+
+                            <View
+                                android:layout_width="4dp"
+                                android:layout_height="24dp"
+                                android:background="@drawable/bg_error_indicator" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:text="🐛"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="1"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="Buggy Code"
+                                android:textColor="#FF5252"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_error_badge"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="4dp"
+                                android:text="HAS BUG"
+                                android:textColor="#FF5252"
+                                android:textSize="9sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:letterSpacing="0.1" />
+                        </LinearLayout>
+
+                        <!-- Code Block -->
+                        <HorizontalScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:scrollbars="none">
+
+                            <TextView
+                                android:id="@+id/text_broken_code"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_code_block_error"
+                                android:fontFamily="monospace"
+                                android:padding="16dp"
+                                android:textColor="#E8E8F0"
+                                android:textSize="13sp"
+                                android:lineSpacingExtra="6dp"
+                                tools:text="public class Main {\n    public static void main(String[] args) {\n        System.out.printIn(&quot;Hello World&quot;);\n    }\n}" />
+                        </HorizontalScrollView>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ═══════════════════════════════════════════════════════════════════
+                     CODE EDITOR CARD - YOUR FIX
+                     ═══════════════════════════════════════════════════════════════════ -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="#1A1A2E"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#00E676"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <!-- Header -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical">
+
+                            <View
+                                android:layout_width="4dp"
+                                android:layout_height="24dp"
+                                android:background="@drawable/bg_success_indicator" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:text="✏️"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="1"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="Your Fix"
+                                android:textColor="#00E676"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_editor_badge"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="4dp"
+                                android:text="EDITOR"
+                                android:textColor="#00E676"
+                                android:textSize="9sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:letterSpacing="0.1" />
+                        </LinearLayout>
+
+                        <!-- Code Editor -->
+                        <EditText
+                            android:id="@+id/edit_user_code"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:minHeight="160dp"
+                            android:background="@drawable/bg_code_editor"
+                            android:fontFamily="monospace"
+                            android:gravity="top|start"
+                            android:hint="Write your fixed code here..."
+                            android:textColorHint="#4A4A6A"
+                            android:inputType="textMultiLine"
+                            android:padding="16dp"
+                            android:textColor="#E8E8F0"
+                            android:textSize="13sp"
+                            android:lineSpacingExtra="6dp"
+                            android:scrollbars="vertical"
+                            android:importantForAutofill="no" />
+
+                        <!-- Action Buttons Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <!-- Run Tests Button -->
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/button_check_fix"
+                                android:layout_width="0dp"
+                                android:layout_height="52dp"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="8dp"
+                                android:text="▶  Run Tests"
+                                android:textColor="@color/white"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textAllCaps="false"
+                                app:backgroundTint="#00C853"
+                                app:cornerRadius="14dp"
+                                app:elevation="0dp" />
+
+                            <!-- Reset Button -->
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/button_reset_code"
+                                android:layout_width="52dp"
+                                android:layout_height="52dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                app:icon="@drawable/ic_refresh"
+                                app:iconGravity="textStart"
+                                app:iconPadding="0dp"
+                                app:iconSize="22dp"
+                                app:iconTint="#B8B8D0"
+                                app:backgroundTint="#2D2D44"
+                                app:cornerRadius="14dp"
+                                app:elevation="0dp"
+                                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ═══════════════════════════════════════════════════════════════════
+                     TEST RESULTS CARD (Initially Hidden)
+                     ═══════════════════════════════════════════════════════════════════ -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_test_results"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="#1A1A2E"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#2D2D44"
+                    app:strokeWidth="1dp"
+                    tools:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <!-- Result Header -->
+                        <TextView
+                            android:id="@+id/text_test_result_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:textSize="18sp"
+                            android:gravity="center"
+                            tools:text="✅ All Tests Passed!"
+                            tools:textColor="#00E676" />
+
+                        <TextView
+                            android:id="@+id/text_test_result_message"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:gravity="center"
+                            android:lineSpacingExtra="4dp"
+                            android:textColor="#B8B8D0"
+                            android:textSize="14sp"
+                            tools:text="Congratulations! You found the bug!" />
+
+                        <!-- Test Cases Container -->
+                        <LinearLayout
+                            android:id="@+id/layout_test_cases"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:orientation="vertical" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ═══════════════════════════════════════════════════════════════════
+                     QUICK ACTIONS ROW
+                     ═══════════════════════════════════════════════════════════════════ -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:orientation="horizontal">
+
+                    <!-- Run Code Button -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/button_run_code"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        app:cardBackgroundColor="#1A1A2E"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="#2D2D44"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="▶️"
+                                android:textSize="24sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="See Output"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:fontFamily="sans-serif-medium" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Hint Button -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/button_show_hint"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="4dp"
+                        app:cardBackgroundColor="#1A1A2E"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="#FFC107"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="💡"
+                                android:textSize="24sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="Get Hint"
+                                android:textColor="#FFC107"
+                                android:textSize="12sp"
+                                android:fontFamily="sans-serif-medium" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Solution Button -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/button_show_solution"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        app:cardBackgroundColor="#1A1A2E"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="#7C4DFF"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🔓"
+                                android:textSize="24sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="Solution"
+                                android:textColor="#7C4DFF"
+                                android:textSize="12sp"
+                                android:fontFamily="sans-serif-medium" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <!-- ═══════════════════════════════════════════════════════════════════
+                     OUTPUT CARD (Initially Hidden)
+                     ═══════════════════════════════════════════════════════════════════ -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_output"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="#1A1A2E"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#2D2D44"
+                    app:strokeWidth="1dp"
+                    tools:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="📤"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="Output Comparison"
+                                android:textColor="@color/white"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <!-- Expected Output -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="✓ Expected Output"
+                            android:textColor="#00E676"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:id="@+id/text_expected_output"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/bg_output_success"
+                            android:fontFamily="monospace"
+                            android:padding="14dp"
+                            android:textColor="#00E676"
+                            android:textSize="13sp"
+                            tools:text="Hello World" />
+
+                        <!-- Actual Output -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="✗ Actual Output (Buggy)"
+                            android:textColor="#FF5252"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:id="@+id/text_actual_output"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/bg_output_error"
+                            android:fontFamily="monospace"
+                            android:padding="14dp"
+                            android:textColor="#FF5252"
+                            android:textSize="13sp"
+                            tools:text="Error: printIn is not a method" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ═══════════════════════════════════════════════════════════════════
+                     HINTS CARD (Initially Hidden)
+                     ═══════════════════════════════════════════════════════════════════ -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_hints"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="#2A2A1E"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#FFC107"
+                    app:strokeWidth="1dp"
+                    tools:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="💡"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="Hints"
+                                android:textColor="#FFC107"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_hints_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:orientation="vertical" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ═══════════════════════════════════════════════════════════════════
+                     SOLUTION CARD (Initially Hidden)
+                     ═══════════════════════════════════════════════════════════════════ -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_solution"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="#1E2A1E"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#00E676"
+                    app:strokeWidth="1dp"
+                    tools:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="✨"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="Solution Revealed"
+                                android:textColor="#00E676"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <!-- Explanation -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="📖 Explanation"
+                            android:textColor="#B8B8D0"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:id="@+id/text_explanation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:lineSpacingExtra="4dp"
+                            android:textColor="#E8E8F0"
+                            android:textSize="14sp"
+                            tools:text="The bug is a simple typo. The method should be 'println' (with a lowercase 'L' and 'N'), not 'printIn' (with uppercase 'I' and 'N')." />
+
+                        <!-- Fixed Code -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="✅ Fixed Code"
+                            android:textColor="#00E676"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <HorizontalScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:scrollbars="none">
+
+                            <TextView
+                                android:id="@+id/text_fixed_code"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_code_block_success"
+                                android:fontFamily="monospace"
+                                android:padding="16dp"
+                                android:textColor="#E8E8F0"
+                                android:textSize="13sp"
+                                android:lineSpacingExtra="6dp"
+                                tools:text="System.out.println(&quot;Hello World&quot;);" />
+                        </HorizontalScrollView>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ═══════════════════════════════════════════════════════════════════
+                     NOTES CARD
+                     ═══════════════════════════════════════════════════════════════════ -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_notes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="#1A1A2E"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#2D2D44"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="📝"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="My Notes"
+                                android:textColor="@color/white"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Save your thoughts and learnings"
+                            android:textColor="#6A6A8A"
+                            android:textSize="12sp" />
+
+                        <EditText
+                            android:id="@+id/edit_user_notes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:minHeight="100dp"
+                            android:background="@drawable/bg_notes_editor"
+                            android:gravity="top|start"
+                            android:hint="Type your notes here..."
+                            android:textColorHint="#4A4A6A"
+                            android:inputType="textMultiLine|textCapSentences"
+                            android:maxLines="8"
+                            android:padding="14dp"
+                            android:textColor="#E8E8F0"
+                            android:textSize="14sp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/button_save_notes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="42dp"
+                            android:layout_gravity="end"
+                            android:layout_marginTop="12dp"
+                            android:text="💾  Save Notes"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:textAllCaps="false"
+                            app:backgroundTint="#3D3D5C"
+                            app:cornerRadius="12dp"
+                            app:elevation="0dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ═══════════════════════════════════════════════════════════════════
+                     MARK AS SOLVED BUTTON
+                     ═══════════════════════════════════════════════════════════════════ -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_mark_solved"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="24dp"
+                    android:text="🏆  Mark as Completed"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textAllCaps="false"
+                    app:backgroundTint="#7C4DFF"
+                    app:cornerRadius="16dp"
+                    app:elevation="0dp" />
+
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-        <!-- Bottom Action Buttons -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_show_solution"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/button_height"
-            android:layout_marginBottom="@dimen/spacing_normal"
-            android:text="@string/show_solution"
-            app:icon="@android:drawable/ic_menu_help"
-            app:iconGravity="start"
-            app:cornerRadius="@dimen/button_corner_radius"
-            style="@style/Widget.Material3.Button.OutlinedButton" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_mark_solved"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/button_height"
-            android:text="@string/mark_as_solved"
-            app:icon="@android:drawable/checkbox_on_background"
-            app:iconGravity="start"
-            app:cornerRadius="@dimen/button_corner_radius" />
-
-    </LinearLayout>
-</ScrollView>
-
-    <!-- Confetti Animation Overlay -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         CONFETTI CELEBRATION OVERLAY
+         ═══════════════════════════════════════════════════════════════════════════ -->
     <com.example.debugappproject.ui.animation.ConfettiAnimationView
         android:id="@+id/confetti_view"
         android:layout_width="match_parent"

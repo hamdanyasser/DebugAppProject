@@ -19,6 +19,7 @@ import com.example.debugappproject.billing.BillingManager;
 import com.example.debugappproject.databinding.FragmentProfileBinding;
 import com.example.debugappproject.model.UserProgress;
 import com.example.debugappproject.util.AnimationUtil;
+import com.example.debugappproject.util.AuthManager;
 import com.example.debugappproject.util.DateUtils;
 import com.example.debugappproject.util.SoundManager;
 
@@ -39,6 +40,7 @@ public class ProfileFragment extends Fragment {
     private AchievementAdapter achievementAdapter;
     private BillingManager billingManager;
     private SoundManager soundManager;
+    private AuthManager authManager;
     private int previousLevel = -1;
 
     @Nullable
@@ -56,6 +58,7 @@ public class ProfileFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
         billingManager = BillingManager.getInstance(requireContext());
         soundManager = SoundManager.getInstance(requireContext());
+        authManager = AuthManager.getInstance(requireContext());
 
         // Play entrance sound
         soundManager.playSound(SoundManager.Sound.TRANSITION);
@@ -101,34 +104,65 @@ public class ProfileFragment extends Fragment {
     }
 
     /**
-     * Update account section UI
+     * Update account section UI with AuthManager integration
      */
     private void updateAccountUI() {
         if (binding == null) return;
         
         boolean isPro = billingManager.isProUserSync();
+        boolean isGuest = authManager.isGuest();
+        String displayName = authManager.getDisplayName();
+        String email = authManager.getEmail();
+        String avatar = authManager.getAvatarEmoji();
         
-        // Guest mode display
+        // Display user avatar emoji (clickable to change)
+        if (binding.textUserAvatar != null) {
+            binding.textUserAvatar.setText(avatar);
+            binding.textUserAvatar.setOnClickListener(v -> {
+                soundManager.playButtonClick();
+                showAvatarSelector();
+            });
+        }
+        
+        // User name display
         if (binding.textUserName != null) {
-            binding.textUserName.setText("Debug Master");
+            binding.textUserName.setText(displayName);
             binding.textUserName.setVisibility(View.VISIBLE);
         }
         
+        // Email or guest mode display
         if (binding.textUserEmail != null) {
-            binding.textUserEmail.setText("Local Progress Mode");
+            if (isGuest) {
+                binding.textUserEmail.setText("Guest Mode - Progress saved locally");
+            } else {
+                binding.textUserEmail.setText(email);
+            }
             binding.textUserEmail.setVisibility(View.VISIBLE);
         }
         
+        // Account status
         if (binding.textAccountStatus != null) {
-            binding.textAccountStatus.setText(isPro ? "👑 Pro Member" : "Guest Mode");
+            String status = "";
+            if (isPro) {
+                status = "👑 Pro Member";
+            } else if (isGuest) {
+                status = "🎮 Guest";
+            } else {
+                status = "✅ Registered";
+            }
+            binding.textAccountStatus.setText(status);
         }
         
-        // Show sign in button
+        // Sign in / Sign out buttons
         if (binding.buttonGoogleSignIn != null) {
-            binding.buttonGoogleSignIn.setVisibility(View.VISIBLE);
+            binding.buttonGoogleSignIn.setVisibility(isGuest ? View.VISIBLE : View.GONE);
         }
         if (binding.buttonSignOut != null) {
-            binding.buttonSignOut.setVisibility(View.GONE);
+            binding.buttonSignOut.setVisibility(isGuest ? View.GONE : View.VISIBLE);
+            binding.buttonSignOut.setOnClickListener(v -> {
+                soundManager.playButtonClick();
+                showLogoutConfirmation();
+            });
         }
         
         // Update auth action button
@@ -147,6 +181,49 @@ public class ProfileFragment extends Fragment {
                 });
             }
         }
+    }
+    
+    /**
+     * Show avatar selector dialog
+     */
+    private void showAvatarSelector() {
+        AvatarSelectorDialog dialog = AvatarSelectorDialog.newInstance(authManager.getAvatarEmoji());
+        dialog.setOnAvatarSelectedListener(emoji -> {
+            // Update UI immediately
+            if (binding != null && binding.textUserAvatar != null) {
+                binding.textUserAvatar.setText(emoji);
+            }
+        });
+        dialog.show(getChildFragmentManager(), "avatar_selector");
+    }
+    
+    /**
+     * Show logout confirmation dialog
+     */
+    private void showLogoutConfirmation() {
+        if (getContext() == null) return;
+        
+        soundManager.playSound(SoundManager.Sound.NOTIFICATION);
+        
+        new AlertDialog.Builder(requireContext())
+            .setTitle("👋 Sign Out")
+            .setMessage("Are you sure you want to sign out?\n\n" +
+                    "Your progress is saved and will be here when you return!")
+            .setPositiveButton("Sign Out", (dialog, which) -> {
+                soundManager.playSound(SoundManager.Sound.BUTTON_BACK);
+                authManager.logout();
+                // Navigate to auth screen
+                try {
+                    Navigation.findNavController(requireView())
+                        .navigate(R.id.action_profile_to_auth);
+                } catch (Exception e) {
+                    updateAccountUI();
+                }
+            })
+            .setNegativeButton("Cancel", (dialog, which) -> {
+                soundManager.playButtonClick();
+            })
+            .show();
     }
 
     /**
@@ -254,9 +331,8 @@ public class ProfileFragment extends Fragment {
 
     private void setupObservers() {
         viewModel.getUserProgress().observe(getViewLifecycleOwner(), progress -> {
-            if (progress != null) {
-                displayUserProgress(progress);
-            }
+            // Display progress even if null (will use defaults)
+            displayUserProgress(progress);
         });
 
         viewModel.getAchievementsWithStatus().observe(getViewLifecycleOwner(), achievements -> {
@@ -296,7 +372,13 @@ public class ProfileFragment extends Fragment {
         if (binding == null) return;
         
         try {
-            int level = viewModel.calculateLevel(progress.getTotalXp());
+            // Handle null progress with defaults
+            int totalXp = progress != null ? progress.getTotalXp() : 0;
+            int bugsSolvedWithoutHints = progress != null ? progress.getBugsSolvedWithoutHints() : 0;
+            long lastCompletionDate = progress != null ? progress.getLastCompletionDate() : 0L;
+            int currentStreakDays = progress != null ? progress.getCurrentStreakDays() : 0;
+            
+            int level = viewModel.calculateLevel(totalXp);
 
             // Level up celebration with SOUND!
             if (previousLevel > 0 && level > previousLevel) {
@@ -308,7 +390,7 @@ public class ProfileFragment extends Fragment {
                 binding.textLevel.setText(String.valueOf(level));
             }
 
-            int xpInLevel = viewModel.getXpProgressInLevel(progress.getTotalXp());
+            int xpInLevel = viewModel.getXpProgressInLevel(totalXp);
             if (binding.textXp != null) {
                 binding.textXp.setText(xpInLevel + " / 100 XP");
             }
@@ -319,12 +401,12 @@ public class ProfileFragment extends Fragment {
             }
 
             if (binding.textPerfectFixes != null) {
-                binding.textPerfectFixes.setText(String.valueOf(progress.getBugsSolvedWithoutHints()));
+                binding.textPerfectFixes.setText(String.valueOf(bugsSolvedWithoutHints));
             }
 
             int currentStreak = DateUtils.calculateCurrentStreak(
-                progress.getLastCompletionDate(),
-                progress.getCurrentStreakDays()
+                lastCompletionDate,
+                currentStreakDays
             );
             if (binding.textStreakDays != null) {
                 binding.textStreakDays.setText(String.valueOf(currentStreak));

@@ -40,6 +40,12 @@ import com.example.debugappproject.model.UserProgress;
  *                 isFeatured, isNew, colorHex, skillTags fields
  * - More comprehensive learning paths (15 total)
  * - Many more achievements
+ *
+ * Version 5 adds:
+ * - Bug: hint field for helpful hints in challenges
+ *
+ * Version 6 adds:
+ * - Schema fixes and updates for new features
  */
 @Database(
     entities = {
@@ -53,7 +59,7 @@ import com.example.debugappproject.model.UserProgress;
         AchievementDefinition.class,
         UserAchievement.class
     },
-    version = 4,
+    version = 6,
     exportSchema = false
 )
 public abstract class DebugMasterDatabase extends RoomDatabase {
@@ -183,6 +189,18 @@ public abstract class DebugMasterDatabase extends RoomDatabase {
     };
 
     /**
+     * Migration from version 4 to 5.
+     * Adds hint column to bugs table.
+     */
+    static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            // Add hint column to bugs table
+            database.execSQL("ALTER TABLE bugs ADD COLUMN hint TEXT");
+        }
+    };
+
+    /**
      * Get singleton instance of database.
      * Now uses proper migrations instead of destructive migration.
      */
@@ -195,7 +213,7 @@ public abstract class DebugMasterDatabase extends RoomDatabase {
                             DebugMasterDatabase.class,
                             "debug_master_database"
                     )
-                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4)
+                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                     .fallbackToDestructiveMigration() // Fallback for dev builds
                     .build();
                 }

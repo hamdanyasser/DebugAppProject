@@ -83,15 +83,30 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
-                    <!-- Profile Photo -->
-                    <ImageView
-                        android:id="@+id/image_user_photo"
+                    <!-- Profile Photo / Avatar Emoji -->
+                    <FrameLayout
                         android:layout_width="56dp"
                         android:layout_height="56dp"
-                        android:src="@drawable/ic_profile_placeholder"
-                        android:background="@drawable/bg_circle_gradient"
-                        android:padding="4dp"
-                        android:scaleType="centerCrop" />
+                        android:background="@drawable/bg_circle_gradient">
+
+                        <ImageView
+                            android:id="@+id/image_user_photo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_profile_placeholder"
+                            android:padding="4dp"
+                            android:scaleType="centerCrop"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/text_user_avatar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="🐛"
+                            android:textSize="28sp" />
+
+                    </FrameLayout>
 
                     <!-- User Info -->
                     <LinearLayout

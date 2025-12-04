@@ -35,6 +35,7 @@ import com.example.debugappproject.data.repository.BugRepository;
 import com.example.debugappproject.data.seeding.DatabaseSeeder;
 import com.example.debugappproject.databinding.FragmentSplashBinding;
 import com.example.debugappproject.ui.onboarding.OnboardingActivity;
+import com.example.debugappproject.util.AuthManager;
 import com.example.debugappproject.util.SoundManager;
 
 import java.util.ArrayList;
@@ -966,23 +967,41 @@ public class SplashFragment extends Fragment {
     }
 
     /**
-     * Performs actual navigation
+     * Performs actual navigation based on auth and onboarding status
      */
     private void performNavigation() {
         if (!isAdded() || binding == null) return;
 
         try {
-            if (OnboardingActivity.hasSeenOnboarding(requireContext())) {
+            AuthManager authManager = AuthManager.getInstance(requireContext());
+            
+            // Check if user has seen onboarding
+            if (!OnboardingActivity.hasSeenOnboarding(requireContext())) {
+                // First time user - show onboarding
+                Navigation.findNavController(binding.getRoot()).navigate(
+                        R.id.action_splash_to_onboarding
+                );
+            } else if (!authManager.isLoggedInSync()) {
+                // Not logged in - show auth screen
+                Navigation.findNavController(binding.getRoot()).navigate(
+                        R.id.action_splash_to_auth
+                );
+            } else {
+                // Logged in - go to home
                 Navigation.findNavController(binding.getRoot()).navigate(
                         R.id.action_splash_to_home
                 );
-            } else {
-                Intent intent = new Intent(requireActivity(), OnboardingActivity.class);
-                startActivity(intent);
-                requireActivity().finish();
             }
         } catch (Exception e) {
             e.printStackTrace();
+            // Fallback to home
+            try {
+                Navigation.findNavController(binding.getRoot()).navigate(
+                        R.id.action_splash_to_home
+                );
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 

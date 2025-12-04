@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    ╔══════════════════════════════════════════════════════════════════════════════╗
+    ║           DEBUGMASTER - BUG IN PATH ITEM (ENHANCED)                          ║
+    ╚══════════════════════════════════════════════════════════════════════════════╝
+-->
+<com.google.android.material.card.MaterialCardView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,86 +13,117 @@
     android:layout_marginVertical="6dp"
     android:clickable="true"
     android:focusable="true"
+    app:cardBackgroundColor="#1A1A2E"
     app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
-    app:strokeWidth="0dp">
+    app:cardElevation="0dp"
+    app:strokeColor="#2D2D44"
+    app:strokeWidth="1dp"
+    app:rippleColor="#7C4DFF">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="14dp">
 
-        <!-- Completion Indicator -->
-        <TextView
-            android:id="@+id/text_completion"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:gravity="center"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="✓" />
+        <!-- Completion Indicator Circle -->
+        <FrameLayout
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_challenge_indicator">
+
+            <TextView
+                android:id="@+id/text_completion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="✓" />
+        </FrameLayout>
 
         <!-- Content Section -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/text_completion"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_marginStart="14dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <!-- Bug Title -->
             <TextView
                 android:id="@+id/text_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="?attr/colorOnSurface"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:fontFamily="sans-serif-medium"
                 android:maxLines="2"
                 android:ellipsize="end"
                 tools:text="Fix the off-by-one error in array indexing" />
 
-            <!-- Difficulty and Category -->
+            <!-- Difficulty and Category Row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="6dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
 
+                <!-- Difficulty Badge -->
                 <TextView
                     android:id="@+id/text_difficulty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/bg_difficulty_badge"
                     android:paddingHorizontal="8dp"
-                    android:paddingVertical="2dp"
-                    android:textSize="11sp"
+                    android:paddingVertical="3dp"
+                    android:textSize="10sp"
                     android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium"
                     tools:text="EASY"
-                    tools:textColor="@android:color/holo_green_dark" />
+                    tools:textColor="#10B981" />
 
-                <View
-                    android:layout_width="4dp"
-                    android:layout_height="4dp"
-                    android:layout_marginHorizontal="6dp"
-                    android:background="?attr/colorOnSurfaceVariant" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:text="•"
+                    android:textColor="#4A4A6A"
+                    android:textSize="10sp" />
 
+                <!-- Category -->
                 <TextView
                     android:id="@+id/text_category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
-                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textColor="#8A8AA0"
                     tools:text="Arrays" />
+                    
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="⭐ 25 XP"
+                    android:textSize="11sp"
+                    android:textColor="#FFD54F" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Arrow Indicator -->
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_arrow_right"
+            android:alpha="0.5"
+            app:tint="#8A8AA0"
+            android:contentDescription="Go" />
+
+    </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

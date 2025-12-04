@@ -222,9 +222,18 @@ public class LearningPathAdapter extends RecyclerView.Adapter<LearningPathAdapte
                     badgeNew.setVisibility(path.isNew() ? View.VISIBLE : View.GONE);
                 }
 
-                // PRO badge (show if locked)
+                // PRO/FREE badge
                 if (badgePro != null) {
-                    badgePro.setVisibility(path.isLocked() ? View.VISIBLE : View.GONE);
+                    if (path.isLocked()) {
+                        badgePro.setText("PRO");
+                        badgePro.setBackgroundResource(R.drawable.bg_badge_pro);
+                        badgePro.setVisibility(View.VISIBLE);
+                    } else {
+                        // Show FREE badge for unlocked paths
+                        badgePro.setText("FREE");
+                        badgePro.setBackgroundResource(R.drawable.bg_badge_free);
+                        badgePro.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 // Button styling based on state
@@ -234,29 +243,29 @@ public class LearningPathAdapter extends RecyclerView.Adapter<LearningPathAdapte
                         buttonContinue.setText("🔒 Unlock");
                         buttonContinue.setIconResource(0);
                         buttonContinue.setBackgroundTintList(
-                            android.content.res.ColorStateList.valueOf(Color.parseColor("#FFD700")));
+                            android.content.res.ColorStateList.valueOf(Color.parseColor("#FFD54F")));
                         buttonContinue.setTextColor(Color.parseColor("#1A1A2E"));
                     } else if (percent == 0) {
                         // Not started
                         buttonContinue.setText("Start");
                         buttonContinue.setIconResource(R.drawable.ic_arrow_right);
                         buttonContinue.setBackgroundTintList(
-                            android.content.res.ColorStateList.valueOf(Color.WHITE));
-                        buttonContinue.setTextColor(Color.parseColor("#6366F1"));
+                            android.content.res.ColorStateList.valueOf(Color.parseColor("#7C4DFF")));
+                        buttonContinue.setTextColor(Color.WHITE);
                     } else if (percent >= 100) {
                         // Completed
-                        buttonContinue.setText("Review ✓");
+                        buttonContinue.setText("✅ Done");
                         buttonContinue.setIconResource(0);
                         buttonContinue.setBackgroundTintList(
-                            android.content.res.ColorStateList.valueOf(Color.parseColor("#10B981")));
-                        buttonContinue.setTextColor(Color.WHITE);
+                            android.content.res.ColorStateList.valueOf(Color.parseColor("#00E676")));
+                        buttonContinue.setTextColor(Color.parseColor("#1A1A2E"));
                     } else {
                         // In progress
                         buttonContinue.setText("Continue");
                         buttonContinue.setIconResource(R.drawable.ic_arrow_right);
                         buttonContinue.setBackgroundTintList(
-                            android.content.res.ColorStateList.valueOf(Color.WHITE));
-                        buttonContinue.setTextColor(Color.parseColor("#6366F1"));
+                            android.content.res.ColorStateList.valueOf(Color.parseColor("#7C4DFF")));
+                        buttonContinue.setTextColor(Color.WHITE);
                     }
 
                     buttonContinue.setOnClickListener(v -> {
@@ -282,12 +291,12 @@ public class LearningPathAdapter extends RecyclerView.Adapter<LearningPathAdapte
                     }
                     if (textPercent != null) {
                         textPercent.setText("PRO");
-                        textPercent.setTextColor(Color.parseColor("#FFD700"));
+                        textPercent.setTextColor(Color.parseColor("#FFD54F"));
                     }
                 } else {
                     itemView.setAlpha(1.0f);
                     if (textPercent != null) {
-                        textPercent.setTextColor(Color.WHITE);
+                        textPercent.setTextColor(Color.parseColor("#7C4DFF"));
                     }
                 }
 

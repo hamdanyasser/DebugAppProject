@@ -16,15 +16,34 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Adapter for displaying leaderboard entries with Mimo-style UI.
+ * Adapter for displaying leaderboard entries with competitive gaming UI.
+ * Features:
+ * - Rank position with styling for top ranks
+ * - Username with badge
+ * - XP score with formatting
+ * - Bugs fixed count
+ * - Click listener for player profiles
  */
 public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.ViewHolder> {
 
     private List<LeaderboardFragment.LeaderboardEntry> entries = new ArrayList<>();
+    private OnItemClickListener clickListener;
+    
+    public interface OnItemClickListener {
+        void onItemClick(LeaderboardFragment.LeaderboardEntry entry, int position);
+    }
+    
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.clickListener = listener;
+    }
 
     public void setEntries(List<LeaderboardFragment.LeaderboardEntry> entries) {
         this.entries = entries;
         notifyDataSetChanged();
+    }
+    
+    public List<LeaderboardFragment.LeaderboardEntry> getEntries() {
+        return entries;
     }
 
     @NonNull
@@ -39,6 +58,12 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         LeaderboardFragment.LeaderboardEntry entry = entries.get(position);
         holder.bind(entry);
+        
+        holder.itemView.setOnClickListener(v -> {
+            if (clickListener != null) {
+                clickListener.onItemClick(entry, position);
+            }
+        });
     }
 
     @Override
@@ -69,22 +94,34 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             
             if (textRankPosition != null) {
                 textRankPosition.setText("#" + entry.rank);
+                
+                // Color coding for ranks
+                int color;
+                if (entry.rank <= 5) {
+                    color = 0xFFFFD700; // Gold
+                } else if (entry.rank <= 10) {
+                    color = 0xFFC0C0C0; // Silver
+                } else if (entry.rank <= 20) {
+                    color = 0xFFCD7F32; // Bronze
+                } else {
+                    color = 0xFF94A3B8; // Default
+                }
+                textRankPosition.setTextColor(color);
             }
             if (textAvatarEmoji != null) {
-                // Use badge as avatar if available, otherwise default emoji
                 textAvatarEmoji.setText(entry.badge != null ? entry.badge : "👨‍💻");
             }
             if (textUsername != null) {
                 textUsername.setText(entry.username);
             }
             if (textUserLevel != null) {
-                textUserLevel.setText("Level " + entry.level);
+                textUserLevel.setText("Lv." + entry.level);
             }
             if (textXpScore != null) {
                 textXpScore.setText(numberFormat.format(entry.xp) + " XP");
             }
             if (textBugsCount != null) {
-                textBugsCount.setText(entry.bugsFixed + " bugs");
+                textBugsCount.setText(entry.bugsFixed + " bugs fixed");
             }
         }
     }

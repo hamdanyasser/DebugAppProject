@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    ╔══════════════════════════════════════════════════════════════════════════════╗
+    ║           DEBUGMASTER - PATH DETAIL (ENHANCED)                               ║
+    ║         Interactive Learning with Animated Tutorials                         ║
+    ╚══════════════════════════════════════════════════════════════════════════════╝
+-->
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_cyber_main">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,14 +26,49 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="100dp">
 
-            <!-- Path Header Card -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- Header with Back Button -->
+            <LinearLayout
+                android:id="@+id/layout_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/button_back"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_button_circle"
+                    android:src="@drawable/ic_arrow_back"
+                    android:contentDescription="Back"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:text="Learning Path"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Path Header Card (Enhanced) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="#1A1A2E"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
+                app:cardElevation="0dp"
+                app:strokeColor="#2D2D44"
+                app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -33,43 +76,105 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <!-- Path Icon -->
-                    <TextView
-                        android:id="@+id/text_icon"
+                    <!-- Icon and Name Row -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="48sp"
-                        android:gravity="center"
-                        tools:text="📚" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <!-- Path Name -->
-                    <TextView
-                        android:id="@+id/text_path_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorOnSurface"
-                        android:gravity="center"
-                        tools:text="Basics of Debugging" />
+                        <!-- Path Icon with Glow -->
+                        <FrameLayout
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:background="@drawable/bg_path_icon">
+
+                            <TextView
+                                android:id="@+id/text_icon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:textSize="32sp"
+                                tools:text="📚" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <!-- Path Name -->
+                            <TextView
+                                android:id="@+id/text_path_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/white"
+                                tools:text="Getting Started" />
+
+                            <!-- Difficulty and XP -->
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:id="@+id/text_difficulty"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/bg_badge_difficulty"
+                                    android:paddingHorizontal="8dp"
+                                    android:paddingVertical="2dp"
+                                    android:text="Beginner"
+                                    android:textColor="#10B981"
+                                    android:textSize="10sp" />
+
+                                <TextView
+                                    android:id="@+id/text_xp_reward"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:text="⭐ 150 XP"
+                                    android:textColor="#FFD54F"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
 
                     <!-- Path Description -->
                     <TextView
                         android:id="@+id/text_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="16dp"
                         android:textSize="14sp"
-                        android:textColor="?attr/colorOnSurfaceVariant"
-                        android:gravity="center"
-                        tools:text="Learn fundamental debugging concepts and techniques" />
+                        android:textColor="#8A8AA0"
+                        android:lineSpacingExtra="4dp"
+                        tools:text="Learn fundamental debugging concepts and techniques every developer needs." />
+
+                    <!-- Tutorial Content Tip -->
+                    <TextView
+                        android:id="@+id/text_tutorial_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_tutorial_tip"
+                        android:padding="12dp"
+                        android:textSize="13sp"
+                        android:textColor="#60A5FA"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        tools:text="💡 Interactive tutorials with step-by-step guidance." />
 
                     <!-- Progress Section -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="20dp"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -84,16 +189,16 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:textSize="14sp"
-                                android:textColor="?attr/colorOnSurfaceVariant"
+                                android:textColor="#8A8AA0"
                                 tools:text="3 of 10 completed" />
 
                             <TextView
                                 android:id="@+id/text_percentage"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="14sp"
+                                android:textSize="16sp"
                                 android:textStyle="bold"
-                                android:textColor="?attr/colorPrimary"
+                                android:textColor="#7C4DFF"
                                 tools:text="30%" />
 
                         </LinearLayout>
@@ -102,33 +207,91 @@
                             android:id="@+id/progress_bar"
                             style="?android:attr/progressBarStyleHorizontal"
                             android:layout_width="match_parent"
-                            android:layout_height="8dp"
-                            android:layout_marginTop="8dp"
+                            android:layout_height="10dp"
+                            android:layout_marginTop="10dp"
                             android:max="100"
+                            android:progressDrawable="@drawable/progress_path_premium"
                             tools:progress="30" />
 
                     </LinearLayout>
+
+                    <!-- Start Learning Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_start_learning"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="20dp"
+                        android:text="🚀 Start Learning"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textAllCaps="false"
+                        app:backgroundTint="#7C4DFF"
+                        app:cornerRadius="12dp"
+                        app:elevation="0dp" />
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Bugs Section Header -->
+            <!-- Tutorial Tip Card (Dismissable) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_tutorial_tip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="#1E3A5F"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="💡 Tip: Complete challenges in order for the best learning experience!"
+                        android:textColor="#60A5FA"
+                        android:textSize="13sp" />
+
+                    <ImageButton
+                        android:id="@+id/button_dismiss_tip"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_close"
+                        android:contentDescription="Dismiss"
+                        app:tint="#60A5FA" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Challenges Section Header -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Challenges"
-                android:textSize="20sp"
+                android:text="🎯 CHALLENGES"
+                android:textSize="12sp"
                 android:textStyle="bold"
-                android:textColor="?attr/colorOnSurface" />
+                android:textColor="#7C4DFF"
+                android:letterSpacing="0.1" />
 
             <!-- Bugs RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_bugs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
+                android:nestedScrollingEnabled="false"
                 android:clipToPadding="false"
                 tools:listitem="@layout/item_bug_in_path" />
 
@@ -153,14 +316,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="No challenges in this path"
+                    android:text="No challenges in this path yet"
                     android:textSize="16sp"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Content is being prepared..."
+                    android:textColor="#8A8AA0"
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

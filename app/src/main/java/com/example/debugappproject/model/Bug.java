@@ -27,6 +27,7 @@ public class Bug {
     private String starterCode;     // Starting code for user's attempt (defaults to brokenCode if null)
     private String userNotes;       // User's personal notes for this bug
     private String testsJson;       // JSON string containing test cases
+    private String hint;            // Helpful hint without giving away the answer
 
     // Constructor
     public Bug(int id, String title, String language, String difficulty, String category,
@@ -44,9 +45,10 @@ public class Bug {
         this.explanation = explanation;
         this.fixedCode = fixedCode;
         this.isCompleted = isCompleted;
-        this.starterCode = null; // Will default to brokenCode if null
+        this.starterCode = null;
         this.userNotes = "";
         this.testsJson = null;
+        this.hint = null;
     }
 
     // Getters and Setters
@@ -170,11 +172,45 @@ public class Bug {
         this.testsJson = testsJson;
     }
 
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
+    }
+
     /**
      * Gets the starting code for the user's fix attempt.
      * Returns starterCode if set, otherwise falls back to brokenCode.
      */
     public String getInitialCode() {
         return (starterCode != null && !starterCode.isEmpty()) ? starterCode : brokenCode;
+    }
+    
+    /**
+     * Gets a hint for this bug. If no hint is set, generates one based on the error type.
+     */
+    public String getHintText() {
+        if (hint != null && !hint.isEmpty()) {
+            return hint;
+        }
+        // Generate a generic hint based on the actual output/error
+        if (actualOutput != null) {
+            if (actualOutput.contains("cannot find symbol")) {
+                return "Check for typos in method names, variable names, or class names. Java is case-sensitive!";
+            } else if (actualOutput.contains("';' expected")) {
+                return "Look for missing semicolons at the end of statements.";
+            } else if (actualOutput.contains("ArrayIndexOutOfBounds")) {
+                return "Arrays start at index 0 and end at length-1. Check your loop boundaries!";
+            } else if (actualOutput.contains("NullPointer")) {
+                return "Something is null that shouldn't be. Add null checks before using objects.";
+            } else if (actualOutput.contains("infinite")) {
+                return "Check your loop condition and make sure the loop variable changes correctly.";
+            } else if (actualOutput.contains("Syntax")) {
+                return "There's a syntax error. Check brackets, parentheses, and quotes.";
+            }
+        }
+        return "Read the error message carefully. Compare your code character by character with what should work.";
     }
 }

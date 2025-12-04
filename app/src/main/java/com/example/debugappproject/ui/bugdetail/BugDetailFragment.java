@@ -137,14 +137,33 @@ public class BugDetailFragment extends Fragment {
     private void displayBug(Bug bug) {
         binding.textBugTitle.setText(bug.getTitle());
 
-        binding.chipDifficulty.setText(bug.getDifficulty());
-        setDifficultyChipColor(bug.getDifficulty());
+        // Set difficulty with proper styling
+        String difficulty = bug.getDifficulty();
+        binding.chipDifficulty.setText(difficulty.toUpperCase());
+        setDifficultyChipStyle(difficulty);
 
         binding.chipCategory.setText(bug.getCategory());
+        
+        // Set language chip if available
+        if (binding.chipLanguage != null) {
+            String language = bug.getLanguage();
+            if (language != null && !language.isEmpty()) {
+                binding.chipLanguage.setText(language);
+                binding.chipLanguage.setVisibility(View.VISIBLE);
+            } else {
+                binding.chipLanguage.setVisibility(View.GONE);
+            }
+        }
+        
+        // Set XP reward based on difficulty
+        if (binding.textXpReward != null) {
+            int xp = getXpForDifficulty(difficulty);
+            binding.textXpReward.setText("+" + xp + " XP");
+        }
 
         if (bug.isCompleted()) {
             binding.chipCompleted.setVisibility(View.VISIBLE);
-            binding.buttonMarkSolved.setText("Completed ✓");
+            binding.buttonMarkSolved.setText("✅  Completed");
             binding.buttonMarkSolved.setEnabled(false);
         }
 
@@ -160,27 +179,49 @@ public class BugDetailFragment extends Fragment {
 
         parseTestCases(bug.getTestsJson());
     }
+    
+    private int getXpForDifficulty(String difficulty) {
+        if (difficulty == null) return 10;
+        switch (difficulty.toLowerCase()) {
+            case "easy": return 15;
+            case "medium": return 25;
+            case "hard": return 40;
+            default: return 10;
+        }
+    }
 
-    private void setDifficultyChipColor(String difficulty) {
-        int colorRes;
+    private void setDifficultyChipStyle(String difficulty) {
+        if (difficulty == null) return;
+        
+        int bgResource;
         switch (difficulty.toLowerCase()) {
             case "easy":
-                colorRes = R.color.difficulty_easy;
+                bgResource = R.drawable.bg_difficulty_easy;
                 break;
             case "medium":
-                colorRes = R.color.difficulty_medium;
+                bgResource = R.drawable.bg_difficulty_medium;
                 break;
             case "hard":
-                colorRes = R.color.difficulty_hard;
+                bgResource = R.drawable.bg_difficulty_hard;
                 break;
             default:
-                colorRes = R.color.difficulty_easy;
+                bgResource = R.drawable.bg_difficulty_easy;
         }
-        binding.chipDifficulty.setChipBackgroundColorResource(colorRes);
+        binding.chipDifficulty.setBackgroundResource(bgResource);
     }
 
     private void setupClickListeners() {
-        // Run Code button
+        // Back button
+        if (binding.buttonBack != null) {
+            binding.buttonBack.setOnClickListener(v -> {
+                soundManager.playSound(SoundManager.Sound.BUTTON_BACK);
+                if (getActivity() != null) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
+
+        // Run Code button (now a card)
         binding.buttonRunCode.setOnClickListener(v -> {
             soundManager.playSound(SoundManager.Sound.CODE_RUN);
             AnimationUtil.animatePress(v, () -> {
@@ -190,13 +231,13 @@ public class BugDetailFragment extends Fragment {
             });
         });
 
-        // Show Hint button
+        // Show Hint button (now a card)
         binding.buttonShowHint.setOnClickListener(v -> {
             soundManager.playButtonClick();
             AnimationUtil.animatePress(v, this::showNextHint);
         });
 
-        // Show Solution button
+        // Show Solution button (now a card)
         binding.buttonShowSolution.setOnClickListener(v -> {
             soundManager.playButtonClick();
             AnimationUtil.animatePress(v, () -> viewModel.showSolution());
@@ -222,30 +263,47 @@ public class BugDetailFragment extends Fragment {
         binding.buttonMarkSolved.setOnClickListener(v -> {
             if (currentBug != null && !currentBug.isCompleted()) {
                 String userCode = binding.editUserCode.getText().toString();
-                boolean testsPassed = CodeComparator.codesMatch(userCode, currentBug.getFixedCode());
+                
+                // Check if user modified the code at all
+                String originalBroken = currentBug.getBrokenCode().trim();
+                if (CodeComparator.normalizeCode(userCode).equals(CodeComparator.normalizeCode(originalBroken))) {
+                    soundManager.playSound(SoundManager.Sound.ERROR);
+                    Toast.makeText(requireContext(), "You need to fix the bug first!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                
+                // Check if the fix is correct
+                boolean isCorrect = CodeComparator.codesMatch(userCode, currentBug.getFixedCode());
+                double similarity = CodeComparator.calculateSimilarity(
+                    CodeComparator.normalizeCode(userCode),
+                    CodeComparator.normalizeCode(currentBug.getFixedCode())
+                );
 
-                if (!testsPassed) {
+                if (!isCorrect && similarity < 0.90) {
+                    // Code is significantly different - warn the user
                     soundManager.playSound(SoundManager.Sound.WARNING);
                     new AlertDialog.Builder(requireContext())
-                            .setTitle("Mark as Solved?")
-                            .setMessage("Are you sure? Your code doesn't quite match the solution yet.")
-                            .setPositiveButton("Yes, Mark as Solved", (dialog, which) -> {
-                                soundManager.playSuccess();
+                            .setTitle("Code Doesn't Match")
+                            .setMessage("Your code is only " + (int)(similarity * 100) + "% similar to the solution.\n\n" +
+                                    "Are you sure you want to mark this as solved without the correct fix?")
+                            .setPositiveButton("Mark Anyway", (dialog, which) -> {
+                                soundManager.playSound(SoundManager.Sound.SUCCESS);
                                 viewModel.markBugAsCompleted(currentBug.getId(), currentBug.getDifficulty());
                                 binding.chipCompleted.setVisibility(View.VISIBLE);
-                                binding.buttonMarkSolved.setText("Completed ✓");
+                                binding.buttonMarkSolved.setText("✅  Completed");
                                 binding.buttonMarkSolved.setEnabled(false);
-                                Toast.makeText(requireContext(), "Bug marked as completed!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), "Bug marked as completed (manual)", Toast.LENGTH_SHORT).show();
                             })
                             .setNegativeButton("Keep Trying", (dialog, which) -> {
                                 soundManager.playSound(SoundManager.Sound.BUTTON_BACK);
                             })
                             .show();
                 } else {
+                    // Code is correct or very close
                     soundManager.playSuccess();
                     viewModel.markBugAsCompleted(currentBug.getId(), currentBug.getDifficulty());
                     binding.chipCompleted.setVisibility(View.VISIBLE);
-                    binding.buttonMarkSolved.setText("Completed ✓");
+                    binding.buttonMarkSolved.setText("✅  Completed");
                     binding.buttonMarkSolved.setEnabled(false);
                     Toast.makeText(requireContext(), "Bug marked as completed!", Toast.LENGTH_SHORT).show();
                 }
@@ -291,21 +349,41 @@ public class BugDetailFragment extends Fragment {
             return;
         }
 
-        if (hints == null || hints.isEmpty()) {
-            soundManager.playSound(SoundManager.Sound.ERROR);
-            Toast.makeText(requireContext(), "No hints available", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         Integer currentLevel = viewModel.getCurrentHintLevel().getValue();
         if (currentLevel == null) {
             currentLevel = 0;
         }
 
-        if (currentLevel < hints.size()) {
+        // Build combined hint list: first the bug's built-in hint, then any from database
+        List<String> allHints = new ArrayList<>();
+        
+        // Add bug's built-in hint first if available
+        if (currentBug != null) {
+            String bugHint = currentBug.getHintText();
+            if (bugHint != null && !bugHint.isEmpty()) {
+                allHints.add(bugHint);
+            }
+        }
+        
+        // Add hints from database
+        if (hints != null) {
+            for (Hint hint : hints) {
+                if (hint.getText() != null && !hint.getText().isEmpty()) {
+                    allHints.add(hint.getText());
+                }
+            }
+        }
+
+        if (allHints.isEmpty()) {
+            soundManager.playSound(SoundManager.Sound.ERROR);
+            Toast.makeText(requireContext(), "No hints available", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (currentLevel < allHints.size()) {
             soundManager.playSound(SoundManager.Sound.HINT_REVEAL);
             
-            Hint hint = hints.get(currentLevel);
+            String hintText = allHints.get(currentLevel);
 
             if (currentLevel == 0) {
                 AnimationUtil.fadeInWithScale(binding.cardHints);
@@ -313,7 +391,7 @@ public class BugDetailFragment extends Fragment {
 
             TextView hintView = new TextView(requireContext());
             hintView.setTextAppearance(R.style.TextAppearance_DebugMaster_Body1);
-            hintView.setText("💡 Hint " + (currentLevel + 1) + ": " + hint.getText());
+            hintView.setText("💡 Hint " + (currentLevel + 1) + ": " + hintText);
             hintView.setAlpha(0f);
 
             if (currentLevel > 0) {
@@ -363,13 +441,13 @@ public class BugDetailFragment extends Fragment {
 
     /**
      * ═══════════════════════════════════════════════════════════════════════════
-     * SMART CODE VALIDATION
+     * STRICT CODE VALIDATION
      * ═══════════════════════════════════════════════════════════════════════════
      * 
-     * This method intelligently validates user code:
-     * 1. For Java: Tries to execute, but also accepts code comparison
-     * 2. For Python/JS/Kotlin/etc: Uses smart code comparison only
-     * 3. Provides helpful feedback regardless of language
+     * This method validates user code strictly:
+     * 1. For Java: Executes code and checks output matches expected
+     * 2. For all languages: Requires high similarity (95%+) to fixed code
+     * 3. Provides helpful feedback for incorrect solutions
      */
     private void validateUserCode() {
         String userCode = binding.editUserCode.getText().toString().trim();
@@ -379,31 +457,46 @@ public class BugDetailFragment extends Fragment {
             Toast.makeText(requireContext(), "Please enter your code fix first", Toast.LENGTH_SHORT).show();
             return;
         }
+        
+        // Check if user just submitted the original broken code
+        String originalBroken = currentBug.getBrokenCode().trim();
+        if (CodeComparator.normalizeCode(userCode).equals(CodeComparator.normalizeCode(originalBroken))) {
+            soundManager.playSound(SoundManager.Sound.ERROR);
+            Toast.makeText(requireContext(), "You need to fix the bug first!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         soundManager.playSound(SoundManager.Sound.CODE_COMPILE);
 
         binding.buttonCheckFix.setEnabled(false);
-        binding.buttonCheckFix.setText("Checking...");
+        binding.buttonCheckFix.setText("⏳  Checking...");
 
         new Thread(() -> {
-            // First, check if the code matches the fix pattern (works for ALL languages)
+            // Calculate similarity for feedback
+            String normalizedUser = CodeComparator.normalizeCode(userCode);
+            String normalizedFixed = CodeComparator.normalizeCode(currentBug.getFixedCode());
+            double similarity = CodeComparator.calculateSimilarity(normalizedUser, normalizedFixed);
+            
+            Log.d(TAG, "=== Validation ===");
+            Log.d(TAG, "User code length: " + userCode.length());
+            Log.d(TAG, "Fixed code length: " + currentBug.getFixedCode().length());
+            Log.d(TAG, "Similarity: " + (int)(similarity * 100) + "%");
+            
+            // Check if codes match (strict comparison)
             boolean codeMatches = CodeComparator.codesMatch(userCode, currentBug.getFixedCode());
             
-            Log.d(TAG, "Code comparison result: " + codeMatches);
-            Log.d(TAG, "Language: " + currentBug.getLanguage());
+            Log.d(TAG, "Code matches: " + codeMatches);
             
-            // Calculate similarity for feedback
-            double similarity = CodeComparator.calculateSimilarity(
-                CodeComparator.extractCoreFix(userCode),
-                CodeComparator.extractCoreFix(currentBug.getFixedCode())
-            );
-            
-            // For Java, also try execution if code doesn't match exactly
+            // For Java, also try execution
             CodeExecutionResult executionResult = null;
             boolean canExecute = isExecutableLanguage(currentBug.getLanguage());
             
-            if (canExecute && !codeMatches) {
+            if (canExecute) {
                 executionResult = codeExecutionEngine.execute(userCode);
+                Log.d(TAG, "Execution result: " + (executionResult.isSuccess() ? "Success" : "Failed"));
+                if (executionResult.isSuccess()) {
+                    Log.d(TAG, "Output: " + executionResult.getOutput());
+                }
             }
 
             final boolean finalCodeMatches = codeMatches;
@@ -412,7 +505,7 @@ public class BugDetailFragment extends Fragment {
 
             requireActivity().runOnUiThread(() -> {
                 binding.buttonCheckFix.setEnabled(true);
-                binding.buttonCheckFix.setText("Check Fix");
+                binding.buttonCheckFix.setText("▶  Run Tests");
 
                 processValidationResult(finalCodeMatches, finalExecutionResult, finalSimilarity);
             });
@@ -428,37 +521,47 @@ public class BugDetailFragment extends Fragment {
     }
 
     /**
-     * Process the validation result and show appropriate UI
+     * Process the validation result and show appropriate UI.
+     * STRICT: Only marks as correct if code truly matches the fix.
      */
     private void processValidationResult(boolean codeMatches, CodeExecutionResult executionResult, double similarity) {
         if (binding.cardTestResults.getVisibility() != View.VISIBLE) {
             AnimationUtil.fadeInWithScale(binding.cardTestResults);
         }
 
-        // SUCCESS: Code matches the fix pattern!
+        Log.d(TAG, "Processing result - codeMatches: " + codeMatches + ", similarity: " + (int)(similarity * 100) + "%");
+
+        // SUCCESS: Code matches the fix pattern (strict comparison passed)
         if (codeMatches) {
             handleSuccess(similarity);
             return;
         }
 
-        // For Java: Check if execution was successful AND output matches
-        if (executionResult != null) {
-            if (executionResult.isSuccess()) {
-                String actualOutput = executionResult.getOutput().trim();
-                String expectedOutput = currentBug.getExpectedOutput().trim();
-                
-                // Check if output looks like it matches (be lenient)
-                if (outputsMatch(actualOutput, expectedOutput)) {
+        // For Java: Check if execution was successful AND output EXACTLY matches
+        if (executionResult != null && executionResult.isSuccess()) {
+            String actualOutput = executionResult.getOutput().trim();
+            String expectedOutput = currentBug.getExpectedOutput().trim();
+            
+            Log.d(TAG, "Comparing outputs:");
+            Log.d(TAG, "Actual: '" + actualOutput + "'");
+            Log.d(TAG, "Expected: '" + expectedOutput + "'");
+            
+            // STRICT output matching - must be very close
+            if (outputsMatchStrict(actualOutput, expectedOutput)) {
+                // Additional check: similarity must be at least 80%
+                if (similarity >= 0.80) {
                     handleSuccess(similarity);
                     return;
+                } else {
+                    Log.d(TAG, "Output matches but code similarity too low: " + (int)(similarity * 100) + "%");
                 }
             }
-            
-            // Show execution error if there was one
-            if (!executionResult.isSuccess()) {
-                handleExecutionError(executionResult);
-                return;
-            }
+        }
+        
+        // Show execution error if there was one
+        if (executionResult != null && !executionResult.isSuccess()) {
+            handleExecutionError(executionResult);
+            return;
         }
 
         // FAILURE: Code doesn't match
@@ -466,27 +569,34 @@ public class BugDetailFragment extends Fragment {
     }
 
     /**
-     * Lenient output comparison
+     * STRICT output comparison - outputs must match closely
      */
-    private boolean outputsMatch(String actual, String expected) {
+    private boolean outputsMatchStrict(String actual, String expected) {
         if (actual == null || expected == null) return false;
+        if (actual.isEmpty() && expected.isEmpty()) return true;
+        if (actual.isEmpty() || expected.isEmpty()) return false;
         
-        // Exact match
-        if (actual.equals(expected)) return true;
+        // Normalize for comparison
+        String normActual = actual.replaceAll("\\s+", " ").trim().toLowerCase();
+        String normExpected = expected.replaceAll("\\s+", " ").trim().toLowerCase();
         
-        // Case-insensitive match
-        if (actual.equalsIgnoreCase(expected)) return true;
+        // Exact match after normalization
+        if (normActual.equals(normExpected)) return true;
         
-        // Trim and compare
-        if (actual.trim().equals(expected.trim())) return true;
+        // Check if one contains the other (for partial matches)
+        // But only if they're very similar in length
+        int lenDiff = Math.abs(normActual.length() - normExpected.length());
+        int maxLen = Math.max(normActual.length(), normExpected.length());
         
-        // Check if actual contains expected (for multi-line outputs)
-        if (actual.contains(expected) || expected.contains(actual)) return true;
+        if (lenDiff <= 5 && maxLen > 0) {
+            // Small length difference - check if similar
+            double similarity = CodeComparator.calculateSimilarity(normActual, normExpected);
+            if (similarity >= 0.95) {
+                return true;
+            }
+        }
         
-        // Normalize whitespace and compare
-        String normalizedActual = actual.replaceAll("\\s+", " ").trim();
-        String normalizedExpected = expected.replaceAll("\\s+", " ").trim();
-        return normalizedActual.equals(normalizedExpected);
+        return false;
     }
 
     /**
@@ -526,7 +636,7 @@ public class BugDetailFragment extends Fragment {
             celebrateBugCompletion();
 
             binding.chipCompleted.setVisibility(View.VISIBLE);
-            binding.buttonMarkSolved.setText("Completed ✓");
+            binding.buttonMarkSolved.setText("✅  Completed");
             binding.buttonMarkSolved.setEnabled(false);
 
             Snackbar.make(binding.getRoot(), "🏆 Bug solved! XP awarded!", Snackbar.LENGTH_LONG).show();

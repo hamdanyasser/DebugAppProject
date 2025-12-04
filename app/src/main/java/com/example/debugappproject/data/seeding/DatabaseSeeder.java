@@ -26,15 +26,29 @@ import java.util.Set;
  * ║           DEBUGMASTER - COMPREHENSIVE LEARNING PLATFORM                      ║
  * ║         90+ Real Debugging Challenges Across 15 Learning Paths              ║
  * ╚══════════════════════════════════════════════════════════════════════════════╝
+ * 
+ * FREE PATHS (4):
+ * 1. Getting Started - Basic debugging fundamentals
+ * 3. Python Power - Learn Python debugging  
+ * 10. HTML & CSS - Web styling debug basics
+ * 12. Data Structures - Core CS fundamentals
+ * 
+ * PRO PATHS (11): 
+ * Everything else for serious learners
  */
 public class DatabaseSeeder {
 
     private static final String TAG = "DatabaseSeeder";
+    private static final int SEED_VERSION = 4; // Increment to force reseed (v4: Fixed null hints issue)
 
     public static void seedDatabase(Context context, BugRepository repository) {
         android.util.Log.i(TAG, "═══════════════════════════════════════════════════════");
-        android.util.Log.i(TAG, "📊 DEBUGMASTER DATABASE SEEDER");
+        android.util.Log.i(TAG, "📊 DEBUGMASTER DATABASE SEEDER v" + SEED_VERSION);
         android.util.Log.i(TAG, "═══════════════════════════════════════════════════════");
+        
+        // Check seed version
+        android.content.SharedPreferences prefs = context.getSharedPreferences("db_seed_prefs", Context.MODE_PRIVATE);
+        int savedVersion = prefs.getInt("seed_version", 0);
         
         int bugCount = 0;
         int pathCount = 0;
@@ -49,15 +63,20 @@ public class DatabaseSeeder {
             android.util.Log.e(TAG, "Error checking database, will reseed", e);
         }
 
-        // CRITICAL: Reseed if bug_in_path is empty (paths will appear empty in UI)
-        boolean needsReseed = bugCount < 80 || pathCount < 15 || bugInPathCount < 50;
+        // CRITICAL: Reseed if version changed, bug_in_path is empty, or paths need updating
+        boolean versionChanged = savedVersion < SEED_VERSION;
+        boolean needsReseed = bugCount < 80 || pathCount < 15 || bugInPathCount < 50 || versionChanged;
+        
+        if (versionChanged) {
+            android.util.Log.i(TAG, "🔄 Seed version changed (" + savedVersion + " -> " + SEED_VERSION + "), forcing reseed...");
+        }
         
         if (!needsReseed) {
             android.util.Log.i(TAG, "✅ Database already has sufficient content - skipping seed");
             return;
         }
         
-        android.util.Log.i(TAG, "🔄 RESEEDING DATABASE (missing content detected)...");
+        android.util.Log.i(TAG, "🔄 RESEEDING DATABASE (missing content or version update)...");
 
         try {
             // Clear existing data first to avoid conflicts
@@ -82,15 +101,31 @@ public class DatabaseSeeder {
             Type bugListType = new TypeToken<List<Bug>>() {}.getType();
             List<Bug> bugs = gson.fromJson(bugsJson, bugListType);
 
-            String hintsJson = gson.toJson(data.get("hints"));
-            Type hintListType = new TypeToken<List<Hint>>() {}.getType();
-            List<Hint> hints = gson.fromJson(hintsJson, hintListType);
+            // Parse hints (may be null)
+            List<Hint> hints = new ArrayList<>();
+            Object hintsObj = data.get("hints");
+            if (hintsObj != null) {
+                String hintsJson = gson.toJson(hintsObj);
+                Type hintListType = new TypeToken<List<Hint>>() {}.getType();
+                List<Hint> parsedHints = gson.fromJson(hintsJson, hintListType);
+                if (parsedHints != null) {
+                    hints = parsedHints;
+                }
+            }
 
-            // Insert bugs and hints
+            // Insert bugs
             repository.insertBugsSync(bugs);
-            repository.insertHintsSync(hints);
+            android.util.Log.i(TAG, "✅ Inserted " + bugs.size() + " bugs");
+            
+            // Insert hints only if we have them
+            if (!hints.isEmpty()) {
+                repository.insertHintsSync(hints);
+                android.util.Log.i(TAG, "✅ Inserted " + hints.size() + " hints");
+            } else {
+                android.util.Log.w(TAG, "⚠️ No hints found in bugs.json - skipping hints");
+            }
+            
             repository.insertInitialProgressSync();
-            android.util.Log.i(TAG, "✅ Inserted " + bugs.size() + " bugs and " + hints.size() + " hints");
 
             // Create paths and assign bugs
             seedLearningPathsSync(repository, bugs);
@@ -99,6 +134,9 @@ public class DatabaseSeeder {
             android.util.Log.i(TAG, "═══════════════════════════════════════════════════════");
             android.util.Log.i(TAG, "🎉 DATABASE SEEDING COMPLETE!");
             android.util.Log.i(TAG, "═══════════════════════════════════════════════════════");
+            
+            // Save seed version to prevent re-seeding
+            prefs.edit().putInt("seed_version", SEED_VERSION).apply();
 
         } catch (Exception e) {
             android.util.Log.e(TAG, "❌ Failed to seed database", e);
@@ -110,74 +148,104 @@ public class DatabaseSeeder {
         List<LearningPath> paths = new ArrayList<>();
         List<BugInPath> bugInPathList = new ArrayList<>();
 
-        android.util.Log.i(TAG, "📚 Creating 15 learning paths...");
+        android.util.Log.i(TAG, "📚 Creating 15 learning paths (4 FREE, 11 PRO)...");
 
         // ═══════════════════════════════════════════════════════════════════════
-        // 15 COMPREHENSIVE LEARNING PATHS
+        // FREE PATHS - Available to all users
         // ═══════════════════════════════════════════════════════════════════════
         
-        paths.add(createPath(1, "🚀 Getting Started", 
-            "Your debugging journey begins! Learn fundamentals that every developer needs.",
-            "🚀", "Beginner", 1, false, "Fundamentals", 45, 12, 150, true, false, "#10B981"));
+        // PATH 1: FREE - Getting Started
+        paths.add(createPath(1, "Getting Started", 
+            "Your debugging journey begins here! Learn the fundamentals every developer needs. Perfect for beginners.",
+            "🚀", "Beginner", 1, false, "Fundamentals", 45, 12, 150, true, false, "#10B981",
+            "Interactive tutorials with step-by-step guidance. Learn to spot common mistakes."));
 
-        paths.add(createPath(2, "☕ Java Mastery",
-            "Master Java debugging from NullPointer to Collections. The complete Java debug guide.",
-            "☕", "Intermediate", 2, true, "Programming", 120, 30, 400, true, false, "#F59E0B"));
+        // PATH 2: PRO - Java Mastery
+        paths.add(createPath(2, "Java Mastery",
+            "Master Java debugging from NullPointerException to Collections. The complete Java debug guide.",
+            "☕", "Intermediate", 2, true, "Programming", 120, 30, 400, true, false, "#F59E0B",
+            "Deep dive into Java's quirks with real-world examples from production code."));
 
-        paths.add(createPath(3, "🐍 Python Power",
-            "Debug Python like a pro! From indentation to decorators, master Pythonic debugging.",
-            "🐍", "Beginner", 3, true, "Programming", 60, 15, 250, true, true, "#3B82F6"));
+        // PATH 3: FREE - Python Power  
+        paths.add(createPath(3, "Python Power",
+            "Debug Python like a pro! From indentation errors to decorators. Master Pythonic debugging.",
+            "🐍", "Beginner", 3, false, "Programming", 60, 15, 250, true, true, "#3B82F6",
+            "Interactive Python playground with instant feedback. Perfect for data scientists."));
 
-        paths.add(createPath(4, "⚡ JavaScript Ninja",
+        // PATH 4: PRO - JavaScript Ninja
+        paths.add(createPath(4, "JavaScript Ninja",
             "Conquer JS quirks: hoisting, closures, async/await, and the infamous 'this' keyword.",
-            "⚡", "Intermediate", 4, true, "Programming", 90, 20, 300, false, true, "#FBBF24"));
+            "⚡", "Intermediate", 4, true, "Programming", 90, 20, 300, false, true, "#FBBF24",
+            "Master the language that powers the web with animated explanations."));
 
-        paths.add(createPath(5, "📱 Kotlin & Android",
-            "Debug Android apps like a senior dev. Memory leaks, lifecycle, null safety mastered.",
-            "📱", "Advanced", 5, true, "Mobile", 100, 20, 350, false, false, "#A855F7"));
+        // PATH 5: PRO - Kotlin & Android
+        paths.add(createPath(5, "Kotlin & Android",
+            "Debug Android apps like a senior dev. Memory leaks, lifecycle bugs, null safety mastered.",
+            "📱", "Advanced", 5, true, "Mobile", 100, 20, 350, false, false, "#A855F7",
+            "Real Android Studio debugging techniques with memory profiler guides."));
 
-        paths.add(createPath(6, "🤖 Prompt Engineering",
-            "Master AI prompts! Get better results from ChatGPT, Claude, and other LLMs.",
-            "🤖", "Beginner", 6, true, "AI/ML", 45, 10, 300, true, true, "#EC4899"));
+        // PATH 6: PRO - Prompt Engineering
+        paths.add(createPath(6, "Prompt Engineering",
+            "Master AI prompts! Get better results from ChatGPT, Claude, and other LLMs. The future is here.",
+            "🤖", "Beginner", 6, true, "AI/ML", 45, 10, 300, true, true, "#EC4899",
+            "Learn prompt patterns, chain-of-thought, and system prompt optimization."));
 
-        paths.add(createPath(7, "🧠 Advanced Debugging",
-            "Expert-level bugs: concurrency, performance, memory issues. For senior developers.",
-            "🧠", "Advanced", 7, true, "Expert", 90, 15, 400, false, true, "#8B5CF6"));
+        // PATH 7: PRO - Advanced Debugging
+        paths.add(createPath(7, "Advanced Debugging",
+            "Expert-level bugs: concurrency, performance, memory leaks. For senior developers only.",
+            "🧠", "Advanced", 7, true, "Expert", 90, 15, 400, false, true, "#8B5CF6",
+            "Race conditions, deadlocks, and heap analysis techniques explained."));
 
-        paths.add(createPath(8, "🗄️ SQL & Databases",
+        // PATH 8: PRO - SQL & Databases
+        paths.add(createPath(8, "SQL & Databases",
             "Fix queries, prevent SQL injection, optimize JOINs. Database debugging mastery.",
-            "🗄️", "Intermediate", 8, true, "Database", 60, 12, 280, false, false, "#06B6D4"));
+            "🗄️", "Intermediate", 8, true, "Database", 60, 12, 280, false, false, "#06B6D4",
+            "Query plans, indexing strategies, and transaction isolation levels."));
 
-        paths.add(createPath(9, "🔌 API & Backend",
-            "Debug REST APIs, handle errors gracefully, fix CORS. Backend debugging essentials.",
-            "🔌", "Intermediate", 9, true, "Backend", 75, 15, 320, false, false, "#14B8A6"));
+        // PATH 9: PRO - API & Backend
+        paths.add(createPath(9, "API & Backend",
+            "Debug REST APIs, handle errors gracefully, fix CORS nightmares. Backend essentials.",
+            "🔌", "Intermediate", 9, true, "Backend", 75, 15, 320, false, false, "#14B8A6",
+            "HTTP status codes, authentication bugs, and rate limiting issues."));
 
-        paths.add(createPath(10, "🎨 HTML & CSS",
-            "Fix layouts, z-index nightmares, flexbox issues. Frontend styling debug guide.",
-            "🎨", "Beginner", 10, true, "Web", 45, 10, 200, false, false, "#F97316"));
+        // PATH 10: FREE - HTML & CSS
+        paths.add(createPath(10, "HTML & CSS",
+            "Fix layouts, z-index nightmares, flexbox issues, and responsive design bugs.",
+            "🎨", "Beginner", 10, false, "Web", 45, 10, 200, false, false, "#F97316",
+            "Visual debugging with browser DevTools. See your fixes in real-time."));
 
-        paths.add(createPath(11, "⚛️ React Debugging",
-            "useState batching, useEffect loops, key props. Master React's tricky behaviors.",
-            "⚛️", "Intermediate", 11, true, "Web", 80, 15, 350, false, true, "#61DAFB"));
+        // PATH 11: PRO - React Debugging
+        paths.add(createPath(11, "React Debugging",
+            "useState batching, useEffect infinite loops, key prop errors. Master React's tricky behaviors.",
+            "⚛️", "Intermediate", 11, true, "Web", 80, 15, 350, false, true, "#61DAFB",
+            "React DevTools, component profiling, and hooks best practices."));
 
-        paths.add(createPath(12, "📚 Data Structures",
-            "Arrays, linked lists, trees, stacks. Debug the structures that power all software.",
-            "📚", "Intermediate", 12, true, "CS Fundamentals", 90, 18, 380, true, false, "#EF4444"));
+        // PATH 12: FREE - Data Structures
+        paths.add(createPath(12, "Data Structures",
+            "Arrays, linked lists, trees, stacks, queues. Debug the structures that power all software.",
+            "📚", "Intermediate", 12, false, "CS Fundamentals", 90, 18, 380, true, false, "#EF4444",
+            "Animated visualizations of data structure operations and common bugs."));
 
-        paths.add(createPath(13, "🧮 Algorithm Bugs",
-            "Binary search, recursion, sorting bugs. Fix the algorithms that interviewers love.",
-            "🧮", "Advanced", 13, true, "CS Fundamentals", 80, 15, 350, false, false, "#F472B6"));
+        // PATH 13: PRO - Algorithm Bugs
+        paths.add(createPath(13, "Algorithm Bugs",
+            "Binary search, recursion, sorting bugs. Fix the algorithms that interviewers love to test.",
+            "🧮", "Advanced", 13, true, "CS Fundamentals", 80, 15, 350, false, false, "#F472B6",
+            "Step-by-step algorithm execution with bug spotting exercises."));
 
-        paths.add(createPath(14, "✨ Clean Code",
-            "Magic numbers, god methods, deep nesting. Write bug-resistant code from the start.",
-            "✨", "Intermediate", 14, true, "Best Practices", 50, 12, 280, false, false, "#84CC16"));
+        // PATH 14: PRO - Clean Code
+        paths.add(createPath(14, "Clean Code",
+            "Magic numbers, god methods, deep nesting. Learn to write bug-resistant code from the start.",
+            "✨", "Intermediate", 14, true, "Best Practices", 50, 12, 280, false, false, "#84CC16",
+            "Code smells detection and refactoring patterns with before/after examples."));
 
-        paths.add(createPath(15, "💼 Interview Prep",
-            "FizzBuzz to Two Sum. Debug the classics that appear in every coding interview.",
-            "💼", "Intermediate", 15, true, "Career", 100, 20, 500, true, true, "#0EA5E9"));
+        // PATH 15: PRO - Interview Prep
+        paths.add(createPath(15, "Interview Prep",
+            "FizzBuzz to Two Sum. Debug the classic coding problems that appear in FAANG interviews.",
+            "💼", "Intermediate", 15, true, "Career", 100, 20, 500, true, true, "#0EA5E9",
+            "Mock interview questions with time pressure. Get job-ready!"));
 
         repository.insertLearningPathsSync(paths);
-        android.util.Log.i(TAG, "✅ Created " + paths.size() + " learning paths");
+        android.util.Log.i(TAG, "✅ Created " + paths.size() + " learning paths (4 FREE: #1,3,10,12)");
 
         // ═══════════════════════════════════════════════════════════════════════
         // INTELLIGENT BUG ASSIGNMENT
@@ -204,7 +272,7 @@ public class DatabaseSeeder {
                 assign(bugInPathList, assigned, bug.getId(), 2, order);
             }
 
-            // PATH 3: Python Power - All Python bugs
+            // PATH 3: Python Power (FREE) - All Python bugs
             if (lang.equals("Python")) {
                 assign(bugInPathList, assigned, bug.getId(), 3, order);
             }
@@ -239,7 +307,7 @@ public class DatabaseSeeder {
                 assign(bugInPathList, assigned, bug.getId(), 9, order);
             }
 
-            // PATH 10: HTML & CSS
+            // PATH 10: HTML & CSS (FREE)
             if (lang.equals("HTML") || lang.equals("CSS") || cat.equals("Styling")) {
                 assign(bugInPathList, assigned, bug.getId(), 10, order);
             }
@@ -249,7 +317,7 @@ public class DatabaseSeeder {
                 assign(bugInPathList, assigned, bug.getId(), 11, order);
             }
 
-            // PATH 12: Data Structures
+            // PATH 12: Data Structures (FREE)
             if (cat.equals("Arrays") || cat.equals("Collections") || cat.equals("DataStructures") ||
                 cat.equals("Strings")) {
                 assign(bugInPathList, assigned, bug.getId(), 12, order);
@@ -303,16 +371,17 @@ public class DatabaseSeeder {
         StringBuilder log = new StringBuilder("\n╔════════════════════════════════════════╗\n");
         log.append("║       PATH CONTENT SUMMARY            ║\n");
         log.append("╠════════════════════════════════════════╣\n");
-        String[] names = {"", "Getting Started", "Java Mastery", "Python Power", "JS Ninja", "Kotlin/Android",
-                         "Prompt Eng", "Advanced", "SQL/DB", "API/Backend", "HTML/CSS", "React", 
-                         "Data Structures", "Algorithms", "Clean Code", "Interview"};
+        String[] names = {"", "Getting Started ★", "Java Mastery", "Python Power ★", "JS Ninja", "Kotlin/Android",
+                         "Prompt Eng", "Advanced", "SQL/DB", "API/Backend", "HTML/CSS ★", "React", 
+                         "Data Structures ★", "Algorithms", "Clean Code", "Interview"};
         for (int i = 1; i <= 15; i++) {
             int count = order[i] - 1;
             String bar = "";
             for (int j = 0; j < Math.min(count, 20); j++) bar += "█";
-            log.append(String.format("║ %2d. %-14s %3d %s\n", i, names[i], count, bar));
+            log.append(String.format("║ %2d. %-18s %3d %s\n", i, names[i], count, bar));
         }
         log.append("╠════════════════════════════════════════╣\n");
+        log.append("║ ★ = FREE PATH                         ║\n");
         log.append("║ TOTAL ASSIGNMENTS: ").append(bugInPathList.size()).append("\n");
         log.append("╚════════════════════════════════════════╝");
         android.util.Log.i(TAG, log.toString());
@@ -333,66 +402,19 @@ public class DatabaseSeeder {
     private static LearningPath createPath(int id, String name, String desc, String emoji,
                                            String diff, int sortOrder, boolean locked, String category,
                                            int mins, int lessons, int xp, boolean featured, 
-                                           boolean isNew, String color) {
+                                           boolean isNew, String color, String tutorial) {
         LearningPath p = new LearningPath(name, desc, emoji, diff, sortOrder, locked,
                 category, mins, lessons, xp, featured, isNew, color);
         p.setId(id);
+        p.setTutorialContent(tutorial);
         return p;
     }
 
     private static void seedAchievementsSync(BugRepository repository) {
-        List<AchievementDefinition> achievements = new ArrayList<>();
-
-        // Bug Achievements
-        achievements.add(new AchievementDefinition("first_bug", "First Bug Squashed", "Complete your first challenge", "🐛", 10, "bugs_fixed", 1));
-        achievements.add(new AchievementDefinition("bug_hunter_10", "Bug Hunter", "Fix 10 bugs", "🎯", 50, "bugs_fixed", 10));
-        achievements.add(new AchievementDefinition("bug_slayer_25", "Bug Slayer", "Fix 25 bugs", "⚔️", 100, "bugs_fixed", 25));
-        achievements.add(new AchievementDefinition("bug_master_50", "Bug Master", "Fix 50 bugs", "🏆", 200, "bugs_fixed", 50));
-        achievements.add(new AchievementDefinition("bug_legend_100", "Bug Legend", "Fix 100 bugs!", "👑", 500, "bugs_fixed", 100));
-
-        // Streaks
-        achievements.add(new AchievementDefinition("streak_3", "Warming Up", "3-day streak", "🔥", 30, "streak_days", 3));
-        achievements.add(new AchievementDefinition("streak_7", "On Fire!", "7-day streak", "🔥", 75, "streak_days", 7));
-        achievements.add(new AchievementDefinition("streak_14", "Unstoppable", "14-day streak", "💥", 150, "streak_days", 14));
-        achievements.add(new AchievementDefinition("streak_30", "Dedicated", "30-day streak", "💎", 300, "streak_days", 30));
-
-        // Perfect Scores
-        achievements.add(new AchievementDefinition("perfect_5", "Sharp Eye", "5 perfect scores", "👁️", 50, "perfect_scores", 5));
-        achievements.add(new AchievementDefinition("perfect_20", "Eagle Eye", "20 perfect scores", "🦅", 150, "perfect_scores", 20));
-
-        // Speed
-        achievements.add(new AchievementDefinition("speed_demon", "Speed Demon", "Fix in under 30s", "⚡", 25, "speed_fix", 1));
-        achievements.add(new AchievementDefinition("lightning_fast", "Lightning Fast", "10 fast fixes", "⚡", 100, "speed_fix", 10));
-
-        // Paths
-        achievements.add(new AchievementDefinition("path_complete_1", "Path Pioneer", "Complete 1 path", "🛤️", 100, "paths_completed", 1));
-        achievements.add(new AchievementDefinition("path_complete_3", "Path Explorer", "Complete 3 paths", "🗺️", 250, "paths_completed", 3));
-        achievements.add(new AchievementDefinition("path_complete_5", "Path Master", "Complete 5 paths", "🧭", 400, "paths_completed", 5));
-        achievements.add(new AchievementDefinition("path_complete_all", "Path Legend", "Complete ALL paths", "🏅", 2000, "paths_completed", 15));
-
-        // Languages
-        achievements.add(new AchievementDefinition("java_expert", "Java Expert", "20 Java bugs fixed", "☕", 100, "java_bugs", 20));
-        achievements.add(new AchievementDefinition("python_master", "Python Master", "15 Python bugs fixed", "🐍", 100, "python_bugs", 15));
-        achievements.add(new AchievementDefinition("js_ninja", "JS Ninja", "15 JavaScript bugs fixed", "⚡", 100, "js_bugs", 15));
-        achievements.add(new AchievementDefinition("polyglot", "Polyglot", "Fix bugs in 3 languages", "🌍", 75, "languages_used", 3));
-
-        // Battle
-        achievements.add(new AchievementDefinition("first_victory", "First Victory", "Win a battle", "⚔️", 50, "battles_won", 1));
-        achievements.add(new AchievementDefinition("battle_veteran", "Battle Veteran", "Win 10 battles", "🛡️", 150, "battles_won", 10));
-        achievements.add(new AchievementDefinition("arena_champion", "Arena Champion", "Win 50 battles", "🏆", 500, "battles_won", 50));
-
-        // Levels
-        achievements.add(new AchievementDefinition("level_5", "Rising Star", "Reach Level 5", "⭐", 50, "level", 5));
-        achievements.add(new AchievementDefinition("level_10", "Skilled", "Reach Level 10", "🌟", 100, "level", 10));
-        achievements.add(new AchievementDefinition("level_25", "Expert", "Reach Level 25", "💫", 250, "level", 25));
-
-        // Special
-        achievements.add(new AchievementDefinition("night_owl", "Night Owl", "Debug after midnight", "🦉", 25, "special", 1));
-        achievements.add(new AchievementDefinition("early_bird", "Early Bird", "Debug before 6 AM", "🐦", 25, "special", 1));
-        achievements.add(new AchievementDefinition("weekend_warrior", "Weekend Warrior", "Debug on weekend", "💪", 50, "special", 1));
-        achievements.add(new AchievementDefinition("pro_member", "Pro Member", "Subscribe to Pro", "👑", 100, "special", 1));
-
+        // Use comprehensive achievement list from AchievementManager
+        List<AchievementDefinition> achievements = com.example.debugappproject.util.AchievementManager.getAllAchievementDefinitions();
+        
         repository.insertAchievementsSync(achievements);
-        android.util.Log.i(TAG, "✅ Created " + achievements.size() + " achievements");
+        android.util.Log.i(TAG, "Created " + achievements.size() + " achievements");
     }
 }

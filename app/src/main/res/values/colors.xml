@@ -244,6 +244,11 @@
     <color name="background">@color/background_light</color>
     <color name="text_primary">@color/text_primary_light</color>
     <color name="text_secondary">@color/text_secondary_light</color>
+    <color name="text_tertiary">#94A3B8</color>
     <color name="surface">@color/surface_light</color>
     <color name="divider">@color/divider_light</color>
+    
+    <!-- Game Colors -->
+    <color name="success_green">#22C55E</color>
+    <color name="error_red">#EF4444</color>
 </resources>

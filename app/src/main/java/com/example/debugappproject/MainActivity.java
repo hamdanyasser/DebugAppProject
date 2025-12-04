@@ -9,11 +9,13 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.debugappproject.databinding.ActivityMainBinding;
+import com.example.debugappproject.util.ThemeManager;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 /**
  * Main activity with bottom navigation.
+ * Handles navigation between main screens and theme application.
  */
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
@@ -21,15 +23,19 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private NavController navController;
     private boolean isNavigationSetup = false;
+    private NavController.OnDestinationChangedListener destinationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Apply theme before super.onCreate
+        ThemeManager.getInstance(this).applyTheme();
+        
         super.onCreate(savedInstanceState);
         
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         
-        android.util.Log.d("MainActivity", "onCreate completed - waiting for fragments");
+        android.util.Log.d("MainActivity", "onCreate completed");
     }
 
     @Override
@@ -44,13 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupNavigationDelayed() {
         // Use a small delay to ensure NavHostFragment is ready
-        binding.getRoot().post(() -> {
-            try {
-                setupNavigation();
-            } catch (Exception e) {
-                android.util.Log.e("MainActivity", "Error setting up navigation", e);
-            }
-        });
+        binding.getRoot().post(this::setupNavigation);
     }
 
     private void setupNavigation() {
@@ -65,14 +65,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
             navController = navHostFragment.getNavController();
-            android.util.Log.d("MainActivity", "NavController obtained");
 
             // Setup bottom navigation with NavigationUI
             NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
-            android.util.Log.d("MainActivity", "Bottom navigation setup complete");
 
-            // Setup destination listener for showing/hiding bottom nav
-            navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            // Create destination listener (store reference to remove later)
+            destinationListener = (controller, destination, arguments) -> {
                 int destId = destination.getId();
                 
                 // Hide bottom nav for these screens
@@ -83,12 +81,12 @@ public class MainActivity extends AppCompatActivity {
                         destId == R.id.pathDetailFragment ||
                         destId == R.id.settingsFragment);
 
-                if (binding.cardBottomNav != null) {
+                if (binding != null && binding.cardBottomNav != null) {
                     binding.cardBottomNav.setVisibility(hideBottomNav ? View.GONE : View.VISIBLE);
                 }
-                
-                android.util.Log.d("MainActivity", "Navigated to: " + destination.getLabel());
-            });
+            };
+            
+            navController.addOnDestinationChangedListener(destinationListener);
 
             isNavigationSetup = true;
             android.util.Log.d("MainActivity", "Navigation setup complete!");
@@ -104,5 +102,15 @@ public class MainActivity extends AppCompatActivity {
             return navController.navigateUp() || super.onSupportNavigateUp();
         }
         return super.onSupportNavigateUp();
+    }
+    
+    @Override
+    protected void onDestroy() {
+        // Remove listener to prevent memory leaks
+        if (navController != null && destinationListener != null) {
+            navController.removeOnDestinationChangedListener(destinationListener);
+        }
+        binding = null;
+        super.onDestroy();
     }
 }

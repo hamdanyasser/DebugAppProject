@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- DEBUGMASTER ULTIMATE - BATTLE ARENA
-     Premium PvP Multiplayer Debugging Experience -->
+<!--
+    ╔══════════════════════════════════════════════════════════════════════════════╗
+    ║           DEBUGMASTER - BATTLE ARENA MENU                                    ║
+    ║              Premium PvP Multiplayer Hub                                     ║
+    ╚══════════════════════════════════════════════════════════════════════════════╝
+-->
 <androidx.coordinatorlayout.widget.CoordinatorLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_cyber_main"
+    android:background="#0D0D1A"
     android:fitsSystemWindows="true">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
+        android:scrollbars="none"
         android:clipToPadding="false">
 
         <LinearLayout
@@ -21,20 +26,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="120dp">
+            android:paddingBottom="100dp">
 
-            <!-- Header with Epic Gradient -->
+            <!-- ═══════════════════════════════════════════════════════════════════
+                 EPIC HEADER
+                 ═══════════════════════════════════════════════════════════════════ -->
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_battle_arena_gradient">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_battle_arena_gradient"
                     android:orientation="vertical"
                     android:padding="20dp"
-                    android:paddingBottom="40dp">
+                    android:paddingBottom="32dp">
 
                     <!-- Top Bar -->
                     <LinearLayout
@@ -57,20 +64,19 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_weight="1"
-                            android:text="⚔️ Battle Arena"
+                            android:text="Battle Arena"
                             android:textColor="@color/white"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
+                            android:textSize="20sp"
+                            android:fontFamily="sans-serif-medium" />
 
                         <!-- Trophies Badge -->
                         <LinearLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="40dp"
                             android:background="@drawable/bg_glass_pill"
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="6dp">
+                            android:paddingHorizontal="14dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -83,21 +89,21 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="6dp"
-                                android:textColor="@color/xp_gold"
+                                android:textColor="#FFD54F"
                                 android:textSize="16sp"
-                                android:textStyle="bold"
-                                android:text="1,250" />
+                                android:fontFamily="sans-serif-bold"
+                                android:text="100" />
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Arena Title Section -->
+                    <!-- Arena Icon & Title -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="24dp"
-                        android:text="🎮"
-                        android:textSize="56sp" />
+                        android:text="⚔️"
+                        android:textSize="64sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -107,17 +113,17 @@
                         android:text="Debug Battles"
                         android:textColor="@color/white"
                         android:textSize="28sp"
-                        android:textStyle="bold" />
+                        android:fontFamily="sans-serif-medium" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="4dp"
-                        android:text="Challenge opponents in real-time!"
+                        android:text="Race to fix bugs before your opponent!"
                         android:textColor="@color/white"
                         android:textSize="14sp"
-                        android:alpha="0.85" />
+                        android:alpha="0.8" />
 
                     <!-- Battle Stats Row -->
                     <LinearLayout
@@ -132,11 +138,11 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:layout_marginEnd="6dp"
                             android:background="@drawable/bg_glass_rounded"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:padding="12dp"
-                            android:layout_marginEnd="6dp">
+                            android:padding="14dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -148,10 +154,10 @@
                                 android:id="@+id/text_wins"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="47"
+                                android:text="0"
                                 android:textColor="@color/white"
-                                android:textSize="22sp"
-                                android:textStyle="bold" />
+                                android:textSize="24sp"
+                                android:fontFamily="sans-serif-bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -167,11 +173,11 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:layout_marginHorizontal="6dp"
                             android:background="@drawable/bg_glass_rounded"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:padding="12dp"
-                            android:layout_marginHorizontal="6dp">
+                            android:padding="14dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -183,10 +189,10 @@
                                 android:id="@+id/text_losses"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="12"
+                                android:text="0"
                                 android:textColor="@color/white"
-                                android:textSize="22sp"
-                                android:textStyle="bold" />
+                                android:textSize="24sp"
+                                android:fontFamily="sans-serif-bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -202,11 +208,11 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:layout_marginStart="6dp"
                             android:background="@drawable/bg_glass_rounded"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:padding="12dp"
-                            android:layout_marginStart="6dp">
+                            android:padding="14dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -218,10 +224,10 @@
                                 android:id="@+id/text_win_rate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="80%"
-                                android:textColor="@color/difficulty_easy"
-                                android:textSize="22sp"
-                                android:textStyle="bold" />
+                                android:text="0%"
+                                android:textColor="#00E676"
+                                android:textSize="24sp"
+                                android:fontFamily="sans-serif-bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -235,7 +241,9 @@
                 </LinearLayout>
             </FrameLayout>
 
-            <!-- Battle Mode Selection -->
+            <!-- ═══════════════════════════════════════════════════════════════════
+                 BATTLE MODE SELECTION
+                 ═══════════════════════════════════════════════════════════════════ -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -245,10 +253,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Select Battle Mode"
+                    android:text="Battle Modes"
                     android:textColor="@color/white"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="sans-serif-medium" />
 
                 <!-- Quick Match Card -->
                 <com.google.android.material.card.MaterialCardView
@@ -258,15 +266,17 @@
                     android:layout_marginTop="16dp"
                     android:clickable="true"
                     android:focusable="true"
-                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardBackgroundColor="#1A1A2E"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="8dp"
-                    app:rippleColor="@color/primary_light">
+                    app:cardElevation="0dp"
+                    app:strokeColor="#7C4DFF"
+                    app:strokeWidth="2dp"
+                    app:rippleColor="#407C4DFF">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_hero_gradient"
+                        android:background="@drawable/bg_quick_match_gradient"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:padding="20dp">
@@ -297,20 +307,21 @@
                                 android:text="Quick Match"
                                 android:textColor="@color/white"
                                 android:textSize="18sp"
-                                android:textStyle="bold" />
+                                android:fontFamily="sans-serif-medium" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:alpha="0.85"
-                                android:text="Find a random opponent instantly"
+                                android:layout_marginTop="2dp"
+                                android:alpha="0.8"
+                                android:text="Battle an AI opponent instantly"
                                 android:textColor="@color/white"
                                 android:textSize="13sp" />
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
+                                android:layout_marginTop="10dp"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal">
 
@@ -318,8 +329,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:background="@drawable/bg_glass_pill"
-                                    android:paddingHorizontal="8dp"
-                                    android:paddingVertical="2dp"
+                                    android:paddingHorizontal="10dp"
+                                    android:paddingVertical="4dp"
                                     android:text="🎮 1v1"
                                     android:textColor="@color/white"
                                     android:textSize="11sp" />
@@ -329,9 +340,9 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
                                     android:background="@drawable/bg_glass_pill"
-                                    android:paddingHorizontal="8dp"
-                                    android:paddingVertical="2dp"
-                                    android:text="⏱️ 5 min"
+                                    android:paddingHorizontal="10dp"
+                                    android:paddingVertical="4dp"
+                                    android:text="⏱️ 3 min"
                                     android:textColor="@color/white"
                                     android:textSize="11sp" />
 
@@ -339,20 +350,22 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
-                                    android:background="@drawable/bg_glass_pill"
-                                    android:paddingHorizontal="8dp"
-                                    android:paddingVertical="2dp"
-                                    android:text="+50 🏆"
-                                    android:textColor="@color/xp_gold"
-                                    android:textSize="11sp" />
+                                    android:background="@drawable/bg_xp_badge"
+                                    android:paddingHorizontal="10dp"
+                                    android:paddingVertical="4dp"
+                                    android:text="+25-40 🏆"
+                                    android:textColor="#FFD54F"
+                                    android:textSize="11sp"
+                                    android:fontFamily="sans-serif-medium" />
                             </LinearLayout>
                         </LinearLayout>
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_chevron_right"
-                            app:tint="@color/white" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="▶"
+                            android:textColor="#7C4DFF"
+                            android:textSize="24sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -364,10 +377,11 @@
                     android:layout_marginTop="12dp"
                     android:clickable="true"
                     android:focusable="true"
-                    app:cardBackgroundColor="@color/surface_dark"
+                    app:cardBackgroundColor="#1A1A2E"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:rippleColor="@color/primary_light">
+                    app:cardElevation="0dp"
+                    app:strokeColor="#2D2D44"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -377,48 +391,67 @@
                         android:padding="20dp">
 
                         <FrameLayout
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:background="@drawable/bg_rank_silver">
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_path_icon">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:text="👥"
-                                android:textSize="28sp" />
+                                android:textSize="24sp" />
                         </FrameLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
+                            android:layout_marginStart="14dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Challenge Friend"
-                                android:textColor="@color/white"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Challenge Friend"
+                                    android:textColor="@color/white"
+                                    android:textSize="16sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:background="@drawable/bg_badge_new"
+                                    android:paddingHorizontal="6dp"
+                                    android:paddingVertical="2dp"
+                                    android:text="SOON"
+                                    android:textColor="@color/white"
+                                    android:textSize="8sp"
+                                    android:fontFamily="sans-serif-bold" />
+                            </LinearLayout>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:alpha="0.7"
+                                android:layout_marginTop="2dp"
+                                android:alpha="0.6"
                                 android:text="Battle with your friends"
                                 android:textColor="@color/white"
-                                android:textSize="13sp" />
+                                android:textSize="12sp" />
                         </LinearLayout>
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_chevron_right"
-                            app:tint="@color/white"
-                            android:alpha="0.7" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="→"
+                            android:textColor="#6A6A8A"
+                            android:textSize="20sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -430,10 +463,11 @@
                     android:layout_marginTop="12dp"
                     android:clickable="true"
                     android:focusable="true"
-                    app:cardBackgroundColor="@color/surface_dark"
+                    app:cardBackgroundColor="#1A1A2E"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:rippleColor="@color/primary_light">
+                    app:cardElevation="0dp"
+                    app:strokeColor="#2D2D44"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -443,48 +477,67 @@
                         android:padding="20dp">
 
                         <FrameLayout
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:background="@drawable/bg_rank_bronze">
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_path_icon">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:text="🏟️"
-                                android:textSize="28sp" />
+                                android:textSize="24sp" />
                         </FrameLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
+                            android:layout_marginStart="14dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Create Private Room"
-                                android:textColor="@color/white"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Private Room"
+                                    android:textColor="@color/white"
+                                    android:textSize="16sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:background="@drawable/bg_badge_new"
+                                    android:paddingHorizontal="6dp"
+                                    android:paddingVertical="2dp"
+                                    android:text="SOON"
+                                    android:textColor="@color/white"
+                                    android:textSize="8sp"
+                                    android:fontFamily="sans-serif-bold" />
+                            </LinearLayout>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:alpha="0.7"
-                                android:text="Get a room code to share"
+                                android:layout_marginTop="2dp"
+                                android:alpha="0.6"
+                                android:text="Create a room and invite friends"
                                 android:textColor="@color/white"
-                                android:textSize="13sp" />
+                                android:textSize="12sp" />
                         </LinearLayout>
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_chevron_right"
-                            app:tint="@color/white"
-                            android:alpha="0.7" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="→"
+                            android:textColor="#6A6A8A"
+                            android:textSize="20sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -496,10 +549,11 @@
                     android:layout_marginTop="12dp"
                     android:clickable="true"
                     android:focusable="true"
-                    app:cardBackgroundColor="@color/surface_dark"
+                    app:cardBackgroundColor="#1A1A2E"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:rippleColor="@color/primary_light">
+                    app:cardElevation="0dp"
+                    app:strokeColor="#2D2D44"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -509,251 +563,192 @@
                         android:padding="20dp">
 
                         <FrameLayout
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:background="@drawable/bg_glass_rounded">
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_path_icon">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:text="🔑"
-                                android:textSize="28sp" />
+                                android:textSize="24sp" />
                         </FrameLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
+                            android:layout_marginStart="14dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Join Room"
-                                android:textColor="@color/white"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Join Room"
+                                    android:textColor="@color/white"
+                                    android:textSize="16sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:background="@drawable/bg_badge_new"
+                                    android:paddingHorizontal="6dp"
+                                    android:paddingVertical="2dp"
+                                    android:text="SOON"
+                                    android:textColor="@color/white"
+                                    android:textSize="8sp"
+                                    android:fontFamily="sans-serif-bold" />
+                            </LinearLayout>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:alpha="0.7"
+                                android:layout_marginTop="2dp"
+                                android:alpha="0.6"
                                 android:text="Enter a room code to join"
                                 android:textColor="@color/white"
-                                android:textSize="13sp" />
+                                android:textSize="12sp" />
                         </LinearLayout>
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_chevron_right"
-                            app:tint="@color/white"
-                            android:alpha="0.7" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="→"
+                            android:textColor="#6A6A8A"
+                            android:textSize="20sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Recent Battles Section -->
+                <!-- ═══════════════════════════════════════════════════════════════════
+                     HOW IT WORKS
+                     ═══════════════════════════════════════════════════════════════════ -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:text="Recent Battles"
+                    android:layout_marginTop="28dp"
+                    android:text="How It Works"
                     android:textColor="@color/white"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="sans-serif-medium" />
 
-                <!-- Battle History Item 1 -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    app:cardBackgroundColor="@color/surface_dark"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                    app:cardBackgroundColor="#1A1A2E"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#2D2D44"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="16dp">
+                        android:orientation="vertical"
+                        android:padding="20dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="✅"
-                            android:textSize="24sp" />
-
+                        <!-- Step 1 -->
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:gravity="center_vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="vs CodeNinja42"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@drawable/bg_glass_circle"
+                                android:gravity="center"
+                                android:text="1"
                                 android:textColor="@color/white"
-                                android:textSize="15sp"
-                                android:textStyle="bold" />
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif-bold" />
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:alpha="0.7"
-                                android:text="2 hours ago"
+                                android:layout_marginStart="12dp"
+                                android:layout_weight="1"
+                                android:text="You and your opponent get the same bug"
                                 android:textColor="@color/white"
-                                android:textSize="12sp" />
+                                android:textSize="14sp" />
                         </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="+35 🏆"
-                            android:textColor="@color/difficulty_easy"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Battle History Item 2 -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:cardBackgroundColor="@color/surface_dark"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="16dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="✅"
-                            android:textSize="24sp" />
-
+                        <!-- Step 2 -->
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:layout_marginTop="12dp"
+                            android:gravity="center_vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="vs BugHunter99"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@drawable/bg_glass_circle"
+                                android:gravity="center"
+                                android:text="2"
                                 android:textColor="@color/white"
-                                android:textSize="15sp"
-                                android:textStyle="bold" />
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif-bold" />
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:alpha="0.7"
-                                android:text="5 hours ago"
+                                android:layout_marginStart="12dp"
+                                android:layout_weight="1"
+                                android:text="Race to fix it correctly within 3 minutes"
                                 android:textColor="@color/white"
-                                android:textSize="12sp" />
+                                android:textSize="14sp" />
                         </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="+42 🏆"
-                            android:textColor="@color/difficulty_easy"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Battle History Item 3 (Loss) -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:cardBackgroundColor="@color/surface_dark"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="16dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="❌"
-                            android:textSize="24sp" />
-
+                        <!-- Step 3 -->
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:layout_marginTop="12dp"
+                            android:gravity="center_vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="vs DebugMaster_Pro"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:background="@drawable/bg_glass_circle"
+                                android:gravity="center"
+                                android:text="3"
                                 android:textColor="@color/white"
-                                android:textSize="15sp"
-                                android:textStyle="bold" />
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif-bold" />
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:alpha="0.7"
-                                android:text="Yesterday"
+                                android:layout_marginStart="12dp"
+                                android:layout_weight="1"
+                                android:text="Win trophies and climb the leaderboard!"
                                 android:textColor="@color/white"
-                                android:textSize="12sp" />
+                                android:textSize="14sp" />
                         </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="-18 🏆"
-                            android:textColor="@color/error_light"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-
-                <!-- View All History -->
-                <TextView
-                    android:id="@+id/text_view_all_battles"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="16dp"
-                    android:paddingVertical="8dp"
-                    android:text="View All Battle History →"
-                    android:textColor="@color/primary"
-                    android:textSize="14sp" />
 
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Matchmaking Overlay (Initially Hidden) -->
+    <!-- ═══════════════════════════════════════════════════════════════════════════
+         MATCHMAKING OVERLAY
+         ═══════════════════════════════════════════════════════════════════════════ -->
     <FrameLayout
         android:id="@+id/layout_matchmaking"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_dark"
+        android:background="#F0000000"
         android:visibility="gone">
 
         <LinearLayout
@@ -764,20 +759,28 @@
             android:orientation="vertical"
             android:padding="32dp">
 
-            <ProgressBar
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:indeterminate="true"
-                android:indeterminateTint="@color/primary" />
+            <!-- Pulsing Search Icon -->
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:background="@drawable/bg_vs_badge">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="⚔️"
+                    android:textSize="48sp" />
+            </FrameLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="🔍 Finding Opponent..."
+                android:text="Finding Opponent..."
                 android:textColor="@color/white"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:fontFamily="sans-serif-medium" />
 
             <TextView
                 android:id="@+id/text_matchmaking_status"
@@ -785,19 +788,29 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Searching for players at your level"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:alpha="0.7" />
+                android:textColor="#B8B8D0"
+                android:textSize="14sp" />
+
+            <ProgressBar
+                android:layout_width="200dp"
+                android:layout_height="4dp"
+                android:layout_marginTop="24dp"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:indeterminate="true"
+                android:indeterminateTint="#7C4DFF" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_cancel_matchmaking"
-                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="44dp"
                 android:layout_marginTop="32dp"
                 android:text="Cancel"
                 android:textColor="@color/white"
-                app:strokeColor="@color/white" />
+                android:textSize="14sp"
+                android:textAllCaps="false"
+                app:backgroundTint="#3D3D5C"
+                app:cornerRadius="12dp"
+                app:elevation="0dp" />
         </LinearLayout>
     </FrameLayout>
 

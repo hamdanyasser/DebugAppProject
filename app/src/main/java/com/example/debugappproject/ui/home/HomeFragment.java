@@ -25,21 +25,13 @@ import com.example.debugappproject.R;
 import com.example.debugappproject.billing.BillingManager;
 import com.example.debugappproject.databinding.FragmentHomeBinding;
 import com.example.debugappproject.model.UserProgress;
+import com.example.debugappproject.util.AuthManager;
 import com.example.debugappproject.util.SoundManager;
 
 import java.util.Calendar;
 
 /**
- * ╔══════════════════════════════════════════════════════════════════════════════╗
- * ║           DEBUGMASTER - PREMIUM HOME DASHBOARD                               ║
- * ║              AAA Mobile Game Quality Experience                              ║
- * ╚══════════════════════════════════════════════════════════════════════════════╝
- *
- * The main hub of the DebugMaster experience with:
- * • Premium entrance animations
- * • Sound effects on all interactions
- * • Haptic feedback
- * • Dynamic stat updates with visual flair
+ * Home Fragment - Main dashboard with game modes and stats
  */
 public class HomeFragment extends Fragment {
 
@@ -48,6 +40,7 @@ public class HomeFragment extends Fragment {
     private HomeViewModel viewModel;
     private BillingManager billingManager;
     private SoundManager soundManager;
+    private AuthManager authManager;
     private Handler animationHandler;
 
     private static final String[] MORNING_GREETINGS = {
@@ -82,9 +75,8 @@ public class HomeFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         billingManager = BillingManager.getInstance(requireContext());
         soundManager = SoundManager.getInstance(requireContext());
+        authManager = AuthManager.getInstance(requireContext());
         animationHandler = new Handler(Looper.getMainLooper());
-        
-        android.util.Log.d("HomeFragment", "onViewCreated: BillingManager initialized, isPro=" + billingManager.isProUserSync());
 
         // Play entrance sound
         soundManager.playSound(SoundManager.Sound.TRANSITION);
@@ -92,26 +84,18 @@ public class HomeFragment extends Fragment {
         setupGreeting();
         setupObservers();
         setupClickListeners();
-        
-        // Start entrance animations
         startEntranceAnimations();
 
         billingManager.getIsProUser().observe(getViewLifecycleOwner(), this::updateProStatus);
     }
 
-    /**
-     * ═══════════════════════════════════════════════════════════════════════════
-     *                         ENTRANCE ANIMATIONS
-     * ═══════════════════════════════════════════════════════════════════════════
-     */
     private void startEntranceAnimations() {
-        // Animate hero card
-        if (binding.cardHero != null) {
-            binding.cardHero.setAlpha(0f);
-            binding.cardHero.setTranslationY(-50f);
+        if (binding.cardXpProgress != null) {
+            binding.cardXpProgress.setAlpha(0f);
+            binding.cardXpProgress.setTranslationY(-30f);
             
-            ObjectAnimator fadeIn = ObjectAnimator.ofFloat(binding.cardHero, "alpha", 0f, 1f);
-            ObjectAnimator slideDown = ObjectAnimator.ofFloat(binding.cardHero, "translationY", -50f, 0f);
+            ObjectAnimator fadeIn = ObjectAnimator.ofFloat(binding.cardXpProgress, "alpha", 0f, 1f);
+            ObjectAnimator slideDown = ObjectAnimator.ofFloat(binding.cardXpProgress, "translationY", -30f, 0f);
             
             AnimatorSet heroAnim = new AnimatorSet();
             heroAnim.playTogether(fadeIn, slideDown);
@@ -120,7 +104,6 @@ public class HomeFragment extends Fragment {
             heroAnim.start();
         }
 
-        // Animate daily challenge card
         if (binding.cardDailyChallenge != null) {
             binding.cardDailyChallenge.setAlpha(0f);
             binding.cardDailyChallenge.setScaleX(0.9f);
@@ -141,10 +124,8 @@ public class HomeFragment extends Fragment {
             }, 200);
         }
 
-        // Animate quick action cards
         animateQuickActionCards();
         
-        // Animate pro upsell
         if (binding.cardProUpsell != null && binding.cardProUpsell.getVisibility() == View.VISIBLE) {
             binding.cardProUpsell.setAlpha(0f);
             animationHandler.postDelayed(() -> {
@@ -158,6 +139,10 @@ public class HomeFragment extends Fragment {
 
     private void animateQuickActionCards() {
         View[] cards = {binding.cardPracticeMode, binding.cardBattleArena};
+        
+        if (binding.cardGameModes != null) {
+            cards = new View[]{binding.cardGameModes, binding.cardPracticeMode, binding.cardBattleArena};
+        }
         
         for (int i = 0; i < cards.length; i++) {
             View card = cards[i];
@@ -183,6 +168,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupGreeting() {
+        if (binding.textUserName != null) {
+            String displayName = authManager.getDisplayName();
+            binding.textUserName.setText("Hey, " + displayName + "! ");
+        }
+        
         if (binding.textGreeting != null) {
             int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
             String[] greetings;
@@ -235,14 +225,12 @@ public class HomeFragment extends Fragment {
 
             if (binding.progressXp != null) {
                 binding.progressXp.setMax(xpToNextLevel);
-                // Animate progress bar
                 animateProgress(binding.progressXp, xpInLevel);
             }
 
             if (binding.textStreakDays != null) {
                 int streak = progress.getStreakDays();
                 binding.textStreakDays.setText(String.valueOf(streak));
-                // Animate streak number if > 0
                 if (streak > 0) {
                     animateStat(binding.textStreakDays);
                 }
@@ -252,7 +240,6 @@ public class HomeFragment extends Fragment {
                 binding.textSolvedCount.setText(String.valueOf(progress.getTotalSolved()));
             }
 
-            // Update level title
             if (binding.textLevelTitle != null) {
                 binding.textLevelTitle.setText(getTitleForLevel(level));
             }
@@ -262,9 +249,6 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    /**
-     * Animate progress bar filling
-     */
     private void animateProgress(android.widget.ProgressBar progressBar, int targetProgress) {
         ValueAnimator animator = ValueAnimator.ofInt(0, targetProgress);
         animator.setDuration(800);
@@ -276,9 +260,6 @@ public class HomeFragment extends Fragment {
         animator.start();
     }
 
-    /**
-     * Pulse animation for stat numbers
-     */
     private void animateStat(View view) {
         ObjectAnimator pulse = ObjectAnimator.ofPropertyValuesHolder(view,
                 PropertyValuesHolder.ofFloat("scaleX", 1f, 1.2f, 1f),
@@ -303,14 +284,12 @@ public class HomeFragment extends Fragment {
         
         if (binding.cardProUpsell != null) {
             if (isPro) {
-                // Hide upsell card for Pro users
                 binding.cardProUpsell.setVisibility(View.GONE);
             } else {
                 binding.cardProUpsell.setVisibility(View.VISIBLE);
             }
         }
         
-        // Show Pro badge next to greeting if Pro user
         if (binding.textGreeting != null && isPro) {
             String currentGreeting = binding.textGreeting.getText().toString();
             if (!currentGreeting.contains("👑")) {
@@ -318,7 +297,6 @@ public class HomeFragment extends Fragment {
             }
         }
         
-        // Update level title to show Pro status
         if (binding.textLevelTitle != null && isPro) {
             String currentTitle = binding.textLevelTitle.getText().toString();
             if (!currentTitle.contains("Pro")) {
@@ -327,13 +305,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    /**
-     * ═══════════════════════════════════════════════════════════════════════════
-     *                         CLICK LISTENERS WITH SOUND
-     * ═══════════════════════════════════════════════════════════════════════════
-     */
     private void setupClickListeners() {
-        // Daily Challenge
         if (binding.cardDailyChallenge != null) {
             binding.cardDailyChallenge.setOnClickListener(v -> {
                 animateCardPress(v);
@@ -350,7 +322,6 @@ public class HomeFragment extends Fragment {
             });
         }
 
-        // Learning Paths
         if (binding.textViewAllPaths != null) {
             binding.textViewAllPaths.setOnClickListener(v -> {
                 soundManager.playButtonClick();
@@ -358,7 +329,14 @@ public class HomeFragment extends Fragment {
             });
         }
 
-        // Practice Mode
+        if (binding.cardGameModes != null) {
+            binding.cardGameModes.setOnClickListener(v -> {
+                animateCardPress(v);
+                soundManager.playSound(SoundManager.Sound.POWER_UP);
+                navigateToDestination(R.id.action_home_to_gameModes, "Game Modes");
+            });
+        }
+
         if (binding.cardPracticeMode != null) {
             binding.cardPracticeMode.setOnClickListener(v -> {
                 animateCardPress(v);
@@ -367,7 +345,6 @@ public class HomeFragment extends Fragment {
             });
         }
 
-        // Battle Arena
         if (binding.cardBattleArena != null) {
             binding.cardBattleArena.setOnClickListener(v -> {
                 animateCardPress(v);
@@ -376,7 +353,6 @@ public class HomeFragment extends Fragment {
             });
         }
 
-        // Pro Upgrade
         if (binding.cardProUpsell != null) {
             binding.cardProUpsell.setOnClickListener(v -> {
                 animateCardPress(v);
@@ -393,7 +369,6 @@ public class HomeFragment extends Fragment {
             });
         }
 
-        // Coins tap (easter egg - satisfying feedback)
         if (binding.layoutCoins != null) {
             binding.layoutCoins.setOnClickListener(v -> {
                 soundManager.playSound(SoundManager.Sound.COIN_COLLECT);
@@ -402,9 +377,6 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    /**
-     * Card press animation
-     */
     private void animateCardPress(View card) {
         ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(card, "scaleX", 1f, 0.95f);
         ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(card, "scaleY", 1f, 0.95f);
@@ -426,9 +398,6 @@ public class HomeFragment extends Fragment {
         fullAnim.start();
     }
 
-    /**
-     * Button press animation
-     */
     private void animateButtonPress(View button) {
         ObjectAnimator pulse = ObjectAnimator.ofPropertyValuesHolder(button,
                 PropertyValuesHolder.ofFloat("scaleX", 1f, 0.9f, 1.05f, 1f),
@@ -437,9 +406,6 @@ public class HomeFragment extends Fragment {
         pulse.start();
     }
 
-    /**
-     * Coin collect easter egg animation
-     */
     private void animateCoinCollect(View view) {
         ObjectAnimator bounce = ObjectAnimator.ofPropertyValuesHolder(view,
                 PropertyValuesHolder.ofFloat("scaleX", 1f, 1.3f, 1f),
@@ -487,7 +453,6 @@ public class HomeFragment extends Fragment {
         if (billingManager != null) {
             billingManager.refreshPurchases();
         }
-        // Resume sounds if paused
         if (soundManager != null) {
             soundManager.resumeAll();
         }
@@ -496,7 +461,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        // Pause sounds when leaving
         if (soundManager != null) {
             soundManager.pauseAll();
         }
@@ -509,7 +473,7 @@ public class HomeFragment extends Fragment {
             animationHandler.removeCallbacksAndMessages(null);
         }
         if (billingManager != null) {
-            billingManager.destroy();
+            billingManager.clearCallback();
         }
         binding = null;
     }

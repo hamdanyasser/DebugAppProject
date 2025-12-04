@@ -5,18 +5,27 @@ import android.util.Log;
 /**
  * ╔══════════════════════════════════════════════════════════════════════════════╗
  * ║           DEBUGMASTER - INTELLIGENT CODE COMPARATOR                          ║
- * ║              Smart validation for debugging challenges                       ║
+ * ║              STRICT validation for debugging challenges                      ║
  * ╚══════════════════════════════════════════════════════════════════════════════╝
  * 
  * Features:
- * - Flexible code matching (handles whitespace, comments, formatting)
- * - Smart snippet comparison (extracts key fix from full code)
- * - Multi-language support (Java, Python, JavaScript, Kotlin, SQL, HTML)
- * - Tolerance for minor variations
+ * - Strict code matching to prevent false positives
+ * - Flexible whitespace/comment handling
+ * - Multi-language support
+ * - Helpful similarity feedback
+ * 
+ * IMPORTANT: This comparator is intentionally STRICT to ensure users
+ * actually fix the bug correctly before getting credit.
  */
 public class CodeComparator {
 
     private static final String TAG = "CodeComparator";
+    
+    // Minimum similarity required for a "match" (98% = very strict)
+    private static final double STRICT_SIMILARITY_THRESHOLD = 0.98;
+    
+    // Minimum similarity for key-fix based validation (95%)
+    private static final double KEY_FIX_SIMILARITY_THRESHOLD = 0.95;
 
     /**
      * Normalizes code for comparison by:
@@ -88,21 +97,31 @@ public class CodeComparator {
     }
 
     /**
-     * MAIN VALIDATION METHOD
+     * MAIN VALIDATION METHOD - STRICT VERSION
      * 
-     * Compares user code with fixed code using multiple strategies:
+     * Compares user code with fixed code using strict validation:
      * 1. Exact normalized match
-     * 2. Core fix extraction match
-     * 3. Key pattern detection
-     * 4. Similarity scoring
+     * 2. Core fix extraction match  
+     * 3. Key pattern + high similarity (95%+)
+     * 4. Very high similarity score (98%+)
+     * 
+     * This is intentionally strict to prevent false positives.
      */
     public static boolean codesMatch(String userCode, String fixedCode) {
         if (userCode == null || fixedCode == null) {
             return false;
         }
         
+        if (userCode.trim().isEmpty()) {
+            return false;
+        }
+        
         String normalizedUser = normalizeCode(userCode);
         String normalizedFixed = normalizeCode(fixedCode);
+        
+        Log.d(TAG, "=== Code Comparison ===");
+        Log.d(TAG, "User (normalized): " + normalizedUser.substring(0, Math.min(100, normalizedUser.length())));
+        Log.d(TAG, "Fixed (normalized): " + normalizedFixed.substring(0, Math.min(100, normalizedFixed.length())));
         
         // Strategy 1: Exact normalized match
         if (normalizedUser.equals(normalizedFixed)) {
@@ -114,198 +133,146 @@ public class CodeComparator {
         String coreUser = extractCoreFix(userCode);
         String coreFixed = extractCoreFix(fixedCode);
         
-        if (coreUser.equals(coreFixed)) {
-            Log.d(TAG, "✅ Core fix match");
+        if (!coreUser.isEmpty() && !coreFixed.isEmpty() && coreUser.equals(coreFixed)) {
+            Log.d(TAG, "✅ Core fix exact match");
             return true;
         }
         
-        // Strategy 3: Check if user code CONTAINS the fixed code core
-        if (normalizedUser.contains(coreFixed) || coreUser.contains(coreFixed)) {
-            Log.d(TAG, "✅ Contains fix");
-            return true;
-        }
+        // Calculate similarity for further checks
+        double similarity = calculateSimilarity(normalizedUser, normalizedFixed);
+        double coreSimilarity = calculateSimilarity(coreUser, coreFixed);
         
-        // Strategy 4: Check for key fix patterns
+        Log.d(TAG, "Similarity: " + (int)(similarity * 100) + "%, Core similarity: " + (int)(coreSimilarity * 100) + "%");
+        
+        // Strategy 3: Key fix detected AND high similarity (95%+)
+        // This prevents marking as correct when user has the pattern but other bugs
         if (containsKeyFix(userCode, fixedCode)) {
-            Log.d(TAG, "✅ Key fix pattern detected");
+            if (coreSimilarity >= KEY_FIX_SIMILARITY_THRESHOLD) {
+                Log.d(TAG, "✅ Key fix + high similarity: " + (int)(coreSimilarity * 100) + "%");
+                return true;
+            } else {
+                Log.d(TAG, "⚠️ Key fix found but similarity too low: " + (int)(coreSimilarity * 100) + "%");
+            }
+        }
+        
+        // Strategy 4: Very high similarity (98%+) - catches minor formatting differences
+        if (similarity >= STRICT_SIMILARITY_THRESHOLD || coreSimilarity >= STRICT_SIMILARITY_THRESHOLD) {
+            Log.d(TAG, "✅ Very high similarity match");
             return true;
         }
         
-        // Strategy 5: High similarity score (90%+)
-        double similarity = calculateSimilarity(coreUser, coreFixed);
-        if (similarity >= 0.90) {
-            Log.d(TAG, "✅ High similarity: " + (int)(similarity * 100) + "%");
-            return true;
-        }
-        
-        Log.d(TAG, "❌ No match. Similarity: " + (int)(similarity * 100) + "%");
+        Log.d(TAG, "❌ No match. Best similarity: " + (int)(Math.max(similarity, coreSimilarity) * 100) + "%");
         return false;
     }
 
     /**
-     * Checks if user code contains the KEY FIX for common bug patterns.
-     * This is more lenient and focuses on whether the actual bug was fixed.
+     * Checks if user code contains the KEY FIX for the specific bug.
+     * Returns true only if the specific fix pattern is present.
      */
     private static boolean containsKeyFix(String userCode, String fixedCode) {
-        String userLower = userCode.toLowerCase();
-        String fixedLower = fixedCode.toLowerCase();
+        String userLower = userCode.toLowerCase().replaceAll("\\s+", " ");
+        String fixedLower = fixedCode.toLowerCase().replaceAll("\\s+", " ");
         
-        // === Common Java Fixes ===
-        
-        // println vs printIn fix (Bug #1)
+        // === Bug #1: println vs printIn ===
         if (fixedLower.contains("println") && !fixedLower.contains("printin")) {
-            return userLower.contains("println") && !userLower.contains("printin");
+            boolean userHasPrintln = userLower.contains("println");
+            boolean userHasPrintin = userLower.contains("printin");
+            if (userHasPrintln && !userHasPrintin) {
+                return true;
+            }
         }
         
-        // .equals() for string comparison (Bug #11)
-        if (fixedLower.contains(".equals(")) {
-            return userLower.contains(".equals(");
+        // === Bug #11: .equals() for string comparison ===
+        if (fixedLower.contains(".equals(") && !fixedLower.contains("==")) {
+            // User must use .equals() and NOT use == for string comparison
+            if (userLower.contains(".equals(")) {
+                // Check they don't still have == for strings
+                if (!userLower.matches(".*\".*\"\\s*==.*") && !userLower.matches(".*==\\s*\".*\".*")) {
+                    return true;
+                }
+            }
         }
         
-        // null check fix (Bug #12)
-        if (fixedLower.contains("!= null") || fixedLower.contains("!= null")) {
-            return userLower.contains("!= null") || userLower.contains("? ");
+        // === Bug #12: null check ===
+        if (fixedLower.contains("!= null") || fixedLower.contains("== null")) {
+            if (userLower.contains("!= null") || userLower.contains("== null") || 
+                userLower.contains("optional") || userLower.contains("?.")) {
+                return true;
+            }
         }
         
-        // Integer division fix - 2.0 instead of 2 (Bug #13)
-        if (fixedLower.contains("/ 2.0") || fixedLower.contains("/2.0")) {
-            return userLower.contains("2.0") || userLower.contains("(double)");
+        // === Bug #13: Integer division fix ===
+        if (fixedLower.contains("/ 2.0") || fixedLower.contains("/2.0") || 
+            fixedLower.contains("(double)") || fixedLower.contains("(float)")) {
+            if (userLower.contains("2.0") || userLower.contains("(double)") || 
+                userLower.contains("(float)") || userLower.contains("1.0 *")) {
+                return true;
+            }
         }
         
-        // && vs || logic fix (Bug #14)
+        // === Bug #14: && vs || logic ===
+        // Only match if fixed uses && and user switches from || to &&
         if (fixedLower.contains("&&") && !fixedLower.contains("||")) {
             if (userLower.contains("&&") && !userLower.contains("||")) {
                 return true;
             }
         }
         
-        // Array index fix: length - 1 (Bug #16)
-        if (fixedLower.contains("length - 1") || fixedLower.contains("length-1")) {
-            return userLower.contains("length - 1") || userLower.contains("length-1");
+        // === Bug #16: Array length - 1 ===
+        if (fixedLower.contains("length - 1") || fixedLower.contains("length-1") ||
+            fixedLower.contains(".length - 1")) {
+            if (userLower.contains("length - 1") || userLower.contains("length-1") ||
+                userLower.contains(".length - 1")) {
+                return true;
+            }
         }
         
-        // Arrays.copyOf fix (Bug #17)
-        if (fixedLower.contains("arrays.copyof") || fixedLower.contains("clone()")) {
-            return userLower.contains("arrays.copyof") || userLower.contains("clone()") || userLower.contains("arraycopy");
-        }
-        
-        // getOrDefault fix (Bug #19)
-        if (fixedLower.contains("getordefault")) {
-            return userLower.contains("getordefault");
-        }
-        
-        // removeIf fix (Bug #20)
-        if (fixedLower.contains("removeif") || fixedLower.contains("iterator")) {
-            return userLower.contains("removeif") || userLower.contains("iterator");
-        }
-        
-        // break in switch fix (Bug #21)
+        // === Bug #21: break in switch ===
         if (fixedLower.contains("break;") && fixedLower.contains("case")) {
-            // Count breaks in user vs fixed
-            int userBreaks = countOccurrences(userLower, "break;");
             int fixedBreaks = countOccurrences(fixedLower, "break;");
-            return userBreaks >= fixedBreaks;
+            int userBreaks = countOccurrences(userLower, "break;");
+            // User must have at least as many breaks as the fixed code
+            if (userBreaks >= fixedBreaks && userBreaks > 0) {
+                return true;
+            }
         }
         
-        // Base case in recursion fix (Bug #25)
-        if (fixedLower.contains("if (n <= 1)") || fixedLower.contains("if (n == 0)") || fixedLower.contains("if (n < 2)")) {
-            return userLower.contains("if (n") || userLower.contains("if(n");
+        // === Bug #41: === strict equality (JavaScript) ===
+        if (fixedLower.contains("===") && !fixedLower.contains("==") || 
+            (fixedLower.contains("===") && countOccurrences(fixedLower, "===") > countOccurrences(fixedLower, "=="))) {
+            if (userLower.contains("===")) {
+                return true;
+            }
         }
         
-        // try-with-resources fix (Bug #26)
-        if (fixedLower.contains("try (") || fixedLower.contains("try(")) {
-            return userLower.contains("try (") || userLower.contains("try(");
-        }
-        
-        // StringBuilder fix (Bug #27)
-        if (fixedLower.contains("stringbuilder")) {
-            return userLower.contains("stringbuilder");
-        }
-        
-        // Math.min for substring fix (Bug #28)
-        if (fixedLower.contains("math.min")) {
-            return userLower.contains("math.min") || userLower.contains("length()");
-        }
-        
-        // === JavaScript Fixes ===
-        
-        // === for strict equality (Bug #41)
-        if (fixedLower.contains("===")) {
-            return userLower.contains("===");
-        }
-        
-        // let vs var (Bugs #42, #43)
+        // === Bug #42/43: let vs var ===
         if (fixedLower.contains("let ") && !fixedLower.contains("var ")) {
-            return userLower.contains("let ") && !userLower.contains("var ");
+            if (userLower.contains("let ") && !userLower.contains("var ")) {
+                return true;
+            }
         }
         
-        // Arrow function fix (Bug #44)
-        if (fixedLower.contains("=>")) {
-            return userLower.contains("=>");
+        // === Python: range() off-by-one ===
+        if (fixedLower.contains("range(") && (fixedLower.contains("range(11)") || 
+            fixedLower.contains("range(1, 11)") || fixedLower.contains("range(0, 11)"))) {
+            if (userLower.contains("range(11)") || userLower.contains("range(1, 11)") || 
+                userLower.contains("range(0, 11)")) {
+                return true;
+            }
         }
         
-        // async/await fix (Bug #45)
-        if (fixedLower.contains("async") && fixedLower.contains("await")) {
-            return userLower.contains("async") && userLower.contains("await");
+        // === Python: .get() for dictionary ===
+        if (fixedLower.contains(".get(") && !fixedLower.contains("[\"")) {
+            if (userLower.contains(".get(")) {
+                return true;
+            }
         }
         
-        // .find() fix (Bug #46)
-        if (fixedLower.contains(".find(")) {
-            return userLower.contains(".find(") || userLower.contains("for (");
-        }
-        
-        // Spread operator fix (Bug #47)
-        if (fixedLower.contains("...")) {
-            return userLower.contains("...") || userLower.contains("object.assign");
-        }
-        
-        // === Python Fixes ===
-        
-        // Indentation (Bug #31) - hard to check, be lenient
-        if (fixedLower.contains("def ") && fixedLower.contains("print")) {
-            return userLower.contains("def ") && userLower.contains("print");
-        }
-        
-        // range() fix (Bug #32)
-        if (fixedLower.contains("range(11)") || fixedLower.contains("range(1, 11)")) {
-            return userLower.contains("range(11)") || userLower.contains("range(1, 11)") || userLower.contains("<= 10");
-        }
-        
-        // None default argument (Bug #33)
-        if (fixedLower.contains("= none") || fixedLower.contains("=none")) {
-            return userLower.contains("none");
-        }
-        
-        // Integer division // (Bug #34)
-        if (fixedLower.contains("//")) {
-            return userLower.contains("//") || userLower.contains("int(");
-        }
-        
-        // .get() for dict (Bug #36)
-        if (fixedLower.contains(".get(")) {
-            return userLower.contains(".get(");
-        }
-        
-        // global keyword (Bug #37)
-        if (fixedLower.contains("global ")) {
-            return userLower.contains("global ");
-        }
-        
-        // self parameter (Bug #39)
-        if (fixedLower.contains("def __init__(self") || fixedLower.contains("def bark(self")) {
-            return userLower.contains("(self");
-        }
-        
-        // === Kotlin Fixes ===
-        
-        // Safe call ?. and elvis ?: (Bug #48)
-        if (fixedLower.contains("?.") || fixedLower.contains("?:")) {
-            return userLower.contains("?.") || userLower.contains("?:");
-        }
-        
-        // .copy() for data class (Bug #49)
-        if (fixedLower.contains(".copy(")) {
-            return userLower.contains(".copy(");
+        // === Kotlin: safe call ?. ===
+        if (fixedLower.contains("?.") && !fixedLower.matches(".*[^?]\\..*")) {
+            if (userLower.contains("?.")) {
+                return true;
+            }
         }
         
         return false;
@@ -337,11 +304,15 @@ public class CodeComparator {
             return 1.0;
         }
         
-        int maxLen = Math.max(s1.length(), s2.length());
-        if (maxLen == 0) {
+        if (s1.isEmpty() && s2.isEmpty()) {
             return 1.0;
         }
         
+        if (s1.isEmpty() || s2.isEmpty()) {
+            return 0.0;
+        }
+        
+        int maxLen = Math.max(s1.length(), s2.length());
         int distance = levenshteinDistance(s1, s2);
         return 1.0 - ((double) distance / maxLen);
     }
@@ -418,14 +389,32 @@ public class CodeComparator {
         
         int similarityPercent = (int)(similarity * 100);
 
-        if (similarityPercent >= 80) {
-            return "🔥 So close! " + similarityPercent + "% there. Check around line " + diffLine + ".";
-        } else if (similarityPercent >= 60) {
+        if (similarityPercent >= 90) {
+            return "🔥 Almost there! " + similarityPercent + "% correct. Check line " + diffLine + " carefully.";
+        } else if (similarityPercent >= 70) {
             return "👍 Good progress! " + similarityPercent + "% similar. Focus on the key fix.";
-        } else if (similarityPercent >= 40) {
+        } else if (similarityPercent >= 50) {
             return "🤔 Getting there! " + similarityPercent + "% similar. Review the hint.";
         } else {
             return "💡 Need a hint? Focus on understanding the bug first.";
         }
+    }
+    
+    /**
+     * Check if the user's fix addresses the specific bug type.
+     * This is a stricter check that looks for the exact fix pattern.
+     */
+    public static boolean hasCorrectFix(String userCode, String fixedCode, String bugType) {
+        String userNorm = normalizeCode(userCode);
+        String fixedNorm = normalizeCode(fixedCode);
+        
+        // First check - must be very similar overall
+        double similarity = calculateSimilarity(userNorm, fixedNorm);
+        if (similarity < 0.85) {
+            return false;
+        }
+        
+        // Then check the specific fix is present
+        return containsKeyFix(userCode, fixedCode);
     }
 }

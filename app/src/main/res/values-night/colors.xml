@@ -1,13 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Dark Theme Color Overrides -->
+    <!-- =======================================================================
+         DEBUGMASTER - DARK MODE COLOR OVERRIDES
+         ======================================================================= -->
+
+    <!-- Background & Surface - Deep Space -->
     <color name="background">@color/background_dark</color>
+    <color name="background_secondary">@color/background_dark_secondary</color>
+    <color name="surface">@color/surface_dark</color>
+    <color name="surface_variant">@color/surface_dark_variant</color>
+    
+    <!-- Text colors -->
     <color name="text_primary">@color/text_primary_dark</color>
     <color name="text_secondary">@color/text_secondary_dark</color>
-    <color name="surface">@color/surface_dark</color>
+    <color name="text_tertiary">@color/text_tertiary_dark</color>
+    <color name="text_disabled">@color/text_disabled_dark</color>
+    
+    <!-- Dividers -->
     <color name="divider">@color/divider_dark</color>
     
-    <!-- Glass colors for dark mode -->
-    <color name="glass_white">#33FFFFFF</color>
-    <color name="glass_white_strong">#66FFFFFF</color>
+    <!-- Glass effects - More transparent for dark mode -->
+    <color name="glass_white">#20FFFFFF</color>
+    <color name="glass_white_strong">#40FFFFFF</color>
+    <color name="glass_dark">#80000000</color>
+    <color name="glass_border">#30FFFFFF</color>
+    
+    <!-- Code editor -->
+    <color name="code_background">@color/code_background_dark</color>
+    
+    <!-- Progress track -->
+    <color name="progress_track">@color/surface_dark_variant</color>
+    
+    <!-- Hint background -->
+    <color name="hint_background">#2A2A1A</color>
+    
+    <!-- Card backgrounds -->
+    <color name="card_background">@color/surface_dark</color>
+    <color name="card_background_elevated">@color/surface_elevated</color>
+    
+    <!-- Input fields -->
+    <color name="input_background">#1E293B</color>
+    <color name="input_stroke">#334155</color>
+    <color name="input_stroke_focused">@color/primary</color>
+    
+    <!-- Chip backgrounds -->
+    <color name="chip_background">#334155</color>
+    <color name="chip_background_selected">@color/primary</color>
+    
+    <!-- Dialog backgrounds -->
+    <color name="dialog_background">@color/surface_dark</color>
+    
+    <!-- Snackbar -->
+    <color name="snackbar_background">#374151</color>
+    <color name="snackbar_text">@color/white</color>
+    
+    <!-- Bottom sheet -->
+    <color name="bottom_sheet_background">@color/surface_dark</color>
+    
+    <!-- Navigation rail/drawer -->
+    <color name="navigation_background">@color/surface_dark</color>
+    
+    <!-- Status bar for dark mode -->
+    <color name="status_bar_color">@android:color/transparent</color>
+    
+    <!-- Shimmer loading -->
+    <color name="shimmer_background">#1E293B</color>
+    <color name="shimmer_highlight">#334155</color>
 </resources>

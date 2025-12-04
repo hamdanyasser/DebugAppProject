@@ -22,4 +22,11 @@ public class BugInPathWithDetails {
     public boolean isCompleted() {
         return isCompleted;
     }
+    
+    /**
+     * Convenience method to get bug ID.
+     */
+    public int getId() {
+        return bug != null ? bug.getId() : 0;
+    }
 }
