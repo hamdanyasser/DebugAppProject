@@ -50,7 +50,7 @@ public class BugRepository {
         learningPathDao = database.learningPathDao();
         lessonDao = database.lessonDao();
         achievementDao = database.achievementDao();
-        executorService = Executors.newFixedThreadPool(2);
+        executorService = Executors.newFixedThreadPool(4); // Increased for better performance
 
         allBugs = bugDao.getAllBugs();
         userProgress = userProgressDao.getUserProgress();
@@ -86,15 +86,17 @@ public class BugRepository {
             bugDao.markBugAsCompleted(bugId);
             userProgressDao.incrementTotalSolved();
 
-            // Increment difficulty-specific counter
-            switch (difficulty) {
-                case "Easy":
+            // Increment difficulty-specific counter (case-insensitive)
+            String diffLower = difficulty != null ? difficulty.toLowerCase() : "easy";
+            switch (diffLower) {
+                case "easy":
                     userProgressDao.incrementEasySolved();
                     break;
-                case "Medium":
+                case "medium":
                     userProgressDao.incrementMediumSolved();
                     break;
-                case "Hard":
+                case "hard":
+                case "expert":
                     userProgressDao.incrementHardSolved();
                     break;
             }
@@ -107,9 +109,10 @@ public class BugRepository {
     /**
      * Mark bug as completed with XP rewards.
      * Calculates XP based on difficulty and whether hints were used.
+     * XP values aligned with GameManager: Easy=10, Medium=25, Hard=50, Expert=100
      *
      * @param bugId Bug ID to mark as completed
-     * @param difficulty Difficulty level ("Easy", "Medium", "Hard")
+     * @param difficulty Difficulty level ("Easy", "Medium", "Hard", "Expert")
      * @param solvedWithoutHints Whether the bug was solved without using hints
      */
     public void markBugAsCompletedWithXP(int bugId, String difficulty, boolean solvedWithoutHints) {
@@ -117,26 +120,32 @@ public class BugRepository {
             bugDao.markBugAsCompleted(bugId);
             userProgressDao.incrementTotalSolved();
 
-            // Calculate XP based on difficulty
-            int xpReward = 0;
-            switch (difficulty) {
-                case "Easy":
+            // Calculate XP based on difficulty (aligned with GameManager)
+            int xpReward = 10; // Default for easy
+            String diffLower = difficulty != null ? difficulty.toLowerCase() : "easy";
+
+            switch (diffLower) {
+                case "easy":
                     userProgressDao.incrementEasySolved();
                     xpReward = 10;
                     break;
-                case "Medium":
+                case "medium":
                     userProgressDao.incrementMediumSolved();
-                    xpReward = 20;
+                    xpReward = 25;
                     break;
-                case "Hard":
+                case "hard":
                     userProgressDao.incrementHardSolved();
-                    xpReward = 30;
+                    xpReward = 50;
+                    break;
+                case "expert":
+                    userProgressDao.incrementHardSolved(); // Count expert as hard for stats
+                    xpReward = 100;
                     break;
             }
 
-            // Bonus XP for solving without hints
+            // Bonus XP for solving without hints (2x multiplier)
             if (solvedWithoutHints) {
-                xpReward += 5;
+                xpReward *= 2;
                 userProgressDao.incrementBugsSolvedWithoutHints();
             }
 
