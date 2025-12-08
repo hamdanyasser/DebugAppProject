@@ -27,7 +27,9 @@ import com.example.debugappproject.model.TestCase;
 import com.example.debugappproject.ui.animation.ConfettiAnimationView;
 import com.example.debugappproject.ui.settings.SettingsFragment;
 import com.example.debugappproject.util.AnimationUtil;
+import com.example.debugappproject.util.CelebrationManager;
 import com.example.debugappproject.util.CodeComparator;
+import com.example.debugappproject.util.EditorThemeManager;
 import com.example.debugappproject.util.SoundManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -71,6 +73,8 @@ public class BugDetailFragment extends Fragment {
     private FragmentBugDetailBinding binding;
     private BugDetailViewModel viewModel;
     private SoundManager soundManager;
+    private CelebrationManager celebrationManager;
+    private EditorThemeManager themeManager;
     private int bugId;
     private Bug currentBug;
     private List<Hint> hints;
@@ -93,12 +97,17 @@ public class BugDetailFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(BugDetailViewModel.class);
         soundManager = SoundManager.getInstance(requireContext());
+        celebrationManager = new CelebrationManager(requireContext());
+        themeManager = new EditorThemeManager(requireContext());
 
         // Play challenge start sound
         soundManager.playSound(SoundManager.Sound.CHALLENGE_START);
 
         // Initialize confetti view
         confettiView = binding.confettiView;
+
+        // Apply editor theme and font
+        applyEditorTheme();
 
         // Initialize code execution engine
         codeExecutionEngine = new CodeExecutionEngine();
@@ -187,6 +196,25 @@ public class BugDetailFragment extends Fragment {
             case "medium": return 25;
             case "hard": return 40;
             default: return 10;
+        }
+    }
+
+    /**
+     * Apply editor theme and font to all code views.
+     */
+    private void applyEditorTheme() {
+        // Apply to code editor
+        if (binding.editUserCode != null) {
+            themeManager.applyFullStyleToEditor(binding.editUserCode);
+        }
+
+        // Apply to code display views
+        if (binding.textBrokenCode != null) {
+            themeManager.applyFullStyle(binding.textBrokenCode);
+        }
+
+        if (binding.textFixedCode != null) {
+            themeManager.applyFullStyle(binding.textFixedCode);
         }
     }
 
@@ -600,25 +628,62 @@ public class BugDetailFragment extends Fragment {
     }
 
     /**
-     * Handle successful code fix
+     * Handle successful code fix with dopamine loop celebrations
      */
     private void handleSuccess(double similarity) {
-        soundManager.playSound(SoundManager.Sound.SUCCESS);
-        
-        binding.textTestResultTitle.setText("✅ Correct! Bug Fixed!");
-        binding.textTestResultTitle.setTextColor(getResources().getColor(R.color.difficulty_easy, null));
-        
-        // Animate title
-        ObjectAnimator pulse = ObjectAnimator.ofPropertyValuesHolder(binding.textTestResultTitle,
-                PropertyValuesHolder.ofFloat("scaleX", 1f, 1.2f, 1f),
-                PropertyValuesHolder.ofFloat("scaleY", 1f, 1.2f, 1f));
-        pulse.setDuration(500);
-        pulse.setInterpolator(new OvershootInterpolator(2f));
-        pulse.start();
+        // Calculate XP and record the solve
+        int xpEarned = getXpForDifficulty(currentBug.getDifficulty());
+        boolean perfectSolve = similarity >= 0.95;
 
-        String message = "🎉 Congratulations! You found the bug and fixed it correctly!\n\n" +
-                "Your solution matches the expected fix. Great debugging skills!";
-        binding.textTestResultMessage.setText(message);
+        // Get celebration data from manager
+        CelebrationManager.CelebrationResult celebration = celebrationManager.recordSolve(
+            perfectSolve,
+            currentBug.getDifficulty(),
+            xpEarned,
+            0 // Streak will be fetched from GameManager in production
+        );
+
+        // Play appropriate celebration sound
+        celebrationManager.playCelebrationSound(celebration.celebrationType);
+
+        // Show the main celebration message
+        binding.textTestResultTitle.setText(celebration.mainMessage);
+        binding.textTestResultTitle.setTextColor(getResources().getColor(R.color.difficulty_easy, null));
+
+        // Animate the title with pulse effect
+        CelebrationManager.animatePulse(binding.textTestResultTitle);
+
+        // Build celebratory message
+        StringBuilder message = new StringBuilder();
+        message.append("🎉 You found the bug and fixed it correctly!\n\n");
+
+        // Add combo message if applicable
+        if (celebration.hasCombo()) {
+            message.append(celebration.comboMessage).append("\n");
+            // Play combo sound after a delay
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                soundManager.playSound(SoundManager.Sound.COMBO);
+            }, 300);
+        }
+
+        // Add difficulty bonus message
+        if (celebration.hasDifficultyBonus()) {
+            message.append(celebration.difficultyMessage).append("\n");
+        }
+
+        // Show XP earned with bonus
+        int totalXp = celebration.getTotalXp();
+        message.append("\n💎 +").append(totalXp).append(" XP earned!");
+        if (celebration.comboBonus > 0) {
+            message.append(" (includes +").append(celebration.comboBonus).append(" combo bonus)");
+        }
+
+        binding.textTestResultMessage.setText(message.toString());
+
+        // Animate the XP text if available
+        if (binding.textXpReward != null) {
+            CelebrationManager.animateBounce(binding.textXpReward);
+        }
 
         for (TestCase test : testCases) {
             test.setPassed(true);
@@ -639,9 +704,9 @@ public class BugDetailFragment extends Fragment {
             binding.buttonMarkSolved.setText("✅  Completed");
             binding.buttonMarkSolved.setEnabled(false);
 
-            Snackbar.make(binding.getRoot(), "🏆 Bug solved! XP awarded!", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(binding.getRoot(), celebration.mainMessage + " +" + totalXp + " XP!", Snackbar.LENGTH_LONG).show();
         } else {
-            Toast.makeText(requireContext(), "Correct! (Already completed)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), celebration.mainMessage + " (Already completed)", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -650,6 +715,9 @@ public class BugDetailFragment extends Fragment {
      */
     private void handleFailure(double similarity, CodeExecutionResult executionResult) {
         soundManager.playFailure();
+
+        // Reset combo on failure
+        celebrationManager.resetCombo();
         
         int similarityPercent = (int)(similarity * 100);
         

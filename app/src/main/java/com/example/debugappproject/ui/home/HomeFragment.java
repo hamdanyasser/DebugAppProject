@@ -26,6 +26,7 @@ import com.example.debugappproject.billing.BillingManager;
 import com.example.debugappproject.databinding.FragmentHomeBinding;
 import com.example.debugappproject.model.UserProgress;
 import com.example.debugappproject.util.AuthManager;
+import com.example.debugappproject.util.ByteMascot;
 import com.example.debugappproject.util.SoundManager;
 
 import java.util.Calendar;
@@ -41,23 +42,11 @@ public class HomeFragment extends Fragment {
     private BillingManager billingManager;
     private SoundManager soundManager;
     private AuthManager authManager;
+    private ByteMascot byteMascot;
     private Handler animationHandler;
 
-    private static final String[] MORNING_GREETINGS = {
-        "Good morning! Ready to squash some bugs? 🌅",
-        "Rise and debug! ☀️",
-        "Early bird catches the bug! 🐦"
-    };
-    private static final String[] AFTERNOON_GREETINGS = {
-        "Good afternoon! Keep the momentum going! 💪",
-        "Debugging time! Let's go! 🚀",
-        "Afternoon bug hunt begins! 🎯"
-    };
-    private static final String[] EVENING_GREETINGS = {
-        "Good evening! Perfect time for coding! 🌙",
-        "Night owl debugging session! 🦉",
-        "Evening bug patrol! ⭐"
-    };
+    // Store daily challenge bug ID for navigation
+    private int currentDailyChallengeBugId = 1;
 
     @Nullable
     @Override
@@ -76,6 +65,7 @@ public class HomeFragment extends Fragment {
         billingManager = BillingManager.getInstance(requireContext());
         soundManager = SoundManager.getInstance(requireContext());
         authManager = AuthManager.getInstance(requireContext());
+        byteMascot = new ByteMascot(requireContext());
         animationHandler = new Handler(Looper.getMainLooper());
 
         // Play entrance sound
@@ -170,23 +160,14 @@ public class HomeFragment extends Fragment {
     private void setupGreeting() {
         if (binding.textUserName != null) {
             String displayName = authManager.getDisplayName();
-            binding.textUserName.setText("Hey, " + displayName + "! ");
+            // Add Byte's emoji to the greeting
+            binding.textUserName.setText(byteMascot.getStateEmoji() + " Hey, " + displayName + "!");
         }
-        
+
         if (binding.textGreeting != null) {
-            int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-            String[] greetings;
-            
-            if (hour < 12) {
-                greetings = MORNING_GREETINGS;
-            } else if (hour < 18) {
-                greetings = AFTERNOON_GREETINGS;
-            } else {
-                greetings = EVENING_GREETINGS;
-            }
-            
-            int randomIndex = (int) (Math.random() * greetings.length);
-            binding.textGreeting.setText(greetings[randomIndex]);
+            // Use ByteMascot for time-based greetings
+            String greeting = byteMascot.getGreeting();
+            binding.textGreeting.setText(greeting);
         }
     }
 
@@ -198,8 +179,22 @@ public class HomeFragment extends Fragment {
         });
 
         viewModel.getDailyChallenge().observe(getViewLifecycleOwner(), bug -> {
-            if (bug != null && binding.textBugOfDayTitle != null) {
-                binding.textBugOfDayTitle.setText(bug.getTitle());
+            if (bug != null) {
+                // Store bug ID for navigation
+                currentDailyChallengeBugId = bug.getId();
+
+                if (binding.textBugOfDayTitle != null) {
+                    binding.textBugOfDayTitle.setText(bug.getTitle());
+                }
+
+                // Show a tip from Byte occasionally
+                if (byteMascot.getInteractionCount() % 3 == 0 && binding.textGreeting != null) {
+                    animationHandler.postDelayed(() -> {
+                        if (binding != null && binding.textGreeting != null) {
+                            binding.textGreeting.setText(byteMascot.getRandomTip());
+                        }
+                    }, 5000);
+                }
             }
         });
     }
@@ -310,7 +305,7 @@ public class HomeFragment extends Fragment {
             binding.cardDailyChallenge.setOnClickListener(v -> {
                 animateCardPress(v);
                 soundManager.playSound(SoundManager.Sound.CHALLENGE_START);
-                navigateToDestination(R.id.action_home_to_bugDetail, "Daily Challenge");
+                navigateToDailyChallenge();
             });
         }
 
@@ -318,7 +313,7 @@ public class HomeFragment extends Fragment {
             binding.buttonSolveNow.setOnClickListener(v -> {
                 animateButtonPress(v);
                 soundManager.playSound(SoundManager.Sound.BUTTON_START);
-                navigateToDestination(R.id.action_home_to_bugDetail, "Daily Challenge");
+                navigateToDailyChallenge();
             });
         }
 
@@ -426,6 +421,31 @@ public class HomeFragment extends Fragment {
             showToast("Coming soon: " + destinationName + " 🚀");
         } catch (Exception e) {
             android.util.Log.e(TAG, "Navigation error", e);
+        }
+    }
+
+    /**
+     * Navigate to Daily Challenge with the correct bug ID.
+     * This fixes the crash caused by missing bugId argument.
+     */
+    private void navigateToDailyChallenge() {
+        try {
+            if (getView() == null) return;
+            NavController navController = Navigation.findNavController(requireView());
+
+            // Create bundle with bugId argument
+            android.os.Bundle args = new android.os.Bundle();
+            args.putInt("bugId", currentDailyChallengeBugId);
+
+            // Show mission intro from Byte
+            showToast(byteMascot.getMissionIntro());
+
+            navController.navigate(R.id.action_home_to_bugDetail, args);
+        } catch (IllegalArgumentException e) {
+            soundManager.playSound(SoundManager.Sound.NOTIFICATION);
+            showToast("Daily Challenge loading... 🐛");
+        } catch (Exception e) {
+            android.util.Log.e(TAG, "Navigation error to daily challenge", e);
         }
     }
 
