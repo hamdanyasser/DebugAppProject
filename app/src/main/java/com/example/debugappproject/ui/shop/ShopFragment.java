@@ -56,7 +56,7 @@ public class ShopFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        repository = new BugRepository(requireContext());
+        repository = new BugRepository(requireActivity().getApplication());
         soundManager = SoundManager.getInstance(requireContext());
         shopPrefs = requireContext().getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE);
 
