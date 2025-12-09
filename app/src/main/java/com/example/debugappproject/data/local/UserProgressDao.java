@@ -108,11 +108,29 @@ public interface UserProgressDao {
     void incrementBugsSolvedWithoutHints();
 
     /**
+     * Add gems to user's total.
+     */
+    @Query("UPDATE user_progress SET gems = gems + :amount WHERE id = 1")
+    void addGems(int amount);
+
+    /**
+     * Spend gems (subtract from total). Returns number of rows updated.
+     */
+    @Query("UPDATE user_progress SET gems = gems - :amount WHERE id = 1 AND gems >= :amount")
+    int spendGems(int amount);
+
+    /**
+     * Get current gems count synchronously.
+     */
+    @Query("SELECT gems FROM user_progress WHERE id = 1")
+    int getGemsSync();
+
+    /**
      * Reset all progress (for reset feature).
      */
     @Query("UPDATE user_progress SET totalSolved = 0, easySolved = 0, mediumSolved = 0, " +
             "hardSolved = 0, streakDays = 0, longestStreakDays = 0, lastSolvedTimestamp = 0, xp = 0, hintsUsed = 0, " +
-            "bugsSolvedWithoutHints = 0 WHERE id = 1")
+            "bugsSolvedWithoutHints = 0, gems = 100 WHERE id = 1")
     void resetProgress();
 
     /**
@@ -120,6 +138,6 @@ public interface UserProgressDao {
      */
     @Query("UPDATE user_progress SET totalSolved = 0, easySolved = 0, mediumSolved = 0, " +
             "hardSolved = 0, streakDays = 0, longestStreakDays = 0, lastSolvedTimestamp = 0, xp = 0, hintsUsed = 0, " +
-            "bugsSolvedWithoutHints = 0 WHERE id = 1")
+            "bugsSolvedWithoutHints = 0, gems = 100 WHERE id = 1")
     void deleteAllProgress();
 }

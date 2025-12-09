@@ -107,9 +107,10 @@ public class BugRepository {
     }
 
     /**
-     * Mark bug as completed with XP rewards.
+     * Mark bug as completed with XP and gem rewards.
      * Calculates XP based on difficulty and whether hints were used.
      * XP values aligned with GameManager: Easy=10, Medium=25, Hard=50, Expert=100
+     * Gem rewards: Easy=5, Medium=10, Hard=20, Expert=40
      *
      * @param bugId Bug ID to mark as completed
      * @param difficulty Difficulty level ("Easy", "Medium", "Hard", "Expert")
@@ -120,37 +121,44 @@ public class BugRepository {
             bugDao.markBugAsCompleted(bugId);
             userProgressDao.incrementTotalSolved();
 
-            // Calculate XP based on difficulty (aligned with GameManager)
+            // Calculate XP and gems based on difficulty
             int xpReward = 10; // Default for easy
+            int gemReward = 5; // Default for easy
             String diffLower = difficulty != null ? difficulty.toLowerCase() : "easy";
 
             switch (diffLower) {
                 case "easy":
                     userProgressDao.incrementEasySolved();
                     xpReward = 10;
+                    gemReward = 5;
                     break;
                 case "medium":
                     userProgressDao.incrementMediumSolved();
                     xpReward = 25;
+                    gemReward = 10;
                     break;
                 case "hard":
                     userProgressDao.incrementHardSolved();
                     xpReward = 50;
+                    gemReward = 20;
                     break;
                 case "expert":
                     userProgressDao.incrementHardSolved(); // Count expert as hard for stats
                     xpReward = 100;
+                    gemReward = 40;
                     break;
             }
 
-            // Bonus XP for solving without hints (2x multiplier)
+            // Bonus for solving without hints (2x XP, 1.5x gems)
             if (solvedWithoutHints) {
                 xpReward *= 2;
+                gemReward = (int)(gemReward * 1.5);
                 userProgressDao.incrementBugsSolvedWithoutHints();
             }
 
-            // Award XP
+            // Award XP and gems
             userProgressDao.addXp(xpReward);
+            userProgressDao.addGems(gemReward);
 
             // Update last solved timestamp
             userProgressDao.updateLastSolvedTimestamp(System.currentTimeMillis());
@@ -193,6 +201,41 @@ public class BugRepository {
             bugDao.resetAllBugs();
             userProgressDao.resetProgress();
         });
+    }
+
+    /**
+     * Add gems to user's balance.
+     */
+    public void addGems(int amount) {
+        executorService.execute(() -> {
+            userProgressDao.addGems(amount);
+        });
+    }
+
+    /**
+     * Spend gems from user's balance.
+     * @return true if successful (had enough gems), false otherwise
+     */
+    public boolean spendGems(int amount) {
+        try {
+            return executorService.submit(() -> {
+                int rowsUpdated = userProgressDao.spendGems(amount);
+                return rowsUpdated > 0;
+            }).get();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Get current gems count synchronously.
+     */
+    public int getGemsSync() {
+        try {
+            return executorService.submit(() -> userProgressDao.getGemsSync()).get();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     // Database seeding (called once)
