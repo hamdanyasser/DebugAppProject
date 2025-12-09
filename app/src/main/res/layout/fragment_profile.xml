@@ -176,6 +176,22 @@
                     app:iconTint="@null"
                     android:visibility="visible" />
 
+                <!-- Email Login Button (shown when guest) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_email_login"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:text="📧 Login with Email"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textAllCaps="false"
+                    app:cornerRadius="24dp"
+                    app:strokeColor="#3D3D54"
+                    app:strokeWidth="1dp"
+                    android:visibility="gone" />
+
                 <!-- Sign Out Button (shown when signed in) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_sign_out"

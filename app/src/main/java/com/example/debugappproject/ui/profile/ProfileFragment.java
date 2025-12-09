@@ -157,6 +157,13 @@ public class ProfileFragment extends Fragment {
         if (binding.buttonGoogleSignIn != null) {
             binding.buttonGoogleSignIn.setVisibility(isGuest ? View.VISIBLE : View.GONE);
         }
+        if (binding.buttonEmailLogin != null) {
+            binding.buttonEmailLogin.setVisibility(isGuest ? View.VISIBLE : View.GONE);
+            binding.buttonEmailLogin.setOnClickListener(v -> {
+                soundManager.playButtonClick();
+                navigateToAuth();
+            });
+        }
         if (binding.buttonSignOut != null) {
             binding.buttonSignOut.setVisibility(isGuest ? View.GONE : View.VISIBLE);
             binding.buttonSignOut.setOnClickListener(v -> {
@@ -183,6 +190,20 @@ public class ProfileFragment extends Fragment {
         }
     }
     
+    /**
+     * Navigate to auth screen for email/password login
+     */
+    private void navigateToAuth() {
+        try {
+            if (getView() != null) {
+                Navigation.findNavController(getView()).navigate(R.id.action_profile_to_auth);
+            }
+        } catch (Exception e) {
+            android.util.Log.e(TAG, "Navigation to auth failed", e);
+            Toast.makeText(getContext(), "Login screen coming soon!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     /**
      * Show avatar selector dialog
      */
@@ -457,6 +478,8 @@ public class ProfileFragment extends Fragment {
         if (billingManager != null) {
             billingManager.refreshPurchases();
             android.util.Log.d(TAG, "onResume: Pro status after refresh = " + billingManager.isProUserSync());
+            // Always update UI on resume to reflect any demo purchases or changes
+            updateAccountUI();
         }
         if (soundManager != null) {
             soundManager.resumeAll();
