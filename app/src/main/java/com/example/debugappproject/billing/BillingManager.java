@@ -289,7 +289,8 @@ public class BillingManager implements PurchasesUpdatedListener {
                         
                         if (hasLifetime) {
                             saveProStatus(true, PRODUCT_LIFETIME);
-                        } else {
+                        } else if (!DEMO_MODE || !isProUserSync()) {
+                            // Only reset if not in demo mode or not already pro (preserve demo purchases)
                             saveProStatus(false, "");
                         }
                     }
