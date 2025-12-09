@@ -420,6 +420,7 @@ public class BugDetailFragment extends Fragment {
             TextView hintView = new TextView(requireContext());
             hintView.setTextAppearance(R.style.TextAppearance_DebugMaster_Body1);
             hintView.setText("💡 Hint " + (currentLevel + 1) + ": " + hintText);
+            hintView.setTextColor(getResources().getColor(R.color.white, null)); // Ensure visible on dark background
             hintView.setAlpha(0f);
 
             if (currentLevel > 0) {

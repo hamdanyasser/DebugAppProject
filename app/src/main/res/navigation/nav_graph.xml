@@ -105,6 +105,10 @@
         <action
             android:id="@+id/action_home_to_gameModes"
             app:destination="@id/gameModesFragment" />
+
+        <action
+            android:id="@+id/action_home_to_shop"
+            app:destination="@id/shopFragment" />
     </fragment>
 
     <!-- Learning Paths Screen (Learn Tab) -->
@@ -164,9 +168,7 @@
 
         <action
             android:id="@+id/action_profile_to_auth"
-            app:destination="@id/authFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/authFragment" />
     </fragment>
 
     <!-- ============================================== -->
@@ -186,6 +188,13 @@
         android:name="com.example.debugappproject.ui.premium.PremiumFragment"
         android:label="Go Pro"
         tools:layout="@layout/fragment_premium" />
+
+    <!-- Gem Shop Screen -->
+    <fragment
+        android:id="@+id/shopFragment"
+        android:name="com.example.debugappproject.ui.shop.ShopFragment"
+        android:label="Gem Shop"
+        tools:layout="@layout/fragment_shop" />
 
     <!-- Practice Mode Screen -->
     <fragment

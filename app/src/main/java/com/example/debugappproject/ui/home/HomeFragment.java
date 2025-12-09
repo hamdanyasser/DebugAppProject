@@ -238,7 +238,12 @@ public class HomeFragment extends Fragment {
             if (binding.textLevelTitle != null) {
                 binding.textLevelTitle.setText(getTitleForLevel(level));
             }
-            
+
+            // Update gems display
+            if (binding.textCoins != null) {
+                binding.textCoins.setText(String.valueOf(progress.getGems()));
+            }
+
         } catch (Exception e) {
             android.util.Log.e(TAG, "Error updating user stats", e);
         }
@@ -368,6 +373,10 @@ public class HomeFragment extends Fragment {
             binding.layoutCoins.setOnClickListener(v -> {
                 soundManager.playSound(SoundManager.Sound.COIN_COLLECT);
                 animateCoinCollect(v);
+                // Navigate to shop after animation
+                v.postDelayed(() -> {
+                    navigateToDestination(R.id.action_home_to_shop, "Gem Shop");
+                }, 300);
             });
         }
     }

@@ -46,6 +46,9 @@ import com.example.debugappproject.model.UserProgress;
  *
  * Version 6 adds:
  * - Schema fixes and updates for new features
+ *
+ * Version 7 adds:
+ * - UserProgress: gems field for in-game currency
  */
 @Database(
     entities = {
@@ -59,7 +62,7 @@ import com.example.debugappproject.model.UserProgress;
         AchievementDefinition.class,
         UserAchievement.class
     },
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 public abstract class DebugMasterDatabase extends RoomDatabase {
@@ -201,6 +204,18 @@ public abstract class DebugMasterDatabase extends RoomDatabase {
     };
 
     /**
+     * Migration from version 6 to 7.
+     * Adds gems column to user_progress table.
+     */
+    static final Migration MIGRATION_6_7 = new Migration(6, 7) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            // Add gems column to user_progress with default value of 100
+            database.execSQL("ALTER TABLE user_progress ADD COLUMN gems INTEGER NOT NULL DEFAULT 100");
+        }
+    };
+
+    /**
      * Get singleton instance of database.
      * Now uses proper migrations instead of destructive migration.
      */
@@ -213,7 +228,7 @@ public abstract class DebugMasterDatabase extends RoomDatabase {
                             DebugMasterDatabase.class,
                             "debug_master_database"
                     )
-                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_6_7)
                     .fallbackToDestructiveMigration() // Fallback for dev builds
                     .build();
                 }

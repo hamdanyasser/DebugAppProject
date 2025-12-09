@@ -24,6 +24,7 @@ public class UserProgress {
     private int hintsUsed;              // Total number of hints used across all bugs
     private int bugsSolvedWithoutHints; // Number of bugs solved without using any hints
     private int longestStreakDays;      // Longest streak ever achieved
+    private int gems;                    // In-game currency for shop purchases
 
     // Constructor
     public UserProgress() {
@@ -39,6 +40,7 @@ public class UserProgress {
         this.hintsUsed = 0;
         this.bugsSolvedWithoutHints = 0;
         this.longestStreakDays = 0;
+        this.gems = 100; // Start with 100 gems
     }
 
     // Getters and Setters
@@ -178,6 +180,14 @@ public class UserProgress {
 
     public void setLongestStreakDays(int longestStreakDays) {
         this.longestStreakDays = longestStreakDays;
+    }
+
+    public int getGems() {
+        return gems;
+    }
+
+    public void setGems(int gems) {
+        this.gems = gems;
     }
 
     /**

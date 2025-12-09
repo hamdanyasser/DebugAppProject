@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.View;
@@ -196,7 +197,7 @@ public class CelebrationManager {
     public static void animateXpGain(TextView textView, int startXp, int endXp, long duration) {
         if (textView == null) return;
 
-        ObjectAnimator animator = ObjectAnimator.ofInt(startXp, endXp);
+        ValueAnimator animator = ValueAnimator.ofInt(startXp, endXp);
         animator.setDuration(duration);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.addUpdateListener(animation -> {
