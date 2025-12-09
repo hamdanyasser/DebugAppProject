@@ -52,8 +52,9 @@ public class AuthFragment extends Fragment {
         authManager = AuthManager.getInstance(requireContext());
         soundManager = SoundManager.getInstance(requireContext());
 
-        // Check if already logged in
-        if (authManager.isLoggedInSync()) {
+        // Check if already logged in with a real account (not guest)
+        // Allow guests to access auth screen to upgrade to a real account
+        if (authManager.isLoggedInSync() && !authManager.isGuest()) {
             navigateToHome();
             return;
         }
