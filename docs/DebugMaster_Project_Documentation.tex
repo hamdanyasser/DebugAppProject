@@ -1,0 +1,915 @@
+\documentclass[11pt,a4paper]{article}
+
+% ============================================================================
+% PACKAGES
+% ============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{fontawesome5}
+\usepackage{tikz}
+\usepackage{array}
+\usepackage{multirow}
+
+% ============================================================================
+% PAGE SETUP
+% ============================================================================
+\geometry{
+    left=2.5cm,
+    right=2.5cm,
+    top=3cm,
+    bottom=3cm
+}
+
+% ============================================================================
+% COLORS
+% ============================================================================
+\definecolor{primaryBlue}{HTML}{3B82F6}
+\definecolor{darkBg}{HTML}{0F172A}
+\definecolor{lightBg}{HTML}{1E293B}
+\definecolor{successGreen}{HTML}{22C55E}
+\definecolor{warningYellow}{HTML}{F59E0B}
+\definecolor{errorRed}{HTML}{EF4444}
+\definecolor{codeGreen}{HTML}{A6E3A1}
+\definecolor{codePurple}{HTML}{8B5CF6}
+
+% ============================================================================
+% LISTINGS SETUP
+% ============================================================================
+\lstset{
+    basicstyle=\ttfamily\small,
+    backgroundcolor=\color{darkBg},
+    commentstyle=\color{gray},
+    keywordstyle=\color{primaryBlue}\bfseries,
+    stringstyle=\color{successGreen},
+    numberstyle=\tiny\color{gray},
+    numbers=left,
+    numbersep=8pt,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{primaryBlue},
+    showstringspaces=false,
+    tabsize=4
+}
+
+\lstdefinestyle{bash}{
+    language=bash,
+    backgroundcolor=\color{darkBg},
+    basicstyle=\ttfamily\small\color{white},
+    keywordstyle=\color{successGreen},
+}
+
+\lstdefinestyle{java}{
+    language=Java,
+    backgroundcolor=\color{lightBg},
+    basicstyle=\ttfamily\small\color{white},
+    keywordstyle=\color{primaryBlue}\bfseries,
+    stringstyle=\color{successGreen},
+    commentstyle=\color{gray}\itshape,
+}
+
+% ============================================================================
+% CUSTOM BOXES
+% ============================================================================
+\newtcolorbox{infobox}[1][]{
+    colback=primaryBlue!10,
+    colframe=primaryBlue,
+    fonttitle=\bfseries,
+    title=#1,
+    rounded corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{warningbox}[1][]{
+    colback=warningYellow!10,
+    colframe=warningYellow,
+    fonttitle=\bfseries,
+    title=#1,
+    rounded corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{successbox}[1][]{
+    colback=successGreen!10,
+    colframe=successGreen,
+    fonttitle=\bfseries,
+    title=#1,
+    rounded corners,
+    boxrule=1pt
+}
+
+\newtcolorbox{codebox}[1][]{
+    colback=darkBg,
+    colframe=primaryBlue,
+    fonttitle=\bfseries\color{white},
+    coltitle=white,
+    title=#1,
+    rounded corners,
+    boxrule=1pt
+}
+
+% ============================================================================
+% HEADER & FOOTER
+% ============================================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textcolor{primaryBlue}{\textbf{DebugMaster}}}
+\fancyhead[R]{\textcolor{gray}{Project Documentation}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{primaryBlue}\leaders\hrule height \headrulewidth\hfill}}
+
+% ============================================================================
+% TITLE FORMATTING
+% ============================================================================
+\titleformat{\section}
+    {\Large\bfseries\color{primaryBlue}}
+    {\thesection}{1em}{}[\titlerule]
+
+\titleformat{\subsection}
+    {\large\bfseries\color{darkBg}}
+    {\thesubsection}{1em}{}
+
+% ============================================================================
+% HYPERREF SETUP
+% ============================================================================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryBlue,
+    urlcolor=primaryBlue,
+    citecolor=primaryBlue
+}
+
+% ============================================================================
+% DOCUMENT START
+% ============================================================================
+\begin{document}
+
+% ============================================================================
+% TITLE PAGE
+% ============================================================================
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\Huge\bfseries\textcolor{primaryBlue}{🐛 DebugMaster}}\\[0.5cm]
+    {\Large\textcolor{gray}{The Ultimate Debugging Game}}\\[2cm]
+
+    \begin{tikzpicture}
+        \node[draw=primaryBlue, line width=2pt, rounded corners=10pt,
+              fill=darkBg, text=white, minimum width=12cm, minimum height=3cm] {
+            \begin{minipage}{11cm}
+                \centering
+                \Large\textbf{Project Documentation}\\[0.3cm]
+                \normalsize Complete Guide for Development Team
+            \end{minipage}
+        };
+    \end{tikzpicture}
+
+    \vspace{2cm}
+
+    \begin{tabular}{ll}
+        \textbf{Version:} & 2.0.0 (Major Update) \\
+        \textbf{Date:} & \today \\
+        \textbf{Branch:} & \texttt{claude/fix-game-bugs-01A7KyWVzeYiWXRn7MbR56sA} \\
+        \textbf{Platform:} & Android (API 24+) \\
+    \end{tabular}
+
+    \vfill
+
+    \textcolor{gray}{Generated with Claude Code}
+
+\end{titlepage}
+
+% ============================================================================
+% TABLE OF CONTENTS
+% ============================================================================
+\tableofcontents
+\newpage
+
+% ============================================================================
+% SECTION: INTRODUCTION
+% ============================================================================
+\section{Introduction}
+
+\subsection{Project Overview}
+
+DebugMaster is an Android mobile game designed to help developers improve their debugging skills through gamified challenges. Players solve buggy code snippets across multiple programming languages, earning XP and unlocking achievements.
+
+\begin{infobox}[Key Features]
+\begin{itemize}[leftmargin=*]
+    \item \textbf{7 Programming Languages:} Java, Python, JavaScript, C++, C\#, Swift, Kotlin
+    \item \textbf{Multiple Game Modes:} Practice, Daily Challenge, Battle Arena, Learning Paths
+    \item \textbf{Gamification:} XP system, streaks, achievements, leaderboards
+    \item \textbf{Social Features:} Friends system, shareable results
+    \item \textbf{Customization:} Editor themes, fonts, mascot
+\end{itemize}
+\end{infobox}
+
+\subsection{Technology Stack}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Component} & \textbf{Technology} & \textbf{Purpose} \\
+\midrule
+Language & Java & Primary development language \\
+UI Framework & Android Views + Data Binding & User interface \\
+Architecture & MVVM & Clean separation of concerns \\
+Database & Room (SQLite) & Local data persistence \\
+DI & Hilt (Dagger) & Dependency injection \\
+Navigation & Jetpack Navigation & Screen navigation \\
+Build & Gradle (Kotlin DSL) & Build system \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================================
+% SECTION: GETTING STARTED
+% ============================================================================
+\section{Getting Started}
+
+\subsection{Prerequisites}
+
+Before you begin, ensure you have the following installed:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Android Studio:} Arctic Fox (2020.3.1) or newer
+    \item \textbf{JDK:} Java 11 or higher
+    \item \textbf{Android SDK:} API Level 24 (Android 7.0) minimum
+    \item \textbf{Git:} Version 2.0 or higher
+    \item \textbf{Gradle:} 8.0+ (included with project)
+\end{itemize}
+
+\subsection{Cloning the Repository}
+
+\begin{codebox}[Clone Commands]
+\begin{lstlisting}[style=bash]
+# Clone the repository
+git clone https://github.com/hamdanyasser/DebugAppProject.git
+
+# Navigate to project directory
+cd DebugAppProject
+
+# Checkout the feature branch with all updates
+git checkout claude/fix-game-bugs-01A7KyWVzeYiWXRn7MbR56sA
+
+# Verify you're on the correct branch
+git branch
+\end{lstlisting}
+\end{codebox}
+
+\subsection{Opening in Android Studio}
+
+\begin{enumerate}[leftmargin=*]
+    \item Open Android Studio
+    \item Select \textbf{File → Open}
+    \item Navigate to the cloned \texttt{DebugAppProject} folder
+    \item Click \textbf{OK} to open the project
+    \item Wait for Gradle sync to complete (may take 2-5 minutes first time)
+    \item If prompted, install any missing SDK components
+\end{enumerate}
+
+\begin{warningbox}[Common Issues]
+\textbf{Gradle Sync Failed:}
+\begin{itemize}
+    \item Ensure you have JDK 11+ set in Project Structure
+    \item Try \textbf{File → Invalidate Caches / Restart}
+    \item Check your internet connection for dependency downloads
+\end{itemize}
+\end{warningbox}
+
+\subsection{Running the App}
+
+\begin{enumerate}[leftmargin=*]
+    \item Connect an Android device (USB debugging enabled) or start an emulator
+    \item Select your device from the device dropdown in the toolbar
+    \item Click the \textbf{Run} button (green play icon) or press \texttt{Shift+F10}
+    \item Wait for the build and installation to complete
+\end{enumerate}
+
+\begin{successbox}[Recommended Emulator Settings]
+\begin{itemize}
+    \item \textbf{Device:} Pixel 4 or newer
+    \item \textbf{API Level:} 30 (Android 11) or higher
+    \item \textbf{RAM:} 2GB minimum
+    \item \textbf{Storage:} 2GB internal storage
+\end{itemize}
+\end{successbox}
+
+% ============================================================================
+% SECTION: PROJECT STRUCTURE
+% ============================================================================
+\section{Project Structure}
+
+\subsection{Directory Layout}
+
+\begin{codebox}[Project Structure]
+\begin{lstlisting}[basicstyle=\ttfamily\small\color{codeGreen}]
+app/src/main/java/com/example/debugappproject/
+|-- billing/          # In-app purchases
+|-- data/
+|   |-- local/        # Room database, DAOs
+|   |-- repository/   # Data repositories
+|   |-- seeding/      # Database initialization
+|-- di/               # Hilt dependency injection modules
+|-- execution/        # Code execution engine
+|-- game/             # GameManager (XP, streaks)
+|-- generator/        # AI Mission Generator (NEW)
+|-- model/            # Data models (Bug, User, etc.)
+|-- ui/
+|   |-- animation/    # Custom animations
+|   |-- battle/       # Battle Arena mode
+|   |-- bugdetail/    # Bug solving screen
+|   |-- home/         # Home dashboard
+|   |-- leaderboard/  # Leaderboards
+|   |-- learn/        # Learning paths
+|   |-- practice/     # Practice mode
+|   |-- profile/      # User profile
+|   |-- settings/     # App settings
+|-- util/             # Utility classes (NEW FILES HERE)
+    |-- ByteMascot.java
+    |-- CelebrationManager.java
+    |-- EditorThemeManager.java
+    |-- FriendsManager.java
+    |-- ShareResultManager.java
+    |-- StreakManager.java
+\end{lstlisting}
+\end{codebox}
+
+\subsection{Key Files Reference}
+
+\begin{center}
+\begin{longtable}{p{5cm}p{8cm}}
+\toprule
+\textbf{File} & \textbf{Description} \\
+\midrule
+\endhead
+\texttt{GameManager.java} & Core game logic: XP calculation, streaks, daily limits \\
+\texttt{BugRepository.java} & Single source of truth for bug data operations \\
+\texttt{BugDetailFragment.java} & Main bug-solving gameplay screen \\
+\texttt{HomeFragment.java} & Dashboard with game modes and stats \\
+\texttt{CelebrationManager.java} & Dopamine loop: messages, combos, animations \\
+\texttt{ByteMascot.java} & Mascot system with greetings and tips \\
+\texttt{EditorThemeManager.java} & 5 themes + 3 fonts with unlock system \\
+\texttt{StreakManager.java} & Streak freeze, weekend bonus, milestones \\
+\texttt{MissionGenerator.java} & AI-based bug challenge generator \\
+\texttt{ShareResultManager.java} & Generate shareable result images \\
+\texttt{FriendsManager.java} & Friend ID system and leaderboards \\
+\bottomrule
+\end{longtable}
+\end{center}
+
+% ============================================================================
+% SECTION: CHANGES MADE
+% ============================================================================
+\section{Changes Made (All Phases)}
+
+This section documents all bug fixes and feature additions made during the development sprint.
+
+\subsection{Phase 1-3: Critical Bug Fixes}
+
+\begin{center}
+\begin{longtable}{p{3cm}p{4cm}p{6cm}}
+\toprule
+\textbf{Bug} & \textbf{Location} & \textbf{Fix Applied} \\
+\midrule
+\endhead
+XP Inconsistency & \texttt{BugRepository.java} \texttt{GameManager.java} & Aligned XP values: Easy=10, Medium=25, Hard=50, Expert=100 \\
+\midrule
+Year Boundary Streak & \texttt{GameManager.java:268} & Fixed \texttt{isYesterday()} to handle Dec 31 → Jan 1 \\
+\midrule
+Navigation Crash & \texttt{HomeFragment.java:431} & Added \texttt{navigateToDailyChallenge()} with bugId \\
+\midrule
+Streak Logic & \texttt{GameManager.java:146} & Streak now updates on ANY solve, not just daily \\
+\midrule
+Thread Pool & \texttt{BugRepository.java:53} & Increased from 2 to 4 threads \\
+\midrule
+Case Sensitivity & \texttt{BugRepository.java:89} & Added case-insensitive difficulty comparison \\
+\bottomrule
+\end{longtable}
+\end{center}
+
+\subsection{Phase 4: Dopamine Loop System}
+
+\begin{infobox}[CelebrationManager.java - New File]
+\textbf{Location:} \texttt{app/src/main/java/.../util/CelebrationManager.java}
+
+\textbf{Features:}
+\begin{itemize}
+    \item Random celebration messages: "Perfect Fix!", "Bug Annihilated!", "Clean Execution!"
+    \item Combo system: 5\% XP bonus per consecutive solve (max 50\%)
+    \item 5-minute combo timeout
+    \item Pulse and bounce animations
+    \item Integration with SoundManager for audio feedback
+\end{itemize}
+
+\textbf{Usage:}
+\begin{lstlisting}[style=java]
+CelebrationManager celebrationManager =
+    new CelebrationManager(context);
+
+// Record a solve and get celebration data
+CelebrationResult result = celebrationManager.recordSolve(
+    isPerfect,      // true if solved without hints
+    "Hard",         // difficulty
+    50,             // XP earned
+    currentStreak   // user's streak
+);
+
+// Access celebration data
+String message = result.mainMessage;  // "Perfect Fix!"
+int combo = result.combo;             // 3
+int bonus = result.comboBonus;        // +15 XP
+\end{lstlisting}
+\end{infobox}
+
+\subsection{Phase 5: Byte the Bug Mascot}
+
+\begin{infobox}[ByteMascot.java - New File]
+\textbf{Location:} \texttt{app/src/main/java/.../util/ByteMascot.java}
+
+\textbf{Features:}
+\begin{itemize}
+    \item Time-based greetings (morning, afternoon, evening)
+    \item Multiple mascot states: IDLE, EXCITED, THINKING, CELEBRATING
+    \item Encouraging messages on failure
+    \item Random debugging tips
+    \item Mission intro messages with storylines
+    \item Animation helpers: bounce, wiggle, spin
+\end{itemize}
+
+\textbf{Usage:}
+\begin{lstlisting}[style=java]
+ByteMascot byte = new ByteMascot(context);
+
+// Get time-based greeting
+String greeting = byte.getGreeting();
+// "Good morning, debugger! Ready to squash bugs?"
+
+// Get success/failure messages
+String success = byte.getSuccessMessage();
+String encourage = byte.getEncouragementMessage();
+
+// Get random tip
+String tip = byte.getRandomTip();
+// "Tip: Off-by-one errors hide in loops!"
+
+// Get mission story
+String[] story = byte.getMissionStory(5);
+// ["Chapter 5: Type Wars", "String meets Integer..."]
+\end{lstlisting}
+\end{infobox}
+
+\subsection{Phase 6: Editor Themes \& Fonts}
+
+\begin{infobox}[EditorThemeManager.java - New File]
+\textbf{Location:} \texttt{app/src/main/java/.../util/EditorThemeManager.java}
+
+\textbf{Available Themes:}
+\begin{center}
+\begin{tabular}{llr}
+\toprule
+\textbf{Theme} & \textbf{Style} & \textbf{XP Required} \\
+\midrule
+Default & Dark blue/purple & 0 (unlocked) \\
+Matrix & Green on black & 500 XP \\
+Hacker Green & Bright green & 1,000 XP \\
+Neon & Pink/cyan neon & 2,000 XP \\
+Midnight & Deep purple & 3,000 XP \\
+Sunset & Orange/red & 5,000 XP \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Available Fonts:}
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+\textbf{Font} & \textbf{XP Required} \\
+\midrule
+System Default (Monospace) & 0 (unlocked) \\
+JetBrains Mono & 1,000 XP \\
+Fira Code & 2,000 XP \\
+Cascadia Code & 3,000 XP \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Usage:}
+\begin{lstlisting}[style=java]
+EditorThemeManager themeManager =
+    new EditorThemeManager(context);
+
+// Apply theme to code editor
+themeManager.applyFullStyleToEditor(editText);
+
+// Check/unlock themes based on XP
+themeManager.checkAndUnlockThemes(userTotalXp);
+
+// Set specific theme
+themeManager.setCurrentTheme(EditorTheme.MATRIX);
+\end{lstlisting}
+\end{infobox}
+
+\subsection{Phase 7: Retention Features}
+
+\begin{infobox}[StreakManager.java - New File]
+\textbf{Location:} \texttt{app/src/main/java/.../util/StreakManager.java}
+
+\textbf{Features:}
+\begin{itemize}
+    \item \textbf{Weekend 2x XP:} Automatic on Saturday/Sunday
+    \item \textbf{Streak Freeze:} Protect your streak (costs 100 XP, max 5)
+    \item \textbf{Grace Period:} 24-hour window to recover broken streak
+    \item \textbf{Streak Tiers:} Bonus multipliers based on streak length
+    \item \textbf{Milestones:} XP + freeze rewards at 7, 30, 100 days
+\end{itemize}
+
+\textbf{Streak Tiers:}
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Tier} & \textbf{Days} & \textbf{Multiplier} \\
+\midrule
+None & 0-2 & 1.0x \\
+Beginner & 3-6 & 1.05x \\
+Advanced & 7-13 & 1.10x \\
+Expert & 14-29 & 1.20x \\
+Master & 30-99 & 1.30x \\
+Legendary & 100+ & 1.50x \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Milestone Rewards:}
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Days} & \textbf{XP Reward} & \textbf{Freezes} \\
+\midrule
+7 days & +50 XP & +1 \\
+14 days & +100 XP & +1 \\
+30 days & +200 XP & +2 \\
+100 days & +1,000 XP & +3 \\
+365 days & +5,000 XP & +5 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{infobox}
+
+\subsection{Phase 8: Social Features}
+
+\begin{infobox}[ShareResultManager.java - New File]
+\textbf{Location:} \texttt{app/src/main/java/.../util/ShareResultManager.java}
+
+Generates beautiful 1080x1920 PNG images with:
+\begin{itemize}
+    \item Bug challenge title and description
+    \item User's code fix (syntax highlighted)
+    \item XP earned with bonuses
+    \item User stats (streak, level, bugs fixed)
+    \item App watermark and date
+\end{itemize}
+
+\textbf{Usage:}
+\begin{lstlisting}[style=java]
+ShareResultManager shareManager =
+    new ShareResultManager(context);
+
+ShareData data = new ShareData()
+    .setBugTitle("Array Index Issue")
+    .setCategory("Arrays")
+    .setDifficulty("Medium")
+    .setUserFix("for (i < arr.length)")
+    .setXpEarned(50)
+    .setStreak(7);
+
+// Share to social media
+shareManager.shareResult(data);
+\end{lstlisting}
+\end{infobox}
+
+\begin{infobox}[FriendsManager.java - New File]
+\textbf{Location:} \texttt{app/src/main/java/.../util/FriendsManager.java}
+
+\textbf{Features:}
+\begin{itemize}
+    \item Unique 8-character user ID (e.g., DEBUG-A1B2-C3D4)
+    \item Add friends by ID
+    \item Friends leaderboard sorted by XP
+    \item Track friend stats
+\end{itemize}
+
+\textbf{Usage:}
+\begin{lstlisting}[style=java]
+FriendsManager friends = new FriendsManager(context);
+
+// Get your shareable ID
+String myId = friends.getFormattedUserId();
+// "DEBUG-A1B2-C3D4"
+
+// Add a friend
+AddFriendResult result = friends.addFriend("X9Y8-Z7W6");
+if (result.success) {
+    // Friend added!
+}
+
+// Get friends leaderboard
+List<Friend> leaderboard =
+    friends.getFriendsLeaderboard(myXp, myLevel, myStreak);
+\end{lstlisting}
+\end{infobox}
+
+\subsection{Phase 9: AI Mission Generator}
+
+\begin{infobox}[MissionGenerator.java - New File]
+\textbf{Location:} \texttt{app/src/main/java/.../generator/MissionGenerator.java}
+
+\textbf{Supported Languages:}
+Java, Python, JavaScript, C++, C\#, Swift, Kotlin
+
+\textbf{Difficulty Levels:}
+Easy (10 XP), Medium (25 XP), Hard (50 XP), Expert (100 XP)
+
+\textbf{Bug Categories:}
+Syntax, Logic, Off-by-One, Null Reference, Infinite Loop, Type Error, Array Bounds, String Manipulation, Operator Precedence, Comparison Error
+
+\textbf{Usage:}
+\begin{lstlisting}[style=java]
+MissionGenerator generator = new MissionGenerator();
+
+// Generate a random mission
+GeneratedMission mission = generator.generate(
+    Language.PYTHON,
+    Difficulty.MEDIUM
+);
+
+// Access mission data
+String title = mission.title;        // "Average Calculation Bug"
+String broken = mission.brokenCode;  // Buggy code
+String fixed = mission.fixedCode;    // Correct code
+String hint = mission.hint;          // Helpful hint
+int xp = mission.baseXp;             // 25
+\end{lstlisting}
+\end{infobox}
+
+\subsection{Phase 10: Code Cleanup}
+
+\textbf{Bug Categories Added:}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{New Category} & \textbf{Description} \\
+\midrule
+LOGIC & Incorrect boolean/conditional logic \\
+INFINITE\_LOOP & Loops that never terminate \\
+OFF\_BY\_ONE & Array bounds, fence-post errors \\
+API & Incorrect API usage patterns \\
+RACE\_CONDITION & Threading/concurrency issues \\
+MEMORY\_LEAK & Resource management bugs \\
+REGEX & Regular expression errors \\
+NULL\_REFERENCE & Null pointer dereferences \\
+TYPE\_ERROR & Type mismatch issues \\
+RECURSION & Base case/recursion bugs \\
+SYNTAX & Syntax errors (semicolons, etc.) \\
+ANDROID & Android-specific lifecycle bugs \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================================
+% SECTION: XP SYSTEM
+% ============================================================================
+\section{XP System Reference}
+
+\subsection{Base XP Values}
+
+\begin{center}
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Difficulty} & \textbf{Base XP} & \textbf{Perfect (2x)} & \textbf{Weekend (2x)} & \textbf{Both (4x)} \\
+\midrule
+Easy & 10 & 20 & 20 & 40 \\
+Medium & 25 & 50 & 50 & 100 \\
+Hard & 50 & 100 & 100 & 200 \\
+Expert & 100 & 200 & 200 & 400 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{XP Multipliers}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Perfect Solve (no hints):} 2x base XP
+    \item \textbf{Weekend Bonus (Sat/Sun):} 2x total XP
+    \item \textbf{Streak Bonus:} +5\% per day (max 50\%)
+    \item \textbf{Streak Tier:} 1.0x to 1.5x based on tier
+    \item \textbf{Combo Bonus:} +5\% per combo (max 50\%)
+    \item \textbf{Daily Challenge:} +25 XP bonus
+\end{itemize}
+
+\subsection{Level Progression}
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+\textbf{Level Range} & \textbf{XP per Level} \\
+\midrule
+1-10 & 100 XP \\
+11-25 & 150 XP \\
+26-50 & 200 XP \\
+51+ & 300 XP \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================================
+% SECTION: TESTING
+% ============================================================================
+\section{Testing Guide}
+
+\subsection{Running Unit Tests}
+
+\begin{codebox}[Run Tests via Terminal]
+\begin{lstlisting}[style=bash]
+# Run all unit tests
+./gradlew test
+
+# Run specific test class
+./gradlew test --tests "AchievementManagerXpTest"
+
+# Run with verbose output
+./gradlew test --info
+\end{lstlisting}
+\end{codebox}
+
+\subsection{Running Instrumented Tests}
+
+\begin{codebox}[Run Instrumented Tests]
+\begin{lstlisting}[style=bash]
+# Connect device or start emulator first
+./gradlew connectedAndroidTest
+
+# Run specific test
+./gradlew connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.example.debugappproject.ExampleInstrumentedTest
+\end{lstlisting}
+\end{codebox}
+
+\subsection{Manual Testing Checklist}
+
+\begin{center}
+\begin{longtable}{p{6cm}p{7cm}}
+\toprule
+\textbf{Test Case} & \textbf{Expected Result} \\
+\midrule
+\endhead
+Open app for first time & Database seeds, home screen loads \\
+\midrule
+Click Daily Challenge & Navigates to bug detail with correct bug \\
+\midrule
+Solve bug without hints & Shows "Perfect Fix!" message, 2x XP \\
+\midrule
+Solve multiple bugs quickly & Combo counter increases, bonus XP \\
+\midrule
+Wait 5+ minutes between solves & Combo resets to 0 \\
+\midrule
+Play on Saturday/Sunday & "Weekend 2x XP Active!" banner shows \\
+\midrule
+Check Practice Mode & Shows real bugs from database \\
+\midrule
+View Leaderboard & Shows user highlighted in list \\
+\midrule
+Change theme in settings & Code editor colors change \\
+\midrule
+Miss a day, then solve bug & Grace period activates \\
+\midrule
+Reach 7-day streak & Milestone reward appears \\
+\bottomrule
+\end{longtable}
+\end{center}
+
+% ============================================================================
+% SECTION: TROUBLESHOOTING
+% ============================================================================
+\section{Troubleshooting}
+
+\subsection{Common Issues}
+
+\begin{warningbox}[Build Errors]
+\textbf{Problem:} \texttt{Could not resolve dependencies}
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item Check internet connection
+    \item Run \texttt{./gradlew clean}
+    \item Run \texttt{./gradlew build --refresh-dependencies}
+\end{enumerate}
+\end{warningbox}
+
+\begin{warningbox}[Database Issues]
+\textbf{Problem:} App crashes on launch with Room error
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item Uninstall app from device
+    \item Clean and rebuild project
+    \item Run again to recreate database
+\end{enumerate}
+\end{warningbox}
+
+\begin{warningbox}[Hilt Errors]
+\textbf{Problem:} \texttt{Hilt injection error}
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item Ensure \texttt{@AndroidEntryPoint} on Activity/Fragment
+    \item Check \texttt{@HiltAndroidApp} on Application class
+    \item Rebuild project: \texttt{./gradlew clean assembleDebug}
+\end{enumerate}
+\end{warningbox}
+
+% ============================================================================
+% SECTION: GIT WORKFLOW
+% ============================================================================
+\section{Git Workflow}
+
+\subsection{Branch Information}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Branch} & \textbf{Purpose} \\
+\midrule
+\texttt{main} & Production-ready code \\
+\texttt{claude/fix-game-bugs-*} & Feature branch with all updates \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Pulling Latest Changes}
+
+\begin{codebox}[Git Commands]
+\begin{lstlisting}[style=bash]
+# Fetch latest changes
+git fetch origin
+
+# Pull updates to your branch
+git pull origin claude/fix-game-bugs-01A7KyWVzeYiWXRn7MbR56sA
+
+# If you have local changes, stash first
+git stash
+git pull origin claude/fix-game-bugs-01A7KyWVzeYiWXRn7MbR56sA
+git stash pop
+\end{lstlisting}
+\end{codebox}
+
+\subsection{Creating a Pull Request}
+
+\begin{enumerate}[leftmargin=*]
+    \item Push your branch to GitHub
+    \item Go to repository on GitHub
+    \item Click "Pull requests" → "New pull request"
+    \item Select your branch as "compare"
+    \item Add description and create PR
+\end{enumerate}
+
+% ============================================================================
+% SECTION: CONTACT
+% ============================================================================
+\section{Contact \& Resources}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Resource} & \textbf{Link} \\
+\midrule
+GitHub Repository & \url{https://github.com/hamdanyasser/DebugAppProject} \\
+Android Documentation & \url{https://developer.android.com/docs} \\
+Room Database Guide & \url{https://developer.android.com/training/data-storage/room} \\
+Hilt Documentation & \url{https://developer.android.com/training/dependency-injection/hilt-android} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================================
+% END DOCUMENT
+% ============================================================================
+
+\vfill
+\begin{center}
+\textcolor{gray}{\textit{Document generated on \today}}
+\end{center}
+
+\end{document}
