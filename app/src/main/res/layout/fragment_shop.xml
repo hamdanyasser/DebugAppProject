@@ -343,6 +343,96 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+                <!-- AI Mentor Sessions -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_mentor_sessions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    app:cardBackgroundColor="#1A1A2E"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    app:strokeColor="#6366F1"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp">
+
+                        <FrameLayout
+                            android:layout_width="48dp"
+                            android:layout_height="48dp">
+
+                            <TextView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:gravity="center"
+                                android:text="🤖"
+                                android:textSize="28sp"
+                                android:background="@drawable/bg_circle_gradient" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="top|end"
+                                android:text="NEW"
+                                android:textColor="#6366F1"
+                                android:textSize="8sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:background="@drawable/bg_glass_pill"
+                                android:paddingHorizontal="4dp"
+                                android:paddingVertical="1dp" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="AI Mentor Sessions (5)"
+                                android:textColor="@color/white"
+                                android:textSize="16sp"
+                                android:fontFamily="sans-serif-medium" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Get personalized debugging help"
+                                android:textColor="#888899"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/text_mentor_sessions_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#6366F1"
+                                android:textSize="12sp"
+                                android:fontFamily="sans-serif-medium"
+                                android:visibility="gone"
+                                tools:text="Owned: 5"
+                                tools:visibility="visible" />
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/button_buy_mentor_sessions"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:text="💎 80"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            app:backgroundTint="#6366F1"
+                            app:cornerRadius="20dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
                 <!-- Cosmetics Section -->
                 <TextView
                     android:layout_width="wrap_content"

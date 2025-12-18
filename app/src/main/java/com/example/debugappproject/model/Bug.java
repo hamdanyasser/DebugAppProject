@@ -3,12 +3,16 @@ package com.example.debugappproject.model;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 /**
  * Bug entity representing a debugging exercise.
  * Each bug contains broken code that students must debug.
  */
 @Entity(tableName = "bugs")
-public class Bug {
+public class Bug implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @PrimaryKey
     private int id;

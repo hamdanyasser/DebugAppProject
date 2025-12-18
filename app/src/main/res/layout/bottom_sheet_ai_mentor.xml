@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    AI Debug Mentor - Interactive Chat Bottom Sheet
+    Provides contextual debugging assistance
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_bottom_sheet"
+    android:paddingBottom="16dp">
+
+    <!-- Drag Handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_drag_handle" />
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="12dp">
+
+        <!-- Mentor Avatar -->
+        <FrameLayout
+            android:layout_width="48dp"
+            android:layout_height="48dp">
+
+            <TextView
+                android:id="@+id/text_mentor_avatar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:text="🤖"
+                android:textSize="28sp"
+                android:background="@drawable/bg_circle_gradient" />
+
+            <!-- Online indicator -->
+            <View
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="bottom|end"
+                android:background="@drawable/bg_online_indicator" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AI Debug Mentor"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <TextView
+                android:id="@+id/text_mentor_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ready to help"
+                android:textColor="#10B981"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <!-- Sessions Counter -->
+        <LinearLayout
+            android:id="@+id/layout_sessions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_glass_pill"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="💬"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/text_sessions_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"
+                tools:text="5" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Chat Area -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_chat"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:minHeight="200dp"
+        android:maxHeight="400dp"
+        android:clipToPadding="false"
+        android:scrollbars="vertical"
+        android:paddingHorizontal="16dp">
+
+        <LinearLayout
+            android:id="@+id/layout_chat_messages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="8dp" />
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Quick Actions -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:paddingHorizontal="12dp"
+        android:clipToPadding="false"
+        android:layout_marginTop="8dp">
+
+        <LinearLayout
+            android:id="@+id/layout_quick_actions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="4dp">
+
+            <!-- Quick action chips will be added programmatically -->
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_explain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Explain the bug"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                app:chipBackgroundColor="#2D2D44"
+                app:chipStrokeColor="#4D4D6A"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="20dp"
+                android:layout_marginEnd="8dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Give me a hint"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                app:chipBackgroundColor="#2D2D44"
+                app:chipStrokeColor="#4D4D6A"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="20dp"
+                android:layout_marginEnd="8dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_check_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check my code"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                app:chipBackgroundColor="#2D2D44"
+                app:chipStrokeColor="#4D4D6A"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="20dp"
+                android:layout_marginEnd="8dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_strategy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="How do I start?"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                app:chipBackgroundColor="#2D2D44"
+                app:chipStrokeColor="#4D4D6A"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="20dp"
+                android:layout_marginEnd="8dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_stuck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="I'm stuck!"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                app:chipBackgroundColor="#2D2D44"
+                app:chipStrokeColor="#4D4D6A"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="20dp" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Input Area -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="12dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Ask me anything..."
+            app:boxBackgroundMode="filled"
+            app:boxBackgroundColor="#1A1A2E"
+            app:boxCornerRadiusTopStart="24dp"
+            app:boxCornerRadiusTopEnd="24dp"
+            app:boxCornerRadiusBottomStart="24dp"
+            app:boxCornerRadiusBottomEnd="24dp"
+            app:boxStrokeColor="#6366F1"
+            app:hintTextColor="#888899">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:inputType="text"
+                android:imeOptions="actionSend"
+                android:maxLines="3"
+                android:paddingVertical="12dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_send"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:icon="@drawable/ic_send"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconTint="@color/white"
+            app:backgroundTint="#6366F1"
+            app:cornerRadius="24dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
+    </LinearLayout>
+
+    <!-- Get More Sessions Button (shown when sessions run out) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_get_sessions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Get More Sessions"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:backgroundTint="#6366F1"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_gem"
+        app:iconGravity="textStart"
+        app:iconTint="@color/white"
+        tools:visibility="visible" />
+
+</LinearLayout>

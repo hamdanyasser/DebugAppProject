@@ -628,6 +628,121 @@
                 </LinearLayout>
 
                 <!-- ═══════════════════════════════════════════════════════════════════
+                     AI DEBUG MENTOR CARD
+                     ═══════════════════════════════════════════════════════════════════ -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_ai_mentor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="#1A1A2E"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#6366F1"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <!-- Mentor Avatar -->
+                        <FrameLayout
+                            android:layout_width="56dp"
+                            android:layout_height="56dp">
+
+                            <TextView
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:gravity="center"
+                                android:text="🤖"
+                                android:textSize="32sp"
+                                android:background="@drawable/bg_circle_gradient" />
+
+                            <!-- Pulse indicator -->
+                            <View
+                                android:id="@+id/view_mentor_pulse"
+                                android:layout_width="14dp"
+                                android:layout_height="14dp"
+                                android:layout_gravity="bottom|end"
+                                android:background="@drawable/bg_online_indicator" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="14dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="AI Debug Mentor"
+                                android:textColor="@color/white"
+                                android:textSize="16sp"
+                                android:fontFamily="sans-serif-medium" />
+
+                            <TextView
+                                android:id="@+id/text_mentor_description"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Get personalized debugging help"
+                                android:textColor="#888899"
+                                android:textSize="13sp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="NEW"
+                                    android:textColor="#6366F1"
+                                    android:textSize="10sp"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:background="@drawable/bg_glass_pill"
+                                    android:paddingHorizontal="8dp"
+                                    android:paddingVertical="2dp" />
+
+                                <TextView
+                                    android:id="@+id/text_mentor_sessions"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:text="3 free sessions"
+                                    android:textColor="#10B981"
+                                    android:textSize="11sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!-- Ask Button -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/button_ask_mentor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
+                            android:text="Ask"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:textAllCaps="false"
+                            app:backgroundTint="#6366F1"
+                            app:cornerRadius="12dp"
+                            app:icon="@drawable/ic_chat"
+                            app:iconGravity="textStart"
+                            app:iconTint="@color/white"
+                            app:iconPadding="4dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ═══════════════════════════════════════════════════════════════════
                      OUTPUT CARD (Initially Hidden)
                      ═══════════════════════════════════════════════════════════════════ -->
                 <com.google.android.material.card.MaterialCardView

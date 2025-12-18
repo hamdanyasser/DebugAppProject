@@ -45,6 +45,7 @@ public class ShopFragment extends Fragment {
     private static final int PRICE_HINTS = 50;
     private static final int PRICE_XP_BOOST = 75;
     private static final int PRICE_STREAK_SHIELD = 100;
+    private static final int PRICE_MENTOR_SESSIONS = 80;
     private static final int PRICE_AVATARS = 200;
     private static final int PRICE_TITLES = 150;
 
@@ -102,6 +103,16 @@ public class ShopFragment extends Fragment {
                 .apply();
             updateItemCounts();
         }));
+
+        // AI Mentor Sessions
+        if (binding.buttonBuyMentorSessions != null) {
+            binding.buttonBuyMentorSessions.setOnClickListener(v -> purchaseItem("AI Mentor Sessions (5)", PRICE_MENTOR_SESSIONS, () -> {
+                // Add 5 mentor sessions
+                com.example.debugappproject.util.AIMentor mentor = new com.example.debugappproject.util.AIMentor(requireContext());
+                mentor.addPurchasedSessions(5);
+                updateItemCounts();
+            }));
+        }
 
         // Cosmetics
         binding.buttonBuyAvatars.setOnClickListener(v -> {
@@ -275,6 +286,18 @@ public class ShopFragment extends Fragment {
                 binding.textStreakShieldStatus.setVisibility(View.VISIBLE);
             } else {
                 binding.textStreakShieldStatus.setVisibility(View.GONE);
+            }
+        }
+
+        // Update AI Mentor sessions count
+        if (binding.textMentorSessionsCount != null) {
+            com.example.debugappproject.util.AIMentor mentor = new com.example.debugappproject.util.AIMentor(requireContext());
+            int sessions = mentor.getTotalSessions();
+            if (sessions > 0) {
+                binding.textMentorSessionsCount.setText("Available: " + sessions);
+                binding.textMentorSessionsCount.setVisibility(View.VISIBLE);
+            } else {
+                binding.textMentorSessionsCount.setVisibility(View.GONE);
             }
         }
     }

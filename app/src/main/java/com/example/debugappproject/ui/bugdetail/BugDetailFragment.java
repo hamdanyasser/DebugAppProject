@@ -25,7 +25,9 @@ import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.model.Hint;
 import com.example.debugappproject.model.TestCase;
 import com.example.debugappproject.ui.animation.ConfettiAnimationView;
+import com.example.debugappproject.ui.mentor.AIMentorBottomSheet;
 import com.example.debugappproject.ui.settings.SettingsFragment;
+import com.example.debugappproject.util.AIMentor;
 import com.example.debugappproject.util.AnimationUtil;
 import com.example.debugappproject.util.CelebrationManager;
 import com.example.debugappproject.util.CodeComparator;
@@ -82,6 +84,7 @@ public class BugDetailFragment extends Fragment {
     private String initialCode;
     private ConfettiAnimationView confettiView;
     private CodeExecutionEngine codeExecutionEngine;
+    private AIMentor aiMentor;
 
     @Nullable
     @Override
@@ -112,6 +115,10 @@ public class BugDetailFragment extends Fragment {
         // Initialize code execution engine
         codeExecutionEngine = new CodeExecutionEngine();
         codeExecutionEngine.setTimeout(5000);
+
+        // Initialize AI Mentor
+        aiMentor = new AIMentor(requireContext());
+        updateMentorSessionsDisplay();
 
         // Get bug ID from arguments
         if (getArguments() != null) {
@@ -187,6 +194,11 @@ public class BugDetailFragment extends Fragment {
         }
 
         parseTestCases(bug.getTestsJson());
+
+        // Update AI Mentor context
+        if (aiMentor != null) {
+            aiMentor.setBugContext(bug);
+        }
     }
     
     private int getXpForDifficulty(String difficulty) {
@@ -350,6 +362,22 @@ public class BugDetailFragment extends Fragment {
                 }
             });
         });
+
+        // AI Mentor button
+        if (binding.buttonAskMentor != null) {
+            binding.buttonAskMentor.setOnClickListener(v -> {
+                soundManager.playSound(SoundManager.Sound.POWER_UP);
+                AnimationUtil.animatePress(v, this::openAIMentor);
+            });
+        }
+
+        // AI Mentor card click
+        if (binding.cardAiMentor != null) {
+            binding.cardAiMentor.setOnClickListener(v -> {
+                soundManager.playSound(SoundManager.Sound.POWER_UP);
+                AnimationUtil.animatePress(v, this::openAIMentor);
+            });
+        }
     }
 
     private void showOutput() {
@@ -858,6 +886,73 @@ public class BugDetailFragment extends Fragment {
         });
 
         AnimationUtil.fadeInWithScale(binding.cardTestResults);
+    }
+
+    /**
+     * Open the AI Debug Mentor bottom sheet
+     */
+    private void openAIMentor() {
+        if (currentBug == null) {
+            Toast.makeText(requireContext(), "Please wait for the bug to load", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Update user's code in mentor for analysis
+        if (aiMentor != null && binding.editUserCode != null) {
+            aiMentor.setUserCode(binding.editUserCode.getText().toString());
+        }
+
+        // Create and show bottom sheet
+        AIMentorBottomSheet mentorSheet = AIMentorBottomSheet.newInstance(currentBug);
+
+        // Update user code when sheet opens
+        mentorSheet.updateUserCode(binding.editUserCode.getText().toString());
+
+        // Set listener for "Get More Sessions" button
+        mentorSheet.setOnGetMoreSessionsListener(() -> {
+            // Navigate to shop
+            try {
+                androidx.navigation.Navigation.findNavController(requireView())
+                    .navigate(com.example.debugappproject.R.id.shopFragment);
+            } catch (Exception e) {
+                Toast.makeText(requireContext(), "Shop coming soon!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mentorSheet.show(getParentFragmentManager(), "ai_mentor");
+    }
+
+    /**
+     * Update the mentor sessions display in the UI
+     */
+    private void updateMentorSessionsDisplay() {
+        if (binding == null || binding.textMentorSessions == null) return;
+
+        boolean hasUnlimited = AIMentor.hasUnlimitedAccess(requireContext());
+
+        if (hasUnlimited) {
+            binding.textMentorSessions.setText("Unlimited (Pro)");
+            binding.textMentorSessions.setTextColor(getResources().getColor(R.color.difficulty_medium, null));
+        } else if (aiMentor != null) {
+            int free = aiMentor.getFreeSessions();
+            int purchased = aiMentor.getPurchasedSessions();
+            int total = free + purchased;
+
+            if (total > 0) {
+                binding.textMentorSessions.setText(total + " session" + (total > 1 ? "s" : "") + " available");
+                binding.textMentorSessions.setTextColor(0xFF10B981); // Green
+            } else {
+                binding.textMentorSessions.setText("No sessions - tap to get more");
+                binding.textMentorSessions.setTextColor(0xFFF59E0B); // Yellow warning
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Update sessions display when returning from shop
+        updateMentorSessionsDisplay();
     }
 
     @Override
