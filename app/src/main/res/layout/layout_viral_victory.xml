@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutViralVictory"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Animated Background Particles (placeholder for Lottie) -->
+    <View
+        android:id="@+id/viewParticleBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_victory_gradient" />
+
+    <!-- Main Content Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="24dp"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Victory Type Badge -->
+        <TextView
+            android:id="@+id/textVictoryType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⚡ LEGENDARY FIX"
+            android:textSize="14sp"
+            android:textColor="#FFD700"
+            android:textStyle="bold"
+            android:letterSpacing="0.2"
+            android:background="@drawable/bg_victory_badge"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="6dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Giant Emoji/Icon -->
+        <TextView
+            android:id="@+id/textVictoryEmoji"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🏆"
+            android:textSize="80sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Main Headline -->
+        <TextView
+            android:id="@+id/textVictoryHeadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="VICTORY"
+            android:textSize="42sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-black"
+            android:letterSpacing="0.1" />
+
+        <!-- Sub-headline (time, opponent, etc) -->
+        <TextView
+            android:id="@+id/textVictorySubheadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Defeated CodeNinja42 in 47 seconds"
+            android:textSize="16sp"
+            android:textColor="#AAAAAA"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Stats Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="24dp">
+
+            <!-- Elo Change -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/textEloChange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+28"
+                    android:textSize="32sp"
+                    android:textColor="#4CAF50"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ELO"
+                    android:textSize="12sp"
+                    android:textColor="#666666"
+                    android:letterSpacing="0.1" />
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="40dp"
+                android:background="#333333" />
+
+            <!-- Rank -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/textRankDisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💎 1,642"
+                    android:textSize="24sp"
+                    android:textColor="#B9F2FF"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DIAMOND"
+                    android:textSize="12sp"
+                    android:textColor="#666666"
+                    android:letterSpacing="0.1" />
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="40dp"
+                android:background="#333333" />
+
+            <!-- Streak -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/textStreakDisplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🔥 14"
+                    android:textSize="24sp"
+                    android:textColor="#FF6B35"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="STREAK"
+                    android:textSize="12sp"
+                    android:textColor="#666666"
+                    android:letterSpacing="0.1" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Rarity Badge -->
+        <TextView
+            android:id="@+id/textRarityBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🎯 Only 2% solve this fast!"
+            android:textSize="14sp"
+            android:textColor="#FFD700"
+            android:background="@drawable/bg_rarity_badge"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="24dp"
+            android:visibility="visible" />
+
+        <!-- Mental Stats Growth (if level up) -->
+        <LinearLayout
+            android:id="@+id/layoutMentalGrowth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_stats_card"
+            android:padding="16dp"
+            android:layout_marginBottom="24dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🧠 MENTAL EVOLUTION"
+                android:textSize="12sp"
+                android:textColor="#888888"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="12dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Stat 1 -->
+                <LinearLayout
+                    android:id="@+id/layoutStatIntuition"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/textIntuitionGain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+15"
+                        android:textSize="18sp"
+                        android:textColor="#9C27B0"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Intuition"
+                        android:textSize="10sp"
+                        android:textColor="#666666" />
+                </LinearLayout>
+
+                <!-- Stat 2 -->
+                <LinearLayout
+                    android:id="@+id/layoutStatPattern"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/textPatternGain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+20"
+                        android:textSize="18sp"
+                        android:textColor="#2196F3"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Speed"
+                        android:textSize="10sp"
+                        android:textColor="#666666" />
+                </LinearLayout>
+
+                <!-- Stat 3 -->
+                <LinearLayout
+                    android:id="@+id/layoutStatError"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/textErrorGain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+12"
+                        android:textSize="18sp"
+                        android:textColor="#FF5722"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Recognition"
+                        android:textSize="10sp"
+                        android:textColor="#666666" />
+                </LinearLayout>
+
+                <!-- IQ Change -->
+                <LinearLayout
+                    android:id="@+id/layoutIQChange"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/textIQChange"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+3 IQ"
+                        android:textSize="18sp"
+                        android:textColor="#4CAF50"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Debug IQ"
+                        android:textSize="10sp"
+                        android:textColor="#666666" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- AI Rival Comment -->
+        <TextView
+            android:id="@+id/textAIComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="&quot;That was DISGUSTING. In a good way.&quot; - Debugger AI"
+            android:textSize="14sp"
+            android:textColor="#888888"
+            android:textStyle="italic"
+            android:gravity="center"
+            android:layout_marginBottom="32dp"
+            android:paddingHorizontal="24dp" />
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <!-- Share Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonShare"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:text="📸 SHARE"
+                android:textSize="14sp"
+                android:textColor="#FFFFFF"
+                app:backgroundTint="#1DA1F2"
+                app:cornerRadius="28dp"
+                android:layout_marginEnd="8dp" />
+
+            <!-- Play Again Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonPlayAgain"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:text="⚔️ AGAIN"
+                android:textSize="14sp"
+                android:textColor="#FFFFFF"
+                app:backgroundTint="#4CAF50"
+                app:cornerRadius="28dp"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- Done Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonDone"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="12dp"
+            android:text="DONE"
+            android:textSize="14sp"
+            android:textColor="#888888"
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+    </LinearLayout>
+
+    <!-- Rank Up Overlay (shown on promotion) -->
+    <FrameLayout
+        android:id="@+id/layoutRankUpOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CC000000"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="48dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⬆️ RANK UP!"
+                android:textSize="20sp"
+                android:textColor="#FFD700"
+                android:textStyle="bold"
+                android:letterSpacing="0.2" />
+
+            <TextView
+                android:id="@+id/textNewRankEmoji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="💎"
+                android:textSize="100sp"
+                android:layout_marginVertical="24dp" />
+
+            <TextView
+                android:id="@+id/textNewRankName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DIAMOND"
+                android:textSize="36sp"
+                android:textColor="#B9F2FF"
+                android:textStyle="bold"
+                android:letterSpacing="0.15" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap to continue"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:layout_marginTop="32dp" />
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>

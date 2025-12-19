@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_dark">
+
+    <!-- Header with Stats -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="8dp"
+        android:background="@color/surface_dark"
+        android:elevation="4dp">
+
+        <ImageButton
+            android:id="@+id/button_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="@color/white"
+            android:contentDescription="Back" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="📁 Multi-File Hunt"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_xp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⭐ 0 XP"
+            android:textColor="@color/accent_gold"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="12dp" />
+
+        <TextView
+            android:id="@+id/text_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⏱️ 3:00"
+            android:textColor="@color/accent_yellow"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Combo Indicator -->
+    <TextView
+        android:id="@+id/text_combo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🔥 2x COMBO!"
+        android:textColor="@color/accent_gold"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="8dp"
+        android:background="#2D1B00"
+        android:visibility="gone" />
+
+    <!-- Bug Info Card -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="8dp"
+        app:cardBackgroundColor="#1E293B"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <TextView
+                android:id="@+id/text_bug_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🎯 Bug Title"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Find the bug across multiple files..."
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:lineSpacingMultiplier="1.2"
+                android:maxLines="3" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- File Tabs -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_files"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/surface_dark"
+        app:tabMode="scrollable"
+        app:tabGravity="start"
+        app:tabTextColor="@color/text_secondary"
+        app:tabSelectedTextColor="@color/white"
+        app:tabIndicatorColor="@color/purple_500"
+        app:tabIndicatorHeight="3dp"
+        app:tabRippleColor="@color/purple_200" />
+
+    <!-- Code Editor Area -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="8dp"
+        app:cardBackgroundColor="#0F0F1A"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp">
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <ScrollView
+                android:id="@+id/scroll_code"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:id="@+id/container_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingVertical="12dp"
+                    android:minWidth="600dp" />
+            </ScrollView>
+        </HorizontalScrollView>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Selection Info -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp"
+        android:background="@color/surface_dark">
+
+        <TextView
+            android:id="@+id/text_selection_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="👆 Tap a line to select it"
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_next_bug"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="Next Bug ➡️"
+            android:textSize="12sp"
+            android:textAllCaps="false"
+            android:visibility="gone"
+            app:backgroundTint="@color/purple_500"
+            app:cornerRadius="8dp" />
+    </LinearLayout>
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:paddingBottom="16dp"
+        android:paddingTop="8dp"
+        android:background="@color/background_dark">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_hint"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="💡 Hint (-10 XP)"
+            android:textSize="13sp"
+            android:textAllCaps="false"
+            app:strokeColor="@color/accent_yellow"
+            app:strokeWidth="2dp"
+            app:cornerRadius="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_submit"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="✅ Found It!"
+            android:textSize="14sp"
+            android:textAllCaps="false"
+            app:backgroundTint="@color/accent_green"
+            app:cornerRadius="12dp" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_stat_item"
+    android:padding="12dp">
+
+    <!-- Header Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/textStatIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🔮"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textStatName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Intuition"
+            android:textSize="12sp"
+            android:textColor="#888888"
+            android:layout_marginStart="8dp" />
+
+        <TextView
+            android:id="@+id/textStatLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lv.7"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- XP Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progressStatXP"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:max="100"
+        android:progress="65"
+        android:progressDrawable="@drawable/progress_stat_xp" />
+
+    <!-- XP Text -->
+    <TextView
+        android:id="@+id/textStatXP"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="65/100 XP"
+        android:textSize="10sp"
+        android:textColor="#555555"
+        android:layout_marginTop="4dp"
+        android:gravity="end" />
+
+</LinearLayout>
