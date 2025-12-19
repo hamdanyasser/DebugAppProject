@@ -22,6 +22,7 @@ import com.example.debugappproject.util.AnimationUtil;
 import com.example.debugappproject.util.AuthManager;
 import com.example.debugappproject.util.DateUtils;
 import com.example.debugappproject.util.SoundManager;
+import com.example.debugappproject.ui.shop.ShopFragment;
 
 /**
  * ╔══════════════════════════════════════════════════════════════════════════════╗
@@ -113,21 +114,45 @@ public class ProfileFragment extends Fragment {
         boolean isGuest = authManager.isGuest();
         String displayName = authManager.getDisplayName();
         String email = authManager.getEmail();
-        String avatar = authManager.getAvatarEmoji();
+        
+        // Use shop avatar if unlocked, otherwise use AuthManager avatar
+        String avatar = ShopFragment.hasUnlockedAvatars(requireContext()) 
+            ? ShopFragment.getSelectedAvatar(requireContext())
+            : authManager.getAvatarEmoji();
         
         // Display user avatar emoji (clickable to change)
         if (binding.textUserAvatar != null) {
             binding.textUserAvatar.setText(avatar);
             binding.textUserAvatar.setOnClickListener(v -> {
                 soundManager.playButtonClick();
-                showAvatarSelector();
+                // If user has premium avatars, show premium selector
+                if (ShopFragment.hasUnlockedAvatars(requireContext())) {
+                    showPremiumAvatarSelector();
+                } else {
+                    showAvatarSelector();
+                }
             });
         }
         
-        // User name display
+        // User name display with custom title
         if (binding.textUserName != null) {
-            binding.textUserName.setText(displayName);
+            String title = ShopFragment.hasUnlockedTitles(requireContext()) 
+                ? ShopFragment.getSelectedTitle(requireContext()) 
+                : "";
+            if (!title.isEmpty()) {
+                binding.textUserName.setText(displayName + " • " + title);
+            } else {
+                binding.textUserName.setText(displayName);
+            }
             binding.textUserName.setVisibility(View.VISIBLE);
+            
+            // Make name clickable to change title if unlocked
+            if (ShopFragment.hasUnlockedTitles(requireContext())) {
+                binding.textUserName.setOnClickListener(v -> {
+                    soundManager.playButtonClick();
+                    showPremiumTitleSelector();
+                });
+            }
         }
         
         // Email or guest mode display
@@ -202,6 +227,73 @@ public class ProfileFragment extends Fragment {
             android.util.Log.e(TAG, "Navigation to auth failed", e);
             Toast.makeText(getContext(), "Login screen coming soon!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * Show premium avatar selector dialog (for users who purchased)
+     */
+    private void showPremiumAvatarSelector() {
+        String[] avatars = ShopFragment.getPremiumAvatars();
+        String currentAvatar = ShopFragment.getSelectedAvatar(requireContext());
+        
+        // Find current selection index
+        int currentIndex = 0;
+        for (int i = 0; i < avatars.length; i++) {
+            if (avatars[i].equals(currentAvatar)) {
+                currentIndex = i;
+                break;
+            }
+        }
+        
+        new AlertDialog.Builder(requireContext())
+            .setTitle("🦸 Select Premium Avatar")
+            .setSingleChoiceItems(avatars, currentIndex, (dialog, which) -> {
+                String selected = avatars[which];
+                ShopFragment.setSelectedAvatar(requireContext(), selected);
+                soundManager.playSound(SoundManager.Sound.COIN_COLLECT);
+                // Update UI immediately
+                if (binding != null && binding.textUserAvatar != null) {
+                    binding.textUserAvatar.setText(selected);
+                }
+                dialog.dismiss();
+            })
+            .setNegativeButton("Cancel", null)
+            .show();
+    }
+    
+    /**
+     * Show premium title selector dialog (for users who purchased)
+     */
+    private void showPremiumTitleSelector() {
+        String[] titles = ShopFragment.getPremiumTitles();
+        String currentTitle = ShopFragment.getSelectedTitle(requireContext());
+        
+        // Add "No Title" option
+        String[] titlesWithNone = new String[titles.length + 1];
+        titlesWithNone[0] = "(No Title)";
+        System.arraycopy(titles, 0, titlesWithNone, 1, titles.length);
+        
+        int currentIndex = 0;
+        for (int i = 0; i < titlesWithNone.length; i++) {
+            if (titlesWithNone[i].equals(currentTitle) || 
+                (currentTitle.isEmpty() && i == 0)) {
+                currentIndex = i;
+                break;
+            }
+        }
+        
+        new AlertDialog.Builder(requireContext())
+            .setTitle("🏷️ Select Your Title")
+            .setSingleChoiceItems(titlesWithNone, currentIndex, (dialog, which) -> {
+                String selected = which == 0 ? "" : titlesWithNone[which];
+                ShopFragment.setSelectedTitle(requireContext(), selected);
+                soundManager.playSound(SoundManager.Sound.COIN_COLLECT);
+                // Update UI immediately
+                updateAccountUI();
+                dialog.dismiss();
+            })
+            .setNegativeButton("Cancel", null)
+            .show();
     }
 
     /**

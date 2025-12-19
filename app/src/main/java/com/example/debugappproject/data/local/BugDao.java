@@ -29,6 +29,12 @@ public interface BugDao {
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Bug bug);
+    
+    /**
+     * Insert a single bug and return its ID.
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long insertBug(Bug bug);
 
     /**
      * Update a bug.
@@ -155,4 +161,10 @@ public interface BugDao {
      */
     @Query("UPDATE bugs SET userNotes = ''")
     void clearAllUserNotes();
+
+    /**
+     * Get all bugs synchronously.
+     */
+    @Query("SELECT * FROM bugs ORDER BY id ASC")
+    List<Bug> getAllBugsSync();
 }

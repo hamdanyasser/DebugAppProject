@@ -291,4 +291,11 @@
     <string name="python">Python</string>
     <string name="javascript">JavaScript</string>
     <string name="all_languages">All Languages</string>
+
+    <!-- =======================================================================
+         ATTRIBUTION TAGS (for AppOps tracking)
+         ======================================================================= -->
+    <string name="attribution_firebase_auth">Firebase Authentication</string>
+    <string name="attribution_firebase_db">Firebase Database</string>
+    <string name="attribution_billing">Google Play Billing</string>
 </resources>

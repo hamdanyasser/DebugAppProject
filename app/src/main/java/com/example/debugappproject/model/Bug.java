@@ -32,8 +32,14 @@ public class Bug implements Serializable {
     private String userNotes;       // User's personal notes for this bug
     private String testsJson;       // JSON string containing test cases
     private String hint;            // Helpful hint without giving away the answer
+    private int xpReward;             // XP reward for solving this bug
 
-    // Constructor
+    // No-arg constructor for Room
+    public Bug() {
+        this.userNotes = "";
+    }
+
+    // Full constructor
     public Bug(int id, String title, String language, String difficulty, String category,
                String description, String brokenCode, String expectedOutput, String actualOutput,
                String explanation, String fixedCode, boolean isCompleted) {
@@ -182,6 +188,18 @@ public class Bug implements Serializable {
 
     public void setHint(String hint) {
         this.hint = hint;
+    }
+    
+    public void setHintText(String hintText) {
+        this.hint = hintText;
+    }
+
+    public int getXpReward() {
+        return xpReward > 0 ? xpReward : 50; // Default 50 XP
+    }
+
+    public void setXpReward(int xpReward) {
+        this.xpReward = xpReward;
     }
 
     /**

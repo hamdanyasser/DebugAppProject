@@ -381,6 +381,28 @@ public class AuthManager {
         return usersDb.getString("email_" + username.toLowerCase(), null) != null;
     }
 
+    /**
+     * Check if a user with the given email is registered in the app
+     * @param email The email to check
+     * @return true if the user exists, false otherwise
+     */
+    public boolean isUserRegistered(String email) {
+        if (email == null || email.isEmpty()) return false;
+        return usersDb.getString("user_" + email.toLowerCase().trim() + "_id", null) != null;
+    }
+
+    /**
+     * Get display name for a registered user by email
+     * @param email The user's email
+     * @return Display name or null if user not found
+     */
+    public String getDisplayNameByEmail(String email) {
+        if (email == null || email.isEmpty()) return null;
+        String normalizedEmail = email.toLowerCase().trim();
+        if (!isUserRegistered(normalizedEmail)) return null;
+        return usersDb.getString("user_" + normalizedEmail + "_displayName", null);
+    }
+
     private String hashPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");

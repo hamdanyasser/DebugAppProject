@@ -28,6 +28,7 @@ import com.example.debugappproject.model.UserProgress;
 import com.example.debugappproject.util.AuthManager;
 import com.example.debugappproject.util.ByteMascot;
 import com.example.debugappproject.util.SoundManager;
+import com.example.debugappproject.ui.shop.ShopFragment;
 
 import java.util.Calendar;
 
@@ -37,6 +38,11 @@ import java.util.Calendar;
 public class HomeFragment extends Fragment {
 
     private static final String TAG = "HomeFragment";
+    private static final String PREFS_NAME = "home_prefs";
+    private static final String KEY_VISIT_COUNT = "visit_count";
+    private static final String KEY_LAST_VISIT = "last_visit_date";
+    private static final String KEY_FIRST_VISIT = "first_visit_date";
+    
     private FragmentHomeBinding binding;
     private HomeViewModel viewModel;
     private BillingManager billingManager;
@@ -44,9 +50,14 @@ public class HomeFragment extends Fragment {
     private AuthManager authManager;
     private ByteMascot byteMascot;
     private Handler animationHandler;
+    private android.content.SharedPreferences prefs;
 
     // Store daily challenge bug ID for navigation
     private int currentDailyChallengeBugId = 1;
+    
+    // User tracking
+    private boolean isReturningUser = false;
+    private int visitCount = 0;
 
     @Nullable
     @Override
@@ -67,6 +78,7 @@ public class HomeFragment extends Fragment {
         authManager = AuthManager.getInstance(requireContext());
         byteMascot = new ByteMascot(requireContext());
         animationHandler = new Handler(Looper.getMainLooper());
+        prefs = requireContext().getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE);
 
         // Play entrance sound
         soundManager.playSound(SoundManager.Sound.TRANSITION);
@@ -158,16 +170,109 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupGreeting() {
+        // Track visits to detect returning users
+        trackUserVisit();
+        
         if (binding.textUserName != null) {
             String displayName = authManager.getDisplayName();
-            // Add Byte's emoji to the greeting
-            binding.textUserName.setText(byteMascot.getStateEmoji() + " Hey, " + displayName + "!");
+            if (displayName == null || displayName.isEmpty()) {
+                displayName = "Debugger";
+            }
+            String avatar = ShopFragment.hasUnlockedAvatars(requireContext()) 
+                ? ShopFragment.getSelectedAvatar(requireContext())
+                : byteMascot.getStateEmoji();
+            if (avatar == null || avatar.isEmpty()) {
+                avatar = "🐛";
+            }
+            
+            // Personalized greeting based on visit count
+            String greeting;
+            if (visitCount <= 1) {
+                greeting = avatar + " Welcome, " + displayName + "!";
+            } else if (visitCount < 5) {
+                greeting = avatar + " Hey, " + displayName + "!";
+            } else if (visitCount < 20) {
+                greeting = avatar + " Welcome back, " + displayName + "!";
+            } else if (visitCount < 50) {
+                greeting = avatar + " Great to see you, " + displayName + "!";
+            } else {
+                greeting = avatar + " 🌟 " + displayName + " the Legend!";
+            }
+            binding.textUserName.setText(greeting);
         }
 
         if (binding.textGreeting != null) {
-            // Use ByteMascot for time-based greetings
-            String greeting = byteMascot.getGreeting();
-            binding.textGreeting.setText(greeting);
+            // Context-aware subgreeting
+            String subGreeting = getContextualSubGreeting();
+            binding.textGreeting.setText(subGreeting);
+        }
+        
+        // Show custom title if user has one
+        if (binding.textLevelTitle != null && ShopFragment.hasUnlockedTitles(requireContext())) {
+            String customTitle = ShopFragment.getSelectedTitle(requireContext());
+            if (customTitle != null && !customTitle.isEmpty()) {
+                binding.textLevelTitle.setText(customTitle);
+            }
+        }
+    }
+    
+    /**
+     * Track user visits to personalize experience
+     */
+    private void trackUserVisit() {
+        prefs = requireContext().getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE);
+        
+        visitCount = prefs.getInt(KEY_VISIT_COUNT, 0);
+        long lastVisit = prefs.getLong(KEY_LAST_VISIT, 0);
+        long now = System.currentTimeMillis();
+        long today = now / 86400000; // Days since epoch
+        long lastVisitDay = lastVisit / 86400000;
+        
+        // Only count as new visit if different day
+        if (today != lastVisitDay) {
+            visitCount++;
+            prefs.edit()
+                .putInt(KEY_VISIT_COUNT, visitCount)
+                .putLong(KEY_LAST_VISIT, now)
+                .apply();
+            
+            // Set first visit if not set
+            if (prefs.getLong(KEY_FIRST_VISIT, 0) == 0) {
+                prefs.edit().putLong(KEY_FIRST_VISIT, now).apply();
+            }
+        }
+        
+        isReturningUser = visitCount > 1;
+    }
+    
+    /**
+     * Get contextual sub-greeting based on time, progress, and shop items
+     */
+    private String getContextualSubGreeting() {
+        // Check for active power-ups first
+        int shopItems = ShopFragment.getTotalItemsOwned(requireContext());
+        if (shopItems > 0) {
+            return "🎯 Ready to debug? You have " + shopItems + " power-ups!";
+        }
+        
+        // Check streak shield
+        if (ShopFragment.hasStreakShield(requireContext())) {
+            return "🛡️ Your streak is protected! Keep debugging!";
+        }
+        
+        // Time-based greetings
+        int hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY);
+        
+        if (hour < 6) {
+            return "🌙 Late night debugging session?";
+        } else if (hour < 12) {
+            return "☕ Good morning! Fresh bugs await.";
+        } else if (hour < 17) {
+            return "☀️ Ready to squash some bugs?";
+        } else if (hour < 21) {
+            return "🌅 Evening debugging time!";
+        } else {
+            return "🌃 Night owl debugging mode!";
         }
     }
 
@@ -377,6 +482,17 @@ public class HomeFragment extends Fragment {
                 v.postDelayed(() -> {
                     navigateToDestination(R.id.action_home_to_shop, "Gem Shop");
                 }, 300);
+            });
+        }
+
+        if (binding.buttonShop != null) {
+            binding.buttonShop.setOnClickListener(v -> {
+                soundManager.playSound(SoundManager.Sound.BUTTON_CLICK);
+                animateCardPress(v);
+                // Navigate to shop after animation
+                v.postDelayed(() -> {
+                    navigateToDestination(R.id.action_home_to_shop, "Gem Shop");
+                }, 200);
             });
         }
     }

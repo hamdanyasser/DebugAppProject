@@ -109,6 +109,18 @@
         <action
             android:id="@+id/action_home_to_shop"
             app:destination="@id/shopFragment" />
+
+        <action
+            android:id="@+id/action_home_to_coop"
+            app:destination="@id/coopFragment" />
+
+        <action
+            android:id="@+id/action_home_to_github"
+            app:destination="@id/githubImportFragment" />
+
+        <action
+            android:id="@+id/action_home_to_teamAnalytics"
+            app:destination="@id/teamAnalyticsFragment" />
     </fragment>
 
     <!-- Learning Paths Screen (Learn Tab) -->
@@ -169,6 +181,10 @@
         <action
             android:id="@+id/action_profile_to_auth"
             app:destination="@id/authFragment" />
+
+        <action
+            android:id="@+id/action_profile_to_certificate"
+            app:destination="@id/certificateFragment" />
     </fragment>
 
     <!-- ============================================== -->
@@ -249,6 +265,10 @@
         <action
             android:id="@+id/action_pathDetail_to_bugDetail"
             app:destination="@id/bugDetailFragment" />
+
+        <action
+            android:id="@+id/action_pathDetail_to_certificate"
+            app:destination="@id/certificateFragment" />
     </fragment>
 
     <!-- Bug Detail Screen -->
@@ -262,6 +282,14 @@
             android:name="bugId"
             app:argType="integer"
             android:defaultValue="1" />
+
+        <action
+            android:id="@+id/action_bugDetail_to_mentor"
+            app:destination="@id/mentorChatFragment" />
+
+        <action
+            android:id="@+id/action_bugDetail_to_debugger"
+            app:destination="@id/debuggerFragment" />
     </fragment>
 
     <!-- Bug List Screen -->
@@ -305,6 +333,14 @@
         <action
             android:id="@+id/action_gameModes_to_subscription"
             app:destination="@id/proSubscriptionFragment" />
+
+        <action
+            android:id="@+id/action_gameModes_to_coop"
+            app:destination="@id/coopFragment" />
+
+        <action
+            android:id="@+id/action_gameModes_to_multiFile"
+            app:destination="@id/multiFileBugFragment" />
     </fragment>
 
     <!-- Interactive Lesson -->
@@ -332,5 +368,103 @@
             app:argType="string"
             android:defaultValue="quick_fix" />
     </fragment>
+
+    <!-- Beginner Tutorial -->
+    <fragment
+        android:id="@+id/beginnerTutorialFragment"
+        android:name="com.example.debugappproject.ui.tutorial.BeginnerTutorialFragment"
+        android:label="Beginner Tutorial"
+        tools:layout="@layout/fragment_beginner_tutorial">
+
+        <action
+            android:id="@+id/action_tutorial_to_gameSession"
+            app:destination="@id/gameSessionFragment" />
+    </fragment>
+
+    <!-- ============================================== -->
+    <!-- NEW FEATURE DESTINATIONS                      -->
+    <!-- ============================================== -->
+
+    <!-- AI Mentor Chat -->
+    <fragment
+        android:id="@+id/mentorChatFragment"
+        android:name="com.example.debugappproject.ui.mentor.MentorChatFragment"
+        android:label="AI Mentor"
+        tools:layout="@layout/fragment_mentor_game">
+
+        <argument
+            android:name="bug_id"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+
+    <!-- Interactive Debugger -->
+    <fragment
+        android:id="@+id/debuggerFragment"
+        android:name="com.example.debugappproject.debugger.DebuggerFragment"
+        android:label="Debugger"
+        tools:layout="@layout/fragment_debugger_game">
+
+        <argument
+            android:name="bug_id"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+
+    <!-- GitHub Import -->
+    <fragment
+        android:id="@+id/githubImportFragment"
+        android:name="com.example.debugappproject.github.GitHubImportFragment"
+        android:label="GitHub Import"
+        tools:layout="@layout/fragment_bug_library" />
+
+    <!-- Certificate -->
+    <fragment
+        android:id="@+id/certificateFragment"
+        android:name="com.example.debugappproject.certificate.CertificateFragment"
+        android:label="Certificate"
+        tools:layout="@layout/fragment_certificate">
+
+        <argument
+            android:name="certificate_type"
+            app:argType="string"
+            android:defaultValue="PATH_COMPLETION" />
+
+        <argument
+            android:name="bugs_fixed"
+            app:argType="integer"
+            android:defaultValue="0" />
+
+        <argument
+            android:name="xp"
+            app:argType="integer"
+            android:defaultValue="0" />
+
+        <argument
+            android:name="path_name"
+            app:argType="string"
+            android:defaultValue="Debugging Fundamentals" />
+    </fragment>
+
+    <!-- Co-op Mode -->
+    <fragment
+        android:id="@+id/coopFragment"
+        android:name="com.example.debugappproject.coop.CoopFragment"
+        android:label="Co-op Mode"
+        tools:layout="@layout/fragment_coop" />
+
+    <!-- Multi-File Bug -->
+    <fragment
+        android:id="@+id/multiFileBugFragment"
+        android:name="com.example.debugappproject.ui.multifile.MultiFileBugFragment"
+        android:label="Multi-File Debug"
+        tools:layout="@layout/fragment_multi_file_bug" />
+
+    <!-- Team Analytics Dashboard (Corporate) -->
+    <fragment
+        android:id="@+id/teamAnalyticsFragment"
+        android:name="com.example.debugappproject.corporate.TeamAnalyticsFragment"
+        android:label="Team Analytics"
+        tools:layout="@layout/fragment_team_analytics" />
 
 </navigation>

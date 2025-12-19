@@ -45,7 +45,6 @@ public class ShopFragment extends Fragment {
     private static final int PRICE_HINTS = 50;
     private static final int PRICE_XP_BOOST = 75;
     private static final int PRICE_STREAK_SHIELD = 100;
-    private static final int PRICE_MENTOR_SESSIONS = 80;
     private static final int PRICE_AVATARS = 200;
     private static final int PRICE_TITLES = 150;
 
@@ -103,16 +102,6 @@ public class ShopFragment extends Fragment {
                 .apply();
             updateItemCounts();
         }));
-
-        // AI Mentor Sessions
-        if (binding.buttonBuyMentorSessions != null) {
-            binding.buttonBuyMentorSessions.setOnClickListener(v -> purchaseItem("AI Mentor Sessions (5)", PRICE_MENTOR_SESSIONS, () -> {
-                // Add 5 mentor sessions
-                com.example.debugappproject.util.AIMentor mentor = new com.example.debugappproject.util.AIMentor(requireContext());
-                mentor.addPurchasedSessions(5);
-                updateItemCounts();
-            }));
-        }
 
         // Cosmetics
         binding.buttonBuyAvatars.setOnClickListener(v -> {
@@ -288,18 +277,6 @@ public class ShopFragment extends Fragment {
                 binding.textStreakShieldStatus.setVisibility(View.GONE);
             }
         }
-
-        // Update AI Mentor sessions count
-        if (binding.textMentorSessionsCount != null) {
-            com.example.debugappproject.util.AIMentor mentor = new com.example.debugappproject.util.AIMentor(requireContext());
-            int sessions = mentor.getTotalSessions();
-            if (sessions > 0) {
-                binding.textMentorSessionsCount.setText("Available: " + sessions);
-                binding.textMentorSessionsCount.setVisibility(View.VISIBLE);
-            } else {
-                binding.textMentorSessionsCount.setVisibility(View.GONE);
-            }
-        }
     }
 
     private void updateOwnedItems() {
@@ -434,6 +411,132 @@ public class ShopFragment extends Fragment {
     public static boolean hasUnlockedTitles(android.content.Context context) {
         return context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE)
                 .getBoolean(KEY_TITLES_UNLOCKED, false);
+    }
+
+    // ============ Game Power-ups Static Methods ============
+
+    private static final String KEY_GAME_SHIELDS = "game_shields";
+    private static final String KEY_TIME_FREEZES = "time_freezes";
+    private static final String KEY_SKIP_TOKENS = "skip_tokens";
+    private static final String KEY_COMBO_SAVERS = "combo_savers";
+    private static final String KEY_SELECTED_AVATAR = "selected_avatar";
+    private static final String KEY_SELECTED_TITLE = "selected_title";
+
+    public static int getGameShields(android.content.Context context) {
+        return context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE)
+                .getInt(KEY_GAME_SHIELDS, 0);
+    }
+
+    public static boolean useGameShield(android.content.Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE);
+        int current = prefs.getInt(KEY_GAME_SHIELDS, 0);
+        if (current > 0) {
+            prefs.edit().putInt(KEY_GAME_SHIELDS, current - 1).apply();
+            return true;
+        }
+        return false;
+    }
+
+    public static int getTimeFreezes(android.content.Context context) {
+        return context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE)
+                .getInt(KEY_TIME_FREEZES, 0);
+    }
+
+    public static boolean useTimeFreeze(android.content.Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE);
+        int current = prefs.getInt(KEY_TIME_FREEZES, 0);
+        if (current > 0) {
+            prefs.edit().putInt(KEY_TIME_FREEZES, current - 1).apply();
+            return true;
+        }
+        return false;
+    }
+
+    public static int getSkipTokens(android.content.Context context) {
+        return context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE)
+                .getInt(KEY_SKIP_TOKENS, 0);
+    }
+
+    public static boolean useSkipToken(android.content.Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE);
+        int current = prefs.getInt(KEY_SKIP_TOKENS, 0);
+        if (current > 0) {
+            prefs.edit().putInt(KEY_SKIP_TOKENS, current - 1).apply();
+            return true;
+        }
+        return false;
+    }
+
+    public static int getComboSavers(android.content.Context context) {
+        return context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE)
+                .getInt(KEY_COMBO_SAVERS, 0);
+    }
+
+    public static boolean useComboSaver(android.content.Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE);
+        int current = prefs.getInt(KEY_COMBO_SAVERS, 0);
+        if (current > 0) {
+            prefs.edit().putInt(KEY_COMBO_SAVERS, current - 1).apply();
+            return true;
+        }
+        return false;
+    }
+
+    // ============ Avatar & Title Methods ============
+
+    private static final String[] PREMIUM_AVATARS = {
+        "🦊", "🐲", "🦄", "🐺", "🦅", "🐼", "🦁", "🐯"
+    };
+
+    private static final String[] PREMIUM_TITLES = {
+        "Bug Slayer", "Code Ninja", "Debug Master", "Syntax Sage",
+        "Logic Lord", "Error Eliminator", "Bug Hunter Elite", "Code Wizard"
+    };
+
+    public static String[] getPremiumAvatars() {
+        return PREMIUM_AVATARS;
+    }
+
+    public static String[] getPremiumTitles() {
+        return PREMIUM_TITLES;
+    }
+
+    public static String getSelectedAvatar(android.content.Context context) {
+        return context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE)
+                .getString(KEY_SELECTED_AVATAR, null);
+    }
+
+    public static void setSelectedAvatar(android.content.Context context, String avatar) {
+        context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE)
+                .edit()
+                .putString(KEY_SELECTED_AVATAR, avatar)
+                .apply();
+    }
+
+    public static String getSelectedTitle(android.content.Context context) {
+        return context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE)
+                .getString(KEY_SELECTED_TITLE, null);
+    }
+
+    public static void setSelectedTitle(android.content.Context context, String title) {
+        context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE)
+                .edit()
+                .putString(KEY_SELECTED_TITLE, title)
+                .apply();
+    }
+
+    public static int getTotalItemsOwned(android.content.Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE);
+        int count = 0;
+        count += prefs.getInt(KEY_HINTS_OWNED, 0);
+        count += prefs.getInt(KEY_XP_BOOST_COUNT, 0);
+        count += prefs.getInt(KEY_GAME_SHIELDS, 0);
+        count += prefs.getInt(KEY_TIME_FREEZES, 0);
+        count += prefs.getInt(KEY_SKIP_TOKENS, 0);
+        count += prefs.getInt(KEY_COMBO_SAVERS, 0);
+        if (prefs.getBoolean(KEY_AVATARS_UNLOCKED, false)) count++;
+        if (prefs.getBoolean(KEY_TITLES_UNLOCKED, false)) count++;
+        return count;
     }
 
     @Override

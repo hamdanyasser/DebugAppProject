@@ -37,6 +37,7 @@ import com.example.debugappproject.databinding.FragmentSplashBinding;
 import com.example.debugappproject.ui.onboarding.OnboardingActivity;
 import com.example.debugappproject.util.AuthManager;
 import com.example.debugappproject.util.SoundManager;
+import com.example.debugappproject.data.repository.BugRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -975,22 +976,32 @@ public class SplashFragment extends Fragment {
         try {
             AuthManager authManager = AuthManager.getInstance(requireContext());
             
-            // Check if user has seen onboarding
-            if (!OnboardingActivity.hasSeenOnboarding(requireContext())) {
+            // Check if user has seen onboarding OR has any existing progress
+            boolean hasSeenOnboarding = OnboardingActivity.hasSeenOnboarding(requireContext());
+            boolean hasExistingProgress = checkForExistingProgress();
+            
+            if (!hasSeenOnboarding && !hasExistingProgress) {
                 // First time user - show onboarding
                 Navigation.findNavController(binding.getRoot()).navigate(
                         R.id.action_splash_to_onboarding
                 );
-            } else if (!authManager.isLoggedInSync()) {
-                // Not logged in - show auth screen
-                Navigation.findNavController(binding.getRoot()).navigate(
-                        R.id.action_splash_to_auth
-                );
             } else {
-                // Logged in - go to home
-                Navigation.findNavController(binding.getRoot()).navigate(
-                        R.id.action_splash_to_home
-                );
+                // Mark onboarding as seen if user has progress but flag wasn't set
+                if (!hasSeenOnboarding && hasExistingProgress) {
+                    markOnboardingAsSeen();
+                }
+                
+                if (!authManager.isLoggedInSync()) {
+                    // Not logged in - show auth screen
+                    Navigation.findNavController(binding.getRoot()).navigate(
+                            R.id.action_splash_to_auth
+                    );
+                } else {
+                    // Logged in - go to home
+                    Navigation.findNavController(binding.getRoot()).navigate(
+                            R.id.action_splash_to_home
+                    );
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1002,6 +1013,54 @@ public class SplashFragment extends Fragment {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+        }
+    }
+    
+    /**
+     * Check if user has any existing progress (returning user)
+     */
+    private boolean checkForExistingProgress() {
+        try {
+            // Check home_prefs for visit count
+            android.content.SharedPreferences homePrefs = requireContext()
+                .getSharedPreferences("home_prefs", android.content.Context.MODE_PRIVATE);
+            int visitCount = homePrefs.getInt("visit_count", 0);
+            if (visitCount > 0) return true;
+            
+            // Check shop_prefs for any purchases
+            android.content.SharedPreferences shopPrefs = requireContext()
+                .getSharedPreferences("shop_prefs", android.content.Context.MODE_PRIVATE);
+            int hints = shopPrefs.getInt("hints_owned", 0);
+            boolean avatars = shopPrefs.getBoolean("avatars_unlocked", false);
+            boolean titles = shopPrefs.getBoolean("titles_unlocked", false);
+            if (hints > 0 || avatars || titles) return true;
+            
+            // Check if user has any XP or completed bugs
+            android.content.SharedPreferences gamePrefs = requireContext()
+                .getSharedPreferences("game_session_prefs", android.content.Context.MODE_PRIVATE);
+            // Check if any game mode has been played
+            if (gamePrefs.getAll().size() > 0) return true;
+            
+            // Check AuthManager for returning user
+            AuthManager authManager = AuthManager.getInstance(requireContext());
+            if (authManager.isLoggedInSync()) return true;
+            
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    /**
+     * Mark onboarding as seen for returning users
+     */
+    private void markOnboardingAsSeen() {
+        try {
+            android.content.SharedPreferences prefs = requireContext()
+                .getSharedPreferences("DebugMasterPrefs", android.content.Context.MODE_PRIVATE);
+            prefs.edit().putBoolean("has_seen_onboarding", true).apply();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

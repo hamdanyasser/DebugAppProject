@@ -40,6 +40,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:paddingBottom="100dp"
+        android:clipToPadding="false"
         android:visibility="gone">
 
         <!-- Top Bar -->
@@ -48,18 +50,18 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:padding="16dp"
+            android:padding="12dp"
             android:background="#1A1A2E">
 
             <!-- Back Button -->
             <TextView
                 android:id="@+id/button_back"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:gravity="center"
                 android:text="←"
                 android:textColor="@color/white"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:background="@drawable/bg_circle_button" />
 
             <!-- Mode Title -->
@@ -68,11 +70,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginHorizontal="12dp"
+                android:layout_marginHorizontal="8dp"
                 android:text="Quick Fix"
                 android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
 
             <!-- Lives -->
             <TextView
@@ -80,28 +84,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="❤️❤️❤️"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <!-- Pause Button -->
             <TextView
                 android:id="@+id/button_pause"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="12dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="8dp"
                 android:gravity="center"
                 android:text="⏸️"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:background="@drawable/bg_circle_button" />
         </LinearLayout>
 
-        <!-- Timer and Progress -->
+        <!-- Timer and Progress - More compact -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
             android:background="#0D0D1A">
 
             <!-- Timer -->
@@ -116,7 +120,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="⏱️"
-                    android:textSize="16sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/text_timer"
@@ -125,16 +129,16 @@
                     android:layout_marginStart="4dp"
                     android:text="60"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:fontFamily="monospace" />
 
                 <ProgressBar
                     android:id="@+id/progress_timer"
                     style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="60dp"
-                    android:layout_height="6dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_width="50dp"
+                    android:layout_height="4dp"
+                    android:layout_marginStart="6dp"
                     android:max="60"
                     android:progress="60"
                     android:progressTint="@color/cyber_neon_purple"
@@ -152,16 +156,16 @@
                 android:id="@+id/text_progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bug 1/10"
+                android:text="1/10"
                 android:textColor="#B8B8D0"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
             <ProgressBar
                 android:id="@+id/progress_session"
                 style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="80dp"
-                android:layout_height="6dp"
-                android:layout_marginStart="8dp"
+                android:layout_width="60dp"
+                android:layout_height="4dp"
+                android:layout_marginStart="6dp"
                 android:max="10"
                 android:progress="0"
                 android:progressTint="#10B981"
@@ -172,35 +176,37 @@
                 android:id="@+id/text_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="Score: 0"
+                android:layout_marginStart="12dp"
+                android:text="0"
                 android:textColor="#F59E0B"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Game Content -->
+        <!-- Scrollable Game Content - takes remaining space -->
         <ScrollView
             android:id="@+id/layout_game_content"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:fillViewport="true">
+            android:fillViewport="true"
+            android:scrollbars="none"
+            android:clipToPadding="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="12dp">
 
-                <!-- Bug Card -->
+                <!-- Bug Card - More compact -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_bug"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardBackgroundColor="#1A1A2E"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="8dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp"
                     app:strokeColor="#7C4DFF"
                     app:strokeWidth="1dp">
 
@@ -208,7 +214,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="12dp">
 
                         <!-- Bug Header -->
                         <LinearLayout
@@ -221,7 +227,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="🐛"
-                                android:textSize="24sp" />
+                                android:textSize="20sp" />
 
                             <TextView
                                 android:id="@+id/text_bug_title"
@@ -231,19 +237,21 @@
                                 android:layout_marginStart="8dp"
                                 android:text="Bug Title"
                                 android:textColor="@color/white"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:maxLines="2"
+                                android:ellipsize="end" />
 
                             <TextView
                                 android:id="@+id/badge_difficulty"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/bg_badge_difficulty"
-                                android:paddingHorizontal="12dp"
-                                android:paddingVertical="4dp"
+                                android:paddingHorizontal="8dp"
+                                android:paddingVertical="2dp"
                                 android:text="MEDIUM"
                                 android:textColor="@color/white"
-                                android:textSize="10sp"
+                                android:textSize="9sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -252,18 +260,20 @@
                             android:id="@+id/text_bug_description"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
+                            android:layout_marginTop="8dp"
                             android:text="Find and fix the bug in this code."
                             android:textColor="#B8B8D0"
-                            android:textSize="14sp" />
+                            android:textSize="13sp"
+                            android:maxLines="3"
+                            android:ellipsize="end" />
 
                         <!-- Code Block -->
                         <HorizontalScrollView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
+                            android:layout_marginTop="8dp"
                             android:background="#0D0D1A"
-                            android:padding="12dp">
+                            android:padding="10dp">
 
                             <TextView
                                 android:id="@+id/text_bug_code"
@@ -272,27 +282,46 @@
                                 android:fontFamily="monospace"
                                 android:text="// Buggy code here"
                                 android:textColor="#10B981"
-                                android:textSize="13sp" />
+                                android:textSize="12sp"
+                                android:lineSpacingExtra="2dp" />
                         </HorizontalScrollView>
 
-                        <!-- Action Buttons -->
+                        <!-- Action Buttons - With Power-ups -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
+                            android:layout_marginTop="8dp"
                             android:orientation="horizontal">
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/button_hint"
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="wrap_content"
-                                android:layout_height="40dp"
+                                android:layout_height="32dp"
                                 android:text="💡 Hint"
                                 android:textColor="@color/white"
-                                android:textSize="12sp"
+                                android:textSize="11sp"
                                 android:textAllCaps="false"
-                                app:cornerRadius="20dp"
+                                android:paddingHorizontal="12dp"
+                                app:cornerRadius="16dp"
                                 app:strokeColor="#F59E0B"
+                                app:strokeWidth="1dp" />
+
+                            <!-- Time Freeze Power-up Button -->
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/button_time_freeze"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_marginStart="6dp"
+                                android:text="⏸️ 0"
+                                android:textColor="#3B82F6"
+                                android:textSize="11sp"
+                                android:textAllCaps="false"
+                                android:paddingHorizontal="12dp"
+                                android:visibility="gone"
+                                app:cornerRadius="16dp"
+                                app:strokeColor="#3B82F6"
                                 app:strokeWidth="1dp" />
 
                             <View
@@ -304,12 +333,13 @@
                                 android:id="@+id/button_skip"
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_width="wrap_content"
-                                android:layout_height="40dp"
+                                android:layout_height="32dp"
                                 android:text="⏭️ Skip"
                                 android:textColor="#EF4444"
-                                android:textSize="12sp"
+                                android:textSize="11sp"
                                 android:textAllCaps="false"
-                                app:cornerRadius="20dp"
+                                android:paddingHorizontal="12dp"
+                                app:cornerRadius="16dp"
                                 app:strokeColor="#EF4444"
                                 app:strokeWidth="1dp" />
                         </LinearLayout>
@@ -321,11 +351,11 @@
                     android:id="@+id/text_feedback"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="8dp"
                     android:gravity="center"
                     android:text="✅ Correct! +50 XP"
                     android:textColor="#10B981"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:visibility="gone" />
 
@@ -333,30 +363,31 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="12dp"
                     android:text="Choose the correct fix:"
                     android:textColor="#B8B8D0"
-                    android:textSize="14sp" />
+                    android:textSize="13sp" />
 
-                <!-- Options -->
+                <!-- Options - More compact -->
                 <LinearLayout
                     android:id="@+id/option1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/bg_option_default"
                     android:orientation="horizontal"
-                    android:padding="12dp"
-                    android:gravity="center_vertical">
+                    android:padding="10dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp">
 
                     <TextView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:background="@drawable/bg_option_number"
                         android:gravity="center"
                         android:text="A"
                         android:textColor="@color/white"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -364,31 +395,34 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginStart="10dp"
                         android:fontFamily="monospace"
                         android:text="// Option A code"
                         android:textColor="@color/white"
-                        android:textSize="12sp" />
+                        android:textSize="11sp"
+                        android:maxLines="3"
+                        android:ellipsize="end" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/option2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="6dp"
                     android:background="@drawable/bg_option_default"
                     android:orientation="horizontal"
-                    android:padding="12dp"
-                    android:gravity="center_vertical">
+                    android:padding="10dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp">
 
                     <TextView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:background="@drawable/bg_option_number"
                         android:gravity="center"
                         android:text="B"
                         android:textColor="@color/white"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -396,31 +430,34 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginStart="10dp"
                         android:fontFamily="monospace"
                         android:text="// Option B code"
                         android:textColor="@color/white"
-                        android:textSize="12sp" />
+                        android:textSize="11sp"
+                        android:maxLines="3"
+                        android:ellipsize="end" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/option3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="6dp"
                     android:background="@drawable/bg_option_default"
                     android:orientation="horizontal"
-                    android:padding="12dp"
-                    android:gravity="center_vertical">
+                    android:padding="10dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp">
 
                     <TextView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:background="@drawable/bg_option_number"
                         android:gravity="center"
                         android:text="C"
                         android:textColor="@color/white"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -428,31 +465,35 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginStart="10dp"
                         android:fontFamily="monospace"
                         android:text="// Option C code"
                         android:textColor="@color/white"
-                        android:textSize="12sp" />
+                        android:textSize="11sp"
+                        android:maxLines="3"
+                        android:ellipsize="end" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/option4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="8dp"
                     android:background="@drawable/bg_option_default"
                     android:orientation="horizontal"
-                    android:padding="12dp"
-                    android:gravity="center_vertical">
+                    android:padding="10dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="48dp">
 
                     <TextView
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:background="@drawable/bg_option_number"
                         android:gravity="center"
                         android:text="D"
                         android:textColor="@color/white"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -460,30 +501,36 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginStart="10dp"
                         android:fontFamily="monospace"
                         android:text="// Option D code"
                         android:textColor="@color/white"
-                        android:textSize="12sp" />
+                        android:textSize="11sp"
+                        android:maxLines="3"
+                        android:ellipsize="end" />
                 </LinearLayout>
-
-                <!-- Submit Button -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/button_submit"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="20dp"
-                    android:enabled="false"
-                    android:alpha="0.5"
-                    android:text="✓ Submit Answer"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:textAllCaps="false"
-                    app:backgroundTint="#7C4DFF"
-                    app:cornerRadius="16dp" />
 
             </LinearLayout>
         </ScrollView>
+
+        <!-- Submit Button - FIXED AT BOTTOM, outside ScrollView -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_submit"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:enabled="false"
+            android:alpha="0.5"
+            android:text="✓ Submit Answer"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            app:backgroundTint="#7C4DFF"
+            app:cornerRadius="12dp"
+            app:elevation="8dp" />
+
     </LinearLayout>
 
     <!-- Countdown Overlay -->

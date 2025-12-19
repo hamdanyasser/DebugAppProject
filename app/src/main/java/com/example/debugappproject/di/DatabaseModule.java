@@ -9,6 +9,7 @@ import com.example.debugappproject.data.local.UserProgressDao;
 import com.example.debugappproject.data.local.LearningPathDao;
 import com.example.debugappproject.data.local.LessonDao;
 import com.example.debugappproject.data.local.AchievementDao;
+import com.example.debugappproject.data.local.MentalProfileDao;
 
 import javax.inject.Singleton;
 
@@ -96,5 +97,15 @@ public class DatabaseModule {
     @Singleton
     public AchievementDao provideAchievementDao(DebugMasterDatabase database) {
         return database.achievementDao();
+    }
+
+    /**
+     * Provides MentalProfileDao from the database.
+     * Used for the Mental Evolution System - cognitive skill tracking and ranked battles.
+     */
+    @Provides
+    @Singleton
+    public MentalProfileDao provideMentalProfileDao(DebugMasterDatabase database) {
+        return database.mentalProfileDao();
     }
 }

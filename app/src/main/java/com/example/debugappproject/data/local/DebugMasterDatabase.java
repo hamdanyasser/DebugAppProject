@@ -16,6 +16,7 @@ import com.example.debugappproject.model.Hint;
 import com.example.debugappproject.model.LearningPath;
 import com.example.debugappproject.model.Lesson;
 import com.example.debugappproject.model.LessonQuestion;
+import com.example.debugappproject.model.MentalProfile;
 import com.example.debugappproject.model.UserAchievement;
 import com.example.debugappproject.model.UserProgress;
 
@@ -49,6 +50,13 @@ import com.example.debugappproject.model.UserProgress;
  *
  * Version 7 adds:
  * - UserProgress: gems field for in-game currency
+ *
+ * Version 8 adds (Mental Evolution System):
+ * - MentalProfile: Cognitive skill tracking, Elo rating, ranked battles
+ *   - 8 core mental stats (patternRecognition, errorIntuition, etc.)
+ *   - 6 specialty skills (nullHunter, loopMaster, etc.)
+ *   - Elo rating and ranked tier system
+ *   - Battle statistics
  */
 @Database(
     entities = {
@@ -60,9 +68,10 @@ import com.example.debugappproject.model.UserProgress;
         Lesson.class,
         LessonQuestion.class,
         AchievementDefinition.class,
-        UserAchievement.class
+        UserAchievement.class,
+        MentalProfile.class
     },
-    version = 7,
+    version = 10,
     exportSchema = false
 )
 public abstract class DebugMasterDatabase extends RoomDatabase {
@@ -76,6 +85,7 @@ public abstract class DebugMasterDatabase extends RoomDatabase {
     public abstract LearningPathDao learningPathDao();
     public abstract LessonDao lessonDao();
     public abstract AchievementDao achievementDao();
+    public abstract MentalProfileDao mentalProfileDao();
 
     /**
      * Migration from version 2 to 3.
@@ -216,6 +226,112 @@ public abstract class DebugMasterDatabase extends RoomDatabase {
     };
 
     /**
+     * Migration from version 7 to 8.
+     * Adds mental_profile table for cognitive skill tracking and ranked battles.
+     */
+    static final Migration MIGRATION_7_8 = new Migration(7, 8) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            // Drop old table if exists to ensure clean state
+            database.execSQL("DROP TABLE IF EXISTS mental_profile");
+
+            // Create mental_profile table matching MentalProfile.java entity exactly
+            database.execSQL(
+                "CREATE TABLE IF NOT EXISTS mental_profile (" +
+                "id INTEGER PRIMARY KEY NOT NULL, " +
+                // Core mental stats (0-1000 scale)
+                "patternRecognition INTEGER NOT NULL DEFAULT 0, " +
+                "errorIntuition INTEGER NOT NULL DEFAULT 0, " +
+                "logicFlow INTEGER NOT NULL DEFAULT 0, " +
+                "speedDebugging INTEGER NOT NULL DEFAULT 0, " +
+                "complexityTolerance INTEGER NOT NULL DEFAULT 0, " +
+                "focusEndurance INTEGER NOT NULL DEFAULT 0, " +
+                "riskAssessment INTEGER NOT NULL DEFAULT 0, " +
+                "codeMemory INTEGER NOT NULL DEFAULT 0, " +
+                // Specialty skills (earned through specific bugs)
+                "nullHunter INTEGER NOT NULL DEFAULT 0, " +
+                "loopMaster INTEGER NOT NULL DEFAULT 0, " +
+                "typeWrangler INTEGER NOT NULL DEFAULT 0, " +
+                "boundaryExpert INTEGER NOT NULL DEFAULT 0, " +
+                "concurrencySage INTEGER NOT NULL DEFAULT 0, " +
+                "memoryArchitect INTEGER NOT NULL DEFAULT 0, " +
+                // Meta statistics
+                "totalXp INTEGER NOT NULL DEFAULT 0, " +
+                "bugsSolved INTEGER NOT NULL DEFAULT 0, " +
+                "perfectSolves INTEGER NOT NULL DEFAULT 0, " +
+                "avgSolveTimeSeconds INTEGER NOT NULL DEFAULT 0, " +
+                "battleWinStreak INTEGER NOT NULL DEFAULT 0, " +
+                "longestBattleStreak INTEGER NOT NULL DEFAULT 0, " +
+                // Elo & Ranked
+                "eloRating INTEGER NOT NULL DEFAULT 1000, " +
+                "peakElo INTEGER NOT NULL DEFAULT 1000, " +
+                "battlesPlayed INTEGER NOT NULL DEFAULT 0, " +
+                "battleWins INTEGER NOT NULL DEFAULT 0, " +
+                "rankedTier INTEGER NOT NULL DEFAULT 0, " +
+                "rankedPoints INTEGER NOT NULL DEFAULT 0, " +
+                // Additional stats
+                "nearMisses INTEGER NOT NULL DEFAULT 0, " +
+                "lastSkillImproved TEXT, " +
+                "lastSkillGain INTEGER NOT NULL DEFAULT 0, " +
+                "lastActivityTimestamp INTEGER NOT NULL DEFAULT 0)"
+            );
+        }
+    };
+
+    /**
+     * Migration from version 8 to 9.
+     * Fixes mental_profile table schema to match MentalProfile.java entity.
+     */
+    static final Migration MIGRATION_8_9 = new Migration(8, 9) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            // Drop and recreate mental_profile table with correct schema
+            database.execSQL("DROP TABLE IF EXISTS mental_profile");
+
+            // Create mental_profile table matching MentalProfile.java entity exactly
+            database.execSQL(
+                "CREATE TABLE IF NOT EXISTS mental_profile (" +
+                "id INTEGER PRIMARY KEY NOT NULL, " +
+                // Core mental stats (0-1000 scale)
+                "patternRecognition INTEGER NOT NULL DEFAULT 0, " +
+                "errorIntuition INTEGER NOT NULL DEFAULT 0, " +
+                "logicFlow INTEGER NOT NULL DEFAULT 0, " +
+                "speedDebugging INTEGER NOT NULL DEFAULT 0, " +
+                "complexityTolerance INTEGER NOT NULL DEFAULT 0, " +
+                "focusEndurance INTEGER NOT NULL DEFAULT 0, " +
+                "riskAssessment INTEGER NOT NULL DEFAULT 0, " +
+                "codeMemory INTEGER NOT NULL DEFAULT 0, " +
+                // Specialty skills (earned through specific bugs)
+                "nullHunter INTEGER NOT NULL DEFAULT 0, " +
+                "loopMaster INTEGER NOT NULL DEFAULT 0, " +
+                "typeWrangler INTEGER NOT NULL DEFAULT 0, " +
+                "boundaryExpert INTEGER NOT NULL DEFAULT 0, " +
+                "concurrencySage INTEGER NOT NULL DEFAULT 0, " +
+                "memoryArchitect INTEGER NOT NULL DEFAULT 0, " +
+                // Meta statistics
+                "totalXp INTEGER NOT NULL DEFAULT 0, " +
+                "bugsSolved INTEGER NOT NULL DEFAULT 0, " +
+                "perfectSolves INTEGER NOT NULL DEFAULT 0, " +
+                "avgSolveTimeSeconds INTEGER NOT NULL DEFAULT 0, " +
+                "battleWinStreak INTEGER NOT NULL DEFAULT 0, " +
+                "longestBattleStreak INTEGER NOT NULL DEFAULT 0, " +
+                // Elo & Ranked
+                "eloRating INTEGER NOT NULL DEFAULT 1000, " +
+                "peakElo INTEGER NOT NULL DEFAULT 1000, " +
+                "battlesPlayed INTEGER NOT NULL DEFAULT 0, " +
+                "battleWins INTEGER NOT NULL DEFAULT 0, " +
+                "rankedTier INTEGER NOT NULL DEFAULT 0, " +
+                "rankedPoints INTEGER NOT NULL DEFAULT 0, " +
+                // Additional stats
+                "nearMisses INTEGER NOT NULL DEFAULT 0, " +
+                "lastSkillImproved TEXT, " +
+                "lastSkillGain INTEGER NOT NULL DEFAULT 0, " +
+                "lastActivityTimestamp INTEGER NOT NULL DEFAULT 0)"
+            );
+        }
+    };
+
+    /**
      * Get singleton instance of database.
      * Now uses proper migrations instead of destructive migration.
      */
@@ -228,7 +344,7 @@ public abstract class DebugMasterDatabase extends RoomDatabase {
                             DebugMasterDatabase.class,
                             "debug_master_database"
                     )
-                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_6_7)
+                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
                     .fallbackToDestructiveMigration() // Fallback for dev builds
                     .build();
                 }

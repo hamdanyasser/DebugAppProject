@@ -77,31 +77,60 @@
                                 android:fontFamily="sans-serif-medium" />
                         </LinearLayout>
 
-                        <!-- Coins Badge -->
+                        <!-- Gems + Shop Button -->
                         <LinearLayout
-                            android:id="@+id/layout_coins"
                             android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:background="@drawable/bg_glass_pill"
+                            android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingHorizontal="14dp">
+                            android:orientation="horizontal">
 
-                            <TextView
+                            <!-- Coins Badge -->
+                            <LinearLayout
+                                android:id="@+id/layout_coins"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="💎"
-                                android:textSize="16sp" />
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_glass_pill"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingHorizontal="14dp">
 
-                            <TextView
-                                android:id="@+id/text_coins"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="6dp"
-                                android:textColor="@color/white"
-                                android:textSize="16sp"
-                                android:fontFamily="sans-serif-medium"
-                                android:text="850" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="💎"
+                                    android:textSize="16sp" />
+
+                                <TextView
+                                    android:id="@+id/text_coins"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="6dp"
+                                    android:textColor="@color/white"
+                                    android:textSize="16sp"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:text="850" />
+                            </LinearLayout>
+
+                            <!-- Shop Button -->
+                            <FrameLayout
+                                android:id="@+id/button_shop"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginStart="8dp"
+                                android:background="@drawable/bg_glass_pill"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:foreground="?attr/selectableItemBackground">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:text="+"
+                                    android:textColor="#00E676"
+                                    android:textSize="22sp"
+                                    android:textStyle="bold" />
+                            </FrameLayout>
                         </LinearLayout>
                     </LinearLayout>
 

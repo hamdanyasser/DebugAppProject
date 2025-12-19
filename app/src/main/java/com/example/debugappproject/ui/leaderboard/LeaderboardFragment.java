@@ -147,13 +147,15 @@ public class LeaderboardFragment extends Fragment {
 
     private void setupRecyclerView() {
         if (binding.recyclerLeaderboard != null) {
+            // IMPORTANT: Set LayoutManager BEFORE Adapter to avoid "No adapter attached" warning
+            binding.recyclerLeaderboard.setLayoutManager(new LinearLayoutManager(requireContext()));
+            
             adapter = new LeaderboardAdapter();
             adapter.setOnItemClickListener((entry, position) -> {
                 soundManager.playButtonClick();
                 showPlayerProfile(entry);
             });
             binding.recyclerLeaderboard.setAdapter(adapter);
-            binding.recyclerLeaderboard.setLayoutManager(new LinearLayoutManager(requireContext()));
         }
     }
 

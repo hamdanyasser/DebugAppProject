@@ -667,9 +667,11 @@ public class BugDetailFragment extends Fragment {
         // Get celebration data from manager
         CelebrationManager.CelebrationResult celebration = celebrationManager.recordSolve(
             perfectSolve,
+            false, // wasFast - not applicable in bug detail view
             currentBug.getDifficulty(),
             xpEarned,
-            0 // Streak will be fetched from GameManager in production
+            0, // Streak will be fetched from GameManager in production
+            1 // Combo count
         );
 
         // Play appropriate celebration sound
@@ -711,7 +713,7 @@ public class BugDetailFragment extends Fragment {
 
         // Animate the XP text if available
         if (binding.textXpReward != null) {
-            CelebrationManager.animateBounce(binding.textXpReward);
+            CelebrationManager.animatePulse(binding.textXpReward);
         }
 
         for (TestCase test : testCases) {

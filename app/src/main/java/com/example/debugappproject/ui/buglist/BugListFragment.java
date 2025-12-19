@@ -305,6 +305,11 @@ public class BugListFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        // Clear RecyclerView adapter to prevent memory leaks
+        if (binding != null && binding.recyclerViewBugs != null) {
+            binding.recyclerViewBugs.setAdapter(null);
+        }
+        adapter = null;
         binding = null;
     }
 }

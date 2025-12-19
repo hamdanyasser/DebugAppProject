@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -29,7 +30,8 @@ android {
 
         debug {
             isMinifyEnabled = false
-            applicationIdSuffix = ".debug"
+            // Removed applicationIdSuffix to match Firebase package name
+            // applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
         }
     }
@@ -90,6 +92,13 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-database")  // Realtime Database for multiplayer
+
+    // OkHttp for HTTP requests
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    
+    // Markwon for Markdown rendering
+    implementation("io.noties.markwon:core:4.6.2")
 
     // Testing
     testImplementation(libs.junit)

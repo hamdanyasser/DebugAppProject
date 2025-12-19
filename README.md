@@ -6,10 +6,10 @@ A gamified Android app to learn debugging skills by finding and fixing bugs in c
 
 ### Free Features
 - **30+ Debugging Challenges** - Real-world bugs to solve
-- **2 Learning Paths** - Java Fundamentals & Loops/Control Flow
+- **2 Learning Paths** - Java  Fundamentals & Loops/Control Flow
 - **Daily Challenges** - New bug every day with bonus XP
 - **Achievement System** - 20+ achievements to unlock
-- **Progress Tracking** - XP, levels, streaks, stats
+- **Progress Tracking** - XP , levels, streaks, stats
 
 ### Pro Features ($4.99/month or $39.99/year)
 - **100+ Challenges** - All difficulty levels
