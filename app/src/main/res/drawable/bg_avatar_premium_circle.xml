@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DEBUGMASTER - Premium Avatar Circle Background with Golden Glow -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!-- Outer Golden Glow -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="36dp"
+                android:centerX="0.5"
+                android:centerY="0.5"
+                android:startColor="#FFFFD700"
+                android:centerColor="#80FFA500"
+                android:endColor="#00FF8C00" />
+        </shape>
+    </item>
+    
+    <!-- Inner Circle with Premium Purple -->
+    <item
+        android:left="4dp"
+        android:top="4dp"
+        android:right="4dp"
+        android:bottom="4dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="28dp"
+                android:centerX="0.5"
+                android:centerY="0.5"
+                android:startColor="#9C27B0"
+                android:endColor="#6A1B9A" />
+            <stroke
+                android:width="2dp"
+                android:color="#FFD700" />
+        </shape>
+    </item>
+    
+</layer-list>

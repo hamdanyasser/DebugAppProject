@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(comm -23:*)",
+      "Bash(gradlew.bat assembleDebug:*)",
+      "Bash(cmd.exe /c \"gradlew.bat assembleDebug\")",
+      "Bash(cmd.exe /c \"cd /d c:\\\\Users\\\\hamda\\\\DebugAppProject && gradlew.bat assembleDebug\")",
+      "Bash(c:/Users/hamda/DebugAppProject/gradlew.bat:*)",
+      "Bash(powershell.exe -Command \"cd ''C:\\\\Users\\\\hamda\\\\DebugAppProject''; .\\\\gradlew.bat assembleDebug\")",
+      "Bash(cmd /c \"gradlew.bat assembleDebug 2>&1\")",
+      "Bash(c:\\\\Users\\\\hamda\\\\DebugAppProject\\\\gradlew.bat -p c:\\\\Users\\\\hamda\\\\DebugAppProject assembleDebug)",
+      "Bash(powershell.exe -Command \"Set-Location ''C:\\\\Users\\\\hamda\\\\DebugAppProject''; .\\\\gradlew.bat assembleDebug\")"
+    ]
+  }
+}

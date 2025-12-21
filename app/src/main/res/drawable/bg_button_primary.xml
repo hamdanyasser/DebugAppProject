@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Premium Primary Button Background -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/dm_primary_lighter">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/dm_primary" />
+            <corners android:radius="@dimen/dm_radius_base" />
+        </shape>
+    </item>
+</ripple>

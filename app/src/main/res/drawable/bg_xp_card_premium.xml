@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PREMIUM XP PROGRESS CARD
+    Golden glow effect for XP display
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outer golden glow -->
+    <item android:bottom="-2dp" android:left="-2dp" android:right="-2dp" android:top="-2dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp" />
+            <stroke android:width="1dp" android:color="#40FFD54F" />
+        </shape>
+    </item>
+
+    <!-- Glass background -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="18dp" />
+            <gradient
+                android:type="linear"
+                android:startColor="#30FFFFFF"
+                android:endColor="#18FFFFFF"
+                android:angle="135" />
+        </shape>
+    </item>
+
+    <!-- Golden top shine -->
+    <item android:top="0dp" android:left="0dp" android:right="0dp">
+        <shape android:shape="rectangle">
+            <corners android:topLeftRadius="18dp" android:topRightRadius="18dp" />
+            <gradient
+                android:type="linear"
+                android:startColor="#15FFD54F"
+                android:endColor="#00000000"
+                android:angle="270" />
+            <size android:height="40dp" />
+        </shape>
+    </item>
+</layer-list>

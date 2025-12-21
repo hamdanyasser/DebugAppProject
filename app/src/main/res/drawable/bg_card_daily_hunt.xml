@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Premium Daily Challenge Card - Gradient -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="135"
+        android:startColor="@color/dm_tertiary_dark"
+        android:centerColor="@color/dm_tertiary"
+        android:endColor="@color/dm_streak"
+        android:type="linear" />
+    <corners android:radius="@dimen/dm_radius_lg" />
+</shape>

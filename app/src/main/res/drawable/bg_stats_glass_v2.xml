@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PREMIUM GLASS STATS CARD V2
+    Enhanced glassmorphism with subtle glow
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Subtle outer glow -->
+    <item android:bottom="-1dp" android:left="-1dp" android:right="-1dp" android:top="-1dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="18dp" />
+            <stroke android:width="1dp" android:color="#30FFFFFF" />
+        </shape>
+    </item>
+
+    <!-- Glass effect background -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="16dp" />
+            <gradient
+                android:type="linear"
+                android:startColor="#25FFFFFF"
+                android:endColor="#15FFFFFF"
+                android:angle="135" />
+        </shape>
+    </item>
+
+    <!-- Top highlight shine -->
+    <item android:top="0dp" android:left="8dp" android:right="8dp">
+        <shape android:shape="rectangle">
+            <corners android:topLeftRadius="16dp" android:topRightRadius="16dp" />
+            <gradient
+                android:type="linear"
+                android:startColor="#20FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:angle="270" />
+            <size android:height="30dp" />
+        </shape>
+    </item>
+</layer-list>

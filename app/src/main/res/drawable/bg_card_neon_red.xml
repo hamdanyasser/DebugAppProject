@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    NEON RED CARD - For Battle Arena
+    Glowing neon effect with red/orange theme
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outer glow ring -->
+    <item android:bottom="-2dp" android:left="-2dp" android:right="-2dp" android:top="-2dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp" />
+            <stroke android:width="2dp" android:color="#FF5252" />
+        </shape>
+    </item>
+
+    <!-- Card background with gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="18dp" />
+            <gradient
+                android:type="linear"
+                android:startColor="#1F0D0D"
+                android:centerColor="#281010"
+                android:endColor="#1F0D0D"
+                android:angle="135" />
+        </shape>
+    </item>
+
+    <!-- Inner fire glow -->
+    <item android:top="0dp" android:left="0dp" android:right="0dp">
+        <shape android:shape="rectangle">
+            <corners android:topLeftRadius="18dp" android:topRightRadius="18dp" />
+            <gradient
+                android:type="linear"
+                android:startColor="#30FF5252"
+                android:endColor="#00FFFFFF"
+                android:angle="270" />
+            <size android:height="50dp" />
+        </shape>
+    </item>
+</layer-list>

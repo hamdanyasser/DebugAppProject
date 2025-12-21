@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PREMIUM GAME MODE CARD BACKGROUND V2
+    Gradient background with glow effect
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base dark gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="18dp" />
+            <gradient
+                android:type="linear"
+                android:startColor="#1A1A2E"
+                android:centerColor="#1E1E38"
+                android:endColor="#1A1A2E"
+                android:angle="135" />
+        </shape>
+    </item>
+
+    <!-- Top shine highlight -->
+    <item android:top="0dp" android:left="0dp" android:right="0dp">
+        <shape android:shape="rectangle">
+            <corners android:topLeftRadius="18dp" android:topRightRadius="18dp" />
+            <gradient
+                android:type="linear"
+                android:startColor="#15FFFFFF"
+                android:endColor="#00000000"
+                android:angle="270" />
+            <size android:height="50dp" />
+        </shape>
+    </item>
+</layer-list>

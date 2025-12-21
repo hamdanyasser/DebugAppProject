@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- =======================================================================
+         DEBUGMASTER DESIGN SYSTEM v2.0
+         World-Class Premium Gaming App Design Tokens
+         ======================================================================= -->
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         🎨 SEMANTIC COLOR TOKENS - Light Mode Defaults
+         These provide consistent naming across the app
+         ═══════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Background Hierarchy -->
+    <color name="dm_bg_primary">#FFFFFF</color>
+    <color name="dm_bg_secondary">#F8FAFC</color>
+    <color name="dm_bg_tertiary">#F1F5F9</color>
+    <color name="dm_bg_inverse">#0F172A</color>
+    
+    <!-- Surface Hierarchy -->
+    <color name="dm_surface">#FFFFFF</color>
+    <color name="dm_surface_dim">#F8FAFC</color>
+    <color name="dm_surface_bright">#FFFFFF</color>
+    <color name="dm_surface_container">#F1F5F9</color>
+    <color name="dm_surface_container_low">#F8FAFC</color>
+    <color name="dm_surface_container_high">#E2E8F0</color>
+    <color name="dm_surface_elevated">#FFFFFF</color>
+    
+    <!-- Text Hierarchy -->
+    <color name="dm_text_primary">#0F172A</color>
+    <color name="dm_text_secondary">#475569</color>
+    <color name="dm_text_tertiary">#64748B</color>
+    <color name="dm_text_disabled">#94A3B8</color>
+    <color name="dm_text_inverse">#FFFFFF</color>
+    <color name="dm_text_on_color">#FFFFFF</color>
+    
+    <!-- Border & Divider -->
+    <color name="dm_border">#E2E8F0</color>
+    <color name="dm_border_strong">#CBD5E1</color>
+    <color name="dm_border_subtle">#F1F5F9</color>
+    <color name="dm_divider">#E2E8F0</color>
+    
+    <!-- Overlay -->
+    <color name="dm_overlay">#80000000</color>
+    
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         🟣 BRAND COLORS - Primary Palette
+         ═══════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Primary - Vivid Purple -->
+    <color name="dm_primary">#7C3AED</color>
+    <color name="dm_primary_light">#A78BFA</color>
+    <color name="dm_primary_lighter">#C4B5FD</color>
+    <color name="dm_primary_dark">#6D28D9</color>
+    <color name="dm_primary_darker">#5B21B6</color>
+    <color name="dm_primary_container">#EDE9FE</color>
+    <color name="dm_primary_container_dark">#4C1D95</color>
+    <color name="dm_on_primary">#FFFFFF</color>
+    <color name="dm_on_primary_container">#4C1D95</color>
+    
+    <!-- Secondary - Teal -->
+    <color name="dm_secondary">#14B8A6</color>
+    <color name="dm_secondary_light">#2DD4BF</color>
+    <color name="dm_secondary_dark">#0D9488</color>
+    <color name="dm_secondary_container">#CCFBF1</color>
+    <color name="dm_on_secondary">#FFFFFF</color>
+    <color name="dm_on_secondary_container">#134E4A</color>
+    
+    <!-- Tertiary - Amber/Gold -->
+    <color name="dm_tertiary">#F59E0B</color>
+    <color name="dm_tertiary_light">#FBBF24</color>
+    <color name="dm_tertiary_dark">#D97706</color>
+    <color name="dm_tertiary_container">#FEF3C7</color>
+    <color name="dm_on_tertiary">#FFFFFF</color>
+    <color name="dm_on_tertiary_container">#78350F</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         ✅ SEMANTIC STATUS COLORS
+         ═══════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Success - Green -->
+    <color name="dm_success">#22C55E</color>
+    <color name="dm_success_light">#4ADE80</color>
+    <color name="dm_success_dark">#16A34A</color>
+    <color name="dm_success_container">#DCFCE7</color>
+    <color name="dm_success_container_dark">#14532D</color>
+    <color name="dm_on_success">#FFFFFF</color>
+    <color name="dm_on_success_container">#166534</color>
+    
+    <!-- Error - Red -->
+    <color name="dm_error">#EF4444</color>
+    <color name="dm_error_light">#F87171</color>
+    <color name="dm_error_dark">#DC2626</color>
+    <color name="dm_error_container">#FEE2E2</color>
+    <color name="dm_error_container_dark">#7F1D1D</color>
+    <color name="dm_on_error">#FFFFFF</color>
+    <color name="dm_on_error_container">#991B1B</color>
+    
+    <!-- Warning - Amber -->
+    <color name="dm_warning">#F59E0B</color>
+    <color name="dm_warning_light">#FBBF24</color>
+    <color name="dm_warning_dark">#D97706</color>
+    <color name="dm_warning_container">#FEF3C7</color>
+    <color name="dm_on_warning">#FFFFFF</color>
+    <color name="dm_on_warning_container">#92400E</color>
+    
+    <!-- Info - Blue -->
+    <color name="dm_info">#3B82F6</color>
+    <color name="dm_info_light">#60A5FA</color>
+    <color name="dm_info_dark">#2563EB</color>
+    <color name="dm_info_container">#DBEAFE</color>
+    <color name="dm_on_info">#FFFFFF</color>
+    <color name="dm_on_info_container">#1E40AF</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         🎮 GAMIFICATION COLORS
+         ═══════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- XP & Rewards -->
+    <color name="dm_xp">#F59E0B</color>
+    <color name="dm_xp_light">#FBBF24</color>
+    <color name="dm_xp_glow">#30F59E0B</color>
+    <color name="dm_coins">#FCD34D</color>
+    <color name="dm_gems">#A78BFA</color>
+    
+    <!-- Streak -->
+    <color name="dm_streak">#F97316</color>
+    <color name="dm_streak_hot">#EF4444</color>
+    <color name="dm_streak_fire">#DC2626</color>
+    <color name="dm_streak_glow">#30F97316</color>
+    
+    <!-- Ranks -->
+    <color name="dm_rank_bronze">#CD7F32</color>
+    <color name="dm_rank_silver">#94A3B8</color>
+    <color name="dm_rank_gold">#F59E0B</color>
+    <color name="dm_rank_platinum">#22D3EE</color>
+    <color name="dm_rank_diamond">#A78BFA</color>
+    <color name="dm_rank_master">#F43F5E</color>
+    <color name="dm_rank_legend">#FBBF24</color>
+    
+    <!-- Achievement Rarity -->
+    <color name="dm_rarity_common">#94A3B8</color>
+    <color name="dm_rarity_uncommon">#22C55E</color>
+    <color name="dm_rarity_rare">#3B82F6</color>
+    <color name="dm_rarity_epic">#A855F7</color>
+    <color name="dm_rarity_legendary">#F59E0B</color>
+    <color name="dm_rarity_mythic">#F43F5E</color>
+    
+    <!-- Pro/Premium -->
+    <color name="dm_pro">#F59E0B</color>
+    <color name="dm_pro_start">#FBBF24</color>
+    <color name="dm_pro_end">#F97316</color>
+    <color name="dm_pro_container">#1E1B4B</color>
+    <color name="dm_pro_glow">#30F59E0B</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         📚 DIFFICULTY COLORS - With Accessible Contrast
+         ═══════════════════════════════════════════════════════════════════════ -->
+    
+    <color name="dm_difficulty_beginner">#22C55E</color>
+    <color name="dm_difficulty_beginner_bg">#DCFCE7</color>
+    <color name="dm_difficulty_beginner_text">#166534</color>
+    
+    <color name="dm_difficulty_easy">#3B82F6</color>
+    <color name="dm_difficulty_easy_bg">#DBEAFE</color>
+    <color name="dm_difficulty_easy_text">#1E40AF</color>
+    
+    <color name="dm_difficulty_medium">#F59E0B</color>
+    <color name="dm_difficulty_medium_bg">#FEF3C7</color>
+    <color name="dm_difficulty_medium_text">#92400E</color>
+    
+    <color name="dm_difficulty_hard">#EF4444</color>
+    <color name="dm_difficulty_hard_bg">#FEE2E2</color>
+    <color name="dm_difficulty_hard_text">#991B1B</color>
+    
+    <color name="dm_difficulty_expert">#A855F7</color>
+    <color name="dm_difficulty_expert_bg">#F3E8FF</color>
+    <color name="dm_difficulty_expert_text">#6B21A8</color>
+    
+    <color name="dm_difficulty_master">#F43F5E</color>
+    <color name="dm_difficulty_master_bg">#FFE4E6</color>
+    <color name="dm_difficulty_master_text">#9F1239</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         💻 CODE EDITOR COLORS
+         ═══════════════════════════════════════════════════════════════════════ -->
+    
+    <color name="dm_code_bg">#1E293B</color>
+    <color name="dm_code_bg_light">#F1F5F9</color>
+    <color name="dm_code_surface">#0F172A</color>
+    <color name="dm_code_text">#E2E8F0</color>
+    <color name="dm_code_text_secondary">#94A3B8</color>
+    <color name="dm_code_line_number">#64748B</color>
+    <color name="dm_code_line_highlight">#334155</color>
+    <color name="dm_code_selection">#3B82F650</color>
+    
+    <!-- Syntax Highlighting -->
+    <color name="dm_syntax_keyword">#C084FC</color>
+    <color name="dm_syntax_string">#4ADE80</color>
+    <color name="dm_syntax_number">#FBBF24</color>
+    <color name="dm_syntax_comment">#64748B</color>
+    <color name="dm_syntax_function">#60A5FA</color>
+    <color name="dm_syntax_variable">#F472B6</color>
+    <color name="dm_syntax_class">#22D3EE</color>
+    <color name="dm_syntax_operator">#F8FAFC</color>
+    <color name="dm_syntax_error">#F87171</color>
+    <color name="dm_syntax_error_bg">#7F1D1D40</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         🌙 DARK MODE CYBER THEME
+         ═══════════════════════════════════════════════════════════════════════ -->
+    
+    <color name="dm_cyber_bg_deep">#030712</color>
+    <color name="dm_cyber_bg_dark">#0F172A</color>
+    <color name="dm_cyber_bg_medium">#1E293B</color>
+    <color name="dm_cyber_surface">#1E293B</color>
+    <color name="dm_cyber_surface_elevated">#334155</color>
+    <color name="dm_cyber_border">#334155</color>
+    <color name="dm_cyber_border_subtle">#1E293B</color>
+    
+    <!-- Neon Accents -->
+    <color name="dm_neon_purple">#A78BFA</color>
+    <color name="dm_neon_pink">#F472B6</color>
+    <color name="dm_neon_blue">#22D3EE</color>
+    <color name="dm_neon_green">#4ADE80</color>
+    <color name="dm_neon_gold">#FBBF24</color>
+    <color name="dm_neon_orange">#FB923C</color>
+    
+    <!-- Glows -->
+    <color name="dm_glow_purple">#307C3AED</color>
+    <color name="dm_glow_blue">#3022D3EE</color>
+    <color name="dm_glow_green">#304ADE80</color>
+    <color name="dm_glow_gold">#30FBBF24</color>
+    <color name="dm_glow_error">#30EF4444</color>
+    
+    <!-- Glass Effects -->
+    <color name="dm_glass_white">#15FFFFFF</color>
+    <color name="dm_glass_white_medium">#25FFFFFF</color>
+    <color name="dm_glass_white_strong">#40FFFFFF</color>
+    <color name="dm_glass_dark">#40000000</color>
+    <color name="dm_glass_border">#20FFFFFF</color>
+    <color name="dm_glass_border_strong">#35FFFFFF</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         📏 DIMENSION TOKENS
+         ═══════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Spacing Scale -->
+    <dimen name="dm_space_xxs">2dp</dimen>
+    <dimen name="dm_space_xs">4dp</dimen>
+    <dimen name="dm_space_sm">8dp</dimen>
+    <dimen name="dm_space_md">12dp</dimen>
+    <dimen name="dm_space_base">16dp</dimen>
+    <dimen name="dm_space_lg">20dp</dimen>
+    <dimen name="dm_space_xl">24dp</dimen>
+    <dimen name="dm_space_2xl">32dp</dimen>
+    <dimen name="dm_space_3xl">48dp</dimen>
+    <dimen name="dm_space_4xl">64dp</dimen>
+    
+    <!-- Border Radius -->
+    <dimen name="dm_radius_xs">4dp</dimen>
+    <dimen name="dm_radius_sm">8dp</dimen>
+    <dimen name="dm_radius_md">12dp</dimen>
+    <dimen name="dm_radius_base">16dp</dimen>
+    <dimen name="dm_radius_lg">20dp</dimen>
+    <dimen name="dm_radius_xl">24dp</dimen>
+    <dimen name="dm_radius_2xl">28dp</dimen>
+    <dimen name="dm_radius_3xl">32dp</dimen>
+    <dimen name="dm_radius_full">999dp</dimen>
+    
+    <!-- Elevation -->
+    <dimen name="dm_elevation_none">0dp</dimen>
+    <dimen name="dm_elevation_xs">1dp</dimen>
+    <dimen name="dm_elevation_sm">2dp</dimen>
+    <dimen name="dm_elevation_md">4dp</dimen>
+    <dimen name="dm_elevation_lg">8dp</dimen>
+    <dimen name="dm_elevation_xl">12dp</dimen>
+    <dimen name="dm_elevation_2xl">16dp</dimen>
+    
+    <!-- Icon Sizes -->
+    <dimen name="dm_icon_xs">12dp</dimen>
+    <dimen name="dm_icon_sm">16dp</dimen>
+    <dimen name="dm_icon_md">20dp</dimen>
+    <dimen name="dm_icon_base">24dp</dimen>
+    <dimen name="dm_icon_lg">28dp</dimen>
+    <dimen name="dm_icon_xl">32dp</dimen>
+    <dimen name="dm_icon_2xl">40dp</dimen>
+    <dimen name="dm_icon_3xl">48dp</dimen>
+    
+    <!-- Component Sizes -->
+    <dimen name="dm_button_height_sm">36dp</dimen>
+    <dimen name="dm_button_height_md">44dp</dimen>
+    <dimen name="dm_button_height_lg">52dp</dimen>
+    <dimen name="dm_button_height_xl">56dp</dimen>
+    
+    <dimen name="dm_chip_height_sm">28dp</dimen>
+    <dimen name="dm_chip_height_md">32dp</dimen>
+    <dimen name="dm_chip_height_lg">36dp</dimen>
+    
+    <dimen name="dm_avatar_xs">24dp</dimen>
+    <dimen name="dm_avatar_sm">32dp</dimen>
+    <dimen name="dm_avatar_md">40dp</dimen>
+    <dimen name="dm_avatar_lg">48dp</dimen>
+    <dimen name="dm_avatar_xl">64dp</dimen>
+    <dimen name="dm_avatar_2xl">80dp</dimen>
+    
+    <!-- Card Sizes -->
+    <dimen name="dm_card_padding_sm">12dp</dimen>
+    <dimen name="dm_card_padding_md">16dp</dimen>
+    <dimen name="dm_card_padding_lg">20dp</dimen>
+    <dimen name="dm_card_padding_xl">24dp</dimen>
+    
+    <!-- Progress Bar -->
+    <dimen name="dm_progress_height_sm">4dp</dimen>
+    <dimen name="dm_progress_height_md">6dp</dimen>
+    <dimen name="dm_progress_height_lg">8dp</dimen>
+    <dimen name="dm_progress_height_xl">12dp</dimen>
+
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DEBUGMASTER - Title Item (Selected State) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#2D1B69" />
+    <stroke
+        android:width="2dp"
+        android:color="#FFD700" />
+    <corners android:radius="12dp" />
+</shape>

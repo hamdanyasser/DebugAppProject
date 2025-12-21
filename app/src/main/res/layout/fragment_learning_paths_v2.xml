@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ╔══════════════════════════════════════════════════════════════════════════════╗
+    ║           DEBUGMASTER - REDESIGNED LEARN TAB                                 ║
+    ║              Premium game-like learning experience                           ║
+    ╚══════════════════════════════════════════════════════════════════════════════╝
+-->
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_cyber_learn">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="120dp">
+
+            <!-- ═══════════════════════════════════════════════════════════════════
+                 HEADER SECTION - Level, XP, Streak Summary
+                 ═══════════════════════════════════════════════════════════════════ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="16dp">
+
+                <!-- Title Row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Learn"
+                        android:textColor="@color/dm_text_primary"
+                        android:textSize="28sp"
+                        android:fontFamily="sans-serif-bold" />
+
+                    <!-- Stats Pills Row -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <!-- Level Badge -->
+                        <TextView
+                            android:id="@+id/text_level"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_glass_pill"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="6dp"
+                            android:text="Lv. 1"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <!-- XP Badge -->
+                        <TextView
+                            android:id="@+id/text_xp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_glass_pill"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="6dp"
+                            android:text="⭐ 0"
+                            android:textColor="@color/dm_xp"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <!-- Streak Badge -->
+                        <TextView
+                            android:id="@+id/text_streak"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_glass_pill"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="6dp"
+                            android:text="🔥 0"
+                            android:textColor="@color/dm_streak"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-medium" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Subtitle -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:alpha="0.7"
+                    android:text="Master debugging, one bug at a time"
+                    android:textColor="@color/dm_text_secondary"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <!-- ═══════════════════════════════════════════════════════════════════
+                 SEARCH BAR
+                 ═══════════════════════════════════════════════════════════════════ -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="@color/dm_surface_container"
+                app:cardCornerRadius="@dimen/dm_radius_md"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/dm_border"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="14dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔍"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/edit_search"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:hint="Search paths, topics..."
+                        android:textColorHint="@color/dm_text_disabled"
+                        android:textColor="@color/dm_text_primary"
+                        android:textSize="14sp"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:maxLines="1" />
+
+                    <TextView
+                        android:id="@+id/button_clear_search"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:text="✕"
+                        android:textColor="@color/dm_text_tertiary"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ═══════════════════════════════════════════════════════════════════
+                 SEGMENTED CONTROL: All | Free | Pro
+                 ═══════════════════════════════════════════════════════════════════ -->
+            <LinearLayout
+                android:id="@+id/layout_segment_control"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_segment_container"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="4dp">
+
+                <TextView
+                    android:id="@+id/tab_all"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_segment_selected"
+                    android:gravity="center"
+                    android:text="All"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold" />
+
+                <TextView
+                    android:id="@+id/tab_free"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:text="Free"
+                    android:textColor="#94A3B8"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-medium" />
+
+                <TextView
+                    android:id="@+id/tab_pro"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:text="👑 Pro"
+                    android:textColor="#94A3B8"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+
+            <!-- ═══════════════════════════════════════════════════════════════════
+                 CATEGORY CHIPS (Horizontal Scrolling)
+                 ═══════════════════════════════════════════════════════════════════ -->
+            <HorizontalScrollView
+                android:id="@+id/scroll_categories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:scrollbars="none"
+                android:clipToPadding="false"
+                android:paddingHorizontal="16dp">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group_categories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true"
+                    app:chipSpacingHorizontal="8dp">
+
+                    <!-- Chips will be added programmatically -->
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
+
+            <!-- ═══════════════════════════════════════════════════════════════════
+                 CONTINUE CARD (Resume last lesson)
+                 ═══════════════════════════════════════════════════════════════════ -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_continue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_practice_mode_gradient"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <FrameLayout
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/bg_glass_circle">
+
+                        <TextView
+                            android:id="@+id/text_continue_emoji"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="▶️"
+                            android:textSize="24sp" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="14dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Continue Learning"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:alpha="0.8" />
+
+                        <TextView
+                            android:id="@+id/text_continue_path_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="Java Mastery"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <!-- Progress -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:gravity="center_vertical">
+
+                            <ProgressBar
+                                android:id="@+id/progress_continue"
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="0dp"
+                                android:layout_height="6dp"
+                                android:layout_weight="1"
+                                android:max="100"
+                                android:progress="45"
+                                android:progressDrawable="@drawable/progress_path_premium" />
+
+                            <TextView
+                                android:id="@+id/text_continue_progress"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="45%"
+                                android:textColor="@color/white"
+                                android:textSize="12sp"
+                                android:fontFamily="sans-serif-medium" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_continue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="Resume"
+                        android:textColor="@color/dm_text_inverse"
+                        android:textSize="13sp"
+                        android:textAllCaps="false"
+                        app:backgroundTint="@color/dm_primary"
+                        app:cornerRadius="12dp"
+                        app:icon="@drawable/ic_arrow_right"
+                        app:iconGravity="end"
+                        app:iconTint="@color/dm_text_inverse" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ═══════════════════════════════════════════════════════════════════
+                 DAILY BUG HUNT CARD
+                 ═══════════════════════════════════════════════════════════════════ -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_daily_hunt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_daily_challenge_premium"
+                    android:padding="16dp">
+
+                    <!-- Left: Icon -->
+                    <FrameLayout
+                        android:id="@+id/frame_daily_icon"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:background="@drawable/bg_glass_circle"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/text_daily_emoji"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="🐛"
+                            android:textSize="28sp" />
+                    </FrameLayout>
+
+                    <!-- Title & Description -->
+                    <TextView
+                        android:id="@+id/text_daily_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:text="Daily Bug Hunt"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        android:fontFamily="sans-serif-bold"
+                        app:layout_constraintEnd_toStartOf="@id/button_start_daily"
+                        app:layout_constraintStart_toEndOf="@id/frame_daily_icon"
+                        app:layout_constraintTop_toTopOf="@id/frame_daily_icon" />
+
+                    <TextView
+                        android:id="@+id/text_daily_description"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginTop="4dp"
+                        android:text="Quick 5-min challenge • +50 XP"
+                        android:textColor="@color/white"
+                        android:alpha="0.85"
+                        android:textSize="13sp"
+                        app:layout_constraintEnd_toStartOf="@id/button_start_daily"
+                        app:layout_constraintStart_toEndOf="@id/frame_daily_icon"
+                        app:layout_constraintTop_toBottomOf="@id/text_daily_title" />
+
+                    <!-- Streak indicator -->
+                    <TextView
+                        android:id="@+id/text_daily_streak"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginTop="8dp"
+                        android:text="🔥 3 day streak"
+                        android:textColor="@color/dm_streak"
+                        android:textSize="12sp"
+                        android:fontFamily="sans-serif-medium"
+                        app:layout_constraintStart_toEndOf="@id/frame_daily_icon"
+                        app:layout_constraintTop_toBottomOf="@id/text_daily_description" />
+
+                    <!-- Start Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_start_daily"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:text="Start"
+                        android:textColor="@color/dm_bg_primary"
+                        android:textSize="14sp"
+                        android:textAllCaps="false"
+                        app:backgroundTint="@color/dm_streak"
+                        app:cornerRadius="12dp"
+                        app:icon="@drawable/ic_play_small"
+                        app:iconGravity="start"
+                        app:iconTint="@color/dm_bg_primary"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <!-- Completed state overlay (hidden by default) -->
+                    <LinearLayout
+                        android:id="@+id/layout_daily_completed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_success_pill"
+                        android:gravity="center"
+                        android:paddingHorizontal="16dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="✓ Done"
+                            android:textColor="@color/dm_success"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-medium" />
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ═══════════════════════════════════════════════════════════════════
+                 PRO BANNER (Only for non-Pro users viewing Pro tab)
+                 ═══════════════════════════════════════════════════════════════════ -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_pro_banner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_pro_upsell_premium"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:gravity="center"
+                        android:text="👑"
+                        android:textSize="28sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="12dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Unlock All Pro Paths"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:fontFamily="sans-serif-bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:alpha="0.9"
+                            android:text="11 premium courses, Battle Arena, and more"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_go_pro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="Go Pro"
+                        android:textColor="@color/dm_bg_primary"
+                        android:textSize="13sp"
+                        android:textAllCaps="false"
+                        app:backgroundTint="@color/dm_streak"
+                        app:cornerRadius="12dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ═══════════════════════════════════════════════════════════════════
+                 PATHS LIST - Main RecyclerView
+                 (Shows filtered paths based on tab & category selection)
+                 ═══════════════════════════════════════════════════════════════════ -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_paths"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:paddingHorizontal="20dp"
+                tools:itemCount="6"
+                tools:listitem="@layout/item_learning_path" />
+
+            <!-- ═══════════════════════════════════════════════════════════════════
+                 EMPTY STATE
+                 ═══════════════════════════════════════════════════════════════════ -->
+            <LinearLayout
+                android:id="@+id/layout_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/text_empty_emoji"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🔍"
+                    android:textSize="48sp" />
+
+                <TextView
+                    android:id="@+id/text_empty_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="No paths found"
+                    android:textColor="@color/dm_text_primary"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-medium" />
+
+                <TextView
+                    android:id="@+id/text_empty_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:alpha="0.7"
+                    android:text="Try a different search or filter"
+                    android:textColor="@color/dm_text_secondary"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/button_clear_filters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="16dp"
+                    android:text="Clear Filters"
+                    android:textColor="@color/dm_text_inverse"
+                    android:textSize="13sp"
+                    android:textAllCaps="false"
+                    app:backgroundTint="@color/dm_primary"
+                    app:cornerRadius="12dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         LOADING SHIMMER OVERLAY
+         ═══════════════════════════════════════════════════════════════════ -->
+    <FrameLayout
+        android:id="@+id/layout_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/dm_overlay"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/dm_primary" />
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

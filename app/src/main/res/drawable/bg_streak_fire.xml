@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PREMIUM STREAK FIRE BACKGROUND
+    Epic fire gradient for streak celebrations
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base dark gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp" />
+            <gradient
+                android:type="linear"
+                android:startColor="#1F0A0A"
+                android:centerColor="#2A1010"
+                android:endColor="#1F0A0A"
+                android:angle="135" />
+        </shape>
+    </item>
+
+    <!-- Fire glow at top -->
+    <item android:top="0dp" android:left="0dp" android:right="0dp">
+        <shape android:shape="rectangle">
+            <corners android:topLeftRadius="20dp" android:topRightRadius="20dp" />
+            <gradient
+                android:type="linear"
+                android:startColor="#50FF6B35"
+                android:centerColor="#30FF9E35"
+                android:endColor="#00000000"
+                android:angle="270" />
+            <size android:height="60dp" />
+        </shape>
+    </item>
+
+    <!-- Border -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp" />
+            <stroke android:width="2dp" android:color="#FF6B35" />
+        </shape>
+    </item>
+</layer-list>

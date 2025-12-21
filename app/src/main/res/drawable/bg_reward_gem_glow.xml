@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PREMIUM GEM REWARD GLOW EFFECT
+    Cyan celebration glow for gem rewards
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outer glow -->
+    <item android:bottom="-10dp" android:left="-10dp" android:right="-10dp" android:top="-10dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:centerX="0.5"
+                android:centerY="0.5"
+                android:gradientRadius="100%"
+                android:startColor="#5000E5FF"
+                android:endColor="#00000000" />
+        </shape>
+    </item>
+
+    <!-- Middle glow -->
+    <item android:bottom="-5dp" android:left="-5dp" android:right="-5dp" android:top="-5dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:centerX="0.5"
+                android:centerY="0.5"
+                android:gradientRadius="100%"
+                android:startColor="#7000E5FF"
+                android:endColor="#00000000" />
+        </shape>
+    </item>
+
+    <!-- Core circle -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:centerX="0.5"
+                android:centerY="0.3"
+                android:gradientRadius="100%"
+                android:startColor="#00E5FF"
+                android:centerColor="#00BCD4"
+                android:endColor="#0097A7" />
+            <stroke android:width="2dp" android:color="#FFFFFF" />
+        </shape>
+    </item>
+</layer-list>

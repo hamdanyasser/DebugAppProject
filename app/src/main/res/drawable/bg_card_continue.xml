@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Premium Continue Learning Card - Purple Gradient -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="135"
+        android:startColor="@color/dm_primary_darker"
+        android:centerColor="@color/dm_primary_dark"
+        android:endColor="@color/dm_primary"
+        android:type="linear" />
+    <corners android:radius="@dimen/dm_radius_lg" />
+</shape>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PREMIUM LEVEL BADGE V2
+    Epic glowing circular badge
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outer glow ring -->
+    <item android:bottom="-3dp" android:left="-3dp" android:right="-3dp" android:top="-3dp">
+        <shape android:shape="oval">
+            <stroke android:width="2dp" android:color="#507C4DFF" />
+            <solid android:color="#00000000" />
+        </shape>
+    </item>
+
+    <!-- Inner glow ring -->
+    <item android:bottom="-1dp" android:left="-1dp" android:right="-1dp" android:top="-1dp">
+        <shape android:shape="oval">
+            <stroke android:width="2dp" android:color="#7C4DFF" />
+            <solid android:color="#00000000" />
+        </shape>
+    </item>
+
+    <!-- Main badge background -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:centerX="0.5"
+                android:centerY="0.3"
+                android:gradientRadius="100%"
+                android:startColor="#9C6DFF"
+                android:centerColor="#7C4DFF"
+                android:endColor="#5C3DDF" />
+        </shape>
+    </item>
+
+    <!-- Top highlight shine -->
+    <item android:top="2dp" android:left="8dp" android:right="8dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="linear"
+                android:startColor="#40FFFFFF"
+                android:endColor="#00FFFFFF"
+                android:angle="270" />
+            <size android:height="18dp" android:width="36dp" />
+        </shape>
+    </item>
+</layer-list>

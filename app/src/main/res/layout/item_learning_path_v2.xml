@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ╔══════════════════════════════════════════════════════════════════════════════╗
+    ║           DEBUGMASTER - REDESIGNED LEARNING PATH ITEM                        ║
+    ║              Premium card with better hierarchy & readability                ║
+    ╚══════════════════════════════════════════════════════════════════════════════╝
+-->
+<com.google.android.material.card.MaterialCardView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="14dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="@color/dm_surface"
+    app:cardCornerRadius="@dimen/dm_radius_lg"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/dm_border"
+    app:strokeWidth="1dp"
+    app:rippleColor="@color/dm_primary_container">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- ═══════════════════════════════════════════════════════════════════
+             LEFT: Emoji Icon with Background
+             ═══════════════════════════════════════════════════════════════════ -->
+        <FrameLayout
+            android:id="@+id/frame_icon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/bg_path_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/text_path_emoji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="🐛"
+                android:textSize="30sp" />
+        </FrameLayout>
+
+        <!-- ═══════════════════════════════════════════════════════════════════
+             TOP ROW: Title + Badges
+             ═══════════════════════════════════════════════════════════════════ -->
+        <LinearLayout
+            android:id="@+id/layout_title_row"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/frame_icon"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/text_path_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Path Name"
+                android:textColor="@color/dm_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <!-- NEW Badge -->
+            <TextView
+                android:id="@+id/badge_new"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_badge_new"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp"
+                android:text="NEW"
+                android:textColor="@color/white"
+                android:textSize="9sp"
+                android:fontFamily="sans-serif-bold"
+                android:visibility="gone" />
+
+            <!-- FREE / PRO Badge -->
+            <TextView
+                android:id="@+id/badge_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/bg_badge_free"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp"
+                android:text="FREE"
+                android:textColor="@color/dm_success"
+                android:textSize="9sp"
+                android:fontFamily="sans-serif-bold" />
+        </LinearLayout>
+
+        <!-- ═══════════════════════════════════════════════════════════════════
+             DESCRIPTION
+             ═══════════════════════════════════════════════════════════════════ -->
+        <TextView
+            android:id="@+id/text_path_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="6dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:lineSpacingMultiplier="1.2"
+            android:text="Description goes here"
+            android:textColor="@color/dm_text_secondary"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/frame_icon"
+            app:layout_constraintTop_toBottomOf="@id/layout_title_row" />
+
+        <!-- ═══════════════════════════════════════════════════════════════════
+             STATS ROW: Difficulty • Time • XP
+             ═══════════════════════════════════════════════════════════════════ -->
+        <LinearLayout
+            android:id="@+id/layout_stats"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/frame_icon"
+            app:layout_constraintTop_toBottomOf="@id/text_path_description">
+
+            <!-- Difficulty Badge -->
+            <TextView
+                android:id="@+id/text_difficulty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_difficulty_badge"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:text="Beginner"
+                android:textColor="@color/dm_success"
+                android:textSize="11sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="4dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/bg_dot_green"
+                android:alpha="0.4" />
+
+            <!-- Time Estimate -->
+            <TextView
+                android:id="@+id/text_time_estimate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⏱ 45 min"
+                android:textColor="@color/dm_text_secondary"
+                android:textSize="12sp" />
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="4dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/bg_dot_green"
+                android:alpha="0.4" />
+
+            <!-- XP Reward -->
+            <TextView
+                android:id="@+id/text_xp_reward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⭐ 150 XP"
+                android:textColor="@color/dm_xp"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- ═══════════════════════════════════════════════════════════════════
+             BOTTOM ROW: Progress + Button
+             ═══════════════════════════════════════════════════════════════════ -->
+        <LinearLayout
+            android:id="@+id/layout_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_stats">
+
+            <!-- Progress Section -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ProgressBar
+                    android:id="@+id/progress_path"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="8dp"
+                    android:layout_weight="1"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressDrawable="@drawable/progress_path_premium" />
+
+                <TextView
+                    android:id="@+id/text_path_progress_percent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="0%"
+                    android:textColor="@color/dm_primary"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold" />
+            </LinearLayout>
+
+            <!-- Action Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_action"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="14dp"
+                android:minWidth="90dp"
+                android:text="Start"
+                android:textColor="@color/dm_text_inverse"
+                android:textSize="13sp"
+                android:textAllCaps="false"
+                app:backgroundTint="@color/dm_primary"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_arrow_right"
+                app:iconGravity="end"
+                app:iconTint="@color/dm_text_inverse"
+                app:iconSize="16dp" />
+        </LinearLayout>
+
+        <!-- ═══════════════════════════════════════════════════════════════════
+             LOCKED OVERLAY (for Pro paths when user is not Pro)
+             ═══════════════════════════════════════════════════════════════════ -->
+        <View
+            android:id="@+id/overlay_locked"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha="0"
+            android:background="#33000000"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Hidden fields for internal use -->
+        <TextView
+            android:id="@+id/text_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_lessons_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Legacy badge_pro for compatibility -->
+        <TextView
+            android:id="@+id/badge_pro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_continue_path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PREMIUM XP REWARD GLOW EFFECT
+    Golden celebration glow for XP rewards
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outer glow -->
+    <item android:bottom="-10dp" android:left="-10dp" android:right="-10dp" android:top="-10dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:centerX="0.5"
+                android:centerY="0.5"
+                android:gradientRadius="100%"
+                android:startColor="#50FFD54F"
+                android:endColor="#00000000" />
+        </shape>
+    </item>
+
+    <!-- Middle glow -->
+    <item android:bottom="-5dp" android:left="-5dp" android:right="-5dp" android:top="-5dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:centerX="0.5"
+                android:centerY="0.5"
+                android:gradientRadius="100%"
+                android:startColor="#70FFD54F"
+                android:endColor="#00000000" />
+        </shape>
+    </item>
+
+    <!-- Core circle -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:centerX="0.5"
+                android:centerY="0.3"
+                android:gradientRadius="100%"
+                android:startColor="#FFEB3B"
+                android:centerColor="#FFD54F"
+                android:endColor="#FFC107" />
+            <stroke android:width="2dp" android:color="#FFFFFF" />
+        </shape>
+    </item>
+</layer-list>

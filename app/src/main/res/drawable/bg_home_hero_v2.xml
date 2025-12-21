@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PREMIUM HOME HERO GRADIENT V2
+    Ultra-vibrant gradient with animated glow feel
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base gradient - Deep space purple to electric blue -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="linear"
+                android:startColor="#0A0A1A"
+                android:centerColor="#1A0A3A"
+                android:endColor="#0D1F3C"
+                android:angle="135" />
+        </shape>
+    </item>
+
+    <!-- Aurora layer 1 - Top glow -->
+    <item android:top="-100dp" android:left="-50dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:centerX="0.3"
+                android:centerY="0"
+                android:gradientRadius="300dp"
+                android:startColor="#407C4DFF"
+                android:endColor="#00000000" />
+        </shape>
+    </item>
+
+    <!-- Aurora layer 2 - Right accent -->
+    <item android:right="-100dp" android:top="50dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:centerX="1"
+                android:centerY="0.3"
+                android:gradientRadius="250dp"
+                android:startColor="#30FF6B9D"
+                android:endColor="#00000000" />
+        </shape>
+    </item>
+
+    <!-- Subtle cyan accent bottom -->
+    <item android:bottom="-150dp" android:left="100dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:centerX="0.5"
+                android:centerY="1"
+                android:gradientRadius="200dp"
+                android:startColor="#2000E5FF"
+                android:endColor="#00000000" />
+        </shape>
+    </item>
+</layer-list>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- =======================================================================
+         DEBUGMASTER DESIGN SYSTEM v2.0 - DARK MODE OVERRIDES
+         Premium Cyber Gaming Experience
+         ======================================================================= -->
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         🌙 SEMANTIC COLOR TOKENS - Dark Mode
+         ═══════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Background Hierarchy - Deep Space -->
+    <color name="dm_bg_primary">#0F172A</color>
+    <color name="dm_bg_secondary">#1E293B</color>
+    <color name="dm_bg_tertiary">#334155</color>
+    <color name="dm_bg_inverse">#F8FAFC</color>
+    
+    <!-- Surface Hierarchy -->
+    <color name="dm_surface">#1E293B</color>
+    <color name="dm_surface_dim">#0F172A</color>
+    <color name="dm_surface_bright">#334155</color>
+    <color name="dm_surface_container">#1E293B</color>
+    <color name="dm_surface_container_low">#0F172A</color>
+    <color name="dm_surface_container_high">#334155</color>
+    <color name="dm_surface_elevated">#334155</color>
+    
+    <!-- Text Hierarchy - Bright for Dark BG -->
+    <color name="dm_text_primary">#F8FAFC</color>
+    <color name="dm_text_secondary">#CBD5E1</color>
+    <color name="dm_text_tertiary">#94A3B8</color>
+    <color name="dm_text_disabled">#64748B</color>
+    <color name="dm_text_inverse">#0F172A</color>
+    <color name="dm_text_on_color">#FFFFFF</color>
+    
+    <!-- Border & Divider -->
+    <color name="dm_border">#334155</color>
+    <color name="dm_border_strong">#475569</color>
+    <color name="dm_border_subtle">#1E293B</color>
+    <color name="dm_divider">#334155</color>
+    
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         🟣 BRAND COLORS - Boosted for Dark Mode
+         ═══════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Primary - Brighter Purple for Dark BG -->
+    <color name="dm_primary">#A78BFA</color>
+    <color name="dm_primary_light">#C4B5FD</color>
+    <color name="dm_primary_lighter">#DDD6FE</color>
+    <color name="dm_primary_dark">#8B5CF6</color>
+    <color name="dm_primary_darker">#7C3AED</color>
+    <color name="dm_primary_container">#4C1D95</color>
+    <color name="dm_primary_container_dark">#2E1065</color>
+    <color name="dm_on_primary">#1E1B4B</color>
+    <color name="dm_on_primary_container">#E9D5FF</color>
+    
+    <!-- Secondary - Brighter Teal -->
+    <color name="dm_secondary">#2DD4BF</color>
+    <color name="dm_secondary_light">#5EEAD4</color>
+    <color name="dm_secondary_dark">#14B8A6</color>
+    <color name="dm_secondary_container">#134E4A</color>
+    <color name="dm_on_secondary">#042F2E</color>
+    <color name="dm_on_secondary_container">#CCFBF1</color>
+    
+    <!-- Tertiary - Brighter Gold -->
+    <color name="dm_tertiary">#FBBF24</color>
+    <color name="dm_tertiary_light">#FCD34D</color>
+    <color name="dm_tertiary_dark">#F59E0B</color>
+    <color name="dm_tertiary_container">#78350F</color>
+    <color name="dm_on_tertiary">#451A03</color>
+    <color name="dm_on_tertiary_container">#FEF3C7</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         ✅ SEMANTIC STATUS COLORS - Optimized for Dark BG
+         ═══════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- Success -->
+    <color name="dm_success">#4ADE80</color>
+    <color name="dm_success_light">#86EFAC</color>
+    <color name="dm_success_dark">#22C55E</color>
+    <color name="dm_success_container">#14532D</color>
+    <color name="dm_success_container_dark">#052E16</color>
+    <color name="dm_on_success">#052E16</color>
+    <color name="dm_on_success_container">#DCFCE7</color>
+    
+    <!-- Error -->
+    <color name="dm_error">#F87171</color>
+    <color name="dm_error_light">#FCA5A5</color>
+    <color name="dm_error_dark">#EF4444</color>
+    <color name="dm_error_container">#7F1D1D</color>
+    <color name="dm_error_container_dark">#450A0A</color>
+    <color name="dm_on_error">#450A0A</color>
+    <color name="dm_on_error_container">#FEE2E2</color>
+    
+    <!-- Warning -->
+    <color name="dm_warning">#FBBF24</color>
+    <color name="dm_warning_light">#FCD34D</color>
+    <color name="dm_warning_dark">#F59E0B</color>
+    <color name="dm_warning_container">#78350F</color>
+    <color name="dm_on_warning">#451A03</color>
+    <color name="dm_on_warning_container">#FEF3C7</color>
+    
+    <!-- Info -->
+    <color name="dm_info">#60A5FA</color>
+    <color name="dm_info_light">#93C5FD</color>
+    <color name="dm_info_dark">#3B82F6</color>
+    <color name="dm_info_container">#1E3A8A</color>
+    <color name="dm_on_info">#172554</color>
+    <color name="dm_on_info_container">#DBEAFE</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         🎮 GAMIFICATION COLORS - Boosted Vibrancy
+         ═══════════════════════════════════════════════════════════════════════ -->
+    
+    <!-- XP & Rewards -->
+    <color name="dm_xp">#FBBF24</color>
+    <color name="dm_xp_light">#FCD34D</color>
+    <color name="dm_xp_glow">#40FBBF24</color>
+    <color name="dm_coins">#FDE047</color>
+    <color name="dm_gems">#C4B5FD</color>
+    
+    <!-- Streak -->
+    <color name="dm_streak">#FB923C</color>
+    <color name="dm_streak_hot">#F87171</color>
+    <color name="dm_streak_fire">#EF4444</color>
+    <color name="dm_streak_glow">#40FB923C</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         📚 DIFFICULTY COLORS - Dark Mode Optimized
+         ═══════════════════════════════════════════════════════════════════════ -->
+    
+    <color name="dm_difficulty_beginner">#4ADE80</color>
+    <color name="dm_difficulty_beginner_bg">#14532D</color>
+    <color name="dm_difficulty_beginner_text">#86EFAC</color>
+    
+    <color name="dm_difficulty_easy">#60A5FA</color>
+    <color name="dm_difficulty_easy_bg">#1E3A8A</color>
+    <color name="dm_difficulty_easy_text">#93C5FD</color>
+    
+    <color name="dm_difficulty_medium">#FBBF24</color>
+    <color name="dm_difficulty_medium_bg">#78350F</color>
+    <color name="dm_difficulty_medium_text">#FCD34D</color>
+    
+    <color name="dm_difficulty_hard">#F87171</color>
+    <color name="dm_difficulty_hard_bg">#7F1D1D</color>
+    <color name="dm_difficulty_hard_text">#FCA5A5</color>
+    
+    <color name="dm_difficulty_expert">#C084FC</color>
+    <color name="dm_difficulty_expert_bg">#581C87</color>
+    <color name="dm_difficulty_expert_text">#D8B4FE</color>
+    
+    <color name="dm_difficulty_master">#FB7185</color>
+    <color name="dm_difficulty_master_bg">#9F1239</color>
+    <color name="dm_difficulty_master_text">#FDA4AF</color>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         💻 CODE EDITOR COLORS - Same as base (already optimized for dark)
+         ═══════════════════════════════════════════════════════════════════════ -->
+    
+    <color name="dm_code_bg">#0F172A</color>
+    <color name="dm_code_bg_light">#1E293B</color>
+    <color name="dm_code_surface">#030712</color>
+    <color name="dm_code_text">#F1F5F9</color>
+    <color name="dm_code_text_secondary">#94A3B8</color>
+    <color name="dm_code_line_number">#64748B</color>
+    <color name="dm_code_line_highlight">#1E293B</color>
+
+</resources>

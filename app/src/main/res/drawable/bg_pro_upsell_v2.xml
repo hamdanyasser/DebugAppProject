@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PREMIUM PRO UPSELL CARD V2
+    Epic purple gradient with crown glow
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outer purple glow -->
+    <item android:bottom="-2dp" android:left="-2dp" android:right="-2dp" android:top="-2dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp" />
+            <stroke android:width="2dp" android:color="#7C4DFF" />
+        </shape>
+    </item>
+
+    <!-- Base gradient - Royal purple -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="18dp" />
+            <gradient
+                android:type="linear"
+                android:startColor="#1A0A2E"
+                android:centerColor="#2A1A4E"
+                android:endColor="#1A0A2E"
+                android:angle="90" />
+        </shape>
+    </item>
+
+    <!-- Crown glow effect - left side -->
+    <item android:left="-30dp" android:top="-30dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:centerX="0.5"
+                android:centerY="0.5"
+                android:gradientRadius="80dp"
+                android:startColor="#30FFD54F"
+                android:endColor="#00000000" />
+            <size android:width="120dp" android:height="120dp" />
+        </shape>
+    </item>
+
+    <!-- Top shimmer -->
+    <item android:top="0dp" android:left="0dp" android:right="0dp">
+        <shape android:shape="rectangle">
+            <corners android:topLeftRadius="18dp" android:topRightRadius="18dp" />
+            <gradient
+                android:type="linear"
+                android:startColor="#257C4DFF"
+                android:endColor="#00000000"
+                android:angle="270" />
+            <size android:height="50dp" />
+        </shape>
+    </item>
+</layer-list>

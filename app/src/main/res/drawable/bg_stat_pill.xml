@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Premium Stat Pill Badge -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/dm_glass_white_medium" />
+    <corners android:radius="@dimen/dm_radius_full" />
+</shape>

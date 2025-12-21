@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PREMIUM SUCCESS CELEBRATION BACKGROUND
+    Epic gradient for victory screens
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base dark gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="linear"
+                android:startColor="#0A0A1A"
+                android:centerColor="#0D1A10"
+                android:endColor="#0A0A1A"
+                android:angle="270" />
+        </shape>
+    </item>
+
+    <!-- Green victory glow - center top -->
+    <item android:top="-50dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:centerX="0.5"
+                android:centerY="0"
+                android:gradientRadius="300dp"
+                android:startColor="#4000E676"
+                android:endColor="#00000000" />
+        </shape>
+    </item>
+
+    <!-- Gold accent glow - left -->
+    <item android:left="-100dp" android:top="100dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:centerX="0.3"
+                android:centerY="0.5"
+                android:gradientRadius="200dp"
+                android:startColor="#25FFD54F"
+                android:endColor="#00000000" />
+        </shape>
+    </item>
+
+    <!-- Cyan accent glow - right -->
+    <item android:right="-100dp" android:bottom="100dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:centerX="0.7"
+                android:centerY="0.5"
+                android:gradientRadius="200dp"
+                android:startColor="#2000E5FF"
+                android:endColor="#00000000" />
+        </shape>
+    </item>
+</layer-list>

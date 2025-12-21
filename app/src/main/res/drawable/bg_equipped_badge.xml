@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DEBUGMASTER - Currently Equipped Badge -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    
+    <corners android:radius="12dp" />
+    
+    <gradient
+        android:type="linear"
+        android:angle="90"
+        android:startColor="#2222C55E"
+        android:endColor="#3322C55E" />
+    
+    <stroke
+        android:width="1dp"
+        android:color="#6622C55E" />
+    
+</shape>

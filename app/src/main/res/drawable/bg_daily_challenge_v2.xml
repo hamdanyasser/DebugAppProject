@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PREMIUM DAILY CHALLENGE CARD V2
+    Epic gradient with fire/gold theme - softened glow
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Subtle outer glow effect -->
+    <item android:bottom="-2dp" android:left="-2dp" android:right="-2dp" android:top="-2dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="24dp" />
+            <stroke android:width="1dp" android:color="#40FF6B35" />
+        </shape>
+    </item>
+
+    <!-- Base gradient - Fire theme -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="22dp" />
+            <gradient
+                android:type="linear"
+                android:startColor="#1A0F0A"
+                android:centerColor="#1F150F"
+                android:endColor="#1A0A0A"
+                android:angle="135" />
+        </shape>
+    </item>
+
+    <!-- Top fire glow - softened -->
+    <item android:top="0dp" android:left="0dp" android:right="0dp">
+        <shape android:shape="rectangle">
+            <corners android:topLeftRadius="22dp" android:topRightRadius="22dp" />
+            <gradient
+                android:type="linear"
+                android:startColor="#30FF6B35"
+                android:centerColor="#15FF9E35"
+                android:endColor="#00000000"
+                android:angle="270" />
+            <size android:height="100dp" />
+        </shape>
+    </item>
+
+    <!-- Corner accent spark - softened -->
+    <item android:right="-50dp" android:top="-50dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:centerX="0.5"
+                android:centerY="0.5"
+                android:gradientRadius="100dp"
+                android:startColor="#18FFD54F"
+                android:endColor="#00000000" />
+            <size android:width="150dp" android:height="150dp" />
+        </shape>
+    </item>
+</layer-list>
