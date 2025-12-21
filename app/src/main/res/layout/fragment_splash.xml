@@ -274,125 +274,239 @@
                               REWARD CARD SECTION (NEW!)
          ════════════════════════════════════════════════════════════════════════ -->
 
-    <!-- Welcome Reward Card Container -->
+    <!-- Welcome Reward Card Container - DOPAMINE RUSH EDITION -->
     <androidx.cardview.widget.CardView
         android:id="@+id/card_reward"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="16dp"
         android:alpha="0"
         android:translationY="40dp"
         android:visibility="gone"
-        app:cardBackgroundColor="#1A1A2E"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="8dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_tagline"
         tools:visibility="visible">
 
+        <!-- Gradient Background -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:background="@drawable/bg_reward_card_gradient"
             android:padding="16dp">
 
-            <!-- Welcome Line -->
-            <TextView
-                android:id="@+id/text_welcome_user"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Welcome back, Debugger! 👑"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:contentDescription="Welcome message" />
-
-            <!-- Gem Reward Row -->
+            <!-- Welcome Line with Crown -->
             <LinearLayout
-                android:id="@+id/layout_gem_reward"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="12dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:alpha="0"
-                android:scaleX="0.5"
-                android:scaleY="0.5">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="💎"
-                    android:textSize="28sp"
+                    android:text="👑"
+                    android:textSize="18sp"
                     android:importantForAccessibility="no" />
 
                 <TextView
-                    android:id="@+id/text_gem_reward"
+                    android:id="@+id/text_welcome_user"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:fontFamily="sans-serif-black"
-                    android:text="+25"
-                    android:textColor="#FFD700"
-                    android:textSize="32sp"
-                    android:contentDescription="Daily gem reward" />
+                    android:layout_marginHorizontal="6dp"
+                    android:text="Welcome back, Debugger!"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:shadowColor="#8B5CF6"
+                    android:shadowRadius="6"
+                    android:shadowDx="0"
+                    android:shadowDy="0"
+                    android:contentDescription="Welcome message" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:text="GEMS"
-                    android:textColor="#94A3B8"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:text="👑"
+                    android:textSize="18sp"
+                    android:importantForAccessibility="no" />
             </LinearLayout>
 
-            <!-- Already Claimed State -->
-            <TextView
-                android:id="@+id/text_already_claimed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="12dp"
-                android:text="✅ Daily reward claimed!"
-                android:textColor="#10B981"
-                android:textSize="14sp"
-                android:visibility="gone"
-                tools:visibility="visible" />
-
-            <!-- Streak Chip -->
-            <TextView
-                android:id="@+id/text_streak_chip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="12dp"
-                android:alpha="0"
-                android:background="@drawable/bg_glass_pill"
-                android:paddingHorizontal="14dp"
-                android:paddingVertical="6dp"
-                android:text="🔥 Start a streak today!"
-                android:textColor="#F97316"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:contentDescription="Streak status" />
-
-            <!-- Today's Mission Line -->
-            <TextView
-                android:id="@+id/text_todays_mission"
+            <!-- MEGA GEM REWARD SECTION -->
+            <FrameLayout
+                android:id="@+id/layout_gem_reward"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:alpha="0"
+                android:scaleX="0.3"
+                android:scaleY="0.3">
+
+                <!-- Glow Ring Behind Gems -->
+                <View
+                    android:id="@+id/gem_glow_ring"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_gem_glow_ring"
+                    android:alpha="0.6" />
+
+                <!-- Central Gem Display -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="12dp">
+
+                    <!-- Big Gem Icon -->
+                    <TextView
+                        android:id="@+id/icon_gem_big"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="💎"
+                        android:textSize="36sp"
+                        android:importantForAccessibility="no" />
+
+                    <!-- Animated Gem Count -->
+                    <TextView
+                        android:id="@+id/text_gem_reward"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:fontFamily="sans-serif-black"
+                        android:text="+25"
+                        android:textColor="#FFD700"
+                        android:textSize="32sp"
+                        android:shadowColor="#FFD700"
+                        android:shadowRadius="12"
+                        android:shadowDx="0"
+                        android:shadowDy="0"
+                        android:letterSpacing="0.05"
+                        android:contentDescription="Daily gem reward" />
+
+                </LinearLayout>
+            </FrameLayout>
+
+            <!-- Already Claimed State - Compact Celebratory -->
+            <LinearLayout
+                android:id="@+id/layout_already_claimed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
                 android:gravity="center"
-                android:text="🎯 Today: Find the NullPointer (+25 XP)"
-                android:textColor="#A78BFA"
-                android:textSize="12sp"
-                android:contentDescription="Today's mission" />
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✨"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/text_already_claimed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:text="Daily reward claimed!"
+                    android:textColor="#10B981"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✨"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <!-- Stats Row: Streak + XP (Compact) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <!-- Streak Badge -->
+                <LinearLayout
+                    android:id="@+id/layout_streak_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:alpha="0"
+                    android:background="@drawable/bg_stat_badge"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="8dp">
+
+                    <TextView
+                        android:id="@+id/text_streak_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔥 1"
+                        android:textColor="#FF6B35"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_streak_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="STREAK"
+                        android:textColor="#FB923C"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:contentDescription="Streak status" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="12dp"
+                    android:layout_height="1dp" />
+
+                <!-- Today's Mission Badge -->
+                <LinearLayout
+                    android:id="@+id/layout_mission_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:alpha="0"
+                    android:background="@drawable/bg_stat_badge"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🎯 +25"
+                        android:textColor="#A78BFA"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_todays_mission"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="XP"
+                        android:textColor="#C4B5FD"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:contentDescription="Today's mission" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
