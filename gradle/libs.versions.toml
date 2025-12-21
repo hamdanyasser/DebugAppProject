@@ -47,7 +47,6 @@ janino = { group = "org.codehaus.janino", name = "janino", version.ref = "janino
 # Debugging & Testing
 leakcanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakcanary" }
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
-mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockito" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

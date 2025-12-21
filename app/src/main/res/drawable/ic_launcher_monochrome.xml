@@ -5,82 +5,82 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
     
-    <!-- Bug body (main oval) -->
+    <!-- Bug body - bold filled oval -->
     <path
-        android:pathData="M54,58m-16,0a16,20 0,1 1,32 0a16,20 0,1 1,-32 0"
+        android:pathData="M50,56m-18,0a18,22 0,1 1,36 0a18,22 0,1 1,-36 0"
         android:fillColor="#000000"/>
     
-    <!-- Bug head -->
+    <!-- Bug head - large circle -->
     <path
-        android:pathData="M54,38m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0"
+        android:pathData="M50,34m-12,0a12,12 0,1 1,24 0a12,12 0,1 1,-24 0"
         android:fillColor="#000000"/>
     
-    <!-- Bug antennae (left) -->
+    <!-- Bug antennae - thick (left) -->
     <path
-        android:pathData="M47,30L42,22"
-        android:strokeWidth="2.5"
-        android:strokeColor="#000000"
-        android:strokeLineCap="round"/>
-    <path
-        android:pathData="M42,22m-2.5,0a2.5,2.5 0,1 1,5 0a2.5,2.5 0,1 1,-5 0"
-        android:fillColor="#000000"/>
-    
-    <!-- Bug antennae (right) -->
-    <path
-        android:pathData="M61,30L66,22"
-        android:strokeWidth="2.5"
-        android:strokeColor="#000000"
-        android:strokeLineCap="round"/>
-    <path
-        android:pathData="M66,22m-2.5,0a2.5,2.5 0,1 1,5 0a2.5,2.5 0,1 1,-5 0"
-        android:fillColor="#000000"/>
-    
-    <!-- Bug legs (left side) -->
-    <path
-        android:pathData="M38,50L28,45"
-        android:strokeWidth="2.5"
-        android:strokeColor="#000000"
-        android:strokeLineCap="round"/>
-    <path
-        android:pathData="M38,58L28,58"
-        android:strokeWidth="2.5"
-        android:strokeColor="#000000"
-        android:strokeLineCap="round"/>
-    <path
-        android:pathData="M38,66L28,71"
-        android:strokeWidth="2.5"
-        android:strokeColor="#000000"
-        android:strokeLineCap="round"/>
-    
-    <!-- Bug legs (right side) -->
-    <path
-        android:pathData="M70,50L80,45"
-        android:strokeWidth="2.5"
-        android:strokeColor="#000000"
-        android:strokeLineCap="round"/>
-    <path
-        android:pathData="M70,58L80,58"
-        android:strokeWidth="2.5"
-        android:strokeColor="#000000"
-        android:strokeLineCap="round"/>
-    <path
-        android:pathData="M70,66L80,71"
-        android:strokeWidth="2.5"
-        android:strokeColor="#000000"
-        android:strokeLineCap="round"/>
-    
-    <!-- Magnifying glass handle -->
-    <path
-        android:pathData="M72,72L82,82"
+        android:pathData="M42,24L36,16"
         android:strokeWidth="4"
         android:strokeColor="#000000"
         android:strokeLineCap="round"/>
-    
-    <!-- Magnifying glass ring -->
     <path
-        android:pathData="M65,65m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0"
-        android:strokeWidth="3"
+        android:pathData="M36,16m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0"
+        android:fillColor="#000000"/>
+    
+    <!-- Bug antennae - thick (right) -->
+    <path
+        android:pathData="M58,24L64,16"
+        android:strokeWidth="4"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"/>
+    <path
+        android:pathData="M64,16m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0"
+        android:fillColor="#000000"/>
+    
+    <!-- Bug legs - THICK (left side) -->
+    <path
+        android:pathData="M32,48L22,42"
+        android:strokeWidth="5"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"/>
+    <path
+        android:pathData="M32,56L20,56"
+        android:strokeWidth="5"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"/>
+    <path
+        android:pathData="M32,64L22,70"
+        android:strokeWidth="5"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"/>
+    
+    <!-- Bug legs - THICK (right side) -->
+    <path
+        android:pathData="M68,48L78,42"
+        android:strokeWidth="5"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"/>
+    <path
+        android:pathData="M68,56L80,56"
+        android:strokeWidth="5"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"/>
+    <path
+        android:pathData="M68,64L78,70"
+        android:strokeWidth="5"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"/>
+    
+    <!-- Magnifying glass ring - BOLD -->
+    <path
+        android:pathData="M70,68m-14,0a14,14 0,1 1,28 0a14,14 0,1 1,-28 0"
+        android:strokeWidth="5"
         android:strokeColor="#000000"
         android:fillColor="#00000000"/>
+    
+    <!-- Magnifying glass handle - THICK -->
+    <path
+        android:pathData="M80,78L92,90"
+        android:strokeWidth="7"
+        android:strokeColor="#000000"
+        android:strokeLineCap="round"/>
         
 </vector>

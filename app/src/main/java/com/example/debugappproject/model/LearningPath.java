@@ -209,4 +209,84 @@ public class LearningPath {
     public void setTutorialContent(String tutorialContent) {
         this.tutorialContent = tutorialContent;
     }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // NEW FIELDS FOR REDESIGNED LEARN TAB
+    // ═══════════════════════════════════════════════════════════════════════
+    
+    private int popularityScore;           // 0-100, higher = more popular
+    private String tags;                   // Comma-separated: "beginner,short,popular,new"
+    private String primaryCategory;        // Main category for grouping: Languages, DSA, etc.
+
+    public int getPopularityScore() {
+        return popularityScore;
+    }
+
+    public void setPopularityScore(int popularityScore) {
+        this.popularityScore = popularityScore;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public String getPrimaryCategory() {
+        // If primaryCategory is set, use it; otherwise derive from category
+        if (primaryCategory != null && !primaryCategory.isEmpty()) {
+            return primaryCategory;
+        }
+        // Map existing categories to primary categories
+        if (category == null) return "Other";
+        switch (category) {
+            case "Programming":
+                return "Languages";
+            case "CS Fundamentals":
+                return "Data Structures & Algorithms";
+            case "Best Practices":
+                return "Clean Code";
+            case "Career":
+                return "Interview Prep";
+            case "Expert":
+            case "Advanced":
+                return "Advanced";
+            case "AI/ML":
+                return "AI & ML";
+            default:
+                return category;
+        }
+    }
+
+    public void setPrimaryCategory(String primaryCategory) {
+        this.primaryCategory = primaryCategory;
+    }
+
+    /**
+     * Check if path has a specific tag
+     */
+    public boolean hasTag(String tag) {
+        if (tags == null || tags.isEmpty()) return false;
+        String[] tagArray = tags.split(",");
+        for (String t : tagArray) {
+            if (t.trim().equalsIgnoreCase(tag)) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if this is a "short" course (under 60 minutes)
+     */
+    public boolean isShort() {
+        return estimatedMinutes > 0 && estimatedMinutes <= 60;
+    }
+
+    /**
+     * Check if this is a "popular" course
+     */
+    public boolean isPopular() {
+        return popularityScore >= 70 || hasTag("popular");
+    }
 }

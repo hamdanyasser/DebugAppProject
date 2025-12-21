@@ -63,7 +63,6 @@ public class SoundManager {
         BUTTON_APPEAR,      // Button appears on screen
 
         // ═══════════════ SPLASH SOUNDS ═══════════════
-        AMBIENT_INTRO,      // Splash screen atmosphere
         LOGO_WHOOSH,        // Logo entrance
         TEXT_REVEAL,        // Text appearing
         GLITCH,             // Glitch effect
@@ -120,7 +119,12 @@ public class SoundManager {
     }
 
     private SoundManager(Context context) {
-        this.context = context.getApplicationContext();
+        // Use attribution context for Android 12+ to properly tag audio/vibration usage
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            this.context = context.getApplicationContext().createAttributionContext("AudioAttribution");
+        } else {
+            this.context = context.getApplicationContext();
+        }
         this.prefs = this.context.getSharedPreferences("debugmaster_sound_prefs", Context.MODE_PRIVATE);
         
         loadPreferences();
@@ -177,11 +181,14 @@ public class SoundManager {
     }
 
     /**
-     * Initialize vibrator
+     * Initialize vibrator with proper attribution for Android 12+
      */
     private void initVibrator() {
+        // Use attribution context for vibration on Android 12+
+        Context vibrationContext;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            VibratorManager vibratorManager = (VibratorManager) context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+            vibrationContext = context.createAttributionContext("VibrationAttribution");
+            VibratorManager vibratorManager = (VibratorManager) vibrationContext.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
             if (vibratorManager != null) {
                 vibrator = vibratorManager.getDefaultVibrator();
             }
@@ -201,7 +208,6 @@ public class SoundManager {
         soundResourceNames.put(Sound.BUTTON_START, "button_start");
         soundResourceNames.put(Sound.BUTTON_BACK, "button_back");
         soundResourceNames.put(Sound.BUTTON_APPEAR, "button_appear");
-        soundResourceNames.put(Sound.AMBIENT_INTRO, "ambient_intro");
         soundResourceNames.put(Sound.LOGO_WHOOSH, "logo_whoosh");
         soundResourceNames.put(Sound.TEXT_REVEAL, "text_reveal");
         soundResourceNames.put(Sound.GLITCH, "glitch");
@@ -365,7 +371,6 @@ public class SoundManager {
             case CODE_RUN:
                 vibrate(Haptic.SELECTION);
                 break;
-            case AMBIENT_INTRO:
             case COUNTDOWN:
             case WARNING:
             case NOTIFICATION:

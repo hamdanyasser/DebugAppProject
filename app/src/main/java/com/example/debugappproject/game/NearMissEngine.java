@@ -7,18 +7,18 @@ import java.util.Random;
 
 /**
  * ╔══════════════════════════════════════════════════════════════════════════════╗
- * ║                    NEAR-MISS ADDICTION ENGINE                                ║
- * ║           The Psychology of "Almost" - Keeps Players Coming Back             ║
+ * ║                    PROGRESS FEEDBACK ENGINE                                  ║
+ * ║           Helpful Feedback to Guide Learning                                 ║
  * ╚══════════════════════════════════════════════════════════════════════════════╝
  *
- * This engine analyzes player solutions and generates "near-miss" feedback
- * that creates psychological tension and drives retry behavior.
+ * This engine analyzes player solutions and provides helpful, encouraging
+ * feedback to support their learning journey.
  *
  * Key principles:
- * 1. "Almost correct" feels more frustrating than "completely wrong"
- * 2. Partial success activates reward circuitry without satisfaction
- * 3. Visible progress creates sunk cost fallacy
- * 4. Small remaining gaps feel achievable
+ * 1. Show players exactly how close they are to the solution
+ * 2. Provide constructive hints that guide without frustrating
+ * 3. Celebrate partial progress to build confidence
+ * 4. Help players understand what they're doing right
  */
 public class NearMissEngine {
 
@@ -29,37 +29,37 @@ public class NearMissEngine {
     public static final float VERY_CLOSE_THRESHOLD = 0.92f; // 92% match = "One tiny mistake!"
     public static final float ALMOST_PERFECT = 0.98f;       // 98% match = "Almost perfect!"
 
-    // Near-miss messages designed to create psychological tension
+    // Encouraging messages to help players learn
     private static final String[] CLOSE_MESSAGES = {
-            "So close! Just one more change...",
-            "You're 85% there. Don't give up now!",
-            "Almost got it! The bug is hiding in plain sight.",
-            "That's close! You can see it, can't you?",
-            "Nearly there! Your instinct is right."
+            "Great progress! You're really close now.",
+            "You're 85% there - nice work!",
+            "Almost there! Take a closer look at the details.",
+            "Good thinking! Just a small adjustment needed.",
+            "You've got the right idea. Keep going!"
     };
 
     private static final String[] VERY_CLOSE_MESSAGES = {
-            "ONE tiny mistake left. You see it?",
-            "Incredible! Just a character or two off.",
-            "You basically solved it. Look closer!",
-            "92% match! The answer is right there.",
-            "So frustratingly close. One more look?"
+            "Excellent! Just one small thing to fix.",
+            "So close! Just a character or two to check.",
+            "You've nearly got it - great job!",
+            "92% match! You're doing great.",
+            "Almost perfect! One more look should do it."
     };
 
     private static final String[] ALMOST_PERFECT_MESSAGES = {
-            "ARE YOU KIDDING ME?! Check one character!",
-            "98% match. ONE. THING. LEFT.",
-            "This is basically correct. What's different?",
-            "The fix is there. It's hiding in whitespace?",
-            "You solved it... almost. Literally one change."
+            "Wow, so close! Check that last detail.",
+            "98% match - you've almost got it!",
+            "Nearly perfect! Just a tiny tweak needed.",
+            "Great work! One small thing remains.",
+            "You've practically solved it. Almost there!"
     };
 
     private static final String[] PARTIAL_SUCCESS_MESSAGES = {
-            "Half the tests pass now! Keep going!",
-            "You fixed part of it. The rest is similar.",
-            "Getting warmer! That change helped.",
-            "Some tests work now. Apply the same logic.",
-            "Partial fix detected! You're onto something."
+            "Nice! Some tests are passing now.",
+            "Good progress! You fixed part of it.",
+            "Getting there! That change helped.",
+            "Some tests pass now. Keep that momentum!",
+            "Partial success! You're on the right track."
     };
 
     // Track near-miss streaks for escalating messages
@@ -99,17 +99,17 @@ public class NearMissEngine {
 
         // Generate appropriate feedback
         String message = generateMessage(type, similarity, testsPassedCount, totalTestCount);
-        String hint = generatePsychologicalHint(type, userCode, correctCode);
+        String hint = generateHelpfulHint(type, userCode, correctCode);
 
-        // Track streaks
+        // Track progress streaks
         if (type != NearMissType.NOT_CLOSE) {
             consecutiveNearMisses++;
         } else {
             consecutiveNearMisses = 0;
         }
 
-        // Calculate "addiction score" - how compelling is this near-miss?
-        int addictionScore = calculateAddictionScore(type, similarity, consecutiveNearMisses);
+        // Calculate progress score - shows how close they are to success
+        int progressScore = calculateProgressScore(type, similarity, consecutiveNearMisses);
 
         return new NearMissResult(
                 type,
@@ -118,7 +118,7 @@ public class NearMissEngine {
                 hint,
                 testsPassedCount,
                 totalTestCount,
-                addictionScore,
+                progressScore,
                 consecutiveNearMisses,
                 shouldShowRetryButton(type),
                 shouldShowDifferenceHighlight(type)
@@ -239,26 +239,26 @@ public class NearMissEngine {
         }
     }
 
-    private String generatePsychologicalHint(NearMissType type, String userCode, String correctCode) {
+    private String generateHelpfulHint(NearMissType type, String userCode, String correctCode) {
         switch (type) {
             case ALMOST_PERFECT:
-                // Super specific hint for maximum frustration/motivation
+                // Specific hint to guide them to the exact location
                 return findSingleDifference(userCode, correctCode);
 
             case VERY_CLOSE:
-                return "The fix is in your solution. Something small is wrong.";
+                return "You're very close! Check for small typos or missing characters.";
 
             case CLOSE:
-                return "You understand the problem. Focus on the details.";
+                return "Good understanding! Focus on the syntax details.";
 
             case PARTIAL_SUCCESS:
-                return "Apply what's working to the rest of the code.";
+                return "Nice work so far! Apply the same fix pattern to the rest.";
 
             case IMPROVING:
-                return "Your changes are helping. Keep that direction.";
+                return "You're making progress! Keep refining your approach.";
 
             default:
-                return "Read the expected output carefully.";
+                return "Take your time and read the expected output carefully.";
         }
     }
 
@@ -296,14 +296,14 @@ public class NearMissEngine {
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    //                         ADDICTION SCORING
+    //                         PROGRESS SCORING
     // ═══════════════════════════════════════════════════════════════════════════
 
     /**
-     * Calculate how "addictive" this near-miss is (0-100)
-     * Higher = more likely to retry immediately
+     * Calculate progress score (0-100) to show how close they are to success.
+     * Higher scores indicate they're very close to solving it.
      */
-    private int calculateAddictionScore(NearMissType type, float similarity, int streak) {
+    private int calculateProgressScore(NearMissType type, float similarity, int streak) {
         int base;
         switch (type) {
             case ALMOST_PERFECT: base = 95; break;
@@ -314,7 +314,7 @@ public class NearMissEngine {
             default: base = 20;
         }
 
-        // Streak bonus - consecutive near-misses increase compulsion
+        // Streak bonus - shows sustained effort and learning
         int streakBonus = Math.min(streak * 3, 15);
 
         // Similarity bonus
@@ -336,12 +336,12 @@ public class NearMissEngine {
     // ═══════════════════════════════════════════════════════════════════════════
 
     public enum NearMissType {
-        ALMOST_PERFECT,     // 98%+ match - Maximum frustration
-        VERY_CLOSE,         // 92-98% match - High tension
-        CLOSE,              // 85-92% match - Visible progress
-        PARTIAL_SUCCESS,    // Some tests pass - Tangible win
+        ALMOST_PERFECT,     // 98%+ match - Nearly there!
+        VERY_CLOSE,         // 92-98% match - Great progress
+        CLOSE,              // 85-92% match - Good progress
+        PARTIAL_SUCCESS,    // Some tests pass - Partial win
         IMPROVING,          // Better than last attempt
-        NOT_CLOSE           // Needs more work
+        NOT_CLOSE           // Keep trying
     }
 
     public static class NearMissResult {
@@ -351,14 +351,14 @@ public class NearMissEngine {
         public final String hint;
         public final int testsPassed;
         public final int totalTests;
-        public final int addictionScore;
+        public final int progressScore;
         public final int nearMissStreak;
         public final boolean showRetryButton;
         public final boolean showDifferenceHighlight;
 
         public NearMissResult(NearMissType type, float similarity, String message,
                               String hint, int testsPassed, int totalTests,
-                              int addictionScore, int nearMissStreak,
+                              int progressScore, int nearMissStreak,
                               boolean showRetryButton, boolean showDifferenceHighlight) {
             this.type = type;
             this.similarity = similarity;
@@ -366,7 +366,7 @@ public class NearMissEngine {
             this.hint = hint;
             this.testsPassed = testsPassed;
             this.totalTests = totalTests;
-            this.addictionScore = addictionScore;
+            this.progressScore = progressScore;
             this.nearMissStreak = nearMissStreak;
             this.showRetryButton = showRetryButton;
             this.showDifferenceHighlight = showDifferenceHighlight;

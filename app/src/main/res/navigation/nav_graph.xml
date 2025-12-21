@@ -121,14 +121,18 @@
         <action
             android:id="@+id/action_home_to_teamAnalytics"
             app:destination="@id/teamAnalyticsFragment" />
+
+        <action
+            android:id="@+id/action_home_to_beginnerTutorial"
+            app:destination="@id/beginnerTutorialFragment" />
     </fragment>
 
-    <!-- Learning Paths Screen (Learn Tab) -->
+    <!-- Learning Paths Screen (Learn Tab) - Redesigned V2 -->
     <fragment
         android:id="@+id/learningPathsFragment"
-        android:name="com.example.debugappproject.ui.learn.LearningPathsFragment"
+        android:name="com.example.debugappproject.ui.learn.LearningPathsFragmentV2"
         android:label="Learn"
-        tools:layout="@layout/fragment_learning_paths">
+        tools:layout="@layout/fragment_learning_paths_v2">
 
         <action
             android:id="@+id/action_paths_to_pathDetail"

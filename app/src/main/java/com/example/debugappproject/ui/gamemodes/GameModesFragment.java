@@ -48,9 +48,14 @@ public class GameModesFragment extends Fragment {
     // Game mode cards
     private View cardQuickFix, cardBattleArena, cardSpeedRun, cardPuzzleMode;
     private View cardTutorialMode, cardDailyChallenge, cardMysteryBug, cardSurvivalMode;
-    
+
     // NEW FEATURE CARDS
     private View cardAIMentor, cardDebugger, cardCoopMode, cardMultiFile, cardGithubImport;
+
+    // Expandable section
+    private com.google.android.material.button.MaterialButton buttonShowMore;
+    private View layoutMoreModes;
+    private boolean isExpanded = false;
 
     @Nullable
     @Override
@@ -72,6 +77,7 @@ public class GameModesFragment extends Fragment {
         setupGameModeCards();
         setupNewFeatureCards();
         setupBackButton();
+        setupShowMoreButton();
         playEntranceAnimations();
 
         soundManager.playSound(SoundManager.Sound.TRANSITION);
@@ -93,6 +99,40 @@ public class GameModesFragment extends Fragment {
         cardCoopMode = rootView.findViewById(R.id.card_coop_mode);
         cardMultiFile = rootView.findViewById(R.id.card_multi_file);
         cardGithubImport = rootView.findViewById(R.id.card_github_import);
+
+        // Expandable section
+        buttonShowMore = rootView.findViewById(R.id.button_show_more);
+        layoutMoreModes = rootView.findViewById(R.id.layout_more_modes);
+    }
+
+    private void setupShowMoreButton() {
+        if (buttonShowMore == null || layoutMoreModes == null) return;
+
+        buttonShowMore.setOnClickListener(v -> {
+            soundManager.playButtonClick();
+            isExpanded = !isExpanded;
+
+            if (isExpanded) {
+                // Expand
+                layoutMoreModes.setVisibility(View.VISIBLE);
+                layoutMoreModes.setAlpha(0f);
+                layoutMoreModes.animate()
+                    .alpha(1f)
+                    .setDuration(300)
+                    .start();
+                buttonShowMore.setText("🔼 Show Less");
+                buttonShowMore.setIconResource(R.drawable.ic_expand_less);
+            } else {
+                // Collapse
+                layoutMoreModes.animate()
+                    .alpha(0f)
+                    .setDuration(200)
+                    .withEndAction(() -> layoutMoreModes.setVisibility(View.GONE))
+                    .start();
+                buttonShowMore.setText("✨ Show More Modes");
+                buttonShowMore.setIconResource(R.drawable.ic_expand_more);
+            }
+        });
     }
 
     private void setupBackButton() {
@@ -284,10 +324,11 @@ public class GameModesFragment extends Fragment {
     }
 
     private void playEntranceAnimations() {
+        // Only animate visible cards initially (START HERE + COMPETE sections)
         View[] allCards = {
-            cardAIMentor, cardDebugger, cardCoopMode, cardMultiFile, cardGithubImport,
-            cardQuickFix, cardBattleArena, cardSpeedRun, cardPuzzleMode,
-            cardTutorialMode, cardDailyChallenge, cardMysteryBug, cardSurvivalMode
+            cardTutorialMode, cardQuickFix, cardDailyChallenge,  // START HERE
+            cardBattleArena, cardSpeedRun,                        // COMPETE
+            buttonShowMore                                        // Show More button
         };
 
         for (int i = 0; i < allCards.length; i++) {
@@ -445,5 +486,7 @@ public class GameModesFragment extends Fragment {
         cardCoopMode = null;
         cardMultiFile = null;
         cardGithubImport = null;
+        buttonShowMore = null;
+        layoutMoreModes = null;
     }
 }

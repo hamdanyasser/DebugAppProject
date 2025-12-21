@@ -163,8 +163,8 @@ public class LeaderboardFragment extends Fragment {
         currentFilter = filter;
         
         int selectedBg = R.drawable.bg_tab_selected;
-        int selectedTextColor = ContextCompat.getColor(requireContext(), R.color.primary);
-        int unselectedTextColor = ContextCompat.getColor(requireContext(), R.color.white);
+        int selectedTextColor = Color.WHITE;
+        int unselectedTextColor = Color.parseColor("#B0B0C0");
         
         // Weekly button
         if (binding.btnWeekly != null) {

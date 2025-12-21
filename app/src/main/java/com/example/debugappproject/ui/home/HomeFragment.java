@@ -42,6 +42,7 @@ public class HomeFragment extends Fragment {
     private static final String KEY_VISIT_COUNT = "visit_count";
     private static final String KEY_LAST_VISIT = "last_visit_date";
     private static final String KEY_FIRST_VISIT = "first_visit_date";
+    private static final String KEY_TUTORIAL_COMPLETED = "tutorial_completed";
     
     private FragmentHomeBinding binding;
     private HomeViewModel viewModel;
@@ -82,13 +83,16 @@ public class HomeFragment extends Fragment {
 
         // Play entrance sound
         soundManager.playSound(SoundManager.Sound.TRANSITION);
-        
+
         setupGreeting();
         setupObservers();
         setupClickListeners();
         startEntranceAnimations();
 
         billingManager.getIsProUser().observe(getViewLifecycleOwner(), this::updateProStatus);
+
+        // Auto-show tutorial for new users who haven't completed it
+        checkAndShowTutorial();
     }
 
     private void startEntranceAnimations() {
@@ -592,6 +596,45 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    /**
+     * Check if the user is new and hasn't completed the tutorial.
+     * If so, automatically navigate to the tutorial.
+     */
+    private void checkAndShowTutorial() {
+        // Only show tutorial for new users (first 2 visits) who haven't completed it
+        boolean tutorialCompleted = prefs.getBoolean(KEY_TUTORIAL_COMPLETED, false);
+
+        if (!tutorialCompleted && visitCount <= 2) {
+            // Delay slightly to let the home screen load first
+            animationHandler.postDelayed(() -> {
+                if (binding == null || !isAdded()) return;
+
+                try {
+                    NavController navController = Navigation.findNavController(requireView());
+                    navController.navigate(R.id.action_home_to_beginnerTutorial);
+                } catch (Exception e) {
+                    android.util.Log.e(TAG, "Failed to navigate to tutorial", e);
+                }
+            }, 800);
+        }
+    }
+
+    /**
+     * Mark tutorial as completed. Called from BeginnerTutorialFragment.
+     */
+    public static void markTutorialCompleted(android.content.Context context) {
+        android.content.SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE);
+        prefs.edit().putBoolean(KEY_TUTORIAL_COMPLETED, true).apply();
+    }
+
+    /**
+     * Check if tutorial has been completed.
+     */
+    public static boolean isTutorialCompleted(android.content.Context context) {
+        android.content.SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE);
+        return prefs.getBoolean(KEY_TUTORIAL_COMPLETED, false);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -616,10 +659,17 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         if (animationHandler != null) {
             animationHandler.removeCallbacksAndMessages(null);
+            animationHandler = null;
         }
         if (billingManager != null) {
             billingManager.clearCallback();
         }
+        // Clear all field references to prevent memory leaks
+        viewModel = null;
+        soundManager = null;
+        authManager = null;
+        byteMascot = null;
+        prefs = null;
         binding = null;
     }
 }

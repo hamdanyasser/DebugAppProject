@@ -271,6 +271,163 @@
         app:layout_constraintTop_toTopOf="@id/text_tagline" />
 
     <!-- ════════════════════════════════════════════════════════════════════════
+                              REWARD CARD SECTION (NEW!)
+         ════════════════════════════════════════════════════════════════════════ -->
+
+    <!-- Welcome Reward Card Container -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_reward"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="20dp"
+        android:alpha="0"
+        android:translationY="40dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="#1A1A2E"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_tagline"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Welcome Line -->
+            <TextView
+                android:id="@+id/text_welcome_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Welcome back, Debugger! 👑"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:contentDescription="Welcome message" />
+
+            <!-- Gem Reward Row -->
+            <LinearLayout
+                android:id="@+id/layout_gem_reward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:alpha="0"
+                android:scaleX="0.5"
+                android:scaleY="0.5">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💎"
+                    android:textSize="28sp"
+                    android:importantForAccessibility="no" />
+
+                <TextView
+                    android:id="@+id/text_gem_reward"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="sans-serif-black"
+                    android:text="+25"
+                    android:textColor="#FFD700"
+                    android:textSize="32sp"
+                    android:contentDescription="Daily gem reward" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="GEMS"
+                    android:textColor="#94A3B8"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Already Claimed State -->
+            <TextView
+                android:id="@+id/text_already_claimed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:text="✅ Daily reward claimed!"
+                android:textColor="#10B981"
+                android:textSize="14sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <!-- Streak Chip -->
+            <TextView
+                android:id="@+id/text_streak_chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:alpha="0"
+                android:background="@drawable/bg_glass_pill"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="6dp"
+                android:text="🔥 Start a streak today!"
+                android:textColor="#F97316"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:contentDescription="Streak status" />
+
+            <!-- Today's Mission Line -->
+            <TextView
+                android:id="@+id/text_todays_mission"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:alpha="0"
+                android:gravity="center"
+                android:text="🎯 Today: Find the NullPointer (+25 XP)"
+                android:textColor="#A78BFA"
+                android:textSize="12sp"
+                android:contentDescription="Today's mission" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Skip Button (top-right) -->
+    <TextView
+        android:id="@+id/btn_skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:alpha="0"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="12dp"
+        android:text="Skip ›"
+        android:textColor="#60FFFFFF"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="Skip welcome animation"
+        tools:visibility="visible" />
+
+    <!-- Tap Anywhere Overlay for Skip -->
+    <View
+        android:id="@+id/overlay_tap_skip"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/btn_start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="Tap to skip" />
+
+    <!-- ════════════════════════════════════════════════════════════════════════
                               LOADING SECTION
          ════════════════════════════════════════════════════════════════════════ -->
 
@@ -373,18 +530,18 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:visibility="visible" />
 
-    <!-- Tap hint text -->
+    <!-- Tap hint text - now shows useful info -->
     <TextView
         android:id="@+id/text_tap_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:alpha="0"
         android:fontFamily="monospace"
-        android:letterSpacing="0.2"
-        android:text="[ TAP TO START ]"
-        android:textColor="#40FFFFFF"
-        android:textSize="10sp"
+        android:letterSpacing="0.15"
+        android:text="🎯 Daily Challenge Available"
+        android:textColor="#B0A78BFA"
+        android:textSize="12sp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -394,7 +551,7 @@
                               FOOTER SECTION
          ════════════════════════════════════════════════════════════════════════ -->
 
-    <!-- Version badge with cyber styling -->
+    <!-- Version badge with cyber styling - cleaner and higher contrast -->
     <TextView
         android:id="@+id/text_version"
         android:layout_width="wrap_content"
@@ -403,11 +560,11 @@
         android:alpha="0"
         android:background="@drawable/bg_glass_pill"
         android:fontFamily="monospace"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="4dp"
-        android:text="v1.0.0"
-        android:textColor="#60FFFFFF"
-        android:textSize="10sp"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="5dp"
+        android:text="v1.1.0"
+        android:textColor="#90A78BFA"
+        android:textSize="9sp"
         app:layout_constraintBottom_toTopOf="@id/text_copyright"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -420,7 +577,7 @@
         android:layout_marginBottom="24dp"
         android:alpha="0"
         android:fontFamily="sans-serif"
-        android:text="© 2024 DEBUGMASTER"
+        android:text="© 2025 DEBUGMASTER"
         android:textColor="#25FFFFFF"
         android:textSize="9sp"
         android:letterSpacing="0.15"

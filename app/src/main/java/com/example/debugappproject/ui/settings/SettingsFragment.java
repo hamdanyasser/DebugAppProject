@@ -139,12 +139,32 @@ public class SettingsFragment extends Fragment {
             
             String email = authManager.getEmail();
             String displayName = authManager.getDisplayName();
-            binding.textLoggedInEmail.setText(email.isEmpty() ? displayName : email);
+            String maskedEmail = maskEmail(email);
+            binding.textLoggedInEmail.setText(maskedEmail.isEmpty() ? displayName : maskedEmail);
             
             binding.layoutLogout.setOnClickListener(v -> {
                 soundManager.playSound(SoundManager.Sound.WARNING);
                 showLogoutConfirmation();
             });
+        }
+    }
+    
+    /**
+     * Masks email for privacy (e.g., hamdan****@gmail.com)
+     */
+    private String maskEmail(String email) {
+        if (email == null || email.isEmpty() || !email.contains("@")) {
+            return email;
+        }
+        String[] parts = email.split("@");
+        String localPart = parts[0];
+        String domain = parts[1];
+        
+        if (localPart.length() <= 3) {
+            return localPart.charAt(0) + "***@" + domain;
+        } else {
+            String visible = localPart.substring(0, 3);
+            return visible + "****@" + domain;
         }
     }
     

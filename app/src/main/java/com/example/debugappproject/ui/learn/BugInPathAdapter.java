@@ -48,7 +48,19 @@ public class BugInPathAdapter extends RecyclerView.Adapter<BugInPathAdapter.BugV
     @Override
     public void onBindViewHolder(@NonNull BugViewHolder holder, int position) {
         BugInPathWithDetails bugWithDetails = bugs.get(position);
-        holder.bind(bugWithDetails, listener);
+        // Determine if this is the "next" challenge (first incomplete one)
+        boolean isNextChallenge = false;
+        if (!bugWithDetails.isCompleted()) {
+            isNextChallenge = true;
+            // Check if any previous ones are incomplete
+            for (int i = 0; i < position; i++) {
+                if (!bugs.get(i).isCompleted()) {
+                    isNextChallenge = false;
+                    break;
+                }
+            }
+        }
+        holder.bind(bugWithDetails, listener, isNextChallenge);
     }
 
     @Override
@@ -138,16 +150,22 @@ public class BugInPathAdapter extends RecyclerView.Adapter<BugInPathAdapter.BugV
         /**
          * Binds bug data to the views.
          */
-        public void bind(BugInPathWithDetails bugWithDetails, OnBugClickListener listener) {
+        public void bind(BugInPathWithDetails bugWithDetails, OnBugClickListener listener, boolean isNextChallenge) {
             Bug bug = bugWithDetails.getBug();
 
-            // Set completion indicator
+            // Set completion indicator with clear game-like states
             if (bugWithDetails.isCompleted()) {
-                textCompletion.setText("✓");
-                textCompletion.setTextColor(Color.parseColor("#4CAF50")); // Green
+                // Completed - green checkmark
+                textCompletion.setText("✅");
+                textCompletion.setTextColor(Color.parseColor("#10B981"));
+            } else if (isNextChallenge) {
+                // Next challenge - play button
+                textCompletion.setText("▶️");
+                textCompletion.setTextColor(Color.parseColor("#A78BFA"));
             } else {
-                textCompletion.setText("○");
-                textCompletion.setTextColor(Color.parseColor("#9E9E9E")); // Gray
+                // Not started - circle indicator
+                textCompletion.setText("⭕");
+                textCompletion.setTextColor(Color.parseColor("#64748B"));
             }
 
             // Set bug details

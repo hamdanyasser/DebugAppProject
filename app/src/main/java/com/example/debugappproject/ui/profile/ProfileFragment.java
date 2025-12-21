@@ -23,6 +23,7 @@ import com.example.debugappproject.util.AuthManager;
 import com.example.debugappproject.util.DateUtils;
 import com.example.debugappproject.util.SoundManager;
 import com.example.debugappproject.ui.shop.ShopFragment;
+import com.example.debugappproject.ui.profile.CosmeticChooserDialog;
 
 /**
  * ╔══════════════════════════════════════════════════════════════════════════════╗
@@ -115,19 +116,56 @@ public class ProfileFragment extends Fragment {
         String displayName = authManager.getDisplayName();
         String email = authManager.getEmail();
         
-        // Use shop avatar if unlocked, otherwise use AuthManager avatar
-        String avatar = ShopFragment.hasUnlockedAvatars(requireContext()) 
-            ? ShopFragment.getSelectedAvatar(requireContext())
+        // Determine which avatar to show and if it's premium
+        boolean hasPremiumAvatars = ShopFragment.hasUnlockedAvatars(requireContext());
+        String selectedPremiumAvatar = ShopFragment.getSelectedAvatar(requireContext());
+        boolean isUsingPremiumAvatar = hasPremiumAvatars && selectedPremiumAvatar != null && !selectedPremiumAvatar.isEmpty();
+        
+        // Use premium avatar if selected, otherwise use free avatar
+        String avatar = isUsingPremiumAvatar 
+            ? selectedPremiumAvatar
             : authManager.getAvatarEmoji();
         
         // Display user avatar emoji (clickable to change)
         if (binding.textUserAvatar != null) {
             binding.textUserAvatar.setText(avatar);
+        }
+        
+        // Update collection badge visibility
+        updateCollectionBadge(isUsingPremiumAvatar, hasPremiumAvatars);
+        
+        // Set up avatar container click listener (larger touch target)
+        if (binding.containerAvatar != null) {
+            binding.containerAvatar.setOnClickListener(v -> {
+                soundManager.playButtonClick();
+                // Animate the tap
+                v.animate().scaleX(0.9f).scaleY(0.9f).setDuration(100)
+                    .withEndAction(() -> v.animate().scaleX(1f).scaleY(1f).setDuration(100).start())
+                    .start();
+                // If user has premium avatars, show collection chooser first
+                if (ShopFragment.hasUnlockedAvatars(requireContext())) {
+                    showAvatarCollectionChooser();
+                } else {
+                    showAvatarSelector();
+                }
+            });
+            
+            // Apply premium glow effect if user has premium avatars
+            if (hasPremiumAvatars && binding.viewPremiumGlow != null) {
+                binding.viewPremiumGlow.setVisibility(View.VISIBLE);
+                binding.containerAvatar.setBackgroundResource(R.drawable.bg_avatar_premium_circle);
+            }
+            
+            // Show tap hint for first-time users
+            if (binding.textTapHint != null) {
+                binding.textTapHint.setVisibility(View.VISIBLE);
+            }
+        } else if (binding.textUserAvatar != null) {
+            // Fallback: Use the avatar text view directly
             binding.textUserAvatar.setOnClickListener(v -> {
                 soundManager.playButtonClick();
-                // If user has premium avatars, show premium selector
                 if (ShopFragment.hasUnlockedAvatars(requireContext())) {
-                    showPremiumAvatarSelector();
+                    showAvatarCollectionChooser();
                 } else {
                     showAvatarSelector();
                 }
@@ -139,7 +177,7 @@ public class ProfileFragment extends Fragment {
             String title = ShopFragment.hasUnlockedTitles(requireContext()) 
                 ? ShopFragment.getSelectedTitle(requireContext()) 
                 : "";
-            if (!title.isEmpty()) {
+            if (title != null && !title.isEmpty()) {
                 binding.textUserName.setText(displayName + " • " + title);
             } else {
                 binding.textUserName.setText(displayName);
@@ -150,7 +188,7 @@ public class ProfileFragment extends Fragment {
             if (ShopFragment.hasUnlockedTitles(requireContext())) {
                 binding.textUserName.setOnClickListener(v -> {
                     soundManager.playButtonClick();
-                    showPremiumTitleSelector();
+                    showTitleCollectionChooser();
                 });
             }
         }
@@ -160,7 +198,7 @@ public class ProfileFragment extends Fragment {
             if (isGuest) {
                 binding.textUserEmail.setText("Guest Mode - Progress saved locally");
             } else {
-                binding.textUserEmail.setText(email);
+                binding.textUserEmail.setText(maskEmail(email));
             }
             binding.textUserEmail.setVisibility(View.VISIBLE);
         }
@@ -231,69 +269,82 @@ public class ProfileFragment extends Fragment {
 
     /**
      * Show premium avatar selector dialog (for users who purchased)
+     * Beautiful custom dialog with premium UI/UX
      */
     private void showPremiumAvatarSelector() {
-        String[] avatars = ShopFragment.getPremiumAvatars();
         String currentAvatar = ShopFragment.getSelectedAvatar(requireContext());
         
-        // Find current selection index
-        int currentIndex = 0;
-        for (int i = 0; i < avatars.length; i++) {
-            if (avatars[i].equals(currentAvatar)) {
-                currentIndex = i;
-                break;
+        PremiumAvatarSelectorDialog dialog = PremiumAvatarSelectorDialog.newInstance(currentAvatar);
+        dialog.setOnPremiumAvatarSelectedListener(emoji -> {
+            // Update UI immediately with animation
+            if (binding != null && binding.textUserAvatar != null) {
+                binding.textUserAvatar.setText(emoji);
+                // Celebration animation
+                binding.textUserAvatar.animate()
+                    .scaleX(1.3f).scaleY(1.3f).setDuration(200)
+                    .withEndAction(() -> binding.textUserAvatar.animate()
+                        .scaleX(1f).scaleY(1f).setDuration(200).start())
+                    .start();
             }
-        }
+        });
+        dialog.show(getChildFragmentManager(), "premium_avatar_selector");
+    }
+    
+    /**
+     * Update the collection badge to show whether using premium or free cosmetics
+     */
+    private void updateCollectionBadge(boolean isUsingPremiumAvatar, boolean hasPremiumAvatars) {
+        if (binding == null) return;
         
-        new AlertDialog.Builder(requireContext())
-            .setTitle("🦸 Select Premium Avatar")
-            .setSingleChoiceItems(avatars, currentIndex, (dialog, which) -> {
-                String selected = avatars[which];
-                ShopFragment.setSelectedAvatar(requireContext(), selected);
-                soundManager.playSound(SoundManager.Sound.COIN_COLLECT);
-                // Update UI immediately
-                if (binding != null && binding.textUserAvatar != null) {
-                    binding.textUserAvatar.setText(selected);
+        // Try to get badge view
+        try {
+            android.widget.TextView badgeView = binding.getRoot().findViewById(R.id.badge_collection_type);
+            if (badgeView != null) {
+                if (hasPremiumAvatars) {
+                    badgeView.setVisibility(android.view.View.VISIBLE);
+                    if (isUsingPremiumAvatar) {
+                        badgeView.setText("👑");  // Crown for premium
+                        // Add subtle pulse animation
+                        badgeView.animate()
+                            .scaleX(1.2f).scaleY(1.2f)
+                            .setDuration(500)
+                            .withEndAction(() -> badgeView.animate()
+                                .scaleX(1f).scaleY(1f)
+                                .setDuration(500)
+                                .start())
+                            .start();
+                    } else {
+                        badgeView.setText("🎨");  // Palette for free with premium owned
+                    }
+                } else {
+                    badgeView.setVisibility(android.view.View.GONE);
                 }
-                dialog.dismiss();
-            })
-            .setNegativeButton("Cancel", null)
-            .show();
+            }
+        } catch (Exception e) {
+            android.util.Log.d(TAG, "Badge view not found (may not be in layout): " + e.getMessage());
+        }
     }
     
     /**
      * Show premium title selector dialog (for users who purchased)
+     * Beautiful custom dialog with premium UI/UX
      */
     private void showPremiumTitleSelector() {
-        String[] titles = ShopFragment.getPremiumTitles();
         String currentTitle = ShopFragment.getSelectedTitle(requireContext());
         
-        // Add "No Title" option
-        String[] titlesWithNone = new String[titles.length + 1];
-        titlesWithNone[0] = "(No Title)";
-        System.arraycopy(titles, 0, titlesWithNone, 1, titles.length);
-        
-        int currentIndex = 0;
-        for (int i = 0; i < titlesWithNone.length; i++) {
-            if (titlesWithNone[i].equals(currentTitle) || 
-                (currentTitle.isEmpty() && i == 0)) {
-                currentIndex = i;
-                break;
+        PremiumTitleSelectorDialog dialog = PremiumTitleSelectorDialog.newInstance(currentTitle);
+        dialog.setOnPremiumTitleSelectedListener(title -> {
+            // Update UI immediately
+            updateAccountUI();
+            
+            // Show toast confirmation
+            if (title != null && !title.isEmpty()) {
+                Toast.makeText(getContext(), "Title equipped: " + title, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Title removed", Toast.LENGTH_SHORT).show();
             }
-        }
-        
-        new AlertDialog.Builder(requireContext())
-            .setTitle("🏷️ Select Your Title")
-            .setSingleChoiceItems(titlesWithNone, currentIndex, (dialog, which) -> {
-                String selected = which == 0 ? "" : titlesWithNone[which];
-                ShopFragment.setSelectedTitle(requireContext(), selected);
-                soundManager.playSound(SoundManager.Sound.COIN_COLLECT);
-                // Update UI immediately
-                updateAccountUI();
-                dialog.dismiss();
-            })
-            .setNegativeButton("Cancel", null)
-            .show();
+        });
+        dialog.show(getChildFragmentManager(), "premium_title_selector");
     }
 
     /**
@@ -302,12 +353,106 @@ public class ProfileFragment extends Fragment {
     private void showAvatarSelector() {
         AvatarSelectorDialog dialog = AvatarSelectorDialog.newInstance(authManager.getAvatarEmoji());
         dialog.setOnAvatarSelectedListener(emoji -> {
-            // Update UI immediately
+            // Update UI immediately with animation
             if (binding != null && binding.textUserAvatar != null) {
                 binding.textUserAvatar.setText(emoji);
+                // Celebration animation
+                binding.textUserAvatar.animate()
+                    .scaleX(1.3f).scaleY(1.3f).setDuration(200)
+                    .withEndAction(() -> binding.textUserAvatar.animate()
+                        .scaleX(1f).scaleY(1f).setDuration(200).start())
+                    .start();
             }
+            // Update full UI to refresh badge
+            updateAccountUI();
         });
         dialog.show(getChildFragmentManager(), "avatar_selector");
+    }
+    
+    /**
+     * Show the beautiful collection chooser dialog for avatars
+     * Allows user to choose between free and premium avatar collections
+     */
+    private void showAvatarCollectionChooser() {
+        String currentFree = authManager.getAvatarEmoji();
+        String currentPremium = ShopFragment.getSelectedAvatar(requireContext());
+        boolean isPremiumEquipped = CosmeticChooserDialog.isCurrentAvatarPremium(requireContext());
+        
+        CosmeticChooserDialog dialog = CosmeticChooserDialog.newInstance(
+            CosmeticChooserDialog.ChooserType.AVATAR,
+            currentFree,
+            currentPremium,
+            isPremiumEquipped
+        );
+        
+        dialog.setOnCollectionChosenListener(new CosmeticChooserDialog.OnCollectionChosenListener() {
+            @Override
+            public void onFreeCollectionChosen() {
+                // User wants free avatars - show free selector
+                showAvatarSelector();
+            }
+            
+            @Override
+            public void onPremiumCollectionChosen() {
+                // User wants premium avatars - show premium selector
+                showPremiumAvatarSelector();
+            }
+        });
+        
+        dialog.show(getChildFragmentManager(), "avatar_collection_chooser");
+    }
+    
+    /**
+     * Show the beautiful collection chooser dialog for titles
+     * Allows user to choose to keep or remove premium titles
+     */
+    private void showTitleCollectionChooser() {
+        String currentPremium = ShopFragment.getSelectedTitle(requireContext());
+        boolean isPremiumEquipped = currentPremium != null && !currentPremium.isEmpty();
+        
+        CosmeticChooserDialog dialog = CosmeticChooserDialog.newInstance(
+            CosmeticChooserDialog.ChooserType.TITLE,
+            "",  // No free titles
+            currentPremium,
+            isPremiumEquipped
+        );
+        
+        dialog.setOnCollectionChosenListener(new CosmeticChooserDialog.OnCollectionChosenListener() {
+            @Override
+            public void onFreeCollectionChosen() {
+                // User wants no title - clear it
+                ShopFragment.setSelectedTitle(requireContext(), "");
+                updateAccountUI();
+                Toast.makeText(getContext(), "Title removed", Toast.LENGTH_SHORT).show();
+            }
+            
+            @Override
+            public void onPremiumCollectionChosen() {
+                // User wants to pick a premium title
+                showPremiumTitleSelector();
+            }
+        });
+        
+        dialog.show(getChildFragmentManager(), "title_collection_chooser");
+    }
+    
+    /**
+     * Masks email for privacy (e.g., hamdan****@gmail.com)
+     */
+    private String maskEmail(String email) {
+        if (email == null || email.isEmpty() || !email.contains("@")) {
+            return email != null ? email : "";
+        }
+        String[] parts = email.split("@");
+        String localPart = parts[0];
+        String domain = parts[1];
+        
+        if (localPart.length() <= 3) {
+            return localPart.charAt(0) + "***@" + domain;
+        } else {
+            String visible = localPart.substring(0, 3);
+            return visible + "****@" + domain;
+        }
     }
     
     /**
@@ -437,9 +582,9 @@ public class ProfileFragment extends Fragment {
             // Achievement click handler with sound
             soundManager.playSound(SoundManager.Sound.BLIP);
         });
-        binding.recyclerAchievements.setAdapter(achievementAdapter);
         GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 2);
         binding.recyclerAchievements.setLayoutManager(layoutManager);
+        binding.recyclerAchievements.setAdapter(achievementAdapter);
     }
 
     private void setupObservers() {
@@ -592,7 +737,12 @@ public class ProfileFragment extends Fragment {
         if (billingManager != null) {
             billingManager.clearCallback();
         }
+        // Clear all field references to prevent memory leaks
         achievementAdapter = null;
+        viewModel = null;
+        soundManager = null;
+        authManager = null;
+        billingManager = null;
         binding = null;
     }
 }

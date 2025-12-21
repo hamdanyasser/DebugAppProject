@@ -298,4 +298,6 @@
     <string name="attribution_firebase_auth">Firebase Authentication</string>
     <string name="attribution_firebase_db">Firebase Database</string>
     <string name="attribution_billing">Google Play Billing</string>
+    <string name="vibration_attribution">Haptic Feedback</string>
+    <string name="audio_attribution">Sound Effects</string>
 </resources>

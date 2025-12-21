@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="AI Debug Mentor"
-                android:textColor="@color/white"
+                android:textColor="@color/dm_text_primary"
                 android:textSize="18sp"
                 android:fontFamily="sans-serif-medium" />
 
@@ -72,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Ready to help"
-                android:textColor="#10B981"
+                android:textColor="@color/dm_success"
                 android:textSize="13sp" />
         </LinearLayout>
 
@@ -98,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:textColor="@color/white"
+                android:textColor="@color/dm_text_primary"
                 android:textSize="14sp"
                 android:fontFamily="sans-serif-medium"
                 tools:text="5" />
@@ -147,10 +147,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Explain the bug"
-                android:textColor="@color/white"
+                android:textColor="@color/dm_text_primary"
                 android:textSize="13sp"
-                app:chipBackgroundColor="#2D2D44"
-                app:chipStrokeColor="#4D4D6A"
+                app:chipBackgroundColor="@color/dm_surface_container"
+                app:chipStrokeColor="@color/dm_border"
                 app:chipStrokeWidth="1dp"
                 app:chipCornerRadius="20dp"
                 android:layout_marginEnd="8dp" />
@@ -160,10 +160,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Give me a hint"
-                android:textColor="@color/white"
+                android:textColor="@color/dm_text_primary"
                 android:textSize="13sp"
-                app:chipBackgroundColor="#2D2D44"
-                app:chipStrokeColor="#4D4D6A"
+                app:chipBackgroundColor="@color/dm_surface_container"
+                app:chipStrokeColor="@color/dm_border"
                 app:chipStrokeWidth="1dp"
                 app:chipCornerRadius="20dp"
                 android:layout_marginEnd="8dp" />
@@ -173,10 +173,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Check my code"
-                android:textColor="@color/white"
+                android:textColor="@color/dm_text_primary"
                 android:textSize="13sp"
-                app:chipBackgroundColor="#2D2D44"
-                app:chipStrokeColor="#4D4D6A"
+                app:chipBackgroundColor="@color/dm_surface_container"
+                app:chipStrokeColor="@color/dm_border"
                 app:chipStrokeWidth="1dp"
                 app:chipCornerRadius="20dp"
                 android:layout_marginEnd="8dp" />
@@ -186,10 +186,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="How do I start?"
-                android:textColor="@color/white"
+                android:textColor="@color/dm_text_primary"
                 android:textSize="13sp"
-                app:chipBackgroundColor="#2D2D44"
-                app:chipStrokeColor="#4D4D6A"
+                app:chipBackgroundColor="@color/dm_surface_container"
+                app:chipStrokeColor="@color/dm_border"
                 app:chipStrokeWidth="1dp"
                 app:chipCornerRadius="20dp"
                 android:layout_marginEnd="8dp" />
@@ -199,10 +199,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="I'm stuck!"
-                android:textColor="@color/white"
+                android:textColor="@color/dm_text_primary"
                 android:textSize="13sp"
-                app:chipBackgroundColor="#2D2D44"
-                app:chipStrokeColor="#4D4D6A"
+                app:chipBackgroundColor="@color/dm_surface_container"
+                app:chipStrokeColor="@color/dm_border"
                 app:chipStrokeWidth="1dp"
                 app:chipCornerRadius="20dp" />
         </LinearLayout>
@@ -224,19 +224,19 @@
             android:layout_weight="1"
             android:hint="Ask me anything..."
             app:boxBackgroundMode="filled"
-            app:boxBackgroundColor="#1A1A2E"
+            app:boxBackgroundColor="@color/dm_surface"
             app:boxCornerRadiusTopStart="24dp"
             app:boxCornerRadiusTopEnd="24dp"
             app:boxCornerRadiusBottomStart="24dp"
             app:boxCornerRadiusBottomEnd="24dp"
-            app:boxStrokeColor="#6366F1"
-            app:hintTextColor="#888899">
+            app:boxStrokeColor="@color/dm_tertiary"
+            app:hintTextColor="@color/dm_text_secondary">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:textColor="@color/dm_text_primary"
                 android:textSize="15sp"
                 android:inputType="text"
                 android:imeOptions="actionSend"
@@ -254,8 +254,8 @@
             app:icon="@drawable/ic_send"
             app:iconGravity="textStart"
             app:iconPadding="0dp"
-            app:iconTint="@color/white"
-            app:backgroundTint="#6366F1"
+            app:iconTint="@color/dm_text_inverse"
+            app:backgroundTint="@color/dm_tertiary"
             app:cornerRadius="24dp"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
     </LinearLayout>
@@ -268,13 +268,13 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
         android:text="Get More Sessions"
-        android:textColor="@color/white"
+        android:textColor="@color/dm_text_inverse"
         android:visibility="gone"
-        app:backgroundTint="#6366F1"
+        app:backgroundTint="@color/dm_tertiary"
         app:cornerRadius="12dp"
         app:icon="@drawable/ic_gem"
         app:iconGravity="textStart"
-        app:iconTint="@color/white"
+        app:iconTint="@color/dm_text_inverse"
         tools:visibility="visible" />
 
 </LinearLayout>

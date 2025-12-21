@@ -4,22 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background_dark">
+    android:background="@drawable/bg_cyber_main">
 
     <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="60dp"
         android:gravity="center_vertical"
-        android:paddingHorizontal="8dp"
-        android:background="@color/surface_dark"
-        android:elevation="4dp">
+        android:paddingHorizontal="12dp"
+        android:background="#1A1A2E"
+        android:elevation="8dp">
 
         <ImageButton
             android:id="@+id/button_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_circle_button"
             android:src="@drawable/ic_arrow_back"
             app:tint="@color/white"
             android:contentDescription="Back" />
@@ -31,7 +31,7 @@
             android:layout_marginStart="12dp"
             android:text="👥 Co-op Debug"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
@@ -39,19 +39,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="🔥 0"
-            android:textColor="@color/accent_gold"
-            android:textSize="14sp"
+            android:textColor="#FF6B6B"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:visibility="gone"
-            android:layout_marginEnd="12dp" />
+            android:layout_marginEnd="16dp" />
 
         <TextView
             android:id="@+id/text_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="⭐ 0"
-            android:textColor="@color/accent_yellow"
-            android:textSize="14sp"
+            android:textColor="#FFD700"
+            android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -175,32 +175,72 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="12dp"
-            android:background="@color/surface_dark"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="14dp"
+            android:background="@drawable/bg_glass_dark"
             android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/text_room_code"
+            <!-- Room Code Badge -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Room: ABCD12"
-                android:textColor="@color/accent_yellow"
-                android:textSize="13sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:background="@drawable/bg_glass_pill"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:gravity="center_vertical">
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🏠"
+                    android:textSize="14sp" />
+                    
+                <TextView
+                    android:id="@+id/text_room_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="ABCD12"
+                    android:textColor="#FFD700"
+                    android:textSize="14sp"
+                    android:fontFamily="monospace"
+                    android:letterSpacing="0.1"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <TextView
-                android:id="@+id/text_timer"
+            <!-- Timer Badge -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="⏱️ 5:00"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:background="@drawable/bg_glass_pill"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="6dp"
+                android:gravity="center_vertical">
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⏱️"
+                    android:textSize="16sp" />
+                    
+                <TextView
+                    android:id="@+id/text_timer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="5:00"
+                    android:textColor="#10B981"
+                    android:textSize="18sp"
+                    android:fontFamily="monospace"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Partner & Role Card -->
@@ -208,48 +248,128 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="12dp"
-            android:layout_marginTop="8dp"
-            app:cardBackgroundColor="#1E293B"
-            app:cardCornerRadius="12dp">
+            android:layout_marginTop="10dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="14dp">
+                android:orientation="horizontal"
+                android:background="@drawable/bg_glass_dark"
+                android:padding="16dp">
 
+                <!-- Partner Side -->
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    
+                    <FrameLayout
+                        android:layout_width="48dp"
+                        android:layout_height="48dp">
+                        
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/ic_profile_placeholder"
+                            android:background="@drawable/bg_circle_button" />
+                        
+                        <ProgressBar
+                            android:id="@+id/progress_partner"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="bottom|end"
+                            android:visibility="gone"
+                            android:indeterminateTint="#10B981" />
+                    </FrameLayout>
+                    
                     <TextView
                         android:id="@+id/text_partner_name"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="👤 Partner: Waiting..."
+                        android:layout_marginTop="8dp"
+                        android:text="Waiting..."
                         android:textColor="@color/white"
-                        android:textSize="14sp" />
-
-                    <ProgressBar
-                        android:id="@+id/progress_partner"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:visibility="gone"
-                        android:indeterminateTint="@color/accent_green" />
+                        android:textSize="13sp"
+                        android:maxLines="1"
+                        android:ellipsize="end" />
+                        
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Partner"
+                        android:textColor="#64748B"
+                        android:textSize="11sp" />
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/text_role"
+                <!-- Role Badge (Center) -->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="🚗 DRIVER - Fix the code!"
-                    android:textColor="@color/accent_green"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingHorizontal="16dp">
+                    
+                    <TextView
+                        android:id="@+id/text_role"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🚗 DRIVER"
+                        android:textColor="#10B981"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/bg_glass_pill"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="8dp" />
+                        
+                    <TextView
+                        android:id="@+id/text_role_hint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Fix the code!"
+                        android:textColor="#94A3B8"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <!-- You Side -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    
+                    <ImageView
+                        android:id="@+id/img_user_avatar"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_profile_placeholder"
+                        android:background="@drawable/bg_circle_purple" />
+                    
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="You"
+                        android:textColor="#A78BFA"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                        
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Ready ✓"
+                        android:textColor="#10B981"
+                        android:textSize="11sp" />
+                </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -330,47 +450,51 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingHorizontal="12dp"
-            android:paddingVertical="12dp">
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"
+            android:background="@drawable/bg_glass_dark">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_switch_role"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="56dp"
                 android:layout_weight="1"
                 android:layout_marginEnd="6dp"
                 android:text="🔄 Switch"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:textAllCaps="false"
-                app:strokeColor="@color/accent_yellow"
-                app:strokeWidth="2dp"
-                app:cornerRadius="12dp" />
+                android:textColor="#1A1A2E"
+                app:backgroundTint="#FFD700"
+                app:cornerRadius="14dp"
+                app:elevation="4dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_hint"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="56dp"
                 android:layout_weight="1"
                 android:layout_marginHorizontal="6dp"
                 android:text="💡 Ask"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:textAllCaps="false"
-                app:strokeColor="@color/purple_500"
-                app:strokeWidth="2dp"
-                app:cornerRadius="12dp" />
+                android:textColor="@color/white"
+                app:backgroundTint="#8B5CF6"
+                app:cornerRadius="14dp"
+                app:elevation="4dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_submit"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="56dp"
                 android:layout_weight="1"
                 android:layout_marginStart="6dp"
                 android:text="✅ Submit"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:textAllCaps="false"
-                app:backgroundTint="@color/accent_green"
-                app:cornerRadius="12dp" />
+                android:textColor="#1A1A2E"
+                app:backgroundTint="#10B981"
+                app:cornerRadius="14dp"
+                app:elevation="4dp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

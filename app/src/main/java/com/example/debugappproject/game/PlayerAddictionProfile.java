@@ -15,19 +15,18 @@ import java.util.Random;
 
 /**
  * ╔══════════════════════════════════════════════════════════════════════════════╗
- * ║                    PLAYER ADDICTION PROFILE                                  ║
- * ║         Identity Lock-In • Mental Stats • Streak Anxiety                     ║
+ * ║                    PLAYER PROGRESS PROFILE                                   ║
+ * ║         Skill Growth • Mental Stats • Achievement Tracking                   ║
  * ╚══════════════════════════════════════════════════════════════════════════════╝
  *
- * This system creates IDENTITY. Players must think:
- * "I am a Debugger. This is who I am."
+ * This system tracks player growth and celebrates their debugging journey.
  *
  * Features:
- * - Mental Evolution Stats (not generic XP)
- * - Streak System with real anxiety
- * - Titles that feel EARNED
+ * - Mental Evolution Stats that show real skill growth
+ * - Streak System with forgiveness mechanics
+ * - Titles earned through genuine achievement
  * - Visible mastery progression
- * - Fear of missing a day
+ * - Encouraging milestone celebrations
  */
 public class PlayerAddictionProfile {
 
@@ -58,13 +57,13 @@ public class PlayerAddictionProfile {
     private int focusXP = 0;
     
     // ═══════════════════════════════════════════════════════════════════════════
-    //                         STREAK SYSTEM (Anxiety Engine)
+    //                         STREAK SYSTEM (With Forgiveness)
     // ═══════════════════════════════════════════════════════════════════════════
-    
+
     private int currentStreak = 0;
     private int longestStreak = 0;
     private long lastPlayDate = 0;
-    private int streakFreezes = 0;            // Paid streak protection
+    private int streakFreezes = 0;            // Free streak protection for busy days
     private boolean streakAtRisk = false;
     
     // ═══════════════════════════════════════════════════════════════════════════
@@ -344,7 +343,7 @@ public class PlayerAddictionProfile {
     }
     
     private int calculateStreakReward(int streak) {
-        // Escalating rewards to create FOMO
+        // Rewards that celebrate dedication without pressure
         if (streak >= 365) return 1000;
         if (streak >= 100) return 500;
         if (streak >= 30) return 200;
@@ -399,8 +398,8 @@ public class PlayerAddictionProfile {
             newTitle = "Dedicated";
             unlockedTitles.add(newTitle);
         }
-        if (currentStreak >= 100 && !unlockedTitles.contains("Obsessed")) {
-            newTitle = "Obsessed";
+        if (currentStreak >= 100 && !unlockedTitles.contains("Committed")) {
+            newTitle = "Committed";
             unlockedTitles.add(newTitle);
         }
         
@@ -447,7 +446,7 @@ public class PlayerAddictionProfile {
             case "Clutch Master": return "🎯";
             case "Comeback King": return "👑";
             case "Dedicated": return "💪";
-            case "Obsessed": return "🔥";
+            case "Committed": return "🔥";
             case "Genius": return "🎓";
             case "Bug Whisperer": return "🔮";
             case "Pattern Master": return "🔍";

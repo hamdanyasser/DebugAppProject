@@ -53,8 +53,9 @@ public class BillingManager implements PurchasesUpdatedListener {
     private final MutableLiveData<Boolean> isProUser = new MutableLiveData<>(false);
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
     private final MutableLiveData<List<ProductDetails>> productDetails = new MutableLiveData<>(new ArrayList<>());
-    private boolean isConnecting = false;
-    
+    private volatile boolean isConnecting = false;
+    private final Object connectionLock = new Object();
+
     private BillingCallback callback;
 
     public interface BillingCallback {
@@ -116,24 +117,28 @@ public class BillingManager implements PurchasesUpdatedListener {
             initBillingClient();
             return;
         }
-        
+
         if (billingClient.isReady()) {
             android.util.Log.d(TAG, "Billing client already ready");
             return;
         }
-        
-        if (isConnecting) {
-            android.util.Log.d(TAG, "Already connecting...");
-            return;
+
+        // Thread-safe check-and-set for isConnecting
+        synchronized (connectionLock) {
+            if (isConnecting) {
+                android.util.Log.d(TAG, "Already connecting...");
+                return;
+            }
+            isConnecting = true;
         }
 
-        isConnecting = true;
-        
         try {
             billingClient.startConnection(new BillingClientStateListener() {
                 @Override
                 public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-                    isConnecting = false;
+                    synchronized (connectionLock) {
+                        isConnecting = false;
+                    }
                     if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                         android.util.Log.d(TAG, "Billing client connected");
                         queryProducts();
@@ -148,13 +153,17 @@ public class BillingManager implements PurchasesUpdatedListener {
 
                 @Override
                 public void onBillingServiceDisconnected() {
-                    isConnecting = false;
+                    synchronized (connectionLock) {
+                        isConnecting = false;
+                    }
                     android.util.Log.w(TAG, "Billing client disconnected");
                     // Don't auto-retry to prevent loops
                 }
             });
         } catch (Exception e) {
-            isConnecting = false;
+            synchronized (connectionLock) {
+                isConnecting = false;
+            }
             android.util.Log.e(TAG, "Error starting billing connection", e);
         }
     }

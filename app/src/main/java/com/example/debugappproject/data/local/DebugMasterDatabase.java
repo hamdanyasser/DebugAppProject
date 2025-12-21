@@ -12,6 +12,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.example.debugappproject.model.AchievementDefinition;
 import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.model.BugInPath;
+import com.example.debugappproject.model.DailyChallenge;
 import com.example.debugappproject.model.Hint;
 import com.example.debugappproject.model.LearningPath;
 import com.example.debugappproject.model.Lesson;
@@ -69,9 +70,10 @@ import com.example.debugappproject.model.UserProgress;
         LessonQuestion.class,
         AchievementDefinition.class,
         UserAchievement.class,
-        MentalProfile.class
+        MentalProfile.class,
+        DailyChallenge.class
     },
-    version = 10,
+    version = 12,
     exportSchema = false
 )
 public abstract class DebugMasterDatabase extends RoomDatabase {
@@ -214,6 +216,18 @@ public abstract class DebugMasterDatabase extends RoomDatabase {
     };
 
     /**
+     * Migration from version 5 to 6.
+     * Adds tutorialContent column to learning_paths table.
+     */
+    static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            // Add tutorialContent column to learning_paths table
+            database.execSQL("ALTER TABLE learning_paths ADD COLUMN tutorialContent TEXT DEFAULT ''");
+        }
+    };
+
+    /**
      * Migration from version 6 to 7.
      * Adds gems column to user_progress table.
      */
@@ -332,6 +346,56 @@ public abstract class DebugMasterDatabase extends RoomDatabase {
     };
 
     /**
+     * Migration from version 9 to 10.
+     * Adds new fields to learning_paths for redesigned Learn tab.
+     */
+    static final Migration MIGRATION_9_10 = new Migration(9, 10) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            // Add new columns to learning_paths table
+            database.execSQL("ALTER TABLE learning_paths ADD COLUMN popularityScore INTEGER NOT NULL DEFAULT 50");
+            database.execSQL("ALTER TABLE learning_paths ADD COLUMN tags TEXT");
+            database.execSQL("ALTER TABLE learning_paths ADD COLUMN primaryCategory TEXT");
+        }
+    };
+
+    /**
+     * Migration from version 10 to 11.
+     * Adds daily_challenges table for Daily Bug Hunt feature.
+     */
+    static final Migration MIGRATION_10_11 = new Migration(10, 11) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            // Create daily_challenges table
+            database.execSQL(
+                "CREATE TABLE IF NOT EXISTS daily_challenges (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                "dateKey TEXT, " +
+                "bugId INTEGER NOT NULL, " +
+                "title TEXT, " +
+                "description TEXT, " +
+                "xpReward INTEGER NOT NULL, " +
+                "estimatedMinutes INTEGER NOT NULL, " +
+                "difficulty TEXT, " +
+                "isCompleted INTEGER NOT NULL DEFAULT 0, " +
+                "completedAt INTEGER NOT NULL DEFAULT 0)"
+            );
+        }
+    };
+
+    /**
+     * Migration from version 11 to 12.
+     * Adds xpReward column to bugs table.
+     */
+    static final Migration MIGRATION_11_12 = new Migration(11, 12) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            // Add xpReward column to bugs table
+            database.execSQL("ALTER TABLE bugs ADD COLUMN xpReward INTEGER NOT NULL DEFAULT 0");
+        }
+    };
+
+    /**
      * Get singleton instance of database.
      * Now uses proper migrations instead of destructive migration.
      */
@@ -344,7 +408,7 @@ public abstract class DebugMasterDatabase extends RoomDatabase {
                             DebugMasterDatabase.class,
                             "debug_master_database"
                     )
-                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
+                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12)
                     .fallbackToDestructiveMigration() // Fallback for dev builds
                     .build();
                 }

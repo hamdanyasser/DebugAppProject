@@ -83,10 +83,14 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
-                    <!-- Profile Photo / Avatar Emoji -->
+                    <!-- Profile Photo / Avatar Emoji - ENHANCED CLICKABLE -->
                     <FrameLayout
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
+                        android:id="@+id/container_avatar"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
                         android:background="@drawable/bg_circle_gradient">
 
                         <ImageView
@@ -100,11 +104,41 @@
 
                         <TextView
                             android:id="@+id/text_user_avatar"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="🐛"
+                            android:textSize="32sp" />
+
+                        <!-- Premium Glow Ring (Hidden by default) -->
+                        <View
+                            android:id="@+id/view_premium_glow"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bg_avatar_premium_glow"
+                            android:visibility="gone" />
+
+                        <!-- Tap Indicator -->
+                        <TextView
+                            android:id="@+id/text_tap_hint"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="🐛"
-                            android:textSize="28sp" />
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:text="✏️"
+                            android:textSize="10sp"
+                            android:visibility="gone" />
+                        
+                        <!-- Collection Badge (shows if premium/free) -->
+                        <TextView
+                            android:id="@+id/badge_collection_type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top|end"
+                            android:layout_marginTop="-4dp"
+                            android:layout_marginEnd="-4dp"
+                            android:text="👑"
+                            android:textSize="12sp"
+                            android:visibility="gone" />
 
                     </FrameLayout>
 
@@ -131,8 +165,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:textSize="12sp"
-                            android:textColor="@color/cyber_neon_blue"
-                            android:alpha="0.8"
+                            android:textColor="#70C9FF"
                             tools:text="Sign in to sync progress" />
 
                         <TextView
@@ -197,14 +230,16 @@
                     android:id="@+id/button_sign_out"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="44dp"
                     android:layout_marginTop="12dp"
-                    android:text="Sign Out"
-                    android:textColor="@color/cyber_neon_pink"
-                    android:textSize="12sp"
-                    app:cornerRadius="20dp"
-                    app:strokeColor="@color/cyber_neon_pink"
-                    app:strokeWidth="1dp"
+                    android:text="SIGN OUT"
+                    android:textColor="#FF6B6B"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05"
+                    app:cornerRadius="22dp"
+                    app:strokeColor="#FF6B6B"
+                    app:strokeWidth="1.5dp"
                     android:visibility="gone" />
 
                 <!-- Sync Info (only shown when signed in) -->
@@ -253,8 +288,12 @@
                         android:layout_height="wrap_content"
                         android:text="LEVEL"
                         android:textSize="14sp"
-                        android:textColor="@color/cyber_neon_blue"
-                        android:letterSpacing="0.2" />
+                        android:textColor="#FFFFFF"
+                        android:letterSpacing="0.2"
+                        android:shadowColor="#60000000"
+                        android:shadowDx="0"
+                        android:shadowDy="1"
+                        android:shadowRadius="4" />
 
                     <TextView
                         android:id="@+id/text_level"
@@ -263,9 +302,11 @@
                         android:layout_marginTop="4dp"
                         android:textSize="56sp"
                         android:textStyle="bold"
-                        android:textColor="@color/cyber_neon_purple"
-                        android:shadowColor="@color/cyber_glow_purple"
-                        android:shadowRadius="20"
+                        android:textColor="#FFFFFF"
+                        android:shadowColor="#80000000"
+                        android:shadowDx="0"
+                        android:shadowDy="2"
+                        android:shadowRadius="8"
                         tools:text="5" />
 
                 </LinearLayout>

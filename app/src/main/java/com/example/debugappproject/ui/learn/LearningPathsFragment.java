@@ -319,7 +319,7 @@ public class LearningPathsFragment extends Fragment {
         for (LearningPath path : paths) {
             pathsWithProgress.add(new PathWithProgress(path, 0, 0));
         }
-        
+
         // Update adapter immediately
         adapter.setPaths(pathsWithProgress);
 
@@ -329,15 +329,22 @@ public class LearningPathsFragment extends Fragment {
             LearningPath path = paths.get(i);
 
             try {
+                // Safety check: only observe if fragment is still attached
+                if (!isAdded() || getView() == null) return;
+
                 viewModel.getBugCountInPath(path.getId()).observe(getViewLifecycleOwner(), total -> {
+                    // Safety check: fragment might be destroyed between observer callbacks
+                    if (!isAdded() || binding == null || adapter == null) return;
+
                     if (total != null && total > 0) {
                         viewModel.getCompletedBugCountInPath(path.getId()).observe(getViewLifecycleOwner(), completed -> {
+                            // Safety check again for nested observer
+                            if (!isAdded() || binding == null || adapter == null) return;
+
                             if (completed != null && index < pathsWithProgress.size()) {
                                 pathsWithProgress.set(index, new PathWithProgress(path, total, completed));
-                                if (adapter != null) {
-                                    adapter.notifyItemChanged(index);
-                                }
-                                
+                                adapter.notifyItemChanged(index);
+
                                 // Update total progress
                                 updateTotalProgress(pathsWithProgress);
                             }

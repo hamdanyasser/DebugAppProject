@@ -4,22 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background_dark">
+    android:background="@drawable/bg_cyber_main">
 
     <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="60dp"
         android:gravity="center_vertical"
         android:paddingHorizontal="12dp"
-        android:background="@color/surface_dark"
-        android:elevation="4dp">
+        android:background="#1A1A2E"
+        android:elevation="8dp">
 
         <ImageButton
             android:id="@+id/button_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_circle_button"
             android:src="@drawable/ic_arrow_back"
             app:tint="@color/white"
             android:contentDescription="Back" />
@@ -31,7 +31,7 @@
             android:layout_marginStart="8dp"
             android:text="🔍 Interactive Debugger"
             android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
@@ -39,8 +39,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Line 1"
-            android:textColor="@color/accent_green"
-            android:textSize="12sp"
+            android:textColor="#10B981"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium"
+            android:background="@drawable/bg_glass_pill"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
             android:layout_marginEnd="12dp" />
 
         <TextView
@@ -48,22 +52,51 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="⭐ 0 XP"
-            android:textColor="@color/accent_yellow"
-            android:textSize="14sp"
+            android:textColor="#FFD700"
+            android:textSize="15sp"
             android:textStyle="bold" />
     </LinearLayout>
 
     <!-- Challenge Title -->
-    <TextView
-        android:id="@+id/text_challenge"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
-        android:text="🔍 Challenge Title"
-        android:textColor="@color/accent_gold"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:background="@color/surface_dark" />
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:background="@drawable/bg_glass_dark"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🎯"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/text_challenge"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:text="Challenge Title"
+            android:textColor="#FFD700"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:maxLines="2"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/text_difficulty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🟡 Medium"
+            android:textColor="#94A3B8"
+            android:textSize="12sp"
+            android:background="@drawable/bg_glass_pill"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp" />
+    </LinearLayout>
 
     <!-- Main Content -->
     <LinearLayout
@@ -79,22 +112,50 @@
             android:layout_height="0dp"
             android:layout_weight="3"
             app:cardBackgroundColor="#0F0F1A"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp">
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
+                <!-- Editor Tab Bar -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:text="📄 Code (tap line to mark bug)"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="11sp"
-                    android:background="#1E1E2E" />
+                    android:orientation="horizontal"
+                    android:background="#1E1E2E"
+                    android:paddingVertical="8dp"
+                    android:paddingHorizontal="12dp"
+                    android:gravity="center_vertical">
+                    
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="💻"
+                        android:textSize="14sp" />
+                    
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="8dp"
+                        android:text="main.java"
+                        android:textColor="#A78BFA"
+                        android:textSize="12sp"
+                        android:fontFamily="monospace" />
+                    
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="👆 Tap buggy line"
+                        android:textColor="#64748B"
+                        android:textSize="10sp"
+                        android:background="@drawable/bg_glass_pill"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="3dp" />
+                </LinearLayout>
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -123,22 +184,48 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginTop="8dp"
-            app:cardBackgroundColor="#1E293B"
-            app:cardCornerRadius="12dp">
+            app:cardBackgroundColor="#0F172A"
+            app:cardCornerRadius="14dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
+                <!-- Variables Header -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:text="📊 Variables"
-                    android:textColor="@color/accent_yellow"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="8dp"
+                    android:background="#1E293B"
+                    android:gravity="center_vertical">
+                    
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🧪"
+                        android:textSize="14sp" />
+                    
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Variables"
+                        android:textColor="#FFD700"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                        
+                    <TextView
+                        android:id="@+id/text_var_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="(3)"
+                        android:textColor="#64748B"
+                        android:textSize="11sp" />
+                </LinearLayout>
 
                 <ScrollView
                     android:layout_width="match_parent"
@@ -161,22 +248,62 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginTop="8dp"
-            app:cardBackgroundColor="#0D0D0D"
-            app:cardCornerRadius="12dp">
+            app:cardBackgroundColor="#0A0A0F"
+            app:cardCornerRadius="14dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
+                <!-- Console Header -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:text="💻 Console Output"
-                    android:textColor="@color/accent_green"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="8dp"
+                    android:background="#111827"
+                    android:gravity="center_vertical">
+                    
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:background="@drawable/bg_dot_red" />
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_dot_yellow" />
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_dot_green" />
+                    
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="Console"
+                        android:textColor="#10B981"
+                        android:textSize="12sp"
+                        android:fontFamily="monospace"
+                        android:textStyle="bold" />
+                        
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+                        
+                    <TextView
+                        android:id="@+id/text_output_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="● Running"
+                        android:textColor="#22C55E"
+                        android:textSize="10sp" />
+                </LinearLayout>
 
                 <ScrollView
                     android:id="@+id/scroll_output"
@@ -209,52 +336,130 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp"
-        android:background="@color/surface_dark"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="12dp"
+        android:background="@drawable/bg_glass_dark"
         android:elevation="8dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_step_over"
+        <!-- Step Over Button -->
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="4dp"
-            android:text="⏭️"
-            android:textSize="18sp"
-            app:backgroundTint="#3B82F6"
-            app:cornerRadius="10dp" />
+            android:orientation="vertical"
+            android:gravity="center">
+            
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_step_over"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="⏭️"
+                android:textSize="22sp"
+                app:backgroundTint="#3B82F6"
+                app:cornerRadius="16dp"
+                app:iconPadding="0dp" />
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Over"
+                android:textColor="#94A3B8"
+                android:textSize="10sp" />
+        </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_step_into"
+        <!-- Step Into Button -->
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginHorizontal="4dp"
-            android:text="⬇️"
-            android:textSize="18sp"
-            app:backgroundTint="#8B5CF6"
-            app:cornerRadius="10dp" />
+            android:orientation="vertical"
+            android:gravity="center">
+            
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_step_into"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="⬇️"
+                android:textSize="22sp"
+                app:backgroundTint="#8B5CF6"
+                app:cornerRadius="16dp"
+                app:iconPadding="0dp" />
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Into"
+                android:textColor="#94A3B8"
+                android:textSize="10sp" />
+        </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_continue"
+        <!-- Continue Button -->
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginHorizontal="4dp"
-            android:text="▶️"
-            android:textSize="18sp"
-            app:backgroundTint="#22C55E"
-            app:cornerRadius="10dp" />
+            android:orientation="vertical"
+            android:gravity="center">
+            
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_continue"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="▶️"
+                android:textSize="22sp"
+                app:backgroundTint="#22C55E"
+                app:cornerRadius="16dp"
+                app:iconPadding="0dp" />
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Run"
+                android:textColor="#94A3B8"
+                android:textSize="10sp" />
+        </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_find_bug"
+        <!-- Find Bug Button -->
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="4dp"
-            android:text="🐛"
-            android:textSize="18sp"
-            app:backgroundTint="#EF4444"
-            app:cornerRadius="10dp" />
+            android:orientation="vertical"
+            android:gravity="center">
+            
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_find_bug"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="🐛"
+                android:textSize="22sp"
+                app:backgroundTint="#EF4444"
+                app:cornerRadius="16dp"
+                app:iconPadding="0dp" />
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Bug!"
+                android:textColor="#F87171"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

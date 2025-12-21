@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Game Mode Card - Reusable card for game modes
+    Game Mode Card V2 - Premium Reusable card for game modes
 -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -10,44 +10,45 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    app:cardBackgroundColor="#1A1A2E"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="0dp"
-    app:strokeColor="#2D2D44"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="8dp"
+    app:strokeColor="#407C4DFF"
     app:strokeWidth="1dp"
     app:rippleColor="#7C4DFF">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/bg_game_mode_card_v2">
 
-        <!-- Accent Line at Top -->
+        <!-- Accent Line at Top - Gradient -->
         <View
             android:id="@+id/accent_line"
             android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:background="#7C4DFF" />
+            android:layout_height="4dp"
+            android:background="@drawable/bg_gradient_accent_line" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:padding="18dp">
 
-            <!-- Mode Icon -->
+            <!-- Mode Icon - PREMIUM V2 -->
             <FrameLayout
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:background="@drawable/bg_game_mode_icon">
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/bg_game_mode_icon_v2">
 
                 <TextView
                     android:id="@+id/text_mode_emoji"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textSize="28sp"
+                    android:textSize="30sp"
                     tools:text="🎯" />
             </FrameLayout>
 
@@ -55,7 +56,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
+                android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -70,7 +71,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
-                        android:textSize="16sp"
+                        android:textSize="17sp"
                         android:textStyle="bold"
                         tools:text="Quick Fix" />
 
@@ -81,7 +82,7 @@
                         android:layout_marginStart="8dp"
                         android:background="@drawable/bg_badge_free"
                         android:paddingHorizontal="8dp"
-                        android:paddingVertical="2dp"
+                        android:paddingVertical="3dp"
                         android:text="FREE"
                         android:textColor="@color/white"
                         android:textSize="9sp"
@@ -94,23 +95,30 @@
                     android:id="@+id/text_mode_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:alpha="0.7"
+                    android:layout_marginTop="6dp"
+                    android:alpha="0.8"
                     android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:textSize="13sp"
+                    android:lineSpacingMultiplier="1.2"
                     android:maxLines="2"
                     android:ellipsize="end"
                     tools:text="Fix bugs in under 60 seconds! Race against the clock." />
             </LinearLayout>
 
-            <!-- Arrow -->
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_arrow_right"
-                android:alpha="0.5"
-                app:tint="@color/white"
-                android:contentDescription="Play" />
+            <!-- Arrow with glow effect -->
+            <FrameLayout
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_stats_glass_v2">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_arrow_right"
+                    app:tint="#7C4DFF"
+                    android:contentDescription="Play" />
+            </FrameLayout>
 
         </LinearLayout>
     </LinearLayout>

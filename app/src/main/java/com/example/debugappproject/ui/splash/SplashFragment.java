@@ -36,8 +36,8 @@ import com.example.debugappproject.data.seeding.DatabaseSeeder;
 import com.example.debugappproject.databinding.FragmentSplashBinding;
 import com.example.debugappproject.ui.onboarding.OnboardingActivity;
 import com.example.debugappproject.util.AuthManager;
+import com.example.debugappproject.util.DailyRewardManager;
 import com.example.debugappproject.util.SoundManager;
-import com.example.debugappproject.data.repository.BugRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +68,8 @@ public class SplashFragment extends Fragment {
     private Handler mainHandler;
     private Handler animationHandler;
     private SoundManager soundManager;
+    private DailyRewardManager rewardManager;
+    private boolean reduceMotion = false;
 
     private volatile boolean databaseSeeded = false;
     private volatile boolean loadingAnimationComplete = false;
@@ -122,15 +124,111 @@ public class SplashFragment extends Fragment {
         mainHandler = new Handler(Looper.getMainLooper());
         animationHandler = new Handler(Looper.getMainLooper());
         
-        // Initialize sound manager
+        // Initialize managers
         soundManager = SoundManager.getInstance(requireContext());
+        rewardManager = new DailyRewardManager(requireContext());
+        reduceMotion = rewardManager.shouldReduceMotion();
 
         setupStartButton();
+        setupSkipFunctionality();
         seedDatabase();
-        startAnimationSequence();
         
-        // Play intro ambient sound for immersion
-        soundManager.playSound(SoundManager.Sound.AMBIENT_INTRO);
+        // If reduce motion is enabled, show static screen immediately
+        if (reduceMotion) {
+            showStaticWelcome();
+        } else {
+            startAnimationSequence();
+        }
+    }
+
+    /**
+     * Shows static welcome screen for reduce motion / accessibility
+     */
+    private void showStaticWelcome() {
+        if (binding == null || !isAdded()) return;
+        
+        // Show all elements immediately without animation
+        binding.hexPattern1.setAlpha(0.08f);
+        binding.hexPattern2.setAlpha(0.08f);
+        binding.energyWave1.setAlpha(0.5f);
+        binding.energyWave2.setAlpha(0.5f);
+        binding.energyWave3.setAlpha(0.5f);
+        binding.logoGlowPulse.setAlpha(0.6f);
+        binding.imageLogo.setAlpha(1f);
+        binding.textDebug.setAlpha(1f);
+        binding.textDebug.setTranslationX(0);
+        binding.textMaster.setAlpha(1f);
+        binding.textMaster.setTranslationX(0);
+        binding.textTagline.setAlpha(1f);
+        binding.textVersion.setAlpha(0.5f);
+        binding.textCopyright.setAlpha(0.3f);
+        
+        // Show reward card and button immediately
+        showRewardCard();
+        showStartButtonStatic();
+    }
+    
+    /**
+     * Shows start button without animation for reduce motion
+     */
+    private void showStartButtonStatic() {
+        if (binding == null || !isAdded()) return;
+        
+        binding.btnStart.setVisibility(View.VISIBLE);
+        binding.btnStart.setAlpha(1f);
+        binding.btnStart.setScaleX(1f);
+        binding.btnStart.setScaleY(1f);
+        binding.btnStartGlow.setVisibility(View.VISIBLE);
+        binding.btnStartGlow.setAlpha(0.4f);
+        binding.textTapHint.setVisibility(View.VISIBLE);
+        binding.textTapHint.setAlpha(0.7f);
+        binding.textTapHint.setText("[ TAP TO START ]");
+        buttonReady = true;
+    }
+
+    /**
+     * Sets up skip functionality - tap anywhere or skip button
+     */
+    private void setupSkipFunctionality() {
+        // Skip button in top-right
+        binding.btnSkip.setOnClickListener(v -> skipToReady());
+        
+        // Tap anywhere overlay to skip
+        binding.overlayTapSkip.setOnClickListener(v -> skipToReady());
+        
+        // Show skip button after a short delay
+        animationHandler.postDelayed(() -> {
+            if (binding != null && isAdded() && !reduceMotion) {
+                binding.btnSkip.setVisibility(View.VISIBLE);
+                binding.overlayTapSkip.setVisibility(View.VISIBLE);
+                ObjectAnimator fadeIn = ObjectAnimator.ofFloat(binding.btnSkip, "alpha", 0f, 0.6f);
+                fadeIn.setDuration(300);
+                fadeIn.start();
+            }
+        }, 500);
+    }
+    
+    /**
+     * Skips animation and shows ready state immediately
+     */
+    private void skipToReady() {
+        if (buttonReady) return; // Already at ready state
+        
+        // Cancel all running animations
+        for (Animator animator : runningAnimators) {
+            if (animator != null && animator.isRunning()) {
+                animator.cancel();
+            }
+        }
+        runningAnimators.clear();
+        animationHandler.removeCallbacksAndMessages(null);
+        
+        // Show everything immediately
+        showStaticWelcome();
+        
+        // Hide skip button
+        binding.btnSkip.setVisibility(View.GONE);
+        binding.overlayTapSkip.setVisibility(View.GONE);
     }
 
     /**
@@ -141,6 +239,8 @@ public class SplashFragment extends Fragment {
         binding.btnStart.setOnClickListener(v -> {
             if (!userTappedStart && buttonReady && databaseSeeded) {
                 userTappedStart = true;
+                // Haptic feedback on play tap
+                rewardManager.triggerPlayHaptic();
                 soundManager.playSound(SoundManager.Sound.BUTTON_START);
                 animateButtonPress(v, this::navigateToNextScreen);
             } else if (!databaseSeeded) {
@@ -797,6 +897,154 @@ public class SplashFragment extends Fragment {
 
         // Show footer
         animationHandler.postDelayed(this::showFooter, 600);
+        
+        // Show reward card after loading
+        animationHandler.postDelayed(this::showRewardCard, 1400);
+    }
+    
+    /**
+     * ═══════════════════════════════════════════════════════════════════════════
+     *                    REWARD CARD ANIMATION (DOPAMINE RUSH!)
+     * ═══════════════════════════════════════════════════════════════════════════
+     */
+    private void showRewardCard() {
+        if (binding == null || !isAdded()) return;
+        
+        // Get user info
+        AuthManager authManager = AuthManager.getInstance(requireContext());
+        String username = authManager.getDisplayName();
+        if (username == null || username.isEmpty()) {
+            username = "Debugger";
+        }
+        
+        // Set welcome message
+        String greeting = rewardManager.getTimeBasedGreeting();
+        binding.textWelcomeUser.setText(greeting + ", " + username + "! 👑");
+        
+        // Check if reward can be claimed
+        boolean canClaim = rewardManager.canClaimToday();
+        int rewardAmount = rewardManager.getTodayRewardAmount();
+        int streakDays = rewardManager.getConsecutiveDays();
+        
+        // Set streak message
+        binding.textStreakChip.setText(rewardManager.getStreakMessage(streakDays));
+        
+        // Set today's mission (placeholder - would come from MetaGameEngine)
+        binding.textTodaysMission.setText("🎯 Today: Find your first bug (+25 XP)");
+        
+        // Show card
+        binding.cardReward.setVisibility(View.VISIBLE);
+        
+        if (reduceMotion) {
+            // Show everything instantly for reduce motion
+            binding.cardReward.setAlpha(1f);
+            binding.cardReward.setTranslationY(0);
+            binding.layoutGemReward.setAlpha(1f);
+            binding.layoutGemReward.setScaleX(1f);
+            binding.layoutGemReward.setScaleY(1f);
+            binding.textStreakChip.setAlpha(1f);
+            binding.textTodaysMission.setAlpha(1f);
+            
+            if (canClaim) {
+                int claimed = rewardManager.claimDailyReward();
+                binding.textGemReward.setText("+" + claimed);
+            } else {
+                binding.layoutGemReward.setVisibility(View.GONE);
+                binding.textAlreadyClaimed.setVisibility(View.VISIBLE);
+            }
+            return;
+        }
+        
+        // Animated card entrance
+        ObjectAnimator cardFade = ObjectAnimator.ofFloat(binding.cardReward, "alpha", 0f, 1f);
+        ObjectAnimator cardSlide = ObjectAnimator.ofFloat(binding.cardReward, "translationY", 40f, 0f);
+        
+        AnimatorSet cardEntrance = new AnimatorSet();
+        cardEntrance.playTogether(cardFade, cardSlide);
+        cardEntrance.setDuration(500);
+        cardEntrance.setInterpolator(new DecelerateInterpolator());
+        cardEntrance.start();
+        runningAnimators.add(cardEntrance);
+        
+        // Animate gem reward after card appears
+        animationHandler.postDelayed(() -> {
+            if (binding == null || !isAdded()) return;
+            
+            if (canClaim) {
+                animateGemReward(rewardAmount);
+            } else {
+                // Show already claimed state
+                binding.layoutGemReward.setVisibility(View.GONE);
+                binding.textAlreadyClaimed.setVisibility(View.VISIBLE);
+                ObjectAnimator claimedFade = ObjectAnimator.ofFloat(binding.textAlreadyClaimed, "alpha", 0f, 1f);
+                claimedFade.setDuration(300);
+                claimedFade.start();
+            }
+        }, 400);
+        
+        // Animate streak chip
+        animationHandler.postDelayed(() -> {
+            if (binding == null || !isAdded()) return;
+            
+            ObjectAnimator streakFade = ObjectAnimator.ofFloat(binding.textStreakChip, "alpha", 0f, 1f);
+            streakFade.setDuration(400);
+            streakFade.start();
+        }, 700);
+        
+        // Animate mission text
+        animationHandler.postDelayed(() -> {
+            if (binding == null || !isAdded()) return;
+            
+            ObjectAnimator missionFade = ObjectAnimator.ofFloat(binding.textTodaysMission, "alpha", 0f, 1f);
+            missionFade.setDuration(400);
+            missionFade.start();
+        }, 900);
+    }
+    
+    /**
+     * Animates gem reward with count-up and haptic feedback
+     */
+    private void animateGemReward(int rewardAmount) {
+        if (binding == null || !isAdded()) return;
+        
+        // Claim the reward
+        int actualReward = rewardManager.claimDailyReward();
+        if (actualReward == 0) actualReward = rewardAmount; // Fallback
+        final int finalReward = actualReward;
+        
+        // Scale + fade in animation
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(binding.layoutGemReward, "scaleX", 0.5f, 1.1f, 1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(binding.layoutGemReward, "scaleY", 0.5f, 1.1f, 1f);
+        ObjectAnimator fadeIn = ObjectAnimator.ofFloat(binding.layoutGemReward, "alpha", 0f, 1f);
+        
+        AnimatorSet gemEntrance = new AnimatorSet();
+        gemEntrance.playTogether(scaleX, scaleY, fadeIn);
+        gemEntrance.setDuration(600);
+        gemEntrance.setInterpolator(new OvershootInterpolator(2f));
+        gemEntrance.start();
+        runningAnimators.add(gemEntrance);
+        
+        // Count-up animation with haptic
+        ValueAnimator countUp = ValueAnimator.ofInt(0, finalReward);
+        countUp.setDuration(800);
+        countUp.setStartDelay(200);
+        countUp.setInterpolator(new DecelerateInterpolator());
+        countUp.addUpdateListener(animation -> {
+            if (binding == null || !isAdded()) return;
+            int value = (int) animation.getAnimatedValue();
+            binding.textGemReward.setText("+" + value);
+        });
+        countUp.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // Haptic feedback on reward reveal complete
+                rewardManager.triggerRewardHaptic();
+                // Play coin sound
+                soundManager.playSound(SoundManager.Sound.COIN_COLLECT);
+            }
+        });
+        countUp.start();
+        runningAnimators.add(countUp);
     }
 
     /**

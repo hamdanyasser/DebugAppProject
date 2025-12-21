@@ -73,13 +73,22 @@ public class MainActivity extends AppCompatActivity {
             destinationListener = (controller, destination, arguments) -> {
                 int destId = destination.getId();
                 
-                // Hide bottom nav for these screens
+                // Hide bottom nav for immersive game screens
                 boolean hideBottomNav = (destId == R.id.splashFragment ||
                         destId == R.id.bugDetailFragment ||
                         destId == R.id.practiceFragment ||
                         destId == R.id.battleArenaFragment ||
                         destId == R.id.pathDetailFragment ||
-                        destId == R.id.settingsFragment);
+                        destId == R.id.settingsFragment ||
+                        destId == R.id.beginnerTutorialFragment ||
+                        destId == R.id.gameSessionFragment ||
+                        destId == R.id.interactiveLessonFragment ||
+                        destId == R.id.coopFragment ||
+                        destId == R.id.debuggerFragment ||
+                        destId == R.id.multiFileBugFragment ||
+                        destId == R.id.githubImportFragment ||
+                        destId == R.id.gameModesFragment ||
+                        destId == R.id.mentorChatFragment);
 
                 if (binding != null && binding.cardBottomNav != null) {
                     binding.cardBottomNav.setVisibility(hideBottomNav ? View.GONE : View.VISIBLE);

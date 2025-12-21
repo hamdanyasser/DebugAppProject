@@ -17,6 +17,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import com.example.debugappproject.R;
 import com.example.debugappproject.databinding.FragmentBugDetailBinding;
 import com.example.debugappproject.execution.CodeExecutionEngine;
@@ -277,10 +279,10 @@ public class BugDetailFragment extends Fragment {
             AnimationUtil.animatePress(v, this::showNextHint);
         });
 
-        // Show Solution button (now a card)
+        // Show Solution button (now a card) - shows confirmation dialog
         binding.buttonShowSolution.setOnClickListener(v -> {
             soundManager.playButtonClick();
-            AnimationUtil.animatePress(v, () -> viewModel.showSolution());
+            AnimationUtil.animatePress(v, this::showSolutionConfirmation);
         });
 
         // Check Fix / Run Tests button
@@ -462,6 +464,35 @@ public class BugDetailFragment extends Fragment {
         } else {
             soundManager.playSound(SoundManager.Sound.WARNING);
             Toast.makeText(requireContext(), "No more hints available", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showSolutionConfirmation() {
+        new MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Reveal Solution?")
+            .setMessage("Spend 1 💎 gem to see the solution.\n\nNote: You won't earn XP or coins if you reveal the answer.")
+            .setPositiveButton("Spend 1 💎", (dialog, which) -> {
+                soundManager.playSound(SoundManager.Sound.HINT_REVEAL);
+                viewModel.showSolution();
+                showSolution();
+                // Update button to show it's been revealed
+                updateSolutionButtonRevealed();
+            })
+            .setNegativeButton("Keep Trying", null)
+            .show();
+    }
+
+    private void updateSolutionButtonRevealed() {
+        // Change the lock icon to unlocked and update colors
+        View cardView = binding.buttonShowSolution;
+        if (cardView instanceof com.google.android.material.card.MaterialCardView) {
+            com.google.android.material.card.MaterialCardView card = 
+                (com.google.android.material.card.MaterialCardView) cardView;
+            card.setStrokeColor(getResources().getColor(R.color.dm_primary, null));
+        }
+        if (binding.textSolutionLabel != null) {
+            binding.textSolutionLabel.setTextColor(
+                getResources().getColor(R.color.dm_primary, null));
         }
     }
 

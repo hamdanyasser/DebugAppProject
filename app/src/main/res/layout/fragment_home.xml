@@ -34,14 +34,15 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_home_hero_gradient">
+                android:background="@drawable/bg_home_hero_v2">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp"
-                    android:paddingTop="16dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:paddingTop="36dp"
                     android:paddingBottom="24dp">
 
                     <!-- Top Row: Greeting + Coins -->
@@ -134,30 +135,32 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- XP Progress Card -->
+                    <!-- XP Progress Card - PREMIUM V2 -->
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/card_xp_progress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        app:cardBackgroundColor="#20FFFFFF"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="0dp"
-                        app:strokeWidth="0dp">
+                        app:cardBackgroundColor="@android:color/transparent"
+                        app:cardCornerRadius="18dp"
+                        app:cardElevation="8dp"
+                        app:strokeColor="#40FFD54F"
+                        app:strokeWidth="1dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
-                            android:padding="16dp">
+                            android:padding="16dp"
+                            android:background="@drawable/bg_xp_card_premium">
 
-                            <!-- Level Badge -->
+                            <!-- Level Badge - PREMIUM V2 -->
                             <FrameLayout
                                 android:id="@+id/frame_level_badge"
-                                android:layout_width="52dp"
-                                android:layout_height="52dp"
-                                android:background="@drawable/bg_level_badge">
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:background="@drawable/bg_level_badge_v2">
 
                                 <TextView
                                     android:id="@+id/text_level_number"
@@ -203,16 +206,16 @@
                                         android:fontFamily="sans-serif-medium" />
                                 </LinearLayout>
 
-                                <!-- XP Progress Bar -->
+                                <!-- XP Progress Bar - PREMIUM V2 -->
                                 <ProgressBar
                                     android:id="@+id/progress_xp"
                                     style="?android:attr/progressBarStyleHorizontal"
                                     android:layout_width="match_parent"
-                                    android:layout_height="8dp"
+                                    android:layout_height="10dp"
                                     android:layout_marginTop="10dp"
                                     android:max="100"
                                     android:progress="0"
-                                    android:progressDrawable="@drawable/progress_xp_gradient" />
+                                    android:progressDrawable="@drawable/progress_xp_v2" />
 
                                 <TextView
                                     android:id="@+id/text_xp_remaining"
@@ -235,16 +238,16 @@
                         android:layout_marginTop="16dp"
                         android:orientation="horizontal">
 
-                        <!-- Streak -->
+                        <!-- Streak - PREMIUM GLASS V2 -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginEnd="6dp"
-                            android:background="@drawable/bg_glass_rounded"
+                            android:background="@drawable/bg_stats_glass_v2"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:padding="14dp">
+                            android:padding="16dp">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -278,16 +281,16 @@
                                 android:alpha="0.7" />
                         </LinearLayout>
 
-                        <!-- Bugs Fixed -->
+                        <!-- Bugs Fixed - PREMIUM GLASS V2 -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginHorizontal="6dp"
-                            android:background="@drawable/bg_glass_rounded"
+                            android:background="@drawable/bg_stats_glass_v2"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:padding="14dp">
+                            android:padding="16dp">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -321,16 +324,16 @@
                                 android:alpha="0.7" />
                         </LinearLayout>
 
-                        <!-- Rank -->
+                        <!-- Rank - PREMIUM GLASS V2 -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginStart="6dp"
-                            android:background="@drawable/bg_glass_rounded"
+                            android:background="@drawable/bg_stats_glass_v2"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:padding="14dp">
+                            android:padding="16dp">
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -375,23 +378,23 @@
                 android:padding="16dp">
 
                 <!-- ═══════════════════════════════════════════════════════════════════
-                     DAILY CHALLENGE CARD
+                     DAILY CHALLENGE CARD - PREMIUM V2
                      ═══════════════════════════════════════════════════════════════════ -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_daily_challenge"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    app:cardBackgroundColor="#1A1A2E"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp"
-                    app:strokeColor="#FF6B35"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="22dp"
+                    app:cardElevation="8dp"
+                    app:strokeColor="#60FF6B35"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_daily_challenge_premium"
+                        android:background="@drawable/bg_daily_challenge_v2"
                         android:orientation="vertical"
                         android:padding="20dp">
 
@@ -578,18 +581,6 @@
                         android:fontFamily="sans-serif-medium" />
                 </LinearLayout>
 
-                <!-- Learning Paths RecyclerView -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_learning_paths"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:clipToPadding="false"
-                    android:nestedScrollingEnabled="false"
-                    android:overScrollMode="never"
-                    tools:itemCount="3"
-                    tools:listitem="@layout/item_learning_path" />
-
                 <!-- ═══════════════════════════════════════════════════════════════════
                      QUICK ACTIONS - 3 Cards in a Row
                      ═══════════════════════════════════════════════════════════════════ -->
@@ -599,25 +590,26 @@
                     android:layout_marginBottom="20dp"
                     android:orientation="horizontal">
 
-                    <!-- Game Modes Hub -->
+                    <!-- Game Modes Hub - NEON PURPLE V2 -->
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/card_game_modes"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="6dp"
                         android:layout_weight="1"
-                        app:cardBackgroundColor="#1A1A2E"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@android:color/transparent"
+                        app:cardCornerRadius="18dp"
+                        app:cardElevation="8dp"
                         app:strokeColor="#7C4DFF"
-                        app:strokeWidth="1dp">
+                        app:strokeWidth="2dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="18dp"
+                            android:background="@drawable/bg_card_neon_purple">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -644,25 +636,26 @@
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Practice Mode -->
+                    <!-- Practice Mode - NEON GREEN V2 -->
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/card_practice_mode"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="6dp"
                         android:layout_weight="1"
-                        app:cardBackgroundColor="#1A1A2E"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@android:color/transparent"
+                        app:cardCornerRadius="18dp"
+                        app:cardElevation="8dp"
                         app:strokeColor="#00E676"
-                        app:strokeWidth="1dp">
+                        app:strokeWidth="2dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="18dp"
+                            android:background="@drawable/bg_card_neon_green">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -689,25 +682,26 @@
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Battle Arena -->
+                    <!-- Battle Arena - NEON RED V2 -->
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/card_battle_arena"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
                         android:layout_weight="1"
-                        app:cardBackgroundColor="#1A1A2E"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@android:color/transparent"
+                        app:cardCornerRadius="18dp"
+                        app:cardElevation="8dp"
                         app:strokeColor="#FF5252"
-                        app:strokeWidth="1dp">
+                        app:strokeWidth="2dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="18dp"
+                            android:background="@drawable/bg_card_neon_red">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -736,25 +730,25 @@
                 </LinearLayout>
 
                 <!-- ═══════════════════════════════════════════════════════════════════
-                     PRO UPSELL BANNER
+                     PRO UPSELL BANNER - PREMIUM V2
                      ═══════════════════════════════════════════════════════════════════ -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_pro_upsell"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="#1A1A2E"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="10dp"
                     app:strokeColor="#7C4DFF"
-                    app:strokeWidth="1dp">
+                    app:strokeWidth="2dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_pro_upsell_premium"
+                        android:background="@drawable/bg_pro_upsell_v2"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="16dp">
+                        android:padding="18dp">
 
                         <!-- Crown Icon -->
                         <FrameLayout

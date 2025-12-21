@@ -87,7 +87,7 @@ public class ProfileViewModel extends AndroidViewModel {
      * Calculates the user's level from their XP.
      * Formula: level = 1 + (xp / 100)
      */
-    public int calculateLevel(int xp) {
+    public static int calculateLevel(int xp) {
         return 1 + (xp / 100);
     }
 
@@ -95,14 +95,14 @@ public class ProfileViewModel extends AndroidViewModel {
      * Calculates XP progress within current level.
      * Returns percentage (0-100).
      */
-    public int getXpProgressInLevel(int xp) {
+    public static int getXpProgressInLevel(int xp) {
         return xp % 100;
     }
 
     /**
      * Gets XP needed for next level.
      */
-    public int getXpForNextLevel(int xp) {
+    public static int getXpForNextLevel(int xp) {
         int currentLevel = calculateLevel(xp);
         return currentLevel * 100;
     }

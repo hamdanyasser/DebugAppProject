@@ -11,18 +11,18 @@ import java.util.Random;
 /**
  * ╔══════════════════════════════════════════════════════════════════════════════╗
  * ║                    META-GAME ENGINE                                          ║
- * ║         Systems That Exist Outside The Code Editor                           ║
+ * ║         Extended Learning Features Beyond the Code Editor                    ║
  * ╚══════════════════════════════════════════════════════════════════════════════╝
  *
- * This engine creates engagement loops that make players think about the game
- * even when they're not actively debugging. Key systems:
+ * This engine provides fun learning activities that complement the core
+ * debugging experience. Key systems:
  *
- * 1. PREDICTION ROUNDS - "What bug will this code have?"
- * 2. BUG FORENSICS - "What caused this stack trace?"
- * 3. DAILY CHALLENGES - Time-limited special challenges
- * 4. STREAK PRESSURE - Daily engagement with consequences
- * 5. RIVAL TRACKING - Watch and compete against specific players
- * 6. POST-MORTEM ANALYSIS - Learn from your mistakes
+ * 1. PREDICTION ROUNDS - "What bug will this code have?" (builds intuition)
+ * 2. BUG FORENSICS - "What caused this stack trace?" (teaches real debugging)
+ * 3. DAILY CHALLENGES - Fun themed challenges each day
+ * 4. STREAK TRACKING - Celebrate consistency with forgiveness
+ * 5. FRIENDLY COMPETITION - Learn alongside other players
+ * 6. POST-MORTEM ANALYSIS - Learn from mistakes constructively
  */
 public class MetaGameEngine {
 
@@ -675,18 +675,18 @@ public class MetaGameEngine {
 
         public String getStreakMessage() {
             if (broken) {
-                return "Streak lost! Start a new one today.";
+                return "Ready for a fresh start? Let's go!";
             }
             if (atRisk) {
-                return "⚠️ Streak at risk! Play now to maintain it!";
+                return "🌟 Play today to continue your streak! (Or use a freeze)";
             }
             if (currentStreak >= 30) {
-                return "🔥 " + currentStreak + " day streak! Legendary!";
+                return "🔥 " + currentStreak + " day streak! Amazing dedication!";
             }
             if (currentStreak >= 7) {
-                return "🔥 " + currentStreak + " day streak! Keep it up!";
+                return "🔥 " + currentStreak + " day streak! Great consistency!";
             }
-            return currentStreak + " day streak";
+            return currentStreak + " day streak - nice!";
         }
     }
 

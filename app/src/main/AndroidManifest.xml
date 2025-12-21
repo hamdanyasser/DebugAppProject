@@ -16,6 +16,10 @@
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="com.android.vending.BILLING" />
 
+    <!-- Attribution tags for Android 12+ permission attribution -->
+    <attribution android:tag="VibrationAttribution" android:label="@string/vibration_attribution" />
+    <attribution android:tag="AudioAttribution" android:label="@string/audio_attribution" />
+
     <application
         android:name=".DebugMasterApplication"
         android:allowBackup="true"

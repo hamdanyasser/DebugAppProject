@@ -10,7 +10,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D0D1A">
+    android:background="@color/dm_bg_primary">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -171,7 +171,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:text="+25 XP"
-                            android:textColor="#FFD54F"
+                            android:textColor="@color/dm_xp"
                             android:textSize="13sp"
                             android:fontFamily="sans-serif-medium"
                             android:textStyle="bold" />
@@ -203,10 +203,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="#1A1A2E"
-                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/dm_surface"
+                    app:cardCornerRadius="@dimen/dm_radius_lg"
                     app:cardElevation="0dp"
-                    app:strokeColor="#2D2D44"
+                    app:strokeColor="@color/dm_border"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -232,7 +232,7 @@
                                 android:layout_marginStart="10dp"
                                 android:fontFamily="sans-serif-medium"
                                 android:text="Mission Briefing"
-                                android:textColor="@color/white"
+                                android:textColor="@color/dm_text_primary"
                                 android:textSize="16sp" />
                         </LinearLayout>
 
@@ -242,7 +242,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="14dp"
                             android:lineSpacingExtra="4dp"
-                            android:textColor="#B8B8D0"
+                            android:textColor="@color/dm_text_secondary"
                             android:textSize="14sp"
                             tools:text="A junior developer wrote this code but something's wrong. The program compiles but crashes at runtime. Can you spot and fix the bug?" />
                     </LinearLayout>
@@ -255,11 +255,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="#1A1A2E"
-                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/dm_surface"
+                    app:cardCornerRadius="@dimen/dm_radius_lg"
                     app:cardElevation="0dp"
-                    app:strokeColor="#FF5252"
-                    app:strokeWidth="1dp">
+                    app:strokeColor="@color/dm_error"
+                    app:strokeWidth="1.5dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -292,20 +292,20 @@
                                 android:layout_weight="1"
                                 android:fontFamily="sans-serif-medium"
                                 android:text="Buggy Code"
-                                android:textColor="#FF5252"
+                                android:textColor="@color/dm_error"
                                 android:textSize="15sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/bg_error_badge"
+                                android:background="@drawable/bg_badge_bug"
                                 android:paddingHorizontal="10dp"
                                 android:paddingVertical="4dp"
-                                android:text="HAS BUG"
-                                android:textColor="#FF5252"
+                                android:text="⚠️ FIND THE BUG"
+                                android:textColor="#FFFFFF"
                                 android:textSize="9sp"
                                 android:fontFamily="sans-serif-medium"
-                                android:letterSpacing="0.1" />
+                                android:letterSpacing="0.05" />
                         </LinearLayout>
 
                         <!-- Code Block -->
@@ -337,11 +337,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="#1A1A2E"
-                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/dm_surface"
+                    app:cardCornerRadius="@dimen/dm_radius_lg"
                     app:cardElevation="0dp"
-                    app:strokeColor="#00E676"
-                    app:strokeWidth="1dp">
+                    app:strokeColor="@color/dm_success"
+                    app:strokeWidth="1.5dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -374,38 +374,47 @@
                                 android:layout_weight="1"
                                 android:fontFamily="sans-serif-medium"
                                 android:text="Your Fix"
-                                android:textColor="#00E676"
+                                android:textColor="@color/dm_success"
                                 android:textSize="15sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/bg_editor_badge"
+                                android:background="@drawable/bg_badge_editor"
                                 android:paddingHorizontal="10dp"
                                 android:paddingVertical="4dp"
-                                android:text="EDITOR"
-                                android:textColor="#00E676"
+                                android:text="✏️ EDIT HERE"
+                                android:textColor="#FFFFFF"
                                 android:textSize="9sp"
                                 android:fontFamily="sans-serif-medium"
-                                android:letterSpacing="0.1" />
+                                android:letterSpacing="0.05" />
                         </LinearLayout>
+
+                        <!-- Helper text -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="💡 Edit the code above to fix the bug, then tap Run Tests"
+                            android:textColor="@color/dm_text_tertiary"
+                            android:textSize="12sp" />
 
                         <!-- Code Editor -->
                         <EditText
                             android:id="@+id/edit_user_code"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:minHeight="160dp"
-                            android:background="@drawable/bg_code_editor"
+                            android:layout_marginTop="12dp"
+                            android:minHeight="180dp"
+                            android:background="@drawable/bg_code_editor_premium"
                             android:fontFamily="monospace"
                             android:gravity="top|start"
                             android:hint="Write your fixed code here..."
-                            android:textColorHint="#4A4A6A"
+                            android:textColorHint="@color/dm_text_disabled"
                             android:inputType="textMultiLine"
                             android:padding="16dp"
-                            android:textColor="#E8E8F0"
-                            android:textSize="13sp"
+                            android:textColor="@color/dm_code_text"
+                            android:textSize="14sp"
                             android:lineSpacingExtra="6dp"
                             android:scrollbars="vertical"
                             android:importantForAutofill="no" />
@@ -422,32 +431,34 @@
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/button_check_fix"
                                 android:layout_width="0dp"
-                                android:layout_height="52dp"
+                                android:layout_height="56dp"
                                 android:layout_weight="1"
                                 android:layout_marginEnd="8dp"
                                 android:text="▶  Run Tests"
                                 android:textColor="@color/white"
-                                android:textSize="14sp"
-                                android:fontFamily="sans-serif-medium"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-bold"
                                 android:textAllCaps="false"
-                                app:backgroundTint="#00C853"
-                                app:cornerRadius="14dp"
-                                app:elevation="0dp" />
+                                app:backgroundTint="@color/dm_success"
+                                app:cornerRadius="@dimen/dm_radius_base"
+                                app:elevation="2dp" />
 
                             <!-- Reset Button -->
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/button_reset_code"
-                                android:layout_width="52dp"
-                                android:layout_height="52dp"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
                                 android:insetTop="0dp"
                                 android:insetBottom="0dp"
+                                android:contentDescription="Reset code to original"
+                                android:tooltipText="Reset code"
                                 app:icon="@drawable/ic_refresh"
                                 app:iconGravity="textStart"
                                 app:iconPadding="0dp"
                                 app:iconSize="22dp"
-                                app:iconTint="#B8B8D0"
-                                app:backgroundTint="#2D2D44"
-                                app:cornerRadius="14dp"
+                                app:iconTint="@color/dm_text_secondary"
+                                app:backgroundTint="@color/dm_surface_container"
+                                app:cornerRadius="@dimen/dm_radius_base"
                                 app:elevation="0dp"
                                 tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
                         </LinearLayout>
@@ -463,10 +474,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:visibility="gone"
-                    app:cardBackgroundColor="#1A1A2E"
-                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/dm_surface"
+                    app:cardCornerRadius="@dimen/dm_radius_lg"
                     app:cardElevation="0dp"
-                    app:strokeColor="#2D2D44"
+                    app:strokeColor="@color/dm_border"
                     app:strokeWidth="1dp"
                     tools:visibility="visible">
 
@@ -494,7 +505,7 @@
                             android:layout_marginTop="12dp"
                             android:gravity="center"
                             android:lineSpacingExtra="4dp"
-                            android:textColor="#B8B8D0"
+                            android:textColor="@color/dm_text_secondary"
                             android:textSize="14sp"
                             tools:text="Congratulations! You found the bug!" />
 
@@ -524,10 +535,10 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginEnd="8dp"
-                        app:cardBackgroundColor="#1A1A2E"
-                        app:cardCornerRadius="16dp"
+                        app:cardBackgroundColor="@color/dm_surface"
+                        app:cardCornerRadius="@dimen/dm_radius_md"
                         app:cardElevation="0dp"
-                        app:strokeColor="#2D2D44"
+                        app:strokeColor="@color/dm_border"
                         app:strokeWidth="1dp">
 
                         <LinearLayout
@@ -548,7 +559,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:text="See Output"
-                                android:textColor="@color/white"
+                                android:textColor="@color/dm_text_primary"
                                 android:textSize="12sp"
                                 android:fontFamily="sans-serif-medium" />
                         </LinearLayout>
@@ -561,10 +572,10 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginHorizontal="4dp"
-                        app:cardBackgroundColor="#1A1A2E"
-                        app:cardCornerRadius="16dp"
+                        app:cardBackgroundColor="@color/dm_surface"
+                        app:cardCornerRadius="@dimen/dm_radius_md"
                         app:cardElevation="0dp"
-                        app:strokeColor="#FFC107"
+                        app:strokeColor="@color/dm_warning"
                         app:strokeWidth="1dp">
 
                         <LinearLayout
@@ -585,7 +596,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:text="Get Hint"
-                                android:textColor="#FFC107"
+                                android:textColor="@color/dm_warning"
                                 android:textSize="12sp"
                                 android:fontFamily="sans-serif-medium" />
                         </LinearLayout>
@@ -598,10 +609,10 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="8dp"
-                        app:cardBackgroundColor="#1A1A2E"
-                        app:cardCornerRadius="16dp"
+                        app:cardBackgroundColor="@color/dm_surface"
+                        app:cardCornerRadius="@dimen/dm_radius_md"
                         app:cardElevation="0dp"
-                        app:strokeColor="#7C4DFF"
+                        app:strokeColor="#64748B"
                         app:strokeWidth="1dp">
 
                         <LinearLayout
@@ -614,15 +625,16 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="🔓"
+                                android:text="🔒"
                                 android:textSize="24sp" />
 
                             <TextView
+                                android:id="@+id/text_solution_label"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:text="Solution"
-                                android:textColor="#7C4DFF"
+                                android:textColor="#64748B"
                                 android:textSize="12sp"
                                 android:fontFamily="sans-serif-medium" />
                         </LinearLayout>
@@ -637,10 +649,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="#1A1A2E"
-                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/dm_surface"
+                    app:cardCornerRadius="@dimen/dm_radius_lg"
                     app:cardElevation="0dp"
-                    app:strokeColor="#6366F1"
+                    app:strokeColor="@color/dm_tertiary"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -683,7 +695,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="AI Debug Mentor"
-                                android:textColor="@color/white"
+                                android:textColor="@color/dm_text_primary"
                                 android:textSize="16sp"
                                 android:fontFamily="sans-serif-medium" />
 
@@ -693,7 +705,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:text="Get personalized debugging help"
-                                android:textColor="#888899"
+                                android:textColor="@color/dm_text_secondary"
                                 android:textSize="13sp" />
 
                             <LinearLayout
@@ -706,21 +718,23 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="NEW"
-                                    android:textColor="#6366F1"
-                                    android:textSize="10sp"
-                                    android:fontFamily="sans-serif-medium"
-                                    android:background="@drawable/bg_glass_pill"
-                                    android:paddingHorizontal="8dp"
-                                    android:paddingVertical="2dp" />
+                                    android:text="✨ Pro Feature"
+                                    android:textColor="@color/dm_tertiary"
+                                    android:textSize="11sp"
+                                    android:fontFamily="sans-serif-medium" />
+
+                                <View
+                                    android:layout_width="4dp"
+                                    android:layout_height="4dp"
+                                    android:layout_marginHorizontal="8dp"
+                                    android:background="@drawable/bg_dot" />
 
                                 <TextView
                                     android:id="@+id/text_mentor_sessions"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="8dp"
                                     android:text="3 free sessions"
-                                    android:textColor="#10B981"
+                                    android:textColor="@color/dm_success"
                                     android:textSize="11sp" />
                             </LinearLayout>
                         </LinearLayout>
@@ -735,7 +749,7 @@
                             android:textSize="14sp"
                             android:fontFamily="sans-serif-medium"
                             android:textAllCaps="false"
-                            app:backgroundTint="#6366F1"
+                            app:backgroundTint="@color/dm_primary"
                             app:cornerRadius="12dp"
                             app:icon="@drawable/ic_chat"
                             app:iconGravity="textStart"
@@ -753,10 +767,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:visibility="gone"
-                    app:cardBackgroundColor="#1A1A2E"
-                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/dm_surface"
+                    app:cardCornerRadius="@dimen/dm_radius_lg"
                     app:cardElevation="0dp"
-                    app:strokeColor="#2D2D44"
+                    app:strokeColor="@color/dm_border"
                     app:strokeWidth="1dp"
                     tools:visibility="visible">
 
@@ -783,7 +797,7 @@
                                 android:layout_marginStart="10dp"
                                 android:fontFamily="sans-serif-medium"
                                 android:text="Output Comparison"
-                                android:textColor="@color/white"
+                                android:textColor="@color/dm_text_primary"
                                 android:textSize="16sp" />
                         </LinearLayout>
 
@@ -793,7 +807,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
                             android:text="✓ Expected Output"
-                            android:textColor="#00E676"
+                            android:textColor="@color/dm_success"
                             android:textSize="12sp"
                             android:fontFamily="sans-serif-medium" />
 
@@ -805,7 +819,7 @@
                             android:background="@drawable/bg_output_success"
                             android:fontFamily="monospace"
                             android:padding="14dp"
-                            android:textColor="#00E676"
+                            android:textColor="@color/dm_success"
                             android:textSize="13sp"
                             tools:text="Hello World" />
 
@@ -815,7 +829,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
                             android:text="✗ Actual Output (Buggy)"
-                            android:textColor="#FF5252"
+                            android:textColor="@color/dm_error"
                             android:textSize="12sp"
                             android:fontFamily="sans-serif-medium" />
 
@@ -827,7 +841,7 @@
                             android:background="@drawable/bg_output_error"
                             android:fontFamily="monospace"
                             android:padding="14dp"
-                            android:textColor="#FF5252"
+                            android:textColor="@color/dm_error"
                             android:textSize="13sp"
                             tools:text="Error: printIn is not a method" />
                     </LinearLayout>
@@ -842,10 +856,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:visibility="gone"
-                    app:cardBackgroundColor="#2A2A1E"
-                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/dm_surface"
+                    app:cardCornerRadius="@dimen/dm_radius_lg"
                     app:cardElevation="0dp"
-                    app:strokeColor="#FFC107"
+                    app:strokeColor="@color/dm_warning"
                     app:strokeWidth="1dp"
                     tools:visibility="visible">
 
@@ -872,7 +886,7 @@
                                 android:layout_marginStart="10dp"
                                 android:fontFamily="sans-serif-medium"
                                 android:text="Hints"
-                                android:textColor="#FFC107"
+                                android:textColor="@color/dm_warning"
                                 android:textSize="16sp" />
                         </LinearLayout>
 
@@ -894,10 +908,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:visibility="gone"
-                    app:cardBackgroundColor="#1E2A1E"
-                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/dm_surface"
+                    app:cardCornerRadius="@dimen/dm_radius_lg"
                     app:cardElevation="0dp"
-                    app:strokeColor="#00E676"
+                    app:strokeColor="@color/dm_success"
                     app:strokeWidth="1dp"
                     tools:visibility="visible">
 
@@ -924,7 +938,7 @@
                                 android:layout_marginStart="10dp"
                                 android:fontFamily="sans-serif-medium"
                                 android:text="Solution Revealed"
-                                android:textColor="#00E676"
+                                android:textColor="@color/dm_success"
                                 android:textSize="16sp" />
                         </LinearLayout>
 
@@ -934,7 +948,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
                             android:text="📖 Explanation"
-                            android:textColor="#B8B8D0"
+                            android:textColor="@color/dm_text_secondary"
                             android:textSize="12sp"
                             android:fontFamily="sans-serif-medium" />
 
@@ -944,7 +958,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:lineSpacingExtra="4dp"
-                            android:textColor="#E8E8F0"
+                            android:textColor="@color/dm_text_primary"
                             android:textSize="14sp"
                             tools:text="The bug is a simple typo. The method should be 'println' (with a lowercase 'L' and 'N'), not 'printIn' (with uppercase 'I' and 'N')." />
 
@@ -954,7 +968,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
                             android:text="✅ Fixed Code"
-                            android:textColor="#00E676"
+                            android:textColor="@color/dm_success"
                             android:textSize="12sp"
                             android:fontFamily="sans-serif-medium" />
 
@@ -971,7 +985,7 @@
                                 android:background="@drawable/bg_code_block_success"
                                 android:fontFamily="monospace"
                                 android:padding="16dp"
-                                android:textColor="#E8E8F0"
+                                android:textColor="@color/dm_code_text"
                                 android:textSize="13sp"
                                 android:lineSpacingExtra="6dp"
                                 tools:text="System.out.println(&quot;Hello World&quot;);" />
@@ -987,10 +1001,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="#1A1A2E"
-                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/dm_surface"
+                    app:cardCornerRadius="@dimen/dm_radius_lg"
                     app:cardElevation="0dp"
-                    app:strokeColor="#2D2D44"
+                    app:strokeColor="@color/dm_border"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -1016,7 +1030,7 @@
                                 android:layout_marginStart="10dp"
                                 android:fontFamily="sans-serif-medium"
                                 android:text="My Notes"
-                                android:textColor="@color/white"
+                                android:textColor="@color/dm_text_primary"
                                 android:textSize="16sp" />
                         </LinearLayout>
 
@@ -1025,7 +1039,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="Save your thoughts and learnings"
-                            android:textColor="#6A6A8A"
+                            android:textColor="@color/dm_text_tertiary"
                             android:textSize="12sp" />
 
                         <EditText
@@ -1037,25 +1051,27 @@
                             android:background="@drawable/bg_notes_editor"
                             android:gravity="top|start"
                             android:hint="Type your notes here..."
-                            android:textColorHint="#4A4A6A"
+                            android:textColorHint="#94A3B8"
                             android:inputType="textMultiLine|textCapSentences"
                             android:maxLines="8"
                             android:padding="14dp"
-                            android:textColor="#E8E8F0"
+                            android:textColor="@color/dm_text_primary"
                             android:textSize="14sp" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/button_save_notes"
-                            android:layout_width="wrap_content"
-                            android:layout_height="42dp"
-                            android:layout_gravity="end"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
                             android:layout_marginTop="12dp"
                             android:text="💾  Save Notes"
-                            android:textColor="@color/white"
-                            android:textSize="13sp"
+                            android:textColor="@color/dm_text_primary"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-medium"
                             android:textAllCaps="false"
-                            app:backgroundTint="#3D3D5C"
+                            app:backgroundTint="@color/dm_surface_container"
                             app:cornerRadius="12dp"
+                            app:strokeColor="@color/dm_border"
+                            app:strokeWidth="1dp"
                             app:elevation="0dp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -1069,12 +1085,12 @@
                     android:layout_height="60dp"
                     android:layout_marginBottom="24dp"
                     android:text="🏆  Mark as Completed"
-                    android:textColor="@color/white"
+                    android:textColor="@color/dm_text_inverse"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"
                     android:textAllCaps="false"
-                    app:backgroundTint="#7C4DFF"
-                    app:cornerRadius="16dp"
+                    app:backgroundTint="@color/dm_primary"
+                    app:cornerRadius="@dimen/dm_radius_md"
                     app:elevation="0dp" />
 
             </LinearLayout>

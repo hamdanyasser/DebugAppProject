@@ -13,10 +13,10 @@
     android:layout_marginBottom="12dp"
     android:clickable="true"
     android:focusable="true"
-    app:cardBackgroundColor="#1A1A2E"
-    app:cardCornerRadius="16dp"
+    app:cardBackgroundColor="@color/dm_surface"
+    app:cardCornerRadius="@dimen/dm_radius_md"
     app:cardElevation="0dp"
-    app:strokeColor="#2D2D44"
+    app:strokeColor="@color/dm_border"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -62,7 +62,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="Loading..."
-                    android:textColor="@color/white"
+                    android:textColor="@color/dm_text_primary"
                     android:textSize="15sp"
                     android:fontFamily="sans-serif-medium" />
 
@@ -91,7 +91,7 @@
                     android:paddingHorizontal="6dp"
                     android:paddingVertical="2dp"
                     android:text="👑 PRO"
-                    android:textColor="#FFD54F"
+                    android:textColor="@color/dm_streak"
                     android:textSize="8sp"
                     android:fontFamily="sans-serif-bold"
                     android:visibility="gone" />
@@ -106,7 +106,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text=""
-                android:textColor="#8A8AA0"
+                android:textColor="@color/dm_text_secondary"
                 android:textSize="12sp" />
 
             <!-- Progress Bar -->
@@ -133,7 +133,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0 lessons"
-                    android:textColor="#6A6A8A"
+                    android:textColor="@color/dm_text_tertiary"
                     android:textSize="11sp" />
 
                 <TextView
@@ -141,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
                     android:text="•"
-                    android:textColor="#4A4A6A"
+                    android:textColor="@color/dm_text_disabled"
                     android:textSize="11sp" />
 
                 <TextView
@@ -149,7 +149,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="30 min"
-                    android:textColor="#6A6A8A"
+                    android:textColor="@color/dm_text_tertiary"
                     android:textSize="11sp" />
 
                 <TextView
@@ -157,7 +157,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
                     android:text="•"
-                    android:textColor="#4A4A6A"
+                    android:textColor="@color/dm_text_disabled"
                     android:textSize="11sp" />
 
                 <TextView
@@ -165,7 +165,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="100 XP"
-                    android:textColor="#FFD54F"
+                    android:textColor="@color/dm_xp"
                     android:textSize="11sp"
                     android:fontFamily="sans-serif-medium" />
             </LinearLayout>
@@ -196,7 +196,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0%"
-                android:textColor="#7C4DFF"
+                android:textColor="@color/dm_primary"
                 android:textSize="16sp"
                 android:fontFamily="sans-serif-bold" />
 
@@ -207,10 +207,10 @@
                 android:layout_marginTop="8dp"
                 android:minWidth="80dp"
                 android:text="Start"
-                android:textColor="@color/white"
+                android:textColor="@color/dm_text_inverse"
                 android:textSize="12sp"
                 android:textAllCaps="false"
-                app:backgroundTint="#7C4DFF"
+                app:backgroundTint="@color/dm_primary"
                 app:cornerRadius="10dp"
                 app:elevation="0dp" />
         </LinearLayout>

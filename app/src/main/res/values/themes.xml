@@ -402,6 +402,22 @@
         <item name="android:backgroundDimAmount">0.6</item>
     </style>
 
+    <!-- Premium Dialog Theme with enhanced styling -->
+    <style name="PremiumDialogTheme" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.75</item>
+        <item name="android:windowAnimationStyle">@style/PremiumDialogAnimation</item>
+    </style>
+
+    <!-- Premium dialog animation -->
+    <style name="PremiumDialogAnimation">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
     <!-- =======================================================================
          BOTTOM SHEET STYLES
          ======================================================================= -->

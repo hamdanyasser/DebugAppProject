@@ -1,6 +1,7 @@
 package com.example.debugappproject.model;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
@@ -40,6 +41,7 @@ public class Bug implements Serializable {
     }
 
     // Full constructor
+    @Ignore
     public Bug(int id, String title, String language, String difficulty, String category,
                String description, String brokenCode, String expectedOutput, String actualOutput,
                String explanation, String fixedCode, boolean isCompleted) {

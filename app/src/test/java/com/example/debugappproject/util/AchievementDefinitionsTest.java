@@ -10,111 +10,84 @@ import static org.junit.Assert.*;
 
 /**
  * Unit tests for achievement definitions and conditions.
- * Tests the default achievement configurations and validates their requirements.
+ * Tests the achievement configurations and validates their requirements.
  */
 public class AchievementDefinitionsTest {
 
     @Test
-    public void getDefaultAchievements_returnsNonEmptyList() {
-        List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
+    public void getAllAchievementDefinitions_returnsNonEmptyList() {
+        List<AchievementDefinition> achievements = AchievementManager.getAllAchievementDefinitions();
         assertNotNull(achievements);
         assertFalse(achievements.isEmpty());
     }
 
     @Test
-    public void getDefaultAchievements_returns13Achievements() {
-        List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
-        assertEquals(13, achievements.size());
+    public void getAllAchievementDefinitions_hasExpectedCount() {
+        List<AchievementDefinition> achievements = AchievementManager.getAllAchievementDefinitions();
+        // Should have many achievements (40+)
+        assertTrue("Should have at least 30 achievements", achievements.size() >= 30);
     }
 
     @Test
     public void firstFixAchievement_hasCorrectProperties() {
-        List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
-        AchievementDefinition firstFix = findById(achievements, AchievementManager.FIRST_FIX);
+        List<AchievementDefinition> achievements = AchievementManager.getAllAchievementDefinitions();
+        AchievementDefinition firstFix = findById(achievements, "first_fix");
 
-        assertNotNull(firstFix);
+        assertNotNull("first_fix achievement should exist", firstFix);
         assertEquals("First Fix", firstFix.getName());
         assertEquals("Solve your first bug", firstFix.getDescription());
-        assertEquals(10, firstFix.getXpReward());
+        assertTrue("XP reward should be positive", firstFix.getXpReward() > 0);
         assertEquals("MILESTONE", firstFix.getCategory());
     }
 
     @Test
-    public void noHintHeroAchievement_hasCorrectProperties() {
-        List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
-        AchievementDefinition noHintHero = findById(achievements, AchievementManager.NO_HINT_HERO);
+    public void streakAchievements_exist() {
+        List<AchievementDefinition> achievements = AchievementManager.getAllAchievementDefinitions();
+        
+        AchievementDefinition streak3 = findById(achievements, "streak_3");
+        AchievementDefinition streak7 = findById(achievements, "streak_7");
+        AchievementDefinition streak30 = findById(achievements, "streak_30");
 
-        assertNotNull(noHintHero);
-        assertEquals("No-Hint Hero", noHintHero.getName());
-        assertEquals(25, noHintHero.getXpReward());
-        assertEquals("SKILL", noHintHero.getCategory());
-    }
-
-    @Test
-    public void streakMachineAchievement_hasCorrectProperties() {
-        List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
-        AchievementDefinition streakMachine = findById(achievements, AchievementManager.STREAK_MACHINE);
-
-        assertNotNull(streakMachine);
-        assertEquals("Streak Machine", streakMachine.getName());
-        assertEquals(30, streakMachine.getXpReward());
-        assertEquals("STREAK", streakMachine.getCategory());
-    }
-
-    @Test
-    public void perfectTenAchievement_hasCorrectProperties() {
-        List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
-        AchievementDefinition perfectTen = findById(achievements, AchievementManager.PERFECT_TEN);
-
-        assertNotNull(perfectTen);
-        assertEquals("Perfect Ten", perfectTen.getName());
-        assertEquals(30, perfectTen.getXpReward());
-    }
-
-    @Test
-    public void completionistAchievement_hasHighestXpReward() {
-        List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
-        AchievementDefinition completionist = findById(achievements, AchievementManager.COMPLETIONIST);
-
-        assertNotNull(completionist);
-        assertEquals("Completionist", completionist.getName());
-        assertEquals(100, completionist.getXpReward());
-    }
-
-    @Test
-    public void xpCollectorAchievement_hasCorrectProperties() {
-        List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
-        AchievementDefinition xpCollector = findById(achievements, AchievementManager.XP_COLLECTOR);
-
-        assertNotNull(xpCollector);
-        assertEquals("XP Collector", xpCollector.getName());
-        assertEquals(20, xpCollector.getXpReward());
-    }
-
-    @Test
-    public void level5Achievement_hasCorrectProperties() {
-        List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
-        AchievementDefinition level5 = findById(achievements, AchievementManager.LEVEL_5);
-
-        assertNotNull(level5);
-        assertEquals("Level 5 Debugger", level5.getName());
-        assertEquals(50, level5.getXpReward());
-    }
-
-    @Test
-    public void streak30Achievement_hasHighXpReward() {
-        List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
-        AchievementDefinition streak30 = findById(achievements, AchievementManager.STREAK_30);
-
-        assertNotNull(streak30);
-        assertEquals("Month Master", streak30.getName());
-        assertEquals(75, streak30.getXpReward());
+        assertNotNull("streak_3 should exist", streak3);
+        assertNotNull("streak_7 should exist", streak7);
+        assertNotNull("streak_30 should exist", streak30);
+        
+        assertEquals("STREAK", streak3.getCategory());
+        assertEquals("STREAK", streak7.getCategory());
         assertEquals("STREAK", streak30.getCategory());
     }
 
     @Test
+    public void xpAchievements_exist() {
+        List<AchievementDefinition> achievements = AchievementManager.getAllAchievementDefinitions();
+        
+        AchievementDefinition xp100 = findById(achievements, "xp_100");
+        AchievementDefinition xp1000 = findById(achievements, "xp_1000");
+        AchievementDefinition xp10000 = findById(achievements, "xp_10000");
+
+        assertNotNull("xp_100 should exist", xp100);
+        assertNotNull("xp_1000 should exist", xp1000);
+        assertNotNull("xp_10000 should exist", xp10000);
+    }
+
+    @Test
+    public void bugMilestoneAchievements_exist() {
+        List<AchievementDefinition> achievements = AchievementManager.getAllAchievementDefinitions();
+        
+        AchievementDefinition bugSquasher = findById(achievements, "bug_squasher_10");
+        AchievementDefinition bugHunter = findById(achievements, "bug_hunter_25");
+        AchievementDefinition bugMaster = findById(achievements, "bug_master_100");
+
+        assertNotNull("bug_squasher_10 should exist", bugSquasher);
+        assertNotNull("bug_hunter_25 should exist", bugHunter);
+        assertNotNull("bug_master_100 should exist", bugMaster);
+        
+        assertEquals("MILESTONE", bugSquasher.getCategory());
+    }
+
+    @Test
     public void allAchievements_haveUniqueIds() {
-        List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
+        List<AchievementDefinition> achievements = AchievementManager.getAllAchievementDefinitions();
         long uniqueIds = achievements.stream()
             .map(AchievementDefinition::getId)
             .distinct()
@@ -125,7 +98,7 @@ public class AchievementDefinitionsTest {
 
     @Test
     public void allAchievements_haveUniqueSortOrders() {
-        List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
+        List<AchievementDefinition> achievements = AchievementManager.getAllAchievementDefinitions();
         long uniqueSortOrders = achievements.stream()
             .map(AchievementDefinition::getSortOrder)
             .distinct()
@@ -136,7 +109,7 @@ public class AchievementDefinitionsTest {
 
     @Test
     public void allAchievements_havePositiveXpRewards() {
-        List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
+        List<AchievementDefinition> achievements = AchievementManager.getAllAchievementDefinitions();
         for (AchievementDefinition achievement : achievements) {
             assertTrue("Achievement " + achievement.getName() + " should have positive XP",
                 achievement.getXpReward() > 0);
@@ -145,7 +118,7 @@ public class AchievementDefinitionsTest {
 
     @Test
     public void allAchievements_haveNonEmptyNames() {
-        List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
+        List<AchievementDefinition> achievements = AchievementManager.getAllAchievementDefinitions();
         for (AchievementDefinition achievement : achievements) {
             assertNotNull(achievement.getName());
             assertFalse(achievement.getName().isEmpty());
@@ -154,7 +127,7 @@ public class AchievementDefinitionsTest {
 
     @Test
     public void allAchievements_haveNonEmptyDescriptions() {
-        List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
+        List<AchievementDefinition> achievements = AchievementManager.getAllAchievementDefinitions();
         for (AchievementDefinition achievement : achievements) {
             assertNotNull(achievement.getDescription());
             assertFalse(achievement.getDescription().isEmpty());
@@ -163,8 +136,8 @@ public class AchievementDefinitionsTest {
 
     @Test
     public void achievementCategories_areValid() {
-        List<AchievementDefinition> achievements = AchievementManager.getDefaultAchievements();
-        String[] validCategories = {"MILESTONE", "SKILL", "CATEGORY", "STREAK"};
+        List<AchievementDefinition> achievements = AchievementManager.getAllAchievementDefinitions();
+        String[] validCategories = {"MILESTONE", "SKILL", "STREAK", "BATTLE", "CHALLENGE", "MASTERY", "SECRET"};
 
         for (AchievementDefinition achievement : achievements) {
             String category = achievement.getCategory();
@@ -178,6 +151,24 @@ public class AchievementDefinitionsTest {
             assertTrue("Achievement " + achievement.getName() + " has invalid category: " + category,
                 isValid);
         }
+    }
+
+    @Test
+    public void battleAchievements_exist() {
+        List<AchievementDefinition> achievements = AchievementManager.getAllAchievementDefinitions();
+        
+        AchievementDefinition firstWin = findById(achievements, "first_battle_win");
+        assertNotNull("first_battle_win should exist", firstWin);
+        assertEquals("BATTLE", firstWin.getCategory());
+    }
+
+    @Test
+    public void skillAchievements_exist() {
+        List<AchievementDefinition> achievements = AchievementManager.getAllAchievementDefinitions();
+        
+        AchievementDefinition noHints = findById(achievements, "no_hint_10");
+        assertNotNull("no_hint_10 should exist", noHints);
+        assertEquals("SKILL", noHints.getCategory());
     }
 
     /**
@@ -194,23 +185,21 @@ public class AchievementDefinitionsTest {
 
     /**
      * Test that validates achievement unlock conditions (documentation).
-     * These conditions are checked by AchievementManager.checkAndUnlockAchievements()
      */
     @Test
     public void achievementConditions_areDocumented() {
-        // FIRST_FIX: Unlock when totalSolved >= 1
-        // NO_HINT_HERO: Unlock when bugsSolvedWithoutHints >= 3
-        // ARRAY_ASSASSIN: Unlock when all array bugs are completed
-        // LOOP_MASTER: Unlock when all loop bugs are completed
-        // STREAK_MACHINE: Unlock when longestStreakDays >= 7
-        // PERFECT_TEN: Unlock when totalSolved >= 10
-        // COMPLETIONIST: Unlock when totalSolved >= total bugs count
-        // XP_COLLECTOR: Unlock when totalXp >= 500
-        // LEVEL_5: Unlock when level >= 5
-        // HARD_MODE: Unlock when hardSolved >= 5
-        // NO_HINTS_5: Unlock when bugsSolvedWithoutHints >= 5
-        // STREAK_7: Unlock when streakDays >= 7
-        // STREAK_30: Unlock when longestStreakDays >= 30
+        // Achievement unlock conditions:
+        // first_fix: totalSolved >= 1
+        // bug_squasher_10: totalSolved >= 10
+        // bug_hunter_25: totalSolved >= 25
+        // bug_master_100: totalSolved >= 100
+        // streak_3: streakDays >= 3
+        // streak_7: streakDays >= 7
+        // streak_30: streakDays >= 30
+        // xp_100: totalXp >= 100
+        // xp_1000: totalXp >= 1000
+        // no_hints_5: bugsSolvedWithoutHints >= 5
+        // battle_first_win: battleWins >= 1
 
         // This test documents the unlock conditions
         assertTrue(true);

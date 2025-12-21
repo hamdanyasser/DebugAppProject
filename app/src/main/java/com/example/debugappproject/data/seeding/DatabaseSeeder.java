@@ -39,7 +39,7 @@ import java.util.Set;
 public class DatabaseSeeder {
 
     private static final String TAG = "DatabaseSeeder";
-    private static final int SEED_VERSION = 4; // Increment to force reseed (v4: Fixed null hints issue)
+    private static final int SEED_VERSION = 5; // Increment to force reseed (v5: Redesigned Learn tab with popularity, tags, primaryCategory)
 
     public static void seedDatabase(Context context, BugRepository repository) {
         android.util.Log.i(TAG, "═══════════════════════════════════════════════════════");
@@ -407,7 +407,79 @@ public class DatabaseSeeder {
                 category, mins, lessons, xp, featured, isNew, color);
         p.setId(id);
         p.setTutorialContent(tutorial);
+        
+        // Set new fields for redesigned Learn tab
+        p.setPopularityScore(calculatePopularity(featured, isNew, locked));
+        p.setTags(generateTags(diff, mins, isNew, featured, locked));
+        p.setPrimaryCategory(mapToPrimaryCategory(category));
+        
         return p;
+    }
+    
+    /**
+     * Calculate popularity score (0-100)
+     */
+    private static int calculatePopularity(boolean featured, boolean isNew, boolean locked) {
+        int score = 50; // Base score
+        if (featured) score += 30;
+        if (isNew) score += 20;
+        if (!locked) score += 10; // Free paths slightly more "popular" for discoverability
+        return Math.min(score, 100);
+    }
+    
+    /**
+     * Generate comma-separated tags for filtering
+     */
+    private static String generateTags(String difficulty, int minutes, boolean isNew, boolean featured, boolean locked) {
+        List<String> tags = new ArrayList<>();
+        
+        // Difficulty tags
+        if ("Beginner".equals(difficulty)) tags.add("beginner");
+        else if ("Intermediate".equals(difficulty)) tags.add("intermediate");
+        else if ("Advanced".equals(difficulty) || "Expert".equals(difficulty)) tags.add("advanced");
+        
+        // Duration tags
+        if (minutes <= 45) tags.add("short");
+        else if (minutes >= 90) tags.add("comprehensive");
+        
+        // Status tags
+        if (isNew) tags.add("new");
+        if (featured) tags.add("popular");
+        if (!locked) tags.add("free");
+        
+        return String.join(",", tags);
+    }
+    
+    /**
+     * Map existing category to primary category for grouping
+     */
+    private static String mapToPrimaryCategory(String category) {
+        if (category == null) return "Other";
+        switch (category) {
+            case "Programming":
+                return "Languages";
+            case "CS Fundamentals":
+                return "Data Structures & Algorithms";
+            case "Best Practices":
+                return "Clean Code";
+            case "Career":
+                return "Interview Prep";
+            case "Expert":
+            case "Advanced":
+                return "Advanced";
+            case "AI/ML":
+                return "AI & ML";
+            case "Web":
+            case "Backend":
+            case "Database":
+                return "Web";
+            case "Mobile":
+                return "Mobile";
+            case "Fundamentals":
+                return "Getting Started";
+            default:
+                return category;
+        }
     }
 
     private static void seedAchievementsSync(BugRepository repository) {

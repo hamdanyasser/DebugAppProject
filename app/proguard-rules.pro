@@ -240,3 +240,51 @@
 # Ignore warnings from other libraries
 -dontwarn javax.annotation.**
 -dontwarn org.jetbrains.annotations.**
+
+# ===================================
+# OkHttp
+# ===================================
+
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
+-dontwarn okio.**
+
+# ===================================
+# Markwon (Markdown)
+# ===================================
+
+-keep class io.noties.markwon.** { *; }
+-dontwarn io.noties.markwon.**
+
+# ===================================
+# Janino (Code Execution)
+# ===================================
+
+-keep class org.codehaus.janino.** { *; }
+-keep class org.codehaus.commons.compiler.** { *; }
+-dontwarn org.codehaus.janino.**
+-dontwarn org.codehaus.commons.compiler.**
+
+# ===================================
+# Lottie Animations
+# ===================================
+
+-keep class com.airbnb.lottie.** { *; }
+-dontwarn com.airbnb.lottie.**
+
+# ===================================
+# Shimmer Effect
+# ===================================
+
+-keep class com.facebook.shimmer.** { *; }
+-dontwarn com.facebook.shimmer.**
+
+# ===================================
+# Game Engine Classes
+# ===================================
+
+-keep class com.example.debugappproject.game.** { *; }
+-keep class com.example.debugappproject.execution.** { *; }
+-keep class com.example.debugappproject.ai.** { *; }
+-keep class com.example.debugappproject.multiplayer.** { *; }

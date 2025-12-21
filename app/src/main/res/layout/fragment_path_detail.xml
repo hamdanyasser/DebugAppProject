@@ -257,18 +257,20 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="💡 Tip: Complete challenges in order for the best learning experience!"
-                        android:textColor="#60A5FA"
+                        android:textColor="#93C5FD"
                         android:textSize="13sp" />
 
-                    <ImageButton
+                    <TextView
                         android:id="@+id/button_dismiss_tip"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_close"
-                        android:contentDescription="Dismiss"
-                        app:tint="#60A5FA" />
+                        android:text="Got it"
+                        android:textColor="#60A5FA"
+                        android:textSize="12sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:padding="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless" />
 
                 </LinearLayout>
 

@@ -19,6 +19,8 @@ import com.example.debugappproject.billing.BillingManager;
 import com.example.debugappproject.data.repository.BugRepository;
 import com.example.debugappproject.databinding.FragmentShopBinding;
 import com.example.debugappproject.util.SoundManager;
+import com.example.debugappproject.ui.profile.PremiumAvatarSelectorDialog;
+import com.example.debugappproject.ui.profile.PremiumTitleSelectorDialog;
 
 /**
  * Shop Fragment for purchasing items with gems and buying gems with real money.
@@ -106,27 +108,29 @@ public class ShopFragment extends Fragment {
         // Cosmetics
         binding.buttonBuyAvatars.setOnClickListener(v -> {
             if (shopPrefs.getBoolean(KEY_AVATARS_UNLOCKED, false)) {
-                soundManager.playSound(SoundManager.Sound.ERROR);
-                Toast.makeText(getContext(), "You already own this!", Toast.LENGTH_SHORT).show();
+                // Already owned - open selector to choose avatar
+                soundManager.playButtonClick();
+                showPremiumAvatarSelector();
                 return;
             }
             purchaseItem("Premium Avatars", PRICE_AVATARS, () -> {
                 shopPrefs.edit().putBoolean(KEY_AVATARS_UNLOCKED, true).apply();
-                binding.buttonBuyAvatars.setText("✓ Owned");
-                binding.buttonBuyAvatars.setEnabled(false);
+                binding.buttonBuyAvatars.setText("Select ▸");
+                // Don't disable - keep clickable to open selector
             });
         });
 
         binding.buttonBuyTitles.setOnClickListener(v -> {
             if (shopPrefs.getBoolean(KEY_TITLES_UNLOCKED, false)) {
-                soundManager.playSound(SoundManager.Sound.ERROR);
-                Toast.makeText(getContext(), "You already own this!", Toast.LENGTH_SHORT).show();
+                // Already owned - open selector to choose title
+                soundManager.playButtonClick();
+                showPremiumTitleSelector();
                 return;
             }
             purchaseItem("Custom Titles", PRICE_TITLES, () -> {
                 shopPrefs.edit().putBoolean(KEY_TITLES_UNLOCKED, true).apply();
-                binding.buttonBuyTitles.setText("✓ Owned");
-                binding.buttonBuyTitles.setEnabled(false);
+                binding.buttonBuyTitles.setText("Select ▸");
+                // Don't disable - keep clickable to open selector
             });
         });
 
@@ -257,12 +261,32 @@ public class ShopFragment extends Fragment {
             binding.textHintCount.setText("Owned: " + hints);
             binding.textHintCount.setVisibility(hints > 0 ? View.VISIBLE : View.GONE);
         }
+        // Update hint button based on ownership
+        if (binding.buttonBuyHints != null) {
+            if (hints > 0) {
+                binding.buttonBuyHints.setText("💡 Use");
+                binding.buttonBuyHints.setBackgroundTintList(android.content.res.ColorStateList.valueOf(0xFF22C55E));
+            } else {
+                binding.buttonBuyHints.setText("💎 50");
+                binding.buttonBuyHints.setBackgroundTintList(android.content.res.ColorStateList.valueOf(0xFF6366F1));
+            }
+        }
 
         // Update XP boost count display
         int xpBoosts = shopPrefs.getInt(KEY_XP_BOOST_COUNT, 0);
         if (binding.textXpBoostCount != null) {
             binding.textXpBoostCount.setText("Remaining: " + xpBoosts);
             binding.textXpBoostCount.setVisibility(xpBoosts > 0 ? View.VISIBLE : View.GONE);
+        }
+        // Update XP boost button based on count
+        if (binding.buttonBuyXpBoost != null) {
+            if (xpBoosts > 0) {
+                binding.buttonBuyXpBoost.setText("✨ Active");
+                binding.buttonBuyXpBoost.setBackgroundTintList(android.content.res.ColorStateList.valueOf(0xFFFBBF24));
+            } else {
+                binding.buttonBuyXpBoost.setText("💎 75");
+                binding.buttonBuyXpBoost.setBackgroundTintList(android.content.res.ColorStateList.valueOf(0xFF6366F1));
+            }
         }
 
         // Update streak shield status
@@ -277,16 +301,26 @@ public class ShopFragment extends Fragment {
                 binding.textStreakShieldStatus.setVisibility(View.GONE);
             }
         }
+        // Update streak shield button based on status
+        if (binding.buttonBuyStreakShield != null) {
+            if (shieldActive) {
+                binding.buttonBuyStreakShield.setText("🛡️ Protected");
+                binding.buttonBuyStreakShield.setBackgroundTintList(android.content.res.ColorStateList.valueOf(0xFF60A5FA));
+            } else {
+                binding.buttonBuyStreakShield.setText("💎 100");
+                binding.buttonBuyStreakShield.setBackgroundTintList(android.content.res.ColorStateList.valueOf(0xFF6366F1));
+            }
+        }
     }
 
     private void updateOwnedItems() {
         if (shopPrefs.getBoolean(KEY_AVATARS_UNLOCKED, false)) {
-            binding.buttonBuyAvatars.setText("✓ Owned");
-            binding.buttonBuyAvatars.setEnabled(false);
+            binding.buttonBuyAvatars.setText("Select ▸");
+            // Keep enabled so user can select avatars
         }
         if (shopPrefs.getBoolean(KEY_TITLES_UNLOCKED, false)) {
-            binding.buttonBuyTitles.setText("✓ Owned");
-            binding.buttonBuyTitles.setEnabled(false);
+            binding.buttonBuyTitles.setText("Select ▸");
+            // Keep enabled so user can select titles
         }
     }
 
@@ -484,13 +518,21 @@ public class ShopFragment extends Fragment {
 
     // ============ Avatar & Title Methods ============
 
+    // 10 Exclusive Premium Avatars with legendary creatures and special emojis
     private static final String[] PREMIUM_AVATARS = {
-        "🦊", "🐲", "🦄", "🐺", "🦅", "🐼", "🦁", "🐯"
+        "🦊", "🐲", "🦄", "🐺", "🦅", "🐼", "🦁", "🐯", "🐉", "🦋"
     };
 
+    // Premium Titles with special emoji prefixes for visual distinction
     private static final String[] PREMIUM_TITLES = {
-        "Bug Slayer", "Code Ninja", "Debug Master", "Syntax Sage",
-        "Logic Lord", "Error Eliminator", "Bug Hunter Elite", "Code Wizard"
+        "🔥 Bug Slayer",
+        "⚔️ Code Ninja",
+        "👑 Debug Master",
+        "🧙 Syntax Sage",
+        "🎯 Logic Lord",
+        "💥 Error Eliminator",
+        "🏆 Bug Hunter Elite",
+        "✨ Code Wizard"
     };
 
     public static String[] getPremiumAvatars() {
@@ -503,7 +545,7 @@ public class ShopFragment extends Fragment {
 
     public static String getSelectedAvatar(android.content.Context context) {
         return context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE)
-                .getString(KEY_SELECTED_AVATAR, null);
+                .getString(KEY_SELECTED_AVATAR, "");
     }
 
     public static void setSelectedAvatar(android.content.Context context, String avatar) {
@@ -515,7 +557,7 @@ public class ShopFragment extends Fragment {
 
     public static String getSelectedTitle(android.content.Context context) {
         return context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE)
-                .getString(KEY_SELECTED_TITLE, null);
+                .getString(KEY_SELECTED_TITLE, "");
     }
 
     public static void setSelectedTitle(android.content.Context context, String title) {
@@ -539,9 +581,43 @@ public class ShopFragment extends Fragment {
         return count;
     }
 
+    /**
+     * Show premium avatar selector dialog from shop
+     */
+    private void showPremiumAvatarSelector() {
+        String currentAvatar = getSelectedAvatar(requireContext());
+        
+        PremiumAvatarSelectorDialog dialog = PremiumAvatarSelectorDialog.newInstance(currentAvatar);
+        dialog.setOnPremiumAvatarSelectedListener(emoji -> {
+            Toast.makeText(getContext(), "Avatar equipped: " + emoji, Toast.LENGTH_SHORT).show();
+        });
+        dialog.show(getChildFragmentManager(), "premium_avatar_selector");
+    }
+    
+    /**
+     * Show premium title selector dialog from shop
+     */
+    private void showPremiumTitleSelector() {
+        String currentTitle = getSelectedTitle(requireContext());
+        
+        PremiumTitleSelectorDialog dialog = PremiumTitleSelectorDialog.newInstance(currentTitle);
+        dialog.setOnPremiumTitleSelectedListener(title -> {
+            if (title != null && !title.isEmpty()) {
+                Toast.makeText(getContext(), "Title equipped: " + title, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Title removed", Toast.LENGTH_SHORT).show();
+            }
+        });
+        dialog.show(getChildFragmentManager(), "premium_title_selector");
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        // Clear all field references to prevent memory leaks
+        repository = null;
+        soundManager = null;
+        shopPrefs = null;
         binding = null;
     }
 }

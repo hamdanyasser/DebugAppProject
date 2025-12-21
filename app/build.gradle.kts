@@ -12,8 +12,8 @@ android {
         applicationId = "com.example.debugappproject"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -103,7 +103,7 @@ dependencies {
     // Testing
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.inline)
+    testImplementation(libs.janino)  // Needed for CodeExecutionEngine tests
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 }
