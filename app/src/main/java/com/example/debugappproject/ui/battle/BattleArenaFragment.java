@@ -28,6 +28,7 @@ import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -101,6 +102,24 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
     private enum GameState { MENU, MATCHMAKING, COUNTDOWN, BATTLE, RESULT }
     private GameState currentState = GameState.MENU;
     
+    // Phase 2: AI Difficulty system
+    public enum AIDifficulty {
+        EASY(0.4f, 90, 180),      // Win rate 40%, solve time 90-180s
+        MEDIUM(0.55f, 60, 120),   // Win rate 55%, solve time 60-120s
+        HARD(0.7f, 40, 90);       // Win rate 70%, solve time 40-90s
+        
+        public final float winRate;
+        public final int minSolveTime;
+        public final int maxSolveTime;
+        
+        AIDifficulty(float winRate, int minTime, int maxTime) {
+            this.winRate = winRate;
+            this.minSolveTime = minTime;
+            this.maxSolveTime = maxTime;
+        }
+    }
+    private AIDifficulty selectedDifficulty = AIDifficulty.MEDIUM;
+    
     private boolean isRealMultiplayer = false;
     private BattleRoom currentRoom;
     private CountDownTimer matchmakingTimer;
@@ -131,6 +150,14 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
     private ValueAnimator opponentProgressAnimator;
     private int opponentTargetTime;
     private boolean opponentWillWin;
+    
+    // Phase 1: Glow and animation control
+    private ValueAnimator quickMatchGlowAnimator;
+    private ValueAnimator timerPulseAnimator;
+    private ObjectAnimator timerShakeAnimator;
+
+    // Prevent double-loading bug
+    private boolean bugLoadingInProgress = false;
     
     // Stats
     private int wins = 0;
@@ -393,6 +420,8 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
     @Override
     public void onTimerSync(long serverStartTime, long battleDurationMs) {
         if (!isAdded() || battleBinding == null) return;
+        // Only process timer sync during active battle
+        if (currentState != GameState.BATTLE) return;
 
         Log.d(TAG, "Timer sync received: serverStartTime=" + serverStartTime + ", duration=" + battleDurationMs);
 
@@ -473,6 +502,144 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
             isRealMultiplayer = false;
             startAIMatchmaking();
         }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════
+    //                   PHASE 3: CONNECTION STATE CALLBACKS
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    @Override
+    public void onConnectionStateChanged(FirebaseMultiplayerManager.ConnectionState state) {
+        if (!isAdded()) return;
+        
+        // Update menu connection indicator
+        TextView connectionStatus = menuBinding != null ? 
+            menuBinding.getRoot().findViewById(R.id.text_connection_status) : null;
+        
+        if (connectionStatus != null) {
+            connectionStatus.setVisibility(View.VISIBLE);
+            switch (state) {
+                case CONNECTED:
+                    connectionStatus.setText("🟢");
+                    break;
+                case DISCONNECTED:
+                case RECONNECTING:
+                    connectionStatus.setText("🔴");
+                    break;
+            }
+        }
+        
+        // Handle disconnect during battle
+        if (state == FirebaseMultiplayerManager.ConnectionState.DISCONNECTED && 
+            currentState == GameState.BATTLE && isRealMultiplayer) {
+            showReconnectingOverlay(true);
+        } else if (state == FirebaseMultiplayerManager.ConnectionState.CONNECTED) {
+            showReconnectingOverlay(false);
+        }
+    }
+    
+    @Override
+    public void onReconnectFailed() {
+        if (!isAdded()) return;
+        
+        if (currentState == GameState.BATTLE && isRealMultiplayer) {
+            showReconnectingOverlay(false);
+            endBattle(false, "⚠️ Connection lost - forfeited");
+        }
+    }
+    
+    /**
+     * Phase 3: Show/hide reconnecting overlay during battle
+     */
+    private void showReconnectingOverlay(boolean show) {
+        if (battleBinding == null) return;
+        
+        View overlay = battleBinding.getRoot().findViewById(R.id.layout_reconnecting);
+        if (overlay != null) {
+            overlay.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+    }
+    
+    /**
+     * Phase 3: Show victory confetti (simple falling emoji TextViews)
+     */
+    private void showVictoryConfetti() {
+        if (battleBinding == null || !isAdded()) return;
+        
+        FrameLayout confettiContainer = battleBinding.getRoot().findViewById(R.id.layout_confetti_container);
+        if (confettiContainer == null) return;
+        
+        confettiContainer.setVisibility(View.VISIBLE);
+        
+        String[] confettiEmojis = {"🎉", "🎊", "✨", "⭐", "🏆", "🥳", "💫", "🌟"};
+        Random random = new Random();
+        
+        // Create 8 falling emoji views
+        for (int i = 0; i < 8; i++) {
+            final TextView confetti = new TextView(requireContext());
+            confetti.setText(confettiEmojis[random.nextInt(confettiEmojis.length)]);
+            confetti.setTextSize(24 + random.nextInt(16));
+            
+            int screenWidth = confettiContainer.getWidth() > 0 ? confettiContainer.getWidth() : 800;
+            int startX = random.nextInt(screenWidth);
+            
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.leftMargin = startX;
+            params.topMargin = -50;
+            confetti.setLayoutParams(params);
+            
+            confettiContainer.addView(confetti);
+            
+            // Animate falling
+            ObjectAnimator fall = ObjectAnimator.ofFloat(confetti, "translationY", 0, 1500);
+            fall.setDuration(2000 + random.nextInt(1500));
+            fall.setStartDelay(i * 100L);
+            fall.setInterpolator(new AccelerateInterpolator(0.5f));
+            fall.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    if (confetti.getParent() != null) {
+                        ((ViewGroup) confetti.getParent()).removeView(confetti);
+                    }
+                }
+            });
+            fall.start();
+            
+            // Slight rotation
+            ObjectAnimator rotate = ObjectAnimator.ofFloat(confetti, "rotation", 0, random.nextBoolean() ? 360 : -360);
+            rotate.setDuration(2000 + random.nextInt(1500));
+            rotate.setStartDelay(i * 100L);
+            rotate.start();
+        }
+    }
+    
+    /**
+     * Phase 3: Show defeat overlay (dark crack effect)
+     */
+    private void showDefeatOverlay() {
+        if (battleBinding == null || !isAdded()) return;
+        
+        View crackOverlay = battleBinding.getRoot().findViewById(R.id.view_defeat_crack);
+        if (crackOverlay == null) return;
+        
+        crackOverlay.setVisibility(View.VISIBLE);
+        crackOverlay.setAlpha(0f);
+        
+        // Fade in the dark overlay
+        crackOverlay.animate()
+            .alpha(0.6f)
+            .setDuration(500)
+            .start();
+        
+        // Shake the screen
+        if (!isReduceMotionEnabled()) {
+            ObjectAnimator shake = ObjectAnimator.ofFloat(battleBinding.getRoot(), "translationX", 0, 15, -15, 10, -10, 5, -5, 0);
+            shake.setDuration(500);
+            shake.start();
+        }
+        
+        vibratePattern(new long[]{0, 200, 100, 200});
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -727,6 +894,264 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
         }
         if (menuBinding.textTrophies != null) menuBinding.textTrophies.setText(String.format("%,d", trophies));
     }
+    
+    // ═══════════════════════════════════════════════════════════════════════════
+    //                      PHASE 1: REDUCE MOTION & ANIMATIONS
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    /**
+     * Check if reduce motion is enabled in preferences
+     */
+    private boolean isReduceMotionEnabled() {
+        SharedPreferences appPrefs = requireContext().getSharedPreferences("app_settings", Context.MODE_PRIVATE);
+        return appPrefs.getBoolean("reduce_motion", false);
+    }
+    
+    /**
+     * Start pulsing glow animation on Quick Match button
+     */
+    private void startQuickMatchGlow() {
+        if (isReduceMotionEnabled() || menuBinding == null) return;
+        
+        View glowView = menuBinding.getRoot().findViewById(R.id.view_quick_match_glow);
+        if (glowView == null) return;
+        
+        // Cancel any existing animator
+        if (quickMatchGlowAnimator != null) {
+            quickMatchGlowAnimator.cancel();
+        }
+        
+        quickMatchGlowAnimator = ValueAnimator.ofFloat(0.4f, 1.0f);
+        quickMatchGlowAnimator.setDuration(3000);
+        quickMatchGlowAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        quickMatchGlowAnimator.setRepeatMode(ValueAnimator.REVERSE);
+        quickMatchGlowAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        quickMatchGlowAnimator.addUpdateListener(animation -> {
+            if (glowView != null && isAdded()) {
+                glowView.setAlpha((float) animation.getAnimatedValue());
+            }
+        });
+        quickMatchGlowAnimator.start();
+    }
+    
+    /**
+     * Animate stats counting up from 0 to actual values
+     */
+    private void animateStatsCountUp() {
+        if (menuBinding == null || !isAdded()) return;
+        
+        final int targetWins = wins;
+        final int targetLosses = losses;
+        final int total = wins + losses;
+        final int targetWinRate = total > 0 ? (wins * 100) / total : 0;
+        
+        ValueAnimator statsAnimator = ValueAnimator.ofFloat(0f, 1f);
+        statsAnimator.setDuration(800);
+        statsAnimator.setInterpolator(new DecelerateInterpolator());
+        statsAnimator.addUpdateListener(animation -> {
+            if (menuBinding == null || !isAdded()) return;
+            float fraction = (float) animation.getAnimatedValue();
+            
+            int currentWins = (int) (targetWins * fraction);
+            int currentLosses = (int) (targetLosses * fraction);
+            int currentWinRate = (int) (targetWinRate * fraction);
+            
+            if (menuBinding.textWins != null) menuBinding.textWins.setText(String.valueOf(currentWins));
+            if (menuBinding.textLosses != null) menuBinding.textLosses.setText(String.valueOf(currentLosses));
+            if (menuBinding.textWinRate != null) menuBinding.textWinRate.setText(currentWinRate + "%");
+        });
+        statsAnimator.start();
+    }
+    
+    /**
+     * Update timer visual urgency based on remaining seconds (Phase 1)
+     */
+    private void updateTimerUrgency(int secondsRemaining) {
+        if (battleBinding == null || !isAdded()) return;
+
+        if (secondsRemaining <= 10) {
+            // Critical: Red + shake + haptic + critical background
+            battleBinding.textBattleTimer.setTextColor(Color.RED);
+
+            // Change timer background to critical state
+            View timerContainer = battleBinding.getRoot().findViewById(R.id.layout_timer_container);
+            if (timerContainer != null) {
+                timerContainer.setBackgroundResource(R.drawable.bg_timer_critical);
+            }
+
+            // Haptic feedback is OK even with reduce motion
+            vibrateShort();
+
+            if (!isReduceMotionEnabled()) {
+                // Shake animation
+                if (timerShakeAnimator == null || !timerShakeAnimator.isRunning()) {
+                    if (timerContainer != null) {
+                        timerShakeAnimator = ObjectAnimator.ofFloat(timerContainer, "translationX", 0, 10, -10, 10, -10, 5, -5, 0);
+                        timerShakeAnimator.setDuration(400);
+                        timerShakeAnimator.start();
+                    }
+                }
+            }
+        } else if (secondsRemaining <= 30) {
+            // Warning: Red + pulse
+            battleBinding.textBattleTimer.setTextColor(getResources().getColor(R.color.error, null));
+            
+            if (!isReduceMotionEnabled()) {
+                if (timerPulseAnimator == null || !timerPulseAnimator.isRunning()) {
+                    View timerContainer = battleBinding.getRoot().findViewById(R.id.layout_timer_container);
+                    if (timerContainer != null) {
+                        timerPulseAnimator = ValueAnimator.ofFloat(1f, 1.1f, 1f);
+                        timerPulseAnimator.setDuration(600);
+                        timerPulseAnimator.addUpdateListener(anim -> {
+                            float scale = (float) anim.getAnimatedValue();
+                            timerContainer.setScaleX(scale);
+                            timerContainer.setScaleY(scale);
+                        });
+                        timerPulseAnimator.start();
+                    }
+                }
+            }
+        } else if (secondsRemaining <= 60) {
+            // Caution: Yellow/warning
+            battleBinding.textBattleTimer.setTextColor(getResources().getColor(R.color.xp_gold, null));
+        } else {
+            // Normal: White
+            battleBinding.textBattleTimer.setTextColor(Color.WHITE);
+        }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════════════
+    //                      PHASE 2: AI PERSONALITY & SCORING
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    // AI greeting messages (positive, non-toxic)
+    private static final String[] AI_GREETINGS = {
+        "🎮 Let's have a great match!",
+        "👋 Ready for a fun challenge?",
+        "🤖 May the best debugger win!"
+    };
+    
+    // AI reactions when player crosses 50%
+    private static final String[] AI_PLAYER_AHEAD_REACTIONS = {
+        "👀 Nice! You're quick!",
+        "😮 Wow, speedy work!",
+        "🔥 You're on fire!"
+    };
+    
+    private static final String[] AI_PLAYER_BEHIND_REACTIONS = {
+        "🤔 Thinking hard...",
+        "💭 Almost got it...",
+        "🧠 Processing..."
+    };
+    
+    private boolean hasShownMidBattleReaction = false;
+    
+    /**
+     * Show AI greeting at battle start
+     */
+    private void showAIGreeting() {
+        Random random = new Random();
+        String greeting = AI_GREETINGS[random.nextInt(AI_GREETINGS.length)];
+        handler.postDelayed(() -> {
+            if (isAdded()) {
+                Toast.makeText(requireContext(), opponentName + ": " + greeting, Toast.LENGTH_SHORT).show();
+            }
+        }, 2000);
+    }
+    
+    /**
+     * Show AI reaction when player crosses 50% progress
+     */
+    private void showMidBattleReaction(boolean playerAhead) {
+        if (hasShownMidBattleReaction || !isAdded()) return;
+        hasShownMidBattleReaction = true;
+        
+        Random random = new Random();
+        String reaction;
+        if (playerAhead) {
+            reaction = AI_PLAYER_AHEAD_REACTIONS[random.nextInt(AI_PLAYER_AHEAD_REACTIONS.length)];
+        } else {
+            reaction = AI_PLAYER_BEHIND_REACTIONS[random.nextInt(AI_PLAYER_BEHIND_REACTIONS.length)];
+        }
+        
+        Toast.makeText(requireContext(), opponentName + ": " + reaction, Toast.LENGTH_SHORT).show();
+    }
+    
+    /**
+     * Phase 2: Calculate detailed score breakdown
+     * BASE_TROPHIES = 30
+     * BONUSES: +10 if <60s, +5 if <90s, +5 clean (no hint), +5 first try, +2 per streak up to +10
+     * PENALTIES: -5 hint used, -2 per wrong submission up to -10
+     * Max bonus cap: +25
+     */
+    private int[] calculateEnhancedScore(boolean won) {
+        int baseTrophies = won ? 30 : -15;
+        int speedBonus = 0;
+        int cleanBonus = 0;
+        int firstTryBonus = 0;
+        int streakBonus = 0;
+        int hintPenalty = 0;
+        int wrongAttemptPenalty = 0;
+        
+        if (won) {
+            // Speed bonus
+            if (timeTaken < 60) {
+                speedBonus = 10;
+            } else if (timeTaken < 90) {
+                speedBonus = 5;
+            }
+            
+            // Clean fix (no hint)
+            if (!hintUsed) {
+                cleanBonus = 5;
+            }
+            
+            // First try
+            if (submissionAttempts == 1) {
+                firstTryBonus = 5;
+            }
+            
+            // Streak bonus
+            streakBonus = Math.min(currentStreak * 2, 10);
+        }
+        
+        // Penalties
+        if (hintUsed) {
+            hintPenalty = -5;
+        }
+        // Penalty: -2 per wrong attempt, capped at -10
+        int penaltyPoints = (submissionAttempts - 1) * 2;
+        wrongAttemptPenalty = -Math.min(penaltyPoints, 10);
+        
+        // Cap total bonuses at +25
+        int totalBonus = speedBonus + cleanBonus + firstTryBonus + streakBonus;
+        totalBonus = Math.min(totalBonus, 25);
+        
+        int totalPenalty = hintPenalty + wrongAttemptPenalty;
+        int finalScore = baseTrophies + totalBonus + totalPenalty;
+        
+        // Return breakdown: [total, base, speedBonus, cleanBonus, firstTryBonus, streakBonus, hintPenalty, wrongPenalty]
+        return new int[] { finalScore, baseTrophies, speedBonus, cleanBonus, firstTryBonus, streakBonus, hintPenalty, wrongAttemptPenalty };
+    }
+    
+    /**
+     * Build score breakdown string for result overlay
+     */
+    private String buildScoreBreakdownText(int[] breakdown) {
+        StringBuilder sb = new StringBuilder();
+        // breakdown: [total, base, speed, clean, firstTry, streak, hintPen, wrongPen]
+        
+        sb.append("Base: ").append(breakdown[1] >= 0 ? "+" : "").append(breakdown[1]);
+        
+        if (breakdown[2] > 0) sb.append(" | Speed: +").append(breakdown[2]);
+        if (breakdown[3] > 0) sb.append(" | Clean: +").append(breakdown[3]);
+        if (breakdown[4] > 0) sb.append(" | 1st Try: +").append(breakdown[4]);
+        if (breakdown[5] > 0) sb.append(" | Streak: +").append(breakdown[5]);
+        if (breakdown[6] < 0) sb.append(" | Hint: ").append(breakdown[6]);
+        if (breakdown[7] < 0) sb.append(" | Retries: ").append(breakdown[7]);
+        
+        return sb.toString();
+    }
 
     // ═══════════════════════════════════════════════════════════════════════════
     //                         MENU UI
@@ -774,6 +1199,34 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
                 cancelMatchmaking();
             });
         }
+        
+        // Phase 2: Setup difficulty selector
+        setupDifficultySelector();
+    }
+    
+    /**
+     * Phase 2: Setup difficulty selector chip group
+     */
+    private void setupDifficultySelector() {
+        com.google.android.material.chip.ChipGroup chipGroup = 
+            menuBinding.getRoot().findViewById(R.id.chip_group_difficulty);
+        if (chipGroup == null) return;
+        
+        chipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            if (checkedIds == null || checkedIds.isEmpty()) return;
+
+            int checkedId = checkedIds.get(0);
+            if (checkedId == R.id.chip_easy) {
+                selectedDifficulty = AIDifficulty.EASY;
+                soundManager.playButtonClick();
+            } else if (checkedId == R.id.chip_medium) {
+                selectedDifficulty = AIDifficulty.MEDIUM;
+                soundManager.playButtonClick();
+            } else if (checkedId == R.id.chip_hard) {
+                selectedDifficulty = AIDifficulty.HARD;
+                soundManager.playButtonClick();
+            }
+        });
     }
     
     private void playEntranceAnimations() {
@@ -793,6 +1246,14 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
                         .start();
             }
         }
+        
+        // Phase 1: Start stats count up and glow after card animations
+        handler.postDelayed(() -> {
+            if (isAdded()) {
+                animateStatsCountUp();
+                startQuickMatchGlow();
+            }
+        }, 600);
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -803,6 +1264,12 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
         if (multiplayerManager == null) {
             showFirebaseUnavailableDialog();
             return;
+        }
+        
+        // Auto-leave any existing room before creating new one
+        if (multiplayerManager.isInRoom()) {
+            Log.d(TAG, "Auto-leaving previous room before creating new one");
+            multiplayerManager.leaveRoom();
         }
         
         soundManager.playSound(SoundManager.Sound.NOTIFICATION);
@@ -897,6 +1364,12 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
     }
     
     private void joinRoom(String roomCode) {
+        // Auto-leave any existing room before joining new one
+        if (multiplayerManager.isInRoom()) {
+            Log.d(TAG, "Auto-leaving previous room before joining new one");
+            multiplayerManager.leaveRoom();
+        }
+        
         soundManager.playSound(SoundManager.Sound.CHALLENGE_START);
         showMatchmakingOverlay("🔗 Joining room " + roomCode + "...");
         currentState = GameState.MATCHMAKING;
@@ -949,17 +1422,32 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
     private void startMatchmaking(String mode) {
         currentState = GameState.MATCHMAKING;
         resetBattleState();
+
+        // Quick Match = instant AI, no Firebase search or waiting
+        if (mode.equals("random")) {
+            isRealMultiplayer = false;
+            showMatchmakingOverlay("⚡ Starting battle...");
+            startInstantAIMatch();
+            return;
+        }
+
+        // Only use Firebase for friend/room modes (future)
         showMatchmakingOverlay("🔍 Searching for opponent...");
-        
-        if (multiplayerManager != null && mode.equals("random")) {
+        if (multiplayerManager != null) {
             isRealMultiplayer = true;
-            
+
+            // Auto-leave any existing room before starting new matchmaking
+            if (multiplayerManager.isInRoom()) {
+                Log.d(TAG, "Auto-leaving previous room before starting matchmaking");
+                multiplayerManager.leaveRoom();
+            }
+
             executor.execute(() -> {
                 try {
                     int bugCount = bugDao.getBugCount();
                     Random random = new Random();
                     int bugId = random.nextInt(Math.max(1, bugCount)) + 1;
-                    
+
                     handler.post(() -> {
                         multiplayerManager.startMatchmaking(requireContext(), bugId);
                         startMatchmakingTimeout();
@@ -975,6 +1463,24 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
             isRealMultiplayer = false;
             startAIMatchmaking();
         }
+    }
+
+    /**
+     * Start instant AI match without Firebase search or delays
+     */
+    private void startInstantAIMatch() {
+        Random random = new Random();
+        String prefix = OPPONENT_PREFIXES[random.nextInt(OPPONENT_PREFIXES.length)];
+        String suffix = OPPONENT_SUFFIXES[random.nextInt(OPPONENT_SUFFIXES.length)];
+        opponentName = prefix + suffix + random.nextInt(100);
+
+        // Use selected difficulty for AI behavior
+        opponentWillWin = random.nextFloat() < selectedDifficulty.winRate;
+        int timeRange = selectedDifficulty.maxSolveTime - selectedDifficulty.minSolveTime;
+        opponentTargetTime = selectedDifficulty.minSolveTime + random.nextInt(timeRange + 1);
+
+        // Brief transition then load bug immediately
+        handler.postDelayed(this::loadRandomBugForBattle, 500);
     }
     
     private void startMatchmakingTimeout() {
@@ -1017,11 +1523,13 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
         String suffix = OPPONENT_SUFFIXES[random.nextInt(OPPONENT_SUFFIXES.length)];
         opponentName = prefix + suffix + random.nextInt(100);
         
-        int total = wins + losses;
-        int winRate = total > 0 ? (wins * 100) / total : 50;
-        int opponentWinChance = 35 + (winRate / 5);
-        opponentWillWin = random.nextInt(100) < opponentWinChance;
-        opponentTargetTime = opponentWillWin ? (40 + random.nextInt(60)) : (80 + random.nextInt(80));
+        // Phase 2: Use selected difficulty for AI behavior
+        opponentWillWin = random.nextFloat() < selectedDifficulty.winRate;
+        int timeRange = selectedDifficulty.maxSolveTime - selectedDifficulty.minSolveTime;
+        opponentTargetTime = selectedDifficulty.minSolveTime + random.nextInt(timeRange + 1);
+        
+        // Show AI greeting (Phase 2)
+        showAIGreeting();
         
         String[] statusMessages = {
             "🔍 Searching for opponent...",
@@ -1093,15 +1601,22 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
         timerStarted = false;
         timeRemaining = BATTLE_DURATION_SECONDS;
         timeTaken = 0;
+        hasShownMidBattleReaction = false; // Phase 2
+        bugLoadingInProgress = false; // Reset loading flag
     }
     
     private void loadBugAndStartBattle(int bugId) {
+        // Prevent double-loading from multiple callbacks
+        if (bugLoadingInProgress) return;
+        bugLoadingInProgress = true;
+
         executor.execute(() -> {
             try {
                 currentBug = bugDao.getBugByIdSync(bugId);
                 if (currentBug == null) currentBug = bugDao.getBugByIdSync(1);
-                
+
                 handler.post(() -> {
+                    bugLoadingInProgress = false;
                     if (currentBug != null && (currentState == GameState.MATCHMAKING || currentState == GameState.MENU)) {
                         initBattleUI();
                     } else {
@@ -1111,6 +1626,7 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
                 });
             } catch (Exception e) {
                 handler.post(() -> {
+                    bugLoadingInProgress = false;
                     showError("Error: " + e.getMessage());
                     cancelMatchmaking();
                 });
@@ -1171,7 +1687,15 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
         
         // Setup battle UI
         battleBinding = LayoutBattleGameBinding.inflate(getLayoutInflater(), rootContainer, false);
-        menuBinding.getRoot().setVisibility(View.GONE);
+        // REMOVE menu view instead of hiding to prevent z-ordering conflicts
+        rootContainer.removeView(menuBinding.getRoot());
+
+        // Ensure battle layout fills the entire container
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT);
+        battleBinding.getRoot().setLayoutParams(params);
+
         rootContainer.addView(battleBinding.getRoot());
         
         setupBattleUI();
@@ -1283,6 +1807,13 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
             multiplayerManager.updateProgress(progress);
         }
         
+        // Phase 2: Mid-battle AI reaction when player crosses 50%
+        if (progress >= 50 && !isRealMultiplayer) {
+            int opponentProgress = battleBinding.progressOpponent.getProgress();
+            boolean playerAhead = progress > opponentProgress;
+            showMidBattleReaction(playerAhead);
+        }
+        
         // Update status with emoji
         String status;
         int color;
@@ -1324,29 +1855,20 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
                 if (battleBinding != null) {
                     battleBinding.textBattleTimer.setText(String.format("%d:%02d", minutes, seconds));
                     
-                    // Dramatic low-time effects
-                    if (timeRemaining <= 10) {
-                        battleBinding.textBattleTimer.setTextColor(Color.RED);
-                        pulseView(battleBinding.textBattleTimer);
+                    // Phase 1: Use centralized urgency handler
+                    updateTimerUrgency(timeRemaining);
+                    
+                    // Sound and toast notifications at key thresholds
+                    if (timeRemaining == 60) {
+                        soundManager.playSound(SoundManager.Sound.NOTIFICATION);
+                        Toast.makeText(requireContext(), "⏱️ 1 minute remaining!", Toast.LENGTH_SHORT).show();
+                    } else if (timeRemaining == 30) {
                         soundManager.playSound(SoundManager.Sound.WARNING);
-                        vibrateShort();
-                        
-                        if (!playerSubmitted) {
-                            showFloatingEmoji("⏰", battleBinding.getRoot());
-                        }
-                    } else if (timeRemaining <= 30) {
-                        battleBinding.textBattleTimer.setTextColor(getResources().getColor(R.color.error, null));
-                        if (timeRemaining == 30) {
-                            soundManager.playSound(SoundManager.Sound.WARNING);
-                            vibratePattern(new long[]{0, 100, 50, 100});
-                            Toast.makeText(requireContext(), "⚠️ 30 seconds left!", Toast.LENGTH_SHORT).show();
-                        }
-                    } else if (timeRemaining <= 60) {
-                        battleBinding.textBattleTimer.setTextColor(getResources().getColor(R.color.xp_gold, null));
-                        if (timeRemaining == 60) {
-                            soundManager.playSound(SoundManager.Sound.NOTIFICATION);
-                            Toast.makeText(requireContext(), "⏱️ 1 minute remaining!", Toast.LENGTH_SHORT).show();
-                        }
+                        vibratePattern(new long[]{0, 100, 50, 100});
+                        Toast.makeText(requireContext(), "⚠️ 30 seconds left!", Toast.LENGTH_SHORT).show();
+                    } else if (timeRemaining <= 10 && !playerSubmitted) {
+                        soundManager.playSound(SoundManager.Sound.WARNING);
+                        showFloatingEmoji("⏰", battleBinding.getRoot());
                     }
                 }
             }
@@ -1500,12 +2022,22 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
             battleBinding.buttonSubmitFix.setAlpha(1f);
             
             String feedback;
+            String toastMessage;
+            
+            // Phase 2: Enhanced near-miss feedback
             if (similarity >= 0.90) {
-                feedback = "🔥 SO close! Double-check syntax!";
+                feedback = "🔥 SO CLOSE!";
+                // Try to provide specific hint
+                toastMessage = "SO CLOSE! Check for small typos or syntax errors.";
+                showFloatingEmoji("🔥", battleBinding.getRoot());
+                // Additional haptic for near-miss
+                vibratePattern(new long[]{0, 50, 30, 50});
             } else if (similarity >= 0.70) {
                 feedback = "⚡ Getting there! Keep going!";
+                toastMessage = feedback;
             } else {
                 feedback = "❌ Not quite. (Attempt " + submissionAttempts + ")";
+                toastMessage = feedback;
             }
             
             battleBinding.textPlayerStatus.setText(feedback);
@@ -1520,7 +2052,7 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
             if (submissionAttempts >= 3 && !hintUsed) {
                 Toast.makeText(requireContext(), "💡 Try using the hint button!", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(requireContext(), feedback, Toast.LENGTH_LONG).show();
+                Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -1541,21 +2073,20 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
             multiplayerManager.leaveRoom();
         }
         
-        Random random = new Random();
-        int baseTrophies = won ? 25 : -15;
-        int bonusTrophies = random.nextInt(15);
-        int trophyChange = won ? (baseTrophies + bonusTrophies) : baseTrophies;
+        // Phase 2: Use enhanced scoring system
+        int[] scoreBreakdown = calculateEnhancedScore(won);
+        int trophyChange = scoreBreakdown[0];
         
+        // Additional multiplayer bonus
         if (won && isRealMultiplayer) trophyChange += 10;
-        if (won && comboCount >= 2) trophyChange += comboCount * 3;
         
         if (won) {
             currentStreak++;
-            if (currentStreak >= 3) trophyChange += currentStreak * 2;
         } else {
             currentStreak = 0;
         }
         
+        Random random = new Random();
         int xpEarned = won ? (50 + random.nextInt(25)) : 10;
         if (hintUsed && won) xpEarned -= 10;
         if (timeTaken < 60 && won) xpEarned += 20; // Speed bonus
@@ -1568,9 +2099,13 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
                     CELEBRATION_EMOJIS[random.nextInt(CELEBRATION_EMOJIS.length)], 
                     battleBinding.getRoot()), i * 200L);
             }
+            // Phase 3: Show victory confetti
+            showVictoryConfetti();
         } else {
             losses++;
             soundManager.playSound(SoundManager.Sound.DEFEAT);
+            // Phase 3: Show defeat overlay
+            showDefeatOverlay();
         }
         trophies = Math.max(0, trophies + trophyChange);
         
@@ -1578,10 +2113,10 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
         if (battleHistory.size() > 20) battleHistory = battleHistory.subList(0, 20);
         
         saveStats();
-        showResultOverlay(won, reason, trophyChange, xpEarned);
+        showResultOverlay(won, reason, trophyChange, xpEarned, scoreBreakdown);
     }
     
-    private void showResultOverlay(boolean won, String reason, int trophyChange, int xpEarned) {
+    private void showResultOverlay(boolean won, String reason, int trophyChange, int xpEarned, int[] scoreBreakdown) {
         if (battleBinding == null) return;
         
         battleBinding.textResultEmoji.setText(won ? "🏆" : "😢");
@@ -1590,6 +2125,14 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
             getResources().getColor(R.color.difficulty_easy, null) :
             getResources().getColor(R.color.error, null));
         battleBinding.textResultMessage.setText(reason);
+        
+        // Phase 2: Show score breakdown
+        TextView breakdownText = battleBinding.getRoot().findViewById(R.id.text_score_breakdown);
+        if (breakdownText != null && scoreBreakdown != null) {
+            String breakdownStr = buildScoreBreakdownText(scoreBreakdown);
+            breakdownText.setText(breakdownStr);
+            breakdownText.setVisibility(View.VISIBLE);
+        }
         
         String trophyText = (trophyChange >= 0 ? "+" : "") + trophyChange;
         battleBinding.textTrophyChange.setText(trophyText);
@@ -1606,8 +2149,8 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
         battleBinding.layoutResult.setVisibility(View.VISIBLE);
         battleBinding.layoutResult.setAlpha(0f);
         battleBinding.layoutResult.animate().alpha(1f).setDuration(300).start();
-        
-        // Bouncy emoji animation
+
+        // Bouncy emoji animation with scale
         battleBinding.textResultEmoji.setScaleX(0f);
         battleBinding.textResultEmoji.setScaleY(0f);
         battleBinding.textResultEmoji.animate()
@@ -1616,6 +2159,49 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
             .setInterpolator(new BounceInterpolator())
             .setStartDelay(200)
             .start();
+
+        // Title animation with slide up
+        battleBinding.textResultTitle.setTranslationY(50f);
+        battleBinding.textResultTitle.setAlpha(0f);
+        battleBinding.textResultTitle.animate()
+            .translationY(0f)
+            .alpha(1f)
+            .setDuration(400)
+            .setStartDelay(400)
+            .start();
+
+        // Stats card animation
+        View statsCard = battleBinding.getRoot().findViewById(R.id.layout_result).findViewById(android.R.id.content);
+
+        // Defeat shake effect
+        if (!won && !isReduceMotionEnabled()) {
+            View rootView = battleBinding.getRoot();
+            android.view.animation.Animation shakeAnim = android.view.animation.AnimationUtils.loadAnimation(requireContext(), R.anim.anim_shake);
+            rootView.startAnimation(shakeAnim);
+        }
+
+        // Trophy/XP counter animation
+        animateCounter(battleBinding.textTrophyChange, 0, trophyChange, 800, 600);
+        animateCounter(battleBinding.textXpEarned, 0, xpEarned, 800, 700);
+    }
+
+    private void animateCounter(TextView textView, int from, int to, long duration, long delay) {
+        if (textView == null || isReduceMotionEnabled()) {
+            textView.setText((to >= 0 ? "+" : "") + to);
+            return;
+        }
+
+        android.os.Handler h = new android.os.Handler(android.os.Looper.getMainLooper());
+        h.postDelayed(() -> {
+            android.animation.ValueAnimator animator = android.animation.ValueAnimator.ofInt(from, to);
+            animator.setDuration(duration);
+            animator.setInterpolator(new android.view.animation.DecelerateInterpolator());
+            animator.addUpdateListener(anim -> {
+                int value = (int) anim.getAnimatedValue();
+                textView.setText((value >= 0 ? "+" : "") + value);
+            });
+            animator.start();
+        }, delay);
     }
     
     private void returnToMenu() {
@@ -1627,7 +2213,11 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
             rootContainer.removeView(battleBinding.getRoot());
             battleBinding = null;
         }
-        
+
+        // Re-add menu view if it was removed (prevents z-ordering issues)
+        if (menuBinding.getRoot().getParent() == null) {
+            rootContainer.addView(menuBinding.getRoot(), 0);
+        }
         menuBinding.getRoot().setVisibility(View.VISIBLE);
         if (menuBinding.layoutMatchmaking != null) menuBinding.layoutMatchmaking.setVisibility(View.GONE);
         if (menuBinding.layoutMainMenu != null) menuBinding.layoutMainMenu.setVisibility(View.VISIBLE);
@@ -1708,6 +2298,12 @@ public class BattleArenaFragment extends Fragment implements FirebaseMultiplayer
         if (battleTimer != null) battleTimer.cancel();
         if (matchmakingTimer != null) matchmakingTimer.cancel();
         if (opponentProgressAnimator != null) opponentProgressAnimator.cancel();
+        
+        // Phase 1: Cancel all custom animators
+        if (quickMatchGlowAnimator != null) quickMatchGlowAnimator.cancel();
+        if (timerPulseAnimator != null) timerPulseAnimator.cancel();
+        if (timerShakeAnimator != null) timerShakeAnimator.cancel();
+        
         if (executor != null) executor.shutdown();
         
         if (multiplayerManager != null) {

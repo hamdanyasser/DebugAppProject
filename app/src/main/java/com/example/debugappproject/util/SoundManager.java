@@ -168,13 +168,33 @@ public class SoundManager {
                 .build();
 
         soundPool.setOnLoadCompleteListener((pool, sampleId, status) -> {
+            // Find which sound this sampleId corresponds to
+            Sound loadedSound = null;
+            for (Map.Entry<Sound, Integer> entry : soundIds.entrySet()) {
+                if (entry.getValue() == sampleId) {
+                    loadedSound = entry.getKey();
+                    break;
+                }
+            }
+            
             if (status == 0) {
-                // Find which sound was loaded and mark it
-                for (Map.Entry<Sound, Integer> entry : soundIds.entrySet()) {
-                    if (entry.getValue() == sampleId) {
-                        soundLoaded.put(entry.getKey(), true);
-                        break;
-                    }
+                // Successfully loaded
+                if (loadedSound != null) {
+                    soundLoaded.put(loadedSound, true);
+                    Log.d(TAG, "Sound loaded successfully: " + loadedSound.name() + " (sampleId=" + sampleId + ")");
+                }
+            } else {
+                // Failed to load - log detailed error info
+                if (loadedSound != null) {
+                    soundLoaded.put(loadedSound, false);
+                    String resourceName = getResourceNameForSound(loadedSound);
+                    Log.e(TAG, "SOUND LOAD FAILED: " + loadedSound.name() + 
+                          " | resource: " + resourceName + 
+                          " | sampleId=" + sampleId + 
+                          " | status=" + status +
+                          " | Consider converting to .ogg or 16-bit PCM .wav");
+                } else {
+                    Log.e(TAG, "SOUND LOAD FAILED: unknown sound | sampleId=" + sampleId + " | status=" + status);
                 }
             }
         });
@@ -194,6 +214,51 @@ public class SoundManager {
             }
         } else {
             vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        }
+    }
+
+    /**
+     * Get resource name for a sound (used for error logging)
+     */
+    private String getResourceNameForSound(Sound sound) {
+        switch (sound) {
+            case BUTTON_CLICK: return "button_click";
+            case BUTTON_START: return "button_start";
+            case BUTTON_BACK: return "button_back";
+            case BUTTON_APPEAR: return "button_appear";
+            case LOGO_WHOOSH: return "logo_whoosh";
+            case TEXT_REVEAL: return "text_reveal";
+            case GLITCH: return "glitch";
+            case TYPING: return "typing";
+            case LOADING_COMPLETE: return "loading_complete";
+            case TRANSITION: return "transition";
+            case SUCCESS: return "success";
+            case FAILURE: return "failure";
+            case LEVEL_UP: return "level_up";
+            case ACHIEVEMENT_UNLOCK: return "achievement_unlock";
+            case XP_GAIN: return "xp_gain";
+            case COIN_COLLECT: return "coin_collect";
+            case STREAK_INCREASE: return "streak_increase";
+            case COMBO: return "combo";
+            case CODE_SUBMIT: return "code_submit";
+            case CODE_COMPILE: return "code_compile";
+            case CODE_ERROR: return "code_error";
+            case CODE_RUN: return "code_run";
+            case ERROR: return "error";
+            case WARNING: return "warning";
+            case NOTIFICATION: return "notification";
+            case BLIP: return "blip";
+            case TICK: return "tick";
+            case COUNTDOWN: return "countdown";
+            case POWER_UP: return "power_up";
+            case HINT_REVEAL: return "hint_reveal";
+            case STAR_EARNED: return "star_earned";
+            case PERFECT_SCORE: return "perfect_score";
+            case CHALLENGE_START: return "challenge_start";
+            case CHALLENGE_COMPLETE: return "challenge_complete";
+            case VICTORY: return "victory";
+            case DEFEAT: return "defeat";
+            default: return "unknown";
         }
     }
 

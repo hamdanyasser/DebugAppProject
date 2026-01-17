@@ -69,6 +69,16 @@ public class FirebaseMultiplayerManager {
     private int mySubmissionAttempts = 0;
     private long lastSubmissionTime = 0;
     
+    // Phase 3: Connection state tracking
+    public enum ConnectionState {
+        CONNECTED,
+        DISCONNECTED,
+        RECONNECTING
+    }
+    private ConnectionState currentConnectionState = ConnectionState.CONNECTED;
+    private ValueEventListener connectionListener;
+    private boolean isReconnecting = false;
+    
     // ═══════════════════════════════════════════════════════════════════════════
     //                         CALLBACK INTERFACE
     // ═══════════════════════════════════════════════════════════════════════════
@@ -90,6 +100,10 @@ public class FirebaseMultiplayerManager {
         default void onSubmissionResult(boolean isCorrect, String feedback, int attemptNumber) {}
         default void onOpponentSubmissionResult(boolean isCorrect) {}
         default void onBothPlayersReady(long serverStartTime) {}
+        
+        // Phase 3: Connection state callbacks
+        default void onConnectionStateChanged(ConnectionState state) {}
+        default void onReconnectFailed() {}
     }
     
     // ═══════════════════════════════════════════════════════════════════════════
@@ -111,10 +125,88 @@ public class FirebaseMultiplayerManager {
             // Sync server time offset for accurate timer sync
             syncServerTime();
             
+            // Phase 3: Start connection monitoring
+            startConnectionMonitoring();
+            
             Log.d(TAG, "Firebase initialized with URL: " + DATABASE_URL);
         } catch (Exception e) {
             Log.e(TAG, "Failed to initialize Firebase", e);
         }
+    }
+    
+    /**
+     * Phase 3: Monitor Firebase connection state
+     */
+    private void startConnectionMonitoring() {
+        DatabaseReference connectedRef = database.getReference(".info/connected");
+        connectionListener = connectedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean connected = Boolean.TRUE.equals(snapshot.getValue(Boolean.class));
+                ConnectionState newState = connected ? ConnectionState.CONNECTED : ConnectionState.DISCONNECTED;
+                
+                if (newState != currentConnectionState) {
+                    Log.d(TAG, "Connection state changed: " + newState);
+                    currentConnectionState = newState;
+                    
+                    mainHandler.post(() -> {
+                        if (callback != null) {
+                            callback.onConnectionStateChanged(newState);
+                        }
+                    });
+                    
+                    // If disconnected during a battle, start reconnection timer
+                    if (newState == ConnectionState.DISCONNECTED && currentRoomId != null) {
+                        isReconnecting = true;
+                        startReconnectionTimeout();
+                    } else if (newState == ConnectionState.CONNECTED && isReconnecting) {
+                        isReconnecting = false;
+                        cancelReconnectionTimeout();
+                    }
+                }
+            }
+            
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w(TAG, "Connection monitoring cancelled", error.toException());
+            }
+        });
+    }
+    
+    private Runnable reconnectionTimeoutRunnable;
+    
+    /**
+     * Phase 3: Start 10-second reconnection timeout
+     */
+    private void startReconnectionTimeout() {
+        cancelReconnectionTimeout();
+        
+        reconnectionTimeoutRunnable = () -> {
+            if (isReconnecting && currentRoomId != null) {
+                Log.w(TAG, "Reconnection timeout - auto-forfeit");
+                mainHandler.post(() -> {
+                    if (callback != null) {
+                        callback.onReconnectFailed();
+                    }
+                });
+            }
+        };
+        
+        mainHandler.postDelayed(reconnectionTimeoutRunnable, 10000); // 10 seconds
+    }
+    
+    private void cancelReconnectionTimeout() {
+        if (reconnectionTimeoutRunnable != null) {
+            mainHandler.removeCallbacks(reconnectionTimeoutRunnable);
+            reconnectionTimeoutRunnable = null;
+        }
+    }
+    
+    /**
+     * Phase 3: Get current connection state
+     */
+    public ConnectionState getConnectionState() {
+        return currentConnectionState;
     }
     
     /**
@@ -201,6 +293,12 @@ public class FirebaseMultiplayerManager {
     // ═══════════════════════════════════════════════════════════════════════════
     
     public void createRoom(Context context, int bugId, CreateRoomCallback callback) {
+        // Phase 3: Prevent creating room if already in one
+        if (isInRoom()) {
+            mainHandler.post(() -> callback.onError("Already in a room. Leave current room first."));
+            return;
+        }
+        
         // Reset submission state for new game
         mySubmissionAttempts = 0;
         lastSubmissionTime = 0;
@@ -253,11 +351,30 @@ public class FirebaseMultiplayerManager {
     // ═══════════════════════════════════════════════════════════════════════════
     
     public void joinRoomByCode(Context context, String roomCode, JoinRoomCallback callback) {
+        // Phase 3: Validate room code format (6 chars, uppercase)
+        if (roomCode == null || roomCode.trim().length() != 6) {
+            mainHandler.post(() -> callback.onError("Invalid room code format. Must be 6 characters."));
+            return;
+        }
+        
+        String normalizedCode = roomCode.trim().toUpperCase();
+        
+        // Phase 3: Validate only alphanumeric
+        if (!normalizedCode.matches("^[A-Z0-9]{6}$")) {
+            mainHandler.post(() -> callback.onError("Invalid room code. Use only letters and numbers."));
+            return;
+        }
+        
+        // Phase 3: Prevent joining if already in a room
+        if (isInRoom()) {
+            mainHandler.post(() -> callback.onError("Already in a room. Leave current room first."));
+            return;
+        }
+        
         // Reset submission state for new game
         mySubmissionAttempts = 0;
         lastSubmissionTime = 0;
         
-        String normalizedCode = roomCode.trim().toUpperCase();
         Log.d(TAG, "Looking up room code: " + normalizedCode);
         
         roomCodesRef.child(normalizedCode).addListenerForSingleValueEvent(new ValueEventListener() {

@@ -52,11 +52,28 @@ public class AchievementManager {
     
     private AchievementManager(Context context) {
         this.context = context.getApplicationContext();
-        DebugMasterDatabase db = DebugMasterDatabase.getInstance(context);
-        this.achievementDao = db.achievementDao();
-        this.userProgressDao = db.userProgressDao();
+        AchievementDao tempAchievementDao = null;
+        UserProgressDao tempUserProgressDao = null;
+        
+        try {
+            DebugMasterDatabase db = DebugMasterDatabase.getInstance(context);
+            tempAchievementDao = db.achievementDao();
+            tempUserProgressDao = db.userProgressDao();
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to initialize database DAOs - achievements disabled until DB is ready", e);
+        }
+        
+        this.achievementDao = tempAchievementDao;
+        this.userProgressDao = tempUserProgressDao;
         this.prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         this.executor = Executors.newSingleThreadExecutor();
+    }
+    
+    /**
+     * Check if the database is ready for achievement operations.
+     */
+    private boolean isDatabaseReady() {
+        return achievementDao != null && userProgressDao != null;
     }
     
     public static synchronized AchievementManager getInstance(Context context) {
@@ -75,6 +92,11 @@ public class AchievementManager {
      * Call this after any progress-related action.
      */
     public void checkAllAchievements() {
+        if (!isDatabaseReady()) {
+            Log.w(TAG, "Database not ready - skipping achievement check");
+            return;
+        }
+        
         executor.execute(() -> {
             try {
                 UserProgress progress = userProgressDao.getUserProgressSync();
@@ -166,6 +188,7 @@ public class AchievementManager {
      */
     private void checkAndUnlock(String achievementId, boolean condition) {
         if (!condition) return;
+        if (!isDatabaseReady()) return;
         
         try {
             UserAchievement existing = achievementDao.getUserAchievementSync(achievementId);
@@ -203,11 +226,17 @@ public class AchievementManager {
     }
     
     private AchievementDefinition findAchievementDefinition(String id) {
-        List<AchievementDefinition> all = achievementDao.getAllAchievementDefinitionsSync();
-        for (AchievementDefinition def : all) {
-            if (def.getId().equals(id)) {
-                return def;
+        if (!isDatabaseReady()) return null;
+        
+        try {
+            List<AchievementDefinition> all = achievementDao.getAllAchievementDefinitionsSync();
+            for (AchievementDefinition def : all) {
+                if (def.getId().equals(id)) {
+                    return def;
+                }
             }
+        } catch (Exception e) {
+            Log.e(TAG, "Error finding achievement definition: " + id, e);
         }
         return null;
     }
@@ -518,5 +547,15 @@ public class AchievementManager {
             "Win a battle after losing 3 in a row", "🔄", 100, "SECRET", 102));
         
         return achievements;
+    }
+
+    /**
+     * Shutdown the executor service to prevent thread leaks.
+     * Should be called when the app is being destroyed.
+     */
+    public void shutdown() {
+        if (executor != null && !executor.isShutdown()) {
+            executor.shutdown();
+        }
     }
 }

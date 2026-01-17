@@ -1,5 +1,6 @@
 package com.example.debugappproject.model;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -28,11 +29,16 @@ public class Bug implements Serializable {
     private String actualOutput;    // What the buggy code outputs/error message
     private String explanation;     // Root cause explanation of the bug
     private String fixedCode;       // The corrected version of the code
+    
+    @ColumnInfo(defaultValue = "0")
     private boolean isCompleted;    // Whether user has solved this bug
+    
     private String starterCode;     // Starting code for user's attempt (defaults to brokenCode if null)
     private String userNotes;       // User's personal notes for this bug
     private String testsJson;       // JSON string containing test cases
     private String hint;            // Helpful hint without giving away the answer
+    
+    @ColumnInfo(defaultValue = "0")
     private int xpReward;             // XP reward for solving this bug
 
     // No-arg constructor for Room

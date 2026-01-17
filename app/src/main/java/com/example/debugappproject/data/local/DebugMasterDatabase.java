@@ -1,6 +1,9 @@
 package com.example.debugappproject.data.local;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.database.Cursor;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -59,6 +62,7 @@ import com.example.debugappproject.model.UserProgress;
  *   - Elo rating and ranked tier system
  *   - Battle statistics
  */
+// NOTE: Bump DB version whenever entities/schema changes to avoid identity hash mismatch!
 @Database(
     entities = {
         Bug.class,
@@ -73,7 +77,7 @@ import com.example.debugappproject.model.UserProgress;
         MentalProfile.class,
         DailyChallenge.class
     },
-    version = 12,
+    version = 13,
     exportSchema = false
 )
 public abstract class DebugMasterDatabase extends RoomDatabase {
@@ -385,32 +389,210 @@ public abstract class DebugMasterDatabase extends RoomDatabase {
 
     /**
      * Migration from version 11 to 12.
-     * Adds xpReward column to bugs table.
+     * Adds xpReward column to bugs table with proper schema.
+     * Handles three cases:
+     * 1. Column doesn't exist: Add via ALTER TABLE
+     * 2. Column exists with correct schema: Do nothing
+     * 3. Column exists with wrong schema: Rebuild table
+     *
+     * NOTE: Room expects defaultValue="0" from @ColumnInfo annotation.
+     * SQLite PRAGMA table_info returns dflt_value as "0" (string) for INTEGER DEFAULT 0.
      */
     static final Migration MIGRATION_11_12 = new Migration(11, 12) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            // Add xpReward column to bugs table
-            database.execSQL("ALTER TABLE bugs ADD COLUMN xpReward INTEGER NOT NULL DEFAULT 0");
+            ColumnMetadata colMeta = getColumnMetadata(database, "bugs", "xpReward");
+            
+            if (colMeta == null) {
+                // Column doesn't exist - add it
+                database.execSQL("ALTER TABLE bugs ADD COLUMN xpReward INTEGER NOT NULL DEFAULT 0");
+            } else if (!colMeta.isNotNull || !isDefaultValueZero(colMeta.defaultValue)) {
+                // Column exists but with wrong schema - rebuild table
+                rebuildBugsTableWithCorrectSchema(database);
+            }
+            // If column exists with correct schema (NOT NULL + DEFAULT 0), do nothing
+        }
+        
+        /**
+         * Check if the default value represents zero.
+         * SQLite can return "0", "'0'", or null for different scenarios.
+         */
+        private boolean isDefaultValueZero(String defaultValue) {
+            if (defaultValue == null) return false;
+            String trimmed = defaultValue.trim();
+            return "0".equals(trimmed) || "'0'".equals(trimmed);
+        }
+        
+        private void rebuildBugsTableWithCorrectSchema(SupportSQLiteDatabase database) {
+            // Create new table with correct schema
+            database.execSQL(
+                "CREATE TABLE IF NOT EXISTS bugs_new (" +
+                "id INTEGER PRIMARY KEY NOT NULL, " +
+                "title TEXT, " +
+                "language TEXT, " +
+                "difficulty TEXT, " +
+                "category TEXT, " +
+                "description TEXT, " +
+                "brokenCode TEXT, " +
+                "expectedOutput TEXT, " +
+                "actualOutput TEXT, " +
+                "explanation TEXT, " +
+                "fixedCode TEXT, " +
+                "isCompleted INTEGER NOT NULL DEFAULT 0, " +
+                "starterCode TEXT, " +
+                "userNotes TEXT, " +
+                "testsJson TEXT, " +
+                "hint TEXT, " +
+                "xpReward INTEGER NOT NULL DEFAULT 0)"
+            );
+            
+            // Copy data from old table, using COALESCE for xpReward
+            database.execSQL(
+                "INSERT INTO bugs_new (id, title, language, difficulty, category, description, " +
+                "brokenCode, expectedOutput, actualOutput, explanation, fixedCode, isCompleted, " +
+                "starterCode, userNotes, testsJson, hint, xpReward) " +
+                "SELECT id, title, language, difficulty, category, description, " +
+                "brokenCode, expectedOutput, actualOutput, explanation, fixedCode, isCompleted, " +
+                "starterCode, userNotes, testsJson, hint, COALESCE(xpReward, 0) FROM bugs"
+            );
+            
+            // Drop old table and rename new one
+            database.execSQL("DROP TABLE bugs");
+            database.execSQL("ALTER TABLE bugs_new RENAME TO bugs");
         }
     };
 
     /**
+     * Migration from version 12 to 13.
+     * Rebuilds bugs table to ensure schema exactly matches Bug.java entity.
+     * This fixes identity hash mismatch by ensuring DEFAULT values are consistent.
+     */
+    static final Migration MIGRATION_12_13 = new Migration(12, 13) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("DebugMasterDatabase", "Running MIGRATION_12_13: Rebuilding bugs table for schema consistency");
+            
+            // Create new table with exact schema matching Bug.java entity
+            database.execSQL(
+                "CREATE TABLE IF NOT EXISTS bugs_new (" +
+                "id INTEGER PRIMARY KEY NOT NULL, " +
+                "title TEXT, " +
+                "language TEXT, " +
+                "difficulty TEXT, " +
+                "category TEXT, " +
+                "description TEXT, " +
+                "brokenCode TEXT, " +
+                "expectedOutput TEXT, " +
+                "actualOutput TEXT, " +
+                "explanation TEXT, " +
+                "fixedCode TEXT, " +
+                "isCompleted INTEGER NOT NULL DEFAULT 0, " +
+                "starterCode TEXT, " +
+                "userNotes TEXT, " +
+                "testsJson TEXT, " +
+                "hint TEXT, " +
+                "xpReward INTEGER NOT NULL DEFAULT 0)"
+            );
+            
+            // Copy data from old table, using COALESCE for safety
+            database.execSQL(
+                "INSERT INTO bugs_new (id, title, language, difficulty, category, description, " +
+                "brokenCode, expectedOutput, actualOutput, explanation, fixedCode, isCompleted, " +
+                "starterCode, userNotes, testsJson, hint, xpReward) " +
+                "SELECT id, title, language, difficulty, category, description, " +
+                "brokenCode, expectedOutput, actualOutput, explanation, fixedCode, " +
+                "COALESCE(isCompleted, 0), starterCode, userNotes, testsJson, hint, " +
+                "COALESCE(xpReward, 0) FROM bugs"
+            );
+            
+            // Drop old table and rename new one
+            database.execSQL("DROP TABLE bugs");
+            database.execSQL("ALTER TABLE bugs_new RENAME TO bugs");
+            
+            Log.d("DebugMasterDatabase", "MIGRATION_12_13 completed successfully");
+        }
+    };
+
+    /**
+     * Column metadata holder for schema validation during migrations.
+     * Named ColumnMetadata to avoid shadowing Room's @ColumnInfo annotation.
+     */
+    private static class ColumnMetadata {
+        final String name;
+        final boolean isNotNull;
+        final String defaultValue;
+        
+        ColumnMetadata(String name, boolean isNotNull, String defaultValue) {
+            this.name = name;
+            this.isNotNull = isNotNull;
+            this.defaultValue = defaultValue;
+        }
+    }
+
+    /**
+     * Get column metadata including NOT NULL and default value.
+     * Returns null if column doesn't exist.
+     */
+    private static ColumnMetadata getColumnMetadata(SupportSQLiteDatabase db, String table, String column) {
+        Cursor cursor = null;
+        try {
+            cursor = db.query("PRAGMA table_info(" + table + ")");
+            if (cursor != null) {
+                int nameIndex = cursor.getColumnIndex("name");
+                int notNullIndex = cursor.getColumnIndex("notnull");
+                int defaultIndex = cursor.getColumnIndex("dflt_value");
+                
+                while (cursor.moveToNext()) {
+                    String colName = cursor.getString(nameIndex);
+                    if (column.equalsIgnoreCase(colName)) {
+                        boolean isNotNull = cursor.getInt(notNullIndex) == 1;
+                        String defaultValue = cursor.getString(defaultIndex);
+                        return new ColumnMetadata(colName, isNotNull, defaultValue);
+                    }
+                }
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Helper method to check if a column exists in a table.
+     * Uses PRAGMA table_info to inspect the table schema.
+     */
+    private static boolean columnExists(SupportSQLiteDatabase db, String table, String column) {
+        return getColumnMetadata(db, table, column) != null;
+    }
+
+    /**
      * Get singleton instance of database.
-     * Now uses proper migrations instead of destructive migration.
+     * Uses proper migrations with debug-only destructive fallback.
      */
     public static DebugMasterDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             synchronized (DebugMasterDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(
+                    RoomDatabase.Builder<DebugMasterDatabase> builder = Room.databaseBuilder(
                             context.getApplicationContext(),
                             DebugMasterDatabase.class,
                             "debug_master_database"
                     )
-                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12)
-                    .fallbackToDestructiveMigration() // Fallback for dev builds
-                    .build();
+                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, 
+                                   MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, 
+                                   MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13);
+                    
+                    // Only use destructive fallback in debug builds
+                    boolean isDebug = (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+                    if (isDebug) {
+                        builder.fallbackToDestructiveMigration();
+                        builder.fallbackToDestructiveMigrationOnDowngrade();
+                        Log.d("DebugMasterDatabase", "Debug build: destructive migration fallback enabled (up & down)");
+                    }
+                    
+                    INSTANCE = builder.build();
                 }
             }
         }

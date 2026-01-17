@@ -74,6 +74,7 @@ dependencies {
     // Animation UI
     implementation(libs.lottie)
     implementation(libs.shimmer)
+    implementation("androidx.dynamicanimation:dynamicanimation:1.0.0")
 
     // Hilt DI
     implementation(libs.hilt.android)

@@ -69,6 +69,16 @@
                             android:textSize="20sp"
                             android:fontFamily="sans-serif-medium" />
 
+                        <!-- Phase 3: Connection Status -->
+                        <TextView
+                            android:id="@+id/text_connection_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:text="🟢"
+                            android:textSize="12sp"
+                            android:visibility="gone" />
+
                         <!-- Trophies Badge -->
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -258,19 +268,36 @@
                     android:textSize="18sp"
                     android:fontFamily="sans-serif-medium" />
 
-                <!-- Quick Match Card -->
+                <!-- Quick Match Card with Glow -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <!-- Glow layer behind Quick Match -->
+                    <View
+                        android:id="@+id/view_quick_match_glow"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="-4dp"
+                        android:background="@drawable/bg_quick_match_gradient"
+                        android:alpha="0.6"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:importantForAccessibility="no" />
+
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/button_quick_match"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:clickable="true"
                     android:focusable="true"
                     app:cardBackgroundColor="#1A1A2E"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="0dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="8dp"
                     app:strokeColor="#7C4DFF"
-                    app:strokeWidth="2dp"
+                    app:strokeWidth="3dp"
                     app:rippleColor="#407C4DFF">
 
                     <LinearLayout
@@ -306,8 +333,12 @@
                                 android:layout_height="wrap_content"
                                 android:text="Quick Match"
                                 android:textColor="@color/white"
-                                android:textSize="18sp"
-                                android:fontFamily="sans-serif-medium" />
+                                android:textSize="20sp"
+                                android:fontFamily="sans-serif-bold"
+                                android:shadowColor="#407C4DFF"
+                                android:shadowDx="0"
+                                android:shadowDy="0"
+                                android:shadowRadius="8" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -368,6 +399,90 @@
                             android:textSize="24sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
+                </FrameLayout>
+
+                <!-- Phase 2: Difficulty Selector -->
+                <LinearLayout
+                    android:id="@+id/layout_difficulty_selector"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="AI Difficulty"
+                        android:textColor="#8A8AA0"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chip_group_difficulty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:singleSelection="true"
+                        app:selectionRequired="true"
+                        app:chipSpacingHorizontal="12dp">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_easy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
+                            android:text="Easy 👶"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:checkable="true"
+                            app:chipBackgroundColor="#2D4A2D"
+                            app:chipStrokeColor="#4CAF50"
+                            app:chipStrokeWidth="2dp"
+                            app:chipCornerRadius="12dp"
+                            app:chipMinHeight="44dp"
+                            app:checkedIconVisible="true"
+                            app:checkedIconTint="@color/white"
+                            app:rippleColor="#404CAF50"
+                            style="@style/Widget.MaterialComponents.Chip.Choice" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_medium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
+                            android:text="Medium 🤖"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:checked="true"
+                            android:checkable="true"
+                            app:chipBackgroundColor="#4A4A2D"
+                            app:chipStrokeColor="#FFC107"
+                            app:chipStrokeWidth="2dp"
+                            app:chipCornerRadius="12dp"
+                            app:chipMinHeight="44dp"
+                            app:checkedIconVisible="true"
+                            app:checkedIconTint="@color/white"
+                            app:rippleColor="#40FFC107"
+                            style="@style/Widget.MaterialComponents.Chip.Choice" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_hard"
+                            android:layout_width="wrap_content"
+                            android:layout_height="44dp"
+                            android:text="Hard 🔥"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:checkable="true"
+                            app:chipBackgroundColor="#4A2D2D"
+                            app:chipStrokeColor="#FF5252"
+                            app:chipStrokeWidth="2dp"
+                            app:chipCornerRadius="12dp"
+                            app:chipMinHeight="44dp"
+                            app:checkedIconVisible="true"
+                            app:checkedIconTint="@color/white"
+                            app:rippleColor="#40FF5252"
+                            style="@style/Widget.MaterialComponents.Chip.Choice" />
+
+                    </com.google.android.material.chip.ChipGroup>
+                </LinearLayout>
 
                 <!-- Challenge Friend Card -->
                 <com.google.android.material.card.MaterialCardView

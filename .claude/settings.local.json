@@ -11,7 +11,23 @@
       "Bash(powershell.exe -Command \"cd ''C:\\\\Users\\\\hamda\\\\DebugAppProject''; .\\\\gradlew.bat assembleDebug\")",
       "Bash(cmd /c \"gradlew.bat assembleDebug 2>&1\")",
       "Bash(c:\\\\Users\\\\hamda\\\\DebugAppProject\\\\gradlew.bat -p c:\\\\Users\\\\hamda\\\\DebugAppProject assembleDebug)",
-      "Bash(powershell.exe -Command \"Set-Location ''C:\\\\Users\\\\hamda\\\\DebugAppProject''; .\\\\gradlew.bat assembleDebug\")"
+      "Bash(powershell.exe -Command \"Set-Location ''C:\\\\Users\\\\hamda\\\\DebugAppProject''; .\\\\gradlew.bat assembleDebug\")",
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(./gradlew.bat assembleDebug:*)",
+      "Bash(cd:*)",
+      "Bash(cmd.exe /c \"c:\\\\Users\\\\hamda\\\\DebugAppProject\\\\gradlew.bat -p c:\\\\Users\\\\hamda\\\\DebugAppProject assembleDebug 2>&1\")",
+      "Bash(powershell.exe:*)",
+      "Bash(git checkout:*)",
+      "Bash(c:UsershamdaDebugAppProjectgradlew.bat -p c:UsershamdaDebugAppProject assembleDebug)",
+      "Bash(cmd.exe:*)",
+      "Bash(git -C \"c:/Users/hamda/DebugAppProject\" show HEAD:app/src/main/java/com/example/debugappproject/ui/battle/BattleArenaFragment.java)",
+      "Bash(git -C \"c:/Users/hamda/DebugAppProject\" diff HEAD -- app/src/main/java/com/example/debugappproject/ui/battle/BattleArenaFragment.java)",
+      "Bash(git -C \"c:/Users/hamda/DebugAppProject\" diff HEAD -- app/src/main/res/layout/layout_battle_game.xml)",
+      "Bash(git -C \"c:/Users/hamda/DebugAppProject\" log --oneline -10 -- app/src/main/res/layout/layout_battle_game.xml)",
+      "Bash(git -C \"c:/Users/hamda/DebugAppProject\" show 183bb21:app/src/main/res/layout/layout_battle_game.xml)",
+      "Bash(git -C \"c:/Users/hamda/DebugAppProject\" diff 183bb21 HEAD -- app/src/main/res/layout/layout_battle_game.xml)",
+      "Bash(git -C \"c:/Users/hamda/DebugAppProject\" diff -- app/src/main/res/layout/layout_battle_game.xml)"
     ]
   }
 }

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -27,7 +28,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.dynamicanimation.animation.DynamicAnimation;
+import androidx.dynamicanimation.animation.SpringAnimation;
+import androidx.dynamicanimation.animation.SpringForce;
 import androidx.fragment.app.Fragment;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.navigation.Navigation;
 
 import com.example.debugappproject.R;
@@ -81,6 +86,13 @@ public class SplashFragment extends Fragment {
     private List<Animator> runningAnimators = new ArrayList<>();
     private Random random = new Random();
 
+    // Letter views for staggered title animation
+    private TextView[] letterViews;
+
+    // Gem sparkle scheduler runnable
+    private Runnable gemSparkleRunnable;
+    private boolean sparkleSchedulerActive = false;
+
     // Loading status messages for terminal effect
     private static final String[] LOADING_MESSAGES = {
             "> Initializing core systems...",
@@ -129,8 +141,10 @@ public class SplashFragment extends Fragment {
         rewardManager = new DailyRewardManager(requireContext());
         reduceMotion = rewardManager.shouldReduceMotion();
 
+        initializeLetterViews();
         setupStartButton();
         setupSkipFunctionality();
+        setupTouchParallax();
         seedDatabase();
         
         // If reduce motion is enabled, show static screen immediately
@@ -155,10 +169,19 @@ public class SplashFragment extends Fragment {
         binding.energyWave3.setAlpha(0.5f);
         binding.logoGlowPulse.setAlpha(0.6f);
         binding.imageLogo.setAlpha(1f);
-        binding.textDebug.setAlpha(1f);
-        binding.textDebug.setTranslationX(0);
-        binding.textMaster.setAlpha(1f);
-        binding.textMaster.setTranslationX(0);
+        binding.imageLogo.setScaleX(1f);
+        binding.imageLogo.setScaleY(1f);
+        
+        // Show all letters instantly
+        for (TextView letter : letterViews) {
+            if (letter != null) {
+                letter.setAlpha(1f);
+                letter.setTranslationY(0);
+                letter.setScaleX(1f);
+                letter.setScaleY(1f);
+            }
+        }
+        
         binding.textTagline.setAlpha(1f);
         binding.textVersion.setAlpha(0.5f);
         binding.textCopyright.setAlpha(0.3f);
@@ -166,6 +189,71 @@ public class SplashFragment extends Fragment {
         // Show reward card and button immediately
         showRewardCard();
         showStartButtonStatic();
+    }
+
+    /**
+     * Initializes letter views for staggered title animation
+     */
+    private void initializeLetterViews() {
+        if (binding == null) return;
+        letterViews = new TextView[] {
+            binding.letterD,
+            binding.letterE,
+            binding.letterB,
+            binding.letterU,
+            binding.letterG,
+            binding.letterM,
+            binding.letterA,
+            binding.letterS,
+            binding.letterT,
+            binding.letterE2,
+            binding.letterR
+        };
+    }
+
+    /**
+     * Sets up touch parallax for hero orb and energy waves
+     */
+    private void setupTouchParallax() {
+        if (binding == null || reduceMotion) return;
+
+        View parallaxTarget = binding.splashRoot;
+        parallaxTarget.setOnTouchListener((v, event) -> {
+            if (reduceMotion || userTappedStart) return false;
+
+            float centerX = v.getWidth() / 2f;
+            float centerY = v.getHeight() / 2f;
+            float deltaX = (event.getX() - centerX) * 0.03f;
+            float deltaY = (event.getY() - centerY) * 0.03f;
+
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_MOVE:
+                    // Logo moves opposite
+                    binding.imageLogo.setTranslationX(-deltaX);
+                    binding.imageLogo.setTranslationY(-deltaY);
+                    binding.logoGlowPulse.setTranslationX(-deltaX);
+                    binding.logoGlowPulse.setTranslationY(-deltaY);
+
+                    // Energy waves move with touch at different rates
+                    binding.energyWave1.setTranslationX(deltaX * 0.5f);
+                    binding.energyWave1.setTranslationY(deltaY * 0.5f);
+                    binding.energyWave2.setTranslationX(deltaX * 0.3f);
+                    binding.energyWave3.setTranslationX(deltaX * 0.2f);
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    // Spring back to center
+                    binding.imageLogo.animate().translationX(0).translationY(0).setDuration(300).start();
+                    binding.logoGlowPulse.animate().translationX(0).translationY(0).setDuration(300).start();
+                    binding.energyWave1.animate().translationX(0).translationY(0).setDuration(300).start();
+                    binding.energyWave2.animate().translationX(0).setDuration(300).start();
+                    binding.energyWave3.animate().translationX(0).setDuration(300).start();
+                    break;
+            }
+            // Return false so clicks still work on children
+            return false;
+        });
     }
     
     /**
@@ -214,6 +302,9 @@ public class SplashFragment extends Fragment {
     private void skipToReady() {
         if (buttonReady) return; // Already at ready state
         
+        // Stop sparkle scheduler
+        sparkleSchedulerActive = false;
+        
         // Cancel all running animations (use copy to avoid ConcurrentModificationException)
         List<Animator> animatorsCopy = new ArrayList<>(runningAnimators);
         for (Animator animator : animatorsCopy) {
@@ -258,42 +349,42 @@ public class SplashFragment extends Fragment {
     }
 
     /**
-     * Epic button press animation with sound
+     * Epic button press animation with enhanced effects + sound
      */
     private void animateButtonPress(View button, Runnable onComplete) {
-        // Flash effect
-        ObjectAnimator flash = ObjectAnimator.ofFloat(button, "alpha", 1f, 0.5f, 1f);
-        flash.setDuration(100);
-
-        // Scale down with haptic feedback feel
-        ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(button, "scaleX", 1f, 0.9f);
-        ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(button, "scaleY", 1f, 0.9f);
+        // Phase 1: Press down (80ms, Decelerate)
+        ObjectAnimator scaleDownX = ObjectAnimator.ofFloat(button, "scaleX", 1f, 0.96f);
+        ObjectAnimator scaleDownY = ObjectAnimator.ofFloat(button, "scaleY", 1f, 0.96f);
+        ObjectAnimator glowAlphaUp = ObjectAnimator.ofFloat(binding.btnStartGlow, "alpha", 0.3f, 0.9f);
+        ObjectAnimator glowScaleUp = ObjectAnimator.ofFloat(binding.btnStartGlow, "scaleX", 1f, 1.3f);
+        ObjectAnimator glowScaleUpY = ObjectAnimator.ofFloat(binding.btnStartGlow, "scaleY", 1f, 1.3f);
 
         AnimatorSet pressDown = new AnimatorSet();
-        pressDown.playTogether(scaleDownX, scaleDownY, flash);
-        pressDown.setDuration(100);
+        pressDown.playTogether(scaleDownX, scaleDownY, glowAlphaUp, glowScaleUp, glowScaleUpY);
+        pressDown.setDuration(80);
+        pressDown.setInterpolator(new DecelerateInterpolator());
 
-        // Scale up with overshoot then fade out
-        ObjectAnimator scaleUpX = ObjectAnimator.ofFloat(button, "scaleX", 0.9f, 1.3f);
-        ObjectAnimator scaleUpY = ObjectAnimator.ofFloat(button, "scaleY", 0.9f, 1.3f);
-        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(button, "alpha", 1f, 0f);
-        
-        // Also fade out glow
-        ObjectAnimator glowFade = ObjectAnimator.ofFloat(binding.btnStartGlow, "alpha", 0.4f, 0f);
-        ObjectAnimator glowScale = ObjectAnimator.ofFloat(binding.btnStartGlow, "scaleX", 1f, 2f);
-        ObjectAnimator glowScaleY = ObjectAnimator.ofFloat(binding.btnStartGlow, "scaleY", 1f, 2f);
+        // Phase 2: Release with ripple (300ms, Overshoot)
+        ObjectAnimator glowRippleScale = ObjectAnimator.ofFloat(binding.btnStartGlow, "scaleX", 1.3f, 2.5f);
+        ObjectAnimator glowRippleScaleY = ObjectAnimator.ofFloat(binding.btnStartGlow, "scaleY", 1.3f, 2.5f);
+        ObjectAnimator glowFadeOut = ObjectAnimator.ofFloat(binding.btnStartGlow, "alpha", 0.9f, 0f);
+        ObjectAnimator buttonBounce = ObjectAnimator.ofFloat(button, "scaleX", 0.96f, 1.08f, 1f);
+        ObjectAnimator buttonBounceY = ObjectAnimator.ofFloat(button, "scaleY", 0.96f, 1.08f, 1f);
 
         AnimatorSet release = new AnimatorSet();
-        release.playTogether(scaleUpX, scaleUpY, fadeOut, glowFade, glowScale, glowScaleY);
-        release.setDuration(400);
-        release.setInterpolator(new AccelerateInterpolator());
+        release.playTogether(glowRippleScale, glowRippleScaleY, glowFadeOut, buttonBounce, buttonBounceY);
+        release.setDuration(300);
+        release.setInterpolator(new OvershootInterpolator(1.5f));
 
-        // Fade out entire screen
+        // Phase 3: Button fade out + screen fade
+        ObjectAnimator buttonFade = ObjectAnimator.ofFloat(button, "alpha", 1f, 0f);
+        buttonFade.setDuration(200);
+
         ObjectAnimator screenFade = ObjectAnimator.ofFloat(binding.splashRoot, "alpha", 1f, 0f);
         screenFade.setDuration(300);
 
         AnimatorSet fullAnimation = new AnimatorSet();
-        fullAnimation.playSequentially(pressDown, release, screenFade);
+        fullAnimation.playSequentially(pressDown, release, buttonFade, screenFade);
         fullAnimation.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -322,7 +413,13 @@ public class SplashFragment extends Fragment {
                 });
             } catch (Exception e) {
                 e.printStackTrace();
-                databaseSeeded = true;
+                // Don't set databaseSeeded = true on error - prevents user from proceeding with broken DB
+                mainHandler.post(() -> {
+                    if (binding != null) {
+                        binding.textTapHint.setText("[ ERROR - RESTART APP ]");
+                        binding.textTapHint.setTextColor(0xFFFF5252);
+                    }
+                });
             }
         }).start();
     }
@@ -338,6 +435,7 @@ public class SplashFragment extends Fragment {
         animationHandler.postDelayed(this::createFloatingParticles, PARTICLES_DELAY);
         animationHandler.postDelayed(this::createCodeRain, CODE_RAIN_DELAY);
         animationHandler.postDelayed(this::animateDecorations, DECORATIONS_DELAY);
+        animationHandler.postDelayed(this::animateBackgroundGradient, 0);
 
         // Energy wave rings (outer to inner) - silent elegant entrance
         animationHandler.postDelayed(() -> animateEnergyWave(binding.energyWave3, 20000, false), WAVE_3_DELAY);
@@ -348,9 +446,8 @@ public class SplashFragment extends Fragment {
         animationHandler.postDelayed(this::animateLogoGlow, LOGO_GLOW_DELAY);
         animationHandler.postDelayed(this::animateLogo, LOGO_DELAY);
 
-        // Text section with glitch effects
-        animationHandler.postDelayed(this::animateDebugText, DEBUG_TEXT_DELAY);
-        animationHandler.postDelayed(this::animateMasterText, MASTER_TEXT_DELAY);
+        // Staggered title letters
+        animationHandler.postDelayed(this::animateStaggeredTitle, DEBUG_TEXT_DELAY);
         animationHandler.postDelayed(this::animateTagline, TAGLINE_DELAY);
 
         // Loading section
@@ -358,6 +455,43 @@ public class SplashFragment extends Fragment {
 
         // Start button - NO AUTO NAVIGATION
         animationHandler.postDelayed(this::showStartButton, START_BUTTON_DELAY);
+    }
+
+    /**
+     * Animates background gradient decorations with slow drift
+     */
+    private void animateBackgroundGradient() {
+        if (binding == null || !isAdded() || reduceMotion) return;
+
+        // Animate top-left decoration
+        ObjectAnimator topLeftX = ObjectAnimator.ofFloat(binding.decorationTopLeft, "translationX", 0f, 20f, 0f);
+        topLeftX.setDuration(12000);
+        topLeftX.setRepeatCount(ValueAnimator.INFINITE);
+        topLeftX.setInterpolator(new LinearInterpolator());
+        topLeftX.start();
+        runningAnimators.add(topLeftX);
+
+        ObjectAnimator topLeftY = ObjectAnimator.ofFloat(binding.decorationTopLeft, "translationY", 0f, 15f, 0f);
+        topLeftY.setDuration(12000);
+        topLeftY.setRepeatCount(ValueAnimator.INFINITE);
+        topLeftY.setInterpolator(new LinearInterpolator());
+        topLeftY.start();
+        runningAnimators.add(topLeftY);
+
+        // Animate bottom-right decoration
+        ObjectAnimator bottomRightX = ObjectAnimator.ofFloat(binding.decorationBottomRight, "translationX", 0f, -20f, 0f);
+        bottomRightX.setDuration(12000);
+        bottomRightX.setRepeatCount(ValueAnimator.INFINITE);
+        bottomRightX.setInterpolator(new LinearInterpolator());
+        bottomRightX.start();
+        runningAnimators.add(bottomRightX);
+
+        ObjectAnimator bottomRightY = ObjectAnimator.ofFloat(binding.decorationBottomRight, "translationY", 0f, -15f, 0f);
+        bottomRightY.setDuration(12000);
+        bottomRightY.setRepeatCount(ValueAnimator.INFINITE);
+        bottomRightY.setInterpolator(new LinearInterpolator());
+        bottomRightY.start();
+        runningAnimators.add(bottomRightY);
     }
 
     /**
@@ -486,17 +620,24 @@ public class SplashFragment extends Fragment {
     }
 
     /**
-     * Creates floating energy particles
+     * Creates floating energy particles with depth layers
      */
     private void createFloatingParticles() {
         if (binding == null || !isAdded()) return;
 
-        FrameLayout container = binding.particlesContainer;
-        container.post(() -> {
+        // Get depth layer containers
+        FrameLayout[] depthLayers = {
+            binding.particlesLayerFar,
+            binding.particlesLayerMid,
+            binding.particlesLayerNear
+        };
+
+        FrameLayout referenceContainer = binding.particlesContainer;
+        referenceContainer.post(() -> {
             if (binding == null || !isAdded()) return;
 
-            int containerWidth = container.getWidth() > 0 ? container.getWidth() : 1080;
-            int containerHeight = container.getHeight() > 0 ? container.getHeight() : 1920;
+            int containerWidth = referenceContainer.getWidth() > 0 ? referenceContainer.getWidth() : 1080;
+            int containerHeight = referenceContainer.getHeight() > 0 ? referenceContainer.getHeight() : 1920;
             int particleCount = 25;
 
             int[] colors = {
@@ -512,6 +653,9 @@ public class SplashFragment extends Fragment {
                 ImageView particle = new ImageView(requireContext());
                 particle.setImageResource(R.drawable.particle_energy);
 
+                // Determine depth layer (0=far, 1=mid, 2=near)
+                int depthLayer = i % 3;
+
                 int sizeDp = 6 + random.nextInt(14);
                 int sizePx = dpToPx(sizeDp);
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(sizePx, sizePx);
@@ -521,26 +665,35 @@ public class SplashFragment extends Fragment {
                 particle.setAlpha(0f);
                 particle.setColorFilter(colors[random.nextInt(colors.length)]);
 
-                container.addView(particle);
+                // Add to appropriate depth layer
+                depthLayers[depthLayer].addView(particle);
                 particles.add(particle);
 
                 final int index = i;
-                animationHandler.postDelayed(() -> animateParticle(particle, containerHeight), index * 120);
+                final int depth = depthLayer;
+                animationHandler.postDelayed(() -> animateParticle(particle, containerHeight, depth), index * 120);
             }
         });
     }
 
     /**
-     * Animates a single particle floating up
+     * Animates a single particle floating up with depth-based properties
      */
-    private void animateParticle(View particle, int containerHeight) {
-        if (binding == null || !isAdded()) return;
+    private void animateParticle(View particle, int containerHeight, int depthLayer) {
+        if (binding == null || !isAdded() || reduceMotion) return;
 
-        float maxAlpha = 0.2f + random.nextFloat() * 0.5f;
+        // Depth-based properties
+        float speedMultiplier = 0.5f + depthLayer * 0.5f; // 0.5, 1.0, 1.5
+        float alphaMax = 0.2f + depthLayer * 0.2f; // 0.2, 0.4, 0.6
+        float scale = 0.5f + depthLayer * 0.3f; // 0.5, 0.8, 1.1
+
+        particle.setScaleX(scale);
+        particle.setScaleY(scale);
+
         float driftX = (random.nextFloat() - 0.5f) * 150f;
-        int duration = 5000 + random.nextInt(4000);
+        int duration = (int) (7000 / speedMultiplier);
 
-        ObjectAnimator fadeIn = ObjectAnimator.ofFloat(particle, "alpha", 0f, maxAlpha);
+        ObjectAnimator fadeIn = ObjectAnimator.ofFloat(particle, "alpha", 0f, alphaMax);
         fadeIn.setDuration(1500);
 
         ObjectAnimator moveY = ObjectAnimator.ofFloat(particle, "translationY", 0f, -containerHeight * 0.6f);
@@ -550,31 +703,30 @@ public class SplashFragment extends Fragment {
         ObjectAnimator moveX = ObjectAnimator.ofFloat(particle, "translationX", 0f, driftX);
         moveX.setDuration(duration);
 
-        ObjectAnimator scale = ObjectAnimator.ofFloat(particle, "scaleX", 1f, 0.3f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(particle, "scaleY", 1f, 0.3f);
-        scale.setDuration(duration);
-        scaleY.setDuration(duration);
+        // Alpha flicker effect during float
+        ObjectAnimator flicker = ObjectAnimator.ofFloat(particle, "alpha", 
+                alphaMax, alphaMax * 0.6f, alphaMax, alphaMax * 0.8f, alphaMax);
+        flicker.setDuration(duration);
 
-        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(particle, "alpha", maxAlpha, 0f);
+        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(particle, "alpha", alphaMax, 0f);
         fadeOut.setDuration(1500);
         fadeOut.setStartDelay(duration - 1500);
 
         AnimatorSet animSet = new AnimatorSet();
-        animSet.playTogether(fadeIn, moveY, moveX, scale, scaleY, fadeOut);
+        animSet.playTogether(fadeIn, moveY, moveX, flicker, fadeOut);
+        final int finalDepthLayer = depthLayer;
         animSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (binding != null && isAdded()) {
+                if (binding != null && isAdded() && !reduceMotion) {
                     particle.setTranslationX(0);
                     particle.setTranslationY(0);
-                    particle.setScaleX(1f);
-                    particle.setScaleY(1f);
                     FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) particle.getLayoutParams();
                     int containerWidth = binding.particlesContainer.getWidth();
                     params.leftMargin = random.nextInt(containerWidth > 0 ? containerWidth : 1080);
                     params.topMargin = containerHeight;
                     particle.setLayoutParams(params);
-                    animateParticle(particle, containerHeight);
+                    animateParticle(particle, containerHeight, finalDepthLayer);
                 }
             }
         });
@@ -725,75 +877,131 @@ public class SplashFragment extends Fragment {
         entrance.start();
         runningAnimators.add(entrance);
 
-        // Breathing effect
+        // Start subtle breathing effect + synced glow pulse after entrance
         animationHandler.postDelayed(() -> {
             if (binding == null || !isAdded()) return;
 
+            // Subtle breathing: 0.98 -> 1.02 loop, 3000ms
             ObjectAnimator breathe = ObjectAnimator.ofPropertyValuesHolder(logo,
-                    PropertyValuesHolder.ofFloat("scaleX", 1f, 1.06f, 1f),
-                    PropertyValuesHolder.ofFloat("scaleY", 1f, 1.06f, 1f));
-            breathe.setDuration(2500);
+                    PropertyValuesHolder.ofFloat("scaleX", 0.98f, 1.02f),
+                    PropertyValuesHolder.ofFloat("scaleY", 0.98f, 1.02f));
+            breathe.setDuration(3000);
             breathe.setRepeatCount(ValueAnimator.INFINITE);
-            breathe.setInterpolator(new AccelerateDecelerateInterpolator());
-            breathe.start();
-            runningAnimators.add(breathe);
+            breathe.setRepeatMode(ValueAnimator.REVERSE);
+            breathe.setInterpolator(new FastOutSlowInInterpolator());
+            if (!reduceMotion) {
+                breathe.start();
+                runningAnimators.add(breathe);
+            }
+
+            // Start synced glow pulse
+            startSyncedGlowPulse();
         }, 1200);
     }
 
     /**
-     * Animates "DEBUG" text with glitch effect + SOUND
+     * Synced glow pulse animation for logo glow ring
      */
-    private void animateDebugText() {
-        if (binding == null || !isAdded()) return;
+    private void startSyncedGlowPulse() {
+        if (binding == null || !isAdded() || reduceMotion) return;
 
-        // Play swoosh sound for text reveal
-        soundManager.playSound(SoundManager.Sound.TEXT_REVEAL);
-        
-        TextView text = binding.textDebug;
+        View glow = binding.logoGlowPulse;
 
-        // Smooth slide in from left
-        ObjectAnimator slideIn = ObjectAnimator.ofFloat(text, "translationX", -150f, 0f);
-        ObjectAnimator fadeIn = ObjectAnimator.ofFloat(text, "alpha", 0f, 1f);
-        ObjectAnimator scaleUp = ObjectAnimator.ofFloat(text, "scaleX", 0.8f, 1f);
-        ObjectAnimator scaleUpY = ObjectAnimator.ofFloat(text, "scaleY", 0.8f, 1f);
-
-        AnimatorSet entrance = new AnimatorSet();
-        entrance.playTogether(slideIn, fadeIn, scaleUp, scaleUpY);
-        entrance.setDuration(500);
-        entrance.setInterpolator(new DecelerateInterpolator(2f));
-        entrance.start();
-        runningAnimators.add(entrance);
-
-        // Subtle glitch effect (no sound - just visual)
-        animationHandler.postDelayed(() -> playGlitchEffect(text), 500);
+        ObjectAnimator glowPulse = ObjectAnimator.ofPropertyValuesHolder(glow,
+                PropertyValuesHolder.ofFloat("alpha", 0.5f, 0.8f),
+                PropertyValuesHolder.ofFloat("scaleX", 0.95f, 1.05f),
+                PropertyValuesHolder.ofFloat("scaleY", 0.95f, 1.05f));
+        glowPulse.setDuration(3000);
+        glowPulse.setRepeatCount(ValueAnimator.INFINITE);
+        glowPulse.setRepeatMode(ValueAnimator.REVERSE);
+        glowPulse.setInterpolator(new FastOutSlowInInterpolator());
+        glowPulse.start();
+        runningAnimators.add(glowPulse);
     }
 
     /**
-     * Animates "MASTER" text with glitch effect
+     * Animates staggered title letters with typing effect
      */
-    private void animateMasterText() {
+    private void animateStaggeredTitle() {
         if (binding == null || !isAdded()) return;
 
-        // Play swoosh sound for text reveal!
-        soundManager.playSound(SoundManager.Sound.TEXT_REVEAL);
-        
-        TextView text = binding.textMaster;
+        final int STAGGER_DELAY = 55; // 55ms per letter
+        final int LETTER_DURATION = 250;
 
-        // Smooth slide in from right
-        ObjectAnimator slideIn = ObjectAnimator.ofFloat(text, "translationX", 150f, 0f);
-        ObjectAnimator fadeIn = ObjectAnimator.ofFloat(text, "alpha", 0f, 1f);
-        ObjectAnimator scaleUp = ObjectAnimator.ofFloat(text, "scaleX", 0.8f, 1f);
-        ObjectAnimator scaleUpY = ObjectAnimator.ofFloat(text, "scaleY", 0.8f, 1f);
+        for (int i = 0; i < letterViews.length; i++) {
+            final TextView letter = letterViews[i];
+            if (letter == null) continue;
 
-        AnimatorSet entrance = new AnimatorSet();
-        entrance.playTogether(slideIn, fadeIn, scaleUp, scaleUpY);
-        entrance.setDuration(500);
-        entrance.setInterpolator(new DecelerateInterpolator(2f));
-        entrance.start();
-        runningAnimators.add(entrance);
+            final int index = i;
+            animationHandler.postDelayed(() -> {
+                if (binding == null || !isAdded()) return;
 
-        // Subtle glitch effect (no sound - just visual)
-        animationHandler.postDelayed(() -> playGlitchEffect(text), 500);
+                // Play typing sound every 3rd letter
+                if (index % 3 == 0) {
+                    soundManager.playSound(SoundManager.Sound.TYPING);
+                }
+
+                // Animate: fade 0->1, translationY 20->0, scale 0.5->1.1->1
+                ObjectAnimator fadeIn = ObjectAnimator.ofFloat(letter, "alpha", 0f, 1f);
+                ObjectAnimator slideUp = ObjectAnimator.ofFloat(letter, "translationY", 
+                        dpToPx(20), 0f);
+                ObjectAnimator scaleX = ObjectAnimator.ofFloat(letter, "scaleX", 0.5f, 1.1f, 1f);
+                ObjectAnimator scaleY = ObjectAnimator.ofFloat(letter, "scaleY", 0.5f, 1.1f, 1f);
+
+                AnimatorSet letterAnim = new AnimatorSet();
+                letterAnim.playTogether(fadeIn, slideUp, scaleX, scaleY);
+                letterAnim.setDuration(LETTER_DURATION);
+                letterAnim.setInterpolator(new FastOutSlowInInterpolator());
+                letterAnim.start();
+                runningAnimators.add(letterAnim);
+            }, i * STAGGER_DELAY);
+        }
+
+        // Play title shimmer after all letters are done
+        int totalLetterTime = letterViews.length * STAGGER_DELAY + LETTER_DURATION;
+        animationHandler.postDelayed(this::playTitleShimmer, totalLetterTime + 200);
+    }
+
+    /**
+     * Plays one-time shimmer highlight across title
+     */
+    private void playTitleShimmer() {
+        if (binding == null || !isAdded() || reduceMotion) return;
+
+        View shimmer = binding.shimmerHighlight;
+
+        // Move from left (-200) to right (400)
+        ObjectAnimator moveX = ObjectAnimator.ofFloat(shimmer, "translationX", 
+                dpToPx(-200), dpToPx(400));
+        moveX.setDuration(600);
+        moveX.setInterpolator(new FastOutSlowInInterpolator());
+
+        // Alpha: 0 -> 0.8 (quick fade in), then 0.8 -> 0 (fade out starts at 400ms)
+        ObjectAnimator alphaIn = ObjectAnimator.ofFloat(shimmer, "alpha", 0f, 0.8f);
+        alphaIn.setDuration(100);
+
+        ObjectAnimator alphaOut = ObjectAnimator.ofFloat(shimmer, "alpha", 0.8f, 0f);
+        alphaOut.setDuration(200);
+        alphaOut.setStartDelay(400);
+
+        AnimatorSet shimmerAnim = new AnimatorSet();
+        shimmerAnim.playTogether(moveX, alphaIn, alphaOut);
+        shimmerAnim.start();
+        runningAnimators.add(shimmerAnim);
+    }
+
+    /**
+     * Animates "DEBUG" text with glitch effect + SOUND (LEGACY - kept for compatibility)
+     */
+    private void animateDebugText() {
+        // Now handled by animateStaggeredTitle()
+    }
+
+    /**
+     * Animates "MASTER" text with glitch effect (LEGACY - kept for compatibility)
+     */
+    private void animateMasterText() {
+        // Now handled by animateStaggeredTitle()
     }
 
     /**
@@ -1020,16 +1228,8 @@ public class SplashFragment extends Fragment {
             return;
         }
         
-        // Animated card entrance with bounce
-        ObjectAnimator cardFade = ObjectAnimator.ofFloat(binding.cardReward, "alpha", 0f, 1f);
-        ObjectAnimator cardSlide = ObjectAnimator.ofFloat(binding.cardReward, "translationY", 60f, 0f);
-        
-        AnimatorSet cardEntrance = new AnimatorSet();
-        cardEntrance.playTogether(cardFade, cardSlide);
-        cardEntrance.setDuration(600);
-        cardEntrance.setInterpolator(new DecelerateInterpolator(2f));
-        cardEntrance.start();
-        runningAnimators.add(cardEntrance);
+        // Spring-based card entrance
+        animateCardSpringEntrance();
         
         // Animate gem reward after card appears
         animationHandler.postDelayed(() -> {
@@ -1086,9 +1286,50 @@ public class SplashFragment extends Fragment {
             runningAnimators.add(missionAnim);
         }, 1100);
     }
+
+    /**
+     * Animates card entrance with spring physics
+     */
+    private void animateCardSpringEntrance() {
+        if (binding == null || !isAdded()) return;
+
+        View card = binding.cardReward;
+        card.setTranslationY(dpToPx(100));
+        card.setScaleX(0.9f);
+        card.setScaleY(0.9f);
+        card.setAlpha(0f);
+
+        // Fade in (standard ObjectAnimator)
+        ObjectAnimator fadeIn = ObjectAnimator.ofFloat(card, "alpha", 0f, 1f);
+        fadeIn.setDuration(300);
+        fadeIn.setInterpolator(new FastOutSlowInInterpolator());
+        fadeIn.start();
+        runningAnimators.add(fadeIn);
+
+        // Spring translation Y
+        SpringAnimation springY = new SpringAnimation(card, DynamicAnimation.TRANSLATION_Y, 0f);
+        springY.getSpring()
+                .setStiffness(SpringForce.STIFFNESS_LOW)
+                .setDampingRatio(SpringForce.DAMPING_RATIO_MEDIUM_BOUNCY);
+        springY.start();
+
+        // Spring scale X
+        SpringAnimation springScaleX = new SpringAnimation(card, DynamicAnimation.SCALE_X, 1f);
+        springScaleX.getSpring()
+                .setStiffness(SpringForce.STIFFNESS_MEDIUM)
+                .setDampingRatio(SpringForce.DAMPING_RATIO_LOW_BOUNCY);
+        springScaleX.start();
+
+        // Spring scale Y
+        SpringAnimation springScaleY = new SpringAnimation(card, DynamicAnimation.SCALE_Y, 1f);
+        springScaleY.getSpring()
+                .setStiffness(SpringForce.STIFFNESS_MEDIUM)
+                .setDampingRatio(SpringForce.DAMPING_RATIO_LOW_BOUNCY);
+        springScaleY.start();
+    }
     
     /**
-     * Animates gem reward with EPIC count-up, confetti burst, and haptic feedback
+     * Animates gem reward with EPIC elastic scale + sparkle scheduler
      */
     private void animateGemReward(int rewardAmount) {
         if (binding == null || !isAdded()) return;
@@ -1098,15 +1339,17 @@ public class SplashFragment extends Fragment {
         if (actualReward == 0) actualReward = rewardAmount; // Fallback
         final int finalReward = actualReward;
         
-        // EPIC scale + fade in animation with overshoot
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(binding.layoutGemReward, "scaleX", 0.3f, 1.2f, 1f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(binding.layoutGemReward, "scaleY", 0.3f, 1.2f, 1f);
+        // ELASTIC scale animation: 0.3 -> 1.3 -> 0.95 -> 1.05 -> 1
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(binding.layoutGemReward, "scaleX", 
+                0.3f, 1.3f, 0.95f, 1.05f, 1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(binding.layoutGemReward, "scaleY", 
+                0.3f, 1.3f, 0.95f, 1.05f, 1f);
         ObjectAnimator fadeIn = ObjectAnimator.ofFloat(binding.layoutGemReward, "alpha", 0f, 1f);
         
         AnimatorSet gemEntrance = new AnimatorSet();
         gemEntrance.playTogether(scaleX, scaleY, fadeIn);
-        gemEntrance.setDuration(600);
-        gemEntrance.setInterpolator(new OvershootInterpolator(2f));
+        gemEntrance.setDuration(800);
+        gemEntrance.setInterpolator(new OvershootInterpolator(3f));
         gemEntrance.start();
         runningAnimators.add(gemEntrance);
         
@@ -1132,10 +1375,69 @@ public class SplashFragment extends Fragment {
                 soundManager.playSound(SoundManager.Sound.COIN_COLLECT);
                 // BURST CONFETTI PARTICLES! 🎉
                 burstRewardConfetti();
+                // Start gem sparkle scheduler
+                startGemSparkleScheduler();
             }
         });
         countUp.start();
         runningAnimators.add(countUp);
+    }
+
+    /**
+     * Starts gem sparkle scheduler that fires randomly every 2-4 seconds
+     */
+    private void startGemSparkleScheduler() {
+        if (binding == null || !isAdded() || reduceMotion || userTappedStart) return;
+        
+        sparkleSchedulerActive = true;
+        
+        gemSparkleRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (binding == null || !isAdded() || !sparkleSchedulerActive || userTappedStart) {
+                    sparkleSchedulerActive = false;
+                    return;
+                }
+                
+                // Play sparkle animation
+                playGemSparkle();
+                
+                // Schedule next sparkle with random delay (2000-4000ms)
+                int nextDelay = 2000 + random.nextInt(2000);
+                animationHandler.postDelayed(this, nextDelay);
+            }
+        };
+        
+        // Start first sparkle after random delay
+        int initialDelay = 2000 + random.nextInt(2000);
+        animationHandler.postDelayed(gemSparkleRunnable, initialDelay);
+    }
+
+    /**
+     * Plays a single gem sparkle animation
+     */
+    private void playGemSparkle() {
+        if (binding == null || !isAdded()) return;
+        
+        ImageView sparkle = binding.gemSparkle;
+        
+        // Random position offset
+        float offsetX = dpToPx(-36 + random.nextInt(20));
+        float offsetY = dpToPx(-8 + random.nextInt(16));
+        sparkle.setTranslationX(offsetX);
+        sparkle.setTranslationY(offsetY);
+        
+        // Sparkle animation: scale + alpha burst
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(sparkle, "scaleX", 0f, 1.2f, 0f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(sparkle, "scaleY", 0f, 1.2f, 0f);
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(sparkle, "alpha", 0f, 1f, 0f);
+        ObjectAnimator rotation = ObjectAnimator.ofFloat(sparkle, "rotation", 0f, 45f);
+        
+        AnimatorSet sparkleAnim = new AnimatorSet();
+        sparkleAnim.playTogether(scaleX, scaleY, alpha, rotation);
+        sparkleAnim.setDuration(400);
+        sparkleAnim.setInterpolator(new FastOutSlowInInterpolator());
+        sparkleAnim.start();
     }
     
     /**
@@ -1384,21 +1686,22 @@ public class SplashFragment extends Fragment {
     }
 
     /**
-     * Glow pulse animation
+     * Glow pulse animation for play button - enhanced
      */
     private void startGlowPulse() {
         if (binding == null || !isAdded() || binding.btnStartGlow.getVisibility() != View.VISIBLE) return;
+        if (reduceMotion) return;
 
         ObjectAnimator pulse = ObjectAnimator.ofPropertyValuesHolder(binding.btnStartGlow,
-                PropertyValuesHolder.ofFloat("scaleX", 1f, 1.15f, 1f),
-                PropertyValuesHolder.ofFloat("scaleY", 1f, 1.15f, 1f),
-                PropertyValuesHolder.ofFloat("alpha", 0.4f, 0.2f, 0.4f));
-        pulse.setDuration(2000);
-        pulse.setInterpolator(new AccelerateDecelerateInterpolator());
+                PropertyValuesHolder.ofFloat("scaleX", 1f, 1.08f, 1f),
+                PropertyValuesHolder.ofFloat("scaleY", 1f, 1.08f, 1f),
+                PropertyValuesHolder.ofFloat("alpha", 0.3f, 0.5f, 0.3f));
+        pulse.setDuration(2500);
+        pulse.setInterpolator(new FastOutSlowInInterpolator());
         pulse.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (!userTappedStart) {
+                if (!userTappedStart && !reduceMotion) {
                     startGlowPulse();
                 }
             }
@@ -1543,6 +1846,12 @@ public class SplashFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        // Stop sparkle scheduler
+        sparkleSchedulerActive = false;
+        if (gemSparkleRunnable != null && animationHandler != null) {
+            animationHandler.removeCallbacks(gemSparkleRunnable);
+        }
 
         if (mainHandler != null) mainHandler.removeCallbacksAndMessages(null);
         if (animationHandler != null) animationHandler.removeCallbacksAndMessages(null);

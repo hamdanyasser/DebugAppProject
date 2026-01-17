@@ -39,9 +39,32 @@ import java.util.Set;
 public class DatabaseSeeder {
 
     private static final String TAG = "DatabaseSeeder";
-    private static final int SEED_VERSION = 5; // Increment to force reseed (v5: Redesigned Learn tab with popularity, tags, primaryCategory)
+    private static final int SEED_VERSION = 6; // Increment to force reseed (v6: Schema fix with DB v13)
+    
+    // Thread-safety: prevent concurrent seeding from multiple entry points
+    private static final Object SEED_LOCK = new Object();
+    private static volatile boolean seedingInProgress = false;
 
     public static void seedDatabase(Context context, BugRepository repository) {
+        // Thread-safety guard: only one seeding operation at a time
+        synchronized (SEED_LOCK) {
+            if (seedingInProgress) {
+                android.util.Log.w(TAG, "⚠️ Seeding already in progress, skipping duplicate call");
+                return;
+            }
+            seedingInProgress = true;
+        }
+        
+        try {
+            seedDatabaseInternal(context, repository);
+        } finally {
+            synchronized (SEED_LOCK) {
+                seedingInProgress = false;
+            }
+        }
+    }
+    
+    private static void seedDatabaseInternal(Context context, BugRepository repository) {
         android.util.Log.i(TAG, "═══════════════════════════════════════════════════════");
         android.util.Log.i(TAG, "📊 DEBUGMASTER DATABASE SEEDER v" + SEED_VERSION);
         android.util.Log.i(TAG, "═══════════════════════════════════════════════════════");
@@ -59,8 +82,24 @@ public class DatabaseSeeder {
             pathCount = repository.getPathCountSync();
             bugInPathCount = repository.getLearningPathDao().getBugInPathCountSync();
             android.util.Log.i(TAG, "📈 Current state: " + bugCount + " bugs, " + pathCount + " paths, " + bugInPathCount + " bug-path mappings");
+        } catch (android.database.sqlite.SQLiteException sqlEx) {
+            // Schema/migration error - DO NOT reseed, let migration fix it first
+            android.util.Log.e(TAG, "❌ SQLite schema error - migration needed, skipping seed", sqlEx);
+            return;
+        } catch (IllegalStateException ise) {
+            // Database in bad state (e.g., migration failed) - don't reseed
+            android.util.Log.e(TAG, "❌ Database in invalid state - skipping seed", ise);
+            return;
         } catch (Exception e) {
-            android.util.Log.e(TAG, "Error checking database, will reseed", e);
+            // Other errors - check if it's a schema-related error
+            String msg = e.getMessage();
+            if (msg != null && (msg.contains("migration") || msg.contains("schema") || 
+                msg.contains("no such column") || msg.contains("no such table") ||
+                msg.contains("duplicate column"))) {
+                android.util.Log.e(TAG, "❌ Schema-related error - skipping seed", e);
+                return;
+            }
+            android.util.Log.e(TAG, "Error checking database, will attempt reseed", e);
         }
 
         // CRITICAL: Reseed if version changed, bug_in_path is empty, or paths need updating
