@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DebugMaster Icon Export - 512x512</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+            background: #1a1a2e;
+            color: white;
+        }
+        h1 { color: #8B5CF6; }
+        .preview {
+            border: 2px solid #8B5CF6;
+            border-radius: 16px;
+            margin: 20px;
+        }
+        button {
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        .instructions {
+            background: #2d2d44;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+    <h1>DebugMaster App Icon</h1>
+    <p>512x512 PNG for Google Play Store</p>
+
+    <canvas id="canvas" width="512" height="512" class="preview"></canvas>
+
+    <button onclick="downloadIcon()">Download 512x512 PNG</button>
+
+    <div class="instructions">
+        <h3>Instructions:</h3>
+        <ol>
+            <li>Click "Download 512x512 PNG"</li>
+            <li>Save the file as <code>debugmaster_icon.png</code></li>
+            <li>Upload to Play Store under "App icon"</li>
+        </ol>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const scale = 512 / 108;
+
+        // Draw background
+        ctx.fillStyle = '#7C3AED';
+        ctx.fillRect(0, 0, 512, 512);
+
+        // Darker purple inner circle
+        ctx.beginPath();
+        ctx.arc(256, 256, 48 * scale, 0, Math.PI * 2);
+        ctx.fillStyle = '#6D28D9';
+        ctx.fill();
+
+        // Subtle highlight ring
+        ctx.beginPath();
+        ctx.arc(256, 256, 40 * scale, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(139, 92, 246, 0.4)';
+        ctx.fill();
+
+        // Bug body
+        ctx.beginPath();
+        ctx.ellipse(50 * scale, 56 * scale, 18 * scale, 22 * scale, 0, 0, Math.PI * 2);
+        ctx.fillStyle = '#22C55E';
+        ctx.fill();
+        ctx.strokeStyle = '#166534';
+        ctx.lineWidth = 3 * scale;
+        ctx.stroke();
+
+        // Bug head
+        ctx.beginPath();
+        ctx.arc(50 * scale, 34 * scale, 12 * scale, 0, Math.PI * 2);
+        ctx.fillStyle = '#22C55E';
+        ctx.fill();
+        ctx.strokeStyle = '#166534';
+        ctx.lineWidth = 3 * scale;
+        ctx.stroke();
+
+        // Left eye white
+        ctx.beginPath();
+        ctx.arc(44 * scale, 32 * scale, 5 * scale, 0, Math.PI * 2);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fill();
+
+        // Left eye pupil
+        ctx.beginPath();
+        ctx.arc(45 * scale, 33 * scale, 2.5 * scale, 0, Math.PI * 2);
+        ctx.fillStyle = '#0F172A';
+        ctx.fill();
+
+        // Right eye white
+        ctx.beginPath();
+        ctx.arc(56 * scale, 32 * scale, 5 * scale, 0, Math.PI * 2);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fill();
+
+        // Right eye pupil
+        ctx.beginPath();
+        ctx.arc(57 * scale, 33 * scale, 2.5 * scale, 0, Math.PI * 2);
+        ctx.fillStyle = '#0F172A';
+        ctx.fill();
+
+        // Left antenna
+        ctx.beginPath();
+        ctx.moveTo(42 * scale, 24 * scale);
+        ctx.lineTo(36 * scale, 16 * scale);
+        ctx.strokeStyle = '#22C55E';
+        ctx.lineWidth = 4 * scale;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(36 * scale, 16 * scale, 4 * scale, 0, Math.PI * 2);
+        ctx.fillStyle = '#FBBF24';
+        ctx.fill();
+
+        // Right antenna
+        ctx.beginPath();
+        ctx.moveTo(58 * scale, 24 * scale);
+        ctx.lineTo(64 * scale, 16 * scale);
+        ctx.strokeStyle = '#22C55E';
+        ctx.lineWidth = 4 * scale;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(64 * scale, 16 * scale, 4 * scale, 0, Math.PI * 2);
+        ctx.fillStyle = '#FBBF24';
+        ctx.fill();
+
+        // Left legs
+        ctx.strokeStyle = '#22C55E';
+        ctx.lineWidth = 5 * scale;
+        ctx.lineCap = 'round';
+
+        ctx.beginPath();
+        ctx.moveTo(32 * scale, 48 * scale);
+        ctx.lineTo(22 * scale, 42 * scale);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(32 * scale, 56 * scale);
+        ctx.lineTo(20 * scale, 56 * scale);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(32 * scale, 64 * scale);
+        ctx.lineTo(22 * scale, 70 * scale);
+        ctx.stroke();
+
+        // Right legs
+        ctx.beginPath();
+        ctx.moveTo(68 * scale, 48 * scale);
+        ctx.lineTo(78 * scale, 42 * scale);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(68 * scale, 56 * scale);
+        ctx.lineTo(80 * scale, 56 * scale);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(68 * scale, 64 * scale);
+        ctx.lineTo(78 * scale, 70 * scale);
+        ctx.stroke();
+
+        // Magnifying glass lens (semi-transparent)
+        ctx.beginPath();
+        ctx.arc(70 * scale, 68 * scale, 14 * scale, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.fill();
+
+        // Magnifying glass ring
+        ctx.beginPath();
+        ctx.arc(70 * scale, 68 * scale, 14 * scale, 0, Math.PI * 2);
+        ctx.strokeStyle = '#FBBF24';
+        ctx.lineWidth = 5 * scale;
+        ctx.stroke();
+
+        // Magnifying glass handle
+        ctx.beginPath();
+        ctx.moveTo(80 * scale, 78 * scale);
+        ctx.lineTo(92 * scale, 90 * scale);
+        ctx.strokeStyle = '#FBBF24';
+        ctx.lineWidth = 7 * scale;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        // Glass shine
+        ctx.beginPath();
+        ctx.ellipse(64 * scale, 62 * scale, 4 * scale, 3 * scale, 0, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        ctx.fill();
+
+        function downloadIcon() {
+            const link = document.createElement('a');
+            link.download = 'debugmaster_icon_512x512.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+</html>
