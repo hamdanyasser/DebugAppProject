@@ -1,0 +1,93 @@
+================================================================================
+                    DEBUGMASTER - PLAY STORE LISTING
+                         Ready to Copy & Paste
+================================================================================
+
+--------------------------------------------------------------------------------
+APP NAME
+--------------------------------------------------------------------------------
+DebugMaster - Learn Debugging
+
+--------------------------------------------------------------------------------
+SHORT DESCRIPTION (80 characters max) - Currently: 74 chars
+--------------------------------------------------------------------------------
+Master debugging through competitive gameplay. Solve bugs, battle players!
+
+--------------------------------------------------------------------------------
+FULL DESCRIPTION
+--------------------------------------------------------------------------------
+🎮 DEBUGMASTER - Learn Debugging the Fun Way!
+
+Transform debugging into an addictive competitive game. Solve real programming bugs, compete in ranked battles, and become a debugging master!
+
+⚡ KEY FEATURES
+
+🐛 SOLVE REAL BUGS
+• 49+ carefully crafted bugs across Java, Python, JavaScript, Kotlin
+• Categories: Loops, Arrays, OOP, Strings, Concurrency & more
+• Learn from actual coding mistakes developers make
+
+⚔️ COMPETITIVE MULTIPLAYER
+• Real-time 1v1 battles against other players
+• Ranked ladder: Bronze → Silver → Gold → Diamond → Master → Legend
+• Climb the global leaderboard
+
+📚 STRUCTURED LEARNING
+• 15+ learning paths from beginner to expert
+• Track your mental skills growth
+• AI mentor for personalized guidance
+
+🏆 GAMIFICATION
+• Earn XP and level up
+• Daily challenges and streaks
+• 50+ achievements to unlock
+• Customize with avatars and titles
+
+💎 REWARDS
+• Earn gems for completing challenges
+• Unlock premium cosmetics
+• Streak bonuses and multipliers
+
+🧠 SKILL TRACKING
+• 8 core debugging skills tracked
+• Pattern Recognition, Error Intuition, Logic Flow & more
+• Watch yourself improve over time
+
+FREE to play with optional Pro subscription for unlimited access.
+
+Start your debugging journey today! 🚀
+
+--------------------------------------------------------------------------------
+CATEGORY
+--------------------------------------------------------------------------------
+Education
+
+--------------------------------------------------------------------------------
+TAGS / KEYWORDS
+--------------------------------------------------------------------------------
+debugging, programming, coding, learn to code, java, python, kotlin,
+javascript, competitive coding, multiplayer, education, game, learning app,
+developer tools, code practice
+
+--------------------------------------------------------------------------------
+CONTENT RATING
+--------------------------------------------------------------------------------
+Everyone (E)
+- No violence
+- No sexual content
+- Has in-app purchases
+- Has user interaction (multiplayer)
+
+--------------------------------------------------------------------------------
+CONTACT EMAIL
+--------------------------------------------------------------------------------
+[Your email here]
+
+--------------------------------------------------------------------------------
+PRIVACY POLICY URL
+--------------------------------------------------------------------------------
+https://hamdanyasser.github.io/DebugAppProject/
+
+================================================================================
+                              END OF LISTING
+================================================================================
