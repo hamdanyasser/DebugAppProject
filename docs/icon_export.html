@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>DebugMaster Premium Icon - 512x512</title>
+    <title>DebugMaster - Ultimate Icon</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -10,102 +10,78 @@
             flex-direction: column;
             align-items: center;
             padding: 40px;
-            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 100%);
+            background: #0a0a0f;
             min-height: 100vh;
             color: white;
         }
         h1 {
-            font-size: 2.5em;
-            background: linear-gradient(135deg, #00D9FF, #BD00FF);
+            font-size: 3em;
+            background: linear-gradient(135deg, #00F5A0, #00D9F5);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
-        .subtitle { color: #94A3B8; margin-bottom: 30px; }
+        .subtitle { color: #6B7280; margin-bottom: 40px; font-size: 18px; }
         .preview-container {
             display: flex;
-            gap: 50px;
+            gap: 60px;
             align-items: flex-end;
             margin: 40px 0;
             flex-wrap: wrap;
             justify-content: center;
         }
         .preview-box { text-align: center; }
-        .preview-box p {
-            color: #64748B;
-            margin-top: 15px;
-            font-size: 14px;
-        }
+        .preview-box p { color: #4B5563; margin-top: 20px; font-size: 14px; }
         canvas {
             border-radius: 22%;
             box-shadow:
-                0 0 60px rgba(0, 217, 255, 0.3),
-                0 0 120px rgba(189, 0, 255, 0.2),
-                0 25px 80px rgba(0, 0, 0, 0.5);
+                0 0 0 1px rgba(255,255,255,0.1),
+                0 0 80px rgba(0, 245, 160, 0.4),
+                0 0 150px rgba(0, 217, 245, 0.2),
+                0 50px 100px rgba(0, 0, 0, 0.8);
+            transition: transform 0.3s ease;
         }
-        .buttons {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
+        canvas:hover { transform: scale(1.02) translateY(-5px); }
+        .buttons { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
         button {
-            background: linear-gradient(135deg, #00D9FF, #BD00FF);
-            color: white;
+            background: linear-gradient(135deg, #00F5A0, #00D9F5);
+            color: #0a0a0f;
             border: none;
-            padding: 18px 40px;
+            padding: 18px 45px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 40px rgba(0, 217, 255, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 245, 160, 0.4);
         }
         button:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 15px 50px rgba(0, 217, 255, 0.5);
-        }
-        button.secondary {
-            background: rgba(255,255,255,0.1);
-            border: 2px solid rgba(255,255,255,0.2);
-            box-shadow: none;
-        }
-        .badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #10B981, #059669);
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            transform: translateY(-3px);
+            box-shadow: 0 20px 60px rgba(0, 245, 160, 0.5);
         }
     </style>
 </head>
 <body>
-    <span class="badge">Premium Quality</span>
     <h1>DebugMaster</h1>
-    <p class="subtitle">App Icon Generator - Play Store Ready</p>
+    <p class="subtitle">The Icon That Gets Downloads</p>
 
     <div class="preview-container">
         <div class="preview-box">
             <canvas id="canvas" width="512" height="512"></canvas>
-            <p>512×512 — Play Store</p>
+            <p>512×512</p>
         </div>
         <div class="preview-box">
-            <canvas id="canvas-medium" width="192" height="192" style="border-radius: 20%;"></canvas>
-            <p>192×192 — xxxhdpi</p>
+            <canvas id="canvas-med" width="192" height="192" style="border-radius: 22%;"></canvas>
+            <p>192×192</p>
         </div>
         <div class="preview-box">
-            <canvas id="canvas-small" width="96" height="96" style="border-radius: 18%;"></canvas>
-            <p>96×96 — xhdpi</p>
+            <canvas id="canvas-sm" width="96" height="96" style="border-radius: 20%;"></canvas>
+            <p>96×96</p>
         </div>
     </div>
 
     <div class="buttons">
-        <button onclick="downloadIcon()">Download 512×512 PNG</button>
-        <button class="secondary" onclick="downloadAll()">Download All Sizes</button>
+        <button onclick="download()">Download Icon</button>
     </div>
 
     <script>
@@ -113,381 +89,310 @@
             const ctx = canvas.getContext('2d');
             const s = size / 512;
 
-            // === BACKGROUND WITH DEPTH ===
-            // Base dark gradient
-            const bgGrad = ctx.createRadialGradient(
-                size * 0.3, size * 0.2, 0,
-                size * 0.5, size * 0.5, size * 0.8
-            );
-            bgGrad.addColorStop(0, '#2D1B69');
-            bgGrad.addColorStop(0.4, '#1A1145');
-            bgGrad.addColorStop(1, '#0D0820');
-
+            // === PREMIUM DARK BACKGROUND ===
+            const bg = ctx.createRadialGradient(size*0.5, size*0.35, 0, size*0.5, size*0.5, size*0.7);
+            bg.addColorStop(0, '#1a2a4a');
+            bg.addColorStop(0.5, '#0f1729');
+            bg.addColorStop(1, '#070b14');
             ctx.beginPath();
             ctx.roundRect(0, 0, size, size, size * 0.22);
-            ctx.fillStyle = bgGrad;
+            ctx.fillStyle = bg;
             ctx.fill();
 
-            // === AMBIENT GLOW LAYERS ===
-            // Top-left purple glow
+            // === DRAMATIC SPOTLIGHT ===
+            ctx.save();
+            ctx.globalCompositeOperation = 'screen';
+            const spotlight = ctx.createRadialGradient(size*0.5, size*0.3, 0, size*0.5, size*0.5, size*0.6);
+            spotlight.addColorStop(0, 'rgba(0, 245, 160, 0.15)');
+            spotlight.addColorStop(0.5, 'rgba(0, 217, 245, 0.08)');
+            spotlight.addColorStop(1, 'transparent');
+            ctx.fillStyle = spotlight;
+            ctx.fillRect(0, 0, size, size);
+            ctx.restore();
+
+            // === THE BUG - HERO CHARACTER ===
+            const cx = size * 0.5;
+            const cy = size * 0.52;
+
+            // Ground shadow (subtle)
             ctx.save();
             ctx.globalAlpha = 0.4;
-            const glow1 = ctx.createRadialGradient(
-                size * 0.2, size * 0.15, 0,
-                size * 0.2, size * 0.15, size * 0.5
-            );
-            glow1.addColorStop(0, '#8B5CF6');
-            glow1.addColorStop(0.5, '#6366F1');
-            glow1.addColorStop(1, 'transparent');
-            ctx.fillStyle = glow1;
-            ctx.fillRect(0, 0, size, size);
+            const shadow = ctx.createRadialGradient(cx, cy + 140*s, 0, cx, cy + 140*s, 100*s);
+            shadow.addColorStop(0, '#000');
+            shadow.addColorStop(1, 'transparent');
+            ctx.fillStyle = shadow;
+            ctx.beginPath();
+            ctx.ellipse(cx, cy + 140*s, 90*s, 25*s, 0, 0, Math.PI*2);
+            ctx.fill();
             ctx.restore();
 
-            // Bottom-right cyan glow
+            // === BODY - Smooth, modern, 3D ===
             ctx.save();
-            ctx.globalAlpha = 0.3;
-            const glow2 = ctx.createRadialGradient(
-                size * 0.8, size * 0.85, 0,
-                size * 0.8, size * 0.85, size * 0.5
-            );
-            glow2.addColorStop(0, '#06B6D4');
-            glow2.addColorStop(0.5, '#0891B2');
-            glow2.addColorStop(1, 'transparent');
-            ctx.fillStyle = glow2;
-            ctx.fillRect(0, 0, size, size);
-            ctx.restore();
 
-            // === CIRCUIT PATTERN (subtle) ===
-            ctx.save();
-            ctx.strokeStyle = 'rgba(139, 92, 246, 0.08)';
-            ctx.lineWidth = 1 * s;
-            for (let i = 0; i < 8; i++) {
-                const y = size * 0.1 + (size * 0.8 / 8) * i;
-                ctx.beginPath();
-                ctx.moveTo(size * 0.1, y);
-                ctx.lineTo(size * 0.9, y);
-                ctx.stroke();
-            }
-            for (let i = 0; i < 8; i++) {
-                const x = size * 0.1 + (size * 0.8 / 8) * i;
-                ctx.beginPath();
-                ctx.moveTo(x, size * 0.1);
-                ctx.lineTo(x, size * 0.9);
-                ctx.stroke();
-            }
-            ctx.restore();
-
-            // === MAIN SHIELD/HEXAGON SHAPE ===
-            const cx = size * 0.5;
-            const cy = size * 0.48;
-            const hexR = size * 0.32;
-
-            ctx.save();
             // Outer glow
-            ctx.shadowColor = '#8B5CF6';
-            ctx.shadowBlur = 40 * s;
+            ctx.shadowColor = '#00F5A0';
+            ctx.shadowBlur = 60 * s;
 
-            // Hexagon path
-            ctx.beginPath();
-            for (let i = 0; i < 6; i++) {
-                const angle = (Math.PI / 3) * i - Math.PI / 2;
-                const x = cx + hexR * Math.cos(angle);
-                const y = cy + hexR * Math.sin(angle);
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-            ctx.closePath();
-
-            // Hexagon fill with gradient
-            const hexGrad = ctx.createLinearGradient(cx - hexR, cy - hexR, cx + hexR, cy + hexR);
-            hexGrad.addColorStop(0, 'rgba(139, 92, 246, 0.3)');
-            hexGrad.addColorStop(0.5, 'rgba(99, 102, 241, 0.2)');
-            hexGrad.addColorStop(1, 'rgba(6, 182, 212, 0.3)');
-            ctx.fillStyle = hexGrad;
-            ctx.fill();
-
-            // Hexagon border
-            ctx.strokeStyle = 'rgba(139, 92, 246, 0.6)';
-            ctx.lineWidth = 2 * s;
-            ctx.stroke();
-            ctx.restore();
-
-            // === BUG CHARACTER (3D style) ===
-            const bugX = cx;
-            const bugY = cy + size * 0.02;
-            const bugS = s * 1.1;
-
-            // Bug shadow
-            ctx.save();
-            ctx.globalAlpha = 0.3;
-            ctx.fillStyle = '#000';
-            ctx.beginPath();
-            ctx.ellipse(bugX, bugY + 55 * bugS, 50 * bugS, 15 * bugS, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-
-            // Bug body with 3D gradient
-            ctx.save();
-            ctx.shadowColor = '#22C55E';
-            ctx.shadowBlur = 25 * s;
-
-            const bodyGrad = ctx.createRadialGradient(
-                bugX - 15 * bugS, bugY - 10 * bugS, 0,
-                bugX, bugY + 10 * bugS, 55 * bugS
-            );
-            bodyGrad.addColorStop(0, '#4ADE80');
-            bodyGrad.addColorStop(0.5, '#22C55E');
-            bodyGrad.addColorStop(1, '#15803D');
+            // Main body gradient (top-lit)
+            const bodyGrad = ctx.createLinearGradient(cx, cy - 60*s, cx, cy + 100*s);
+            bodyGrad.addColorStop(0, '#5EEAD4');
+            bodyGrad.addColorStop(0.3, '#10B981');
+            bodyGrad.addColorStop(0.7, '#059669');
+            bodyGrad.addColorStop(1, '#047857');
 
             ctx.beginPath();
-            ctx.ellipse(bugX, bugY + 15 * bugS, 42 * bugS, 50 * bugS, 0, 0, Math.PI * 2);
+            ctx.ellipse(cx, cy + 30*s, 85*s, 100*s, 0, 0, Math.PI*2);
             ctx.fillStyle = bodyGrad;
             ctx.fill();
 
-            // Body segments
-            ctx.strokeStyle = 'rgba(21, 128, 61, 0.4)';
-            ctx.lineWidth = 2 * bugS;
-            ctx.beginPath();
-            ctx.moveTo(bugX - 35 * bugS, bugY);
-            ctx.quadraticCurveTo(bugX, bugY - 5 * bugS, bugX + 35 * bugS, bugY);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(bugX - 38 * bugS, bugY + 25 * bugS);
-            ctx.quadraticCurveTo(bugX, bugY + 20 * bugS, bugX + 38 * bugS, bugY + 25 * bugS);
-            ctx.stroke();
-
-            // Bug head
-            const headGrad = ctx.createRadialGradient(
-                bugX - 8 * bugS, bugY - 55 * bugS, 0,
-                bugX, bugY - 45 * bugS, 35 * bugS
-            );
-            headGrad.addColorStop(0, '#4ADE80');
-            headGrad.addColorStop(0.6, '#22C55E');
-            headGrad.addColorStop(1, '#15803D');
-
-            ctx.beginPath();
-            ctx.arc(bugX, bugY - 45 * bugS, 30 * bugS, 0, Math.PI * 2);
-            ctx.fillStyle = headGrad;
+            // Body highlight (3D effect)
+            ctx.shadowBlur = 0;
+            const bodyHighlight = ctx.createRadialGradient(cx - 25*s, cy - 20*s, 0, cx, cy + 30*s, 100*s);
+            bodyHighlight.addColorStop(0, 'rgba(167, 243, 208, 0.6)');
+            bodyHighlight.addColorStop(0.3, 'rgba(167, 243, 208, 0.2)');
+            bodyHighlight.addColorStop(1, 'transparent');
+            ctx.fillStyle = bodyHighlight;
             ctx.fill();
             ctx.restore();
 
-            // Eyes with reflection
+            // Body segments (subtle lines)
             ctx.save();
-            // Left eye
-            ctx.fillStyle = '#FFF';
-            ctx.shadowColor = '#FFF';
-            ctx.shadowBlur = 8 * s;
+            ctx.strokeStyle = 'rgba(4, 120, 87, 0.5)';
+            ctx.lineWidth = 2.5 * s;
             ctx.beginPath();
-            ctx.ellipse(bugX - 12 * bugS, bugY - 48 * bugS, 12 * bugS, 14 * bugS, -0.1, 0, Math.PI * 2);
+            ctx.moveTo(cx - 70*s, cy + 10*s);
+            ctx.quadraticCurveTo(cx, cy - 5*s, cx + 70*s, cy + 10*s);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(cx - 75*s, cy + 55*s);
+            ctx.quadraticCurveTo(cx, cy + 40*s, cx + 75*s, cy + 55*s);
+            ctx.stroke();
+            ctx.restore();
+
+            // === HEAD ===
+            ctx.save();
+            ctx.shadowColor = '#00F5A0';
+            ctx.shadowBlur = 40 * s;
+
+            const headGrad = ctx.createLinearGradient(cx, cy - 110*s, cx, cy - 30*s);
+            headGrad.addColorStop(0, '#5EEAD4');
+            headGrad.addColorStop(0.4, '#10B981');
+            headGrad.addColorStop(1, '#059669');
+
+            ctx.beginPath();
+            ctx.ellipse(cx, cy - 70*s, 60*s, 55*s, 0, 0, Math.PI*2);
+            ctx.fillStyle = headGrad;
+            ctx.fill();
+
+            // Head highlight
+            ctx.shadowBlur = 0;
+            const headHL = ctx.createRadialGradient(cx - 15*s, cy - 95*s, 0, cx, cy - 70*s, 60*s);
+            headHL.addColorStop(0, 'rgba(167, 243, 208, 0.7)');
+            headHL.addColorStop(0.4, 'rgba(167, 243, 208, 0.2)');
+            headHL.addColorStop(1, 'transparent');
+            ctx.fillStyle = headHL;
+            ctx.fill();
+            ctx.restore();
+
+            // === EYES - Big, expressive, looking at viewer ===
+            // Eye whites (slightly blue tint)
+            ctx.save();
+            ctx.shadowColor = '#fff';
+            ctx.shadowBlur = 15 * s;
+
+            const eyeGrad = ctx.createRadialGradient(cx - 25*s, cy - 80*s, 0, cx - 25*s, cy - 75*s, 28*s);
+            eyeGrad.addColorStop(0, '#ffffff');
+            eyeGrad.addColorStop(0.7, '#f0f9ff');
+            eyeGrad.addColorStop(1, '#e0f2fe');
+
+            // Left eye
+            ctx.beginPath();
+            ctx.ellipse(cx - 25*s, cy - 75*s, 26*s, 30*s, -0.15, 0, Math.PI*2);
+            ctx.fillStyle = eyeGrad;
             ctx.fill();
 
             // Right eye
+            const eyeGrad2 = ctx.createRadialGradient(cx + 25*s, cy - 80*s, 0, cx + 25*s, cy - 75*s, 28*s);
+            eyeGrad2.addColorStop(0, '#ffffff');
+            eyeGrad2.addColorStop(0.7, '#f0f9ff');
+            eyeGrad2.addColorStop(1, '#e0f2fe');
             ctx.beginPath();
-            ctx.ellipse(bugX + 12 * bugS, bugY - 48 * bugS, 12 * bugS, 14 * bugS, 0.1, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Pupils with gradient
-            ctx.shadowBlur = 0;
-            const pupilGrad = ctx.createRadialGradient(
-                bugX - 10 * bugS, bugY - 46 * bugS, 0,
-                bugX - 10 * bugS, bugY - 46 * bugS, 6 * bugS
-            );
-            pupilGrad.addColorStop(0, '#1E293B');
-            pupilGrad.addColorStop(1, '#0F172A');
-
-            ctx.fillStyle = pupilGrad;
-            ctx.beginPath();
-            ctx.arc(bugX - 9 * bugS, bugY - 46 * bugS, 6 * bugS, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.beginPath();
-            ctx.arc(bugX + 15 * bugS, bugY - 46 * bugS, 6 * bugS, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Eye shine
-            ctx.fillStyle = '#FFF';
-            ctx.beginPath();
-            ctx.arc(bugX - 6 * bugS, bugY - 52 * bugS, 3 * bugS, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(bugX + 18 * bugS, bugY - 52 * bugS, 3 * bugS, 0, Math.PI * 2);
+            ctx.ellipse(cx + 25*s, cy - 75*s, 26*s, 30*s, 0.15, 0, Math.PI*2);
+            ctx.fillStyle = eyeGrad2;
             ctx.fill();
             ctx.restore();
 
-            // Antennae with glow tips
+            // Pupils (looking slightly up and to the right - engaging)
             ctx.save();
-            ctx.strokeStyle = '#22C55E';
-            ctx.lineWidth = 4 * bugS;
+            const pupilGrad = ctx.createRadialGradient(cx - 20*s, cy - 78*s, 0, cx - 20*s, cy - 75*s, 14*s);
+            pupilGrad.addColorStop(0, '#1e293b');
+            pupilGrad.addColorStop(0.7, '#0f172a');
+            pupilGrad.addColorStop(1, '#020617');
+
+            ctx.beginPath();
+            ctx.arc(cx - 20*s, cy - 75*s, 13*s, 0, Math.PI*2);
+            ctx.fillStyle = pupilGrad;
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(cx + 30*s, cy - 75*s, 13*s, 0, Math.PI*2);
+            ctx.fill();
+            ctx.restore();
+
+            // Eye sparkles (life!)
+            ctx.save();
+            ctx.fillStyle = '#ffffff';
+            ctx.shadowColor = '#ffffff';
+            ctx.shadowBlur = 8 * s;
+
+            // Big sparkles
+            ctx.beginPath();
+            ctx.arc(cx - 14*s, cy - 82*s, 6*s, 0, Math.PI*2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(cx + 36*s, cy - 82*s, 6*s, 0, Math.PI*2);
+            ctx.fill();
+
+            // Small sparkles
+            ctx.beginPath();
+            ctx.arc(cx - 26*s, cy - 68*s, 3*s, 0, Math.PI*2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(cx + 24*s, cy - 68*s, 3*s, 0, Math.PI*2);
+            ctx.fill();
+            ctx.restore();
+
+            // === SMILE - Friendly, confident ===
+            ctx.save();
+            ctx.strokeStyle = '#047857';
+            ctx.lineWidth = 4 * s;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.arc(cx, cy - 55*s, 18*s, 0.2, Math.PI - 0.2);
+            ctx.stroke();
+            ctx.restore();
+
+            // === ANTENNAE - Bouncy, fun ===
+            ctx.save();
+            ctx.strokeStyle = '#10B981';
+            ctx.lineWidth = 6 * s;
             ctx.lineCap = 'round';
 
-            // Left antenna
+            // Left antenna (curved)
             ctx.beginPath();
-            ctx.moveTo(bugX - 20 * bugS, bugY - 70 * bugS);
-            ctx.quadraticCurveTo(bugX - 35 * bugS, bugY - 90 * bugS, bugX - 40 * bugS, bugY - 105 * bugS);
+            ctx.moveTo(cx - 35*s, cy - 115*s);
+            ctx.bezierCurveTo(cx - 50*s, cy - 150*s, cx - 70*s, cy - 170*s, cx - 65*s, cy - 195*s);
             ctx.stroke();
 
             // Right antenna
             ctx.beginPath();
-            ctx.moveTo(bugX + 20 * bugS, bugY - 70 * bugS);
-            ctx.quadraticCurveTo(bugX + 35 * bugS, bugY - 90 * bugS, bugX + 40 * bugS, bugY - 105 * bugS);
+            ctx.moveTo(cx + 35*s, cy - 115*s);
+            ctx.bezierCurveTo(cx + 50*s, cy - 150*s, cx + 70*s, cy - 170*s, cx + 65*s, cy - 195*s);
             ctx.stroke();
+            ctx.restore();
 
-            // Glowing tips
+            // Antenna orbs (glowing!)
+            ctx.save();
             ctx.shadowColor = '#FBBF24';
-            ctx.shadowBlur = 15 * s;
-            ctx.fillStyle = '#FBBF24';
+            ctx.shadowBlur = 25 * s;
+
+            const orbGrad = ctx.createRadialGradient(cx - 68*s, cy - 198*s, 0, cx - 65*s, cy - 195*s, 15*s);
+            orbGrad.addColorStop(0, '#FEF3C7');
+            orbGrad.addColorStop(0.4, '#FCD34D');
+            orbGrad.addColorStop(1, '#F59E0B');
 
             ctx.beginPath();
-            ctx.arc(bugX - 40 * bugS, bugY - 105 * bugS, 8 * bugS, 0, Math.PI * 2);
+            ctx.arc(cx - 65*s, cy - 195*s, 14*s, 0, Math.PI*2);
+            ctx.fillStyle = orbGrad;
             ctx.fill();
 
-            ctx.beginPath();
-            ctx.arc(bugX + 40 * bugS, bugY - 105 * bugS, 8 * bugS, 0, Math.PI * 2);
-            ctx.fill();
+            const orbGrad2 = ctx.createRadialGradient(cx + 62*s, cy - 198*s, 0, cx + 65*s, cy - 195*s, 15*s);
+            orbGrad2.addColorStop(0, '#FEF3C7');
+            orbGrad2.addColorStop(0.4, '#FCD34D');
+            orbGrad2.addColorStop(1, '#F59E0B');
 
-            // Inner glow on tips
-            ctx.shadowBlur = 0;
-            ctx.fillStyle = '#FEF3C7';
             ctx.beginPath();
-            ctx.arc(bugX - 40 * bugS, bugY - 105 * bugS, 4 * bugS, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(bugX + 40 * bugS, bugY - 105 * bugS, 4 * bugS, 0, Math.PI * 2);
+            ctx.arc(cx + 65*s, cy - 195*s, 14*s, 0, Math.PI*2);
+            ctx.fillStyle = orbGrad2;
             ctx.fill();
             ctx.restore();
 
-            // Bug legs with joints
+            // === LEGS - Dynamic pose ===
             ctx.save();
-            ctx.strokeStyle = '#22C55E';
-            ctx.lineWidth = 5 * bugS;
+            ctx.strokeStyle = '#10B981';
+            ctx.lineWidth = 8 * s;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
 
             // Left legs
-            const legStartL = [{x: -38, y: -5}, {x: -42, y: 15}, {x: -38, y: 35}];
-            const legMidL = [{x: -58, y: -20}, {x: -65, y: 15}, {x: -58, y: 50}];
-            const legEndL = [{x: -75, y: -10}, {x: -80, y: 15}, {x: -75, y: 55}];
+            const leftLegs = [
+                {x1: -75, y1: 0, x2: -110, y2: -25, x3: -130, y3: -10},
+                {x1: -80, y1: 35, x2: -125, y2: 35, x3: -145, y3: 45},
+                {x1: -70, y1: 75, x2: -105, y2: 95, x3: -125, y3: 110}
+            ];
 
-            legStartL.forEach((start, i) => {
+            leftLegs.forEach(leg => {
                 ctx.beginPath();
-                ctx.moveTo(bugX + start.x * bugS, bugY + start.y * bugS);
-                ctx.lineTo(bugX + legMidL[i].x * bugS, bugY + legMidL[i].y * bugS);
-                ctx.lineTo(bugX + legEndL[i].x * bugS, bugY + legEndL[i].y * bugS);
+                ctx.moveTo(cx + leg.x1*s, cy + leg.y1*s);
+                ctx.lineTo(cx + leg.x2*s, cy + leg.y2*s);
+                ctx.lineTo(cx + leg.x3*s, cy + leg.y3*s);
                 ctx.stroke();
             });
 
             // Right legs (mirrored)
-            legStartL.forEach((start, i) => {
+            leftLegs.forEach(leg => {
                 ctx.beginPath();
-                ctx.moveTo(bugX - start.x * bugS, bugY + start.y * bugS);
-                ctx.lineTo(bugX - legMidL[i].x * bugS, bugY + legMidL[i].y * bugS);
-                ctx.lineTo(bugX - legEndL[i].x * bugS, bugY + legEndL[i].y * bugS);
+                ctx.moveTo(cx - leg.x1*s, cy + leg.y1*s);
+                ctx.lineTo(cx - leg.x2*s, cy + leg.y2*s);
+                ctx.lineTo(cx - leg.x3*s, cy + leg.y3*s);
                 ctx.stroke();
             });
             ctx.restore();
 
-            // === MAGNIFYING GLASS (premium) ===
-            const mgX = bugX + 60 * s;
-            const mgY = bugY + 70 * s;
-            const mgR = 35 * s;
-
+            // === CODE BADGE - Small, subtle, professional ===
             ctx.save();
-            // Glass glow
-            ctx.shadowColor = '#06B6D4';
+            const badgeX = cx + 55*s;
+            const badgeY = cy + 90*s;
+
+            // Badge glow
+            ctx.shadowColor = '#00D9F5';
             ctx.shadowBlur = 20 * s;
 
-            // Glass lens (gradient)
-            const lensGrad = ctx.createRadialGradient(
-                mgX - 10 * s, mgY - 10 * s, 0,
-                mgX, mgY, mgR
-            );
-            lensGrad.addColorStop(0, 'rgba(6, 182, 212, 0.4)');
-            lensGrad.addColorStop(0.7, 'rgba(6, 182, 212, 0.2)');
-            lensGrad.addColorStop(1, 'rgba(6, 182, 212, 0.1)');
-
+            // Badge background
+            const badgeBg = ctx.createLinearGradient(badgeX - 35*s, badgeY - 25*s, badgeX + 35*s, badgeY + 25*s);
+            badgeBg.addColorStop(0, '#0891B2');
+            badgeBg.addColorStop(1, '#0E7490');
             ctx.beginPath();
-            ctx.arc(mgX, mgY, mgR, 0, Math.PI * 2);
-            ctx.fillStyle = lensGrad;
+            ctx.roundRect(badgeX - 35*s, badgeY - 22*s, 70*s, 44*s, 12*s);
+            ctx.fillStyle = badgeBg;
             ctx.fill();
 
-            // Glass ring
-            ctx.shadowColor = '#FBBF24';
-            ctx.shadowBlur = 15 * s;
-
-            const ringGrad = ctx.createLinearGradient(mgX - mgR, mgY - mgR, mgX + mgR, mgY + mgR);
-            ringGrad.addColorStop(0, '#FCD34D');
-            ringGrad.addColorStop(0.5, '#FBBF24');
-            ringGrad.addColorStop(1, '#F59E0B');
-
-            ctx.strokeStyle = ringGrad;
-            ctx.lineWidth = 6 * s;
-            ctx.stroke();
-
-            // Handle
-            ctx.beginPath();
-            ctx.moveTo(mgX + mgR * 0.7, mgY + mgR * 0.7);
-            ctx.lineTo(mgX + mgR * 1.6, mgY + mgR * 1.6);
-            ctx.lineWidth = 10 * s;
-            ctx.lineCap = 'round';
-            ctx.stroke();
-
-            // Lens shine
+            // Badge highlight
             ctx.shadowBlur = 0;
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.fillStyle = 'rgba(255,255,255,0.15)';
             ctx.beginPath();
-            ctx.ellipse(mgX - 12 * s, mgY - 12 * s, 8 * s, 5 * s, -0.5, 0, Math.PI * 2);
+            ctx.roundRect(badgeX - 32*s, badgeY - 20*s, 64*s, 20*s, [10*s, 10*s, 0, 0]);
             ctx.fill();
-            ctx.restore();
 
-            // === TOP SPARKLES ===
-            drawSparkle(ctx, size * 0.12, size * 0.12, 10 * s, '#FBBF24');
-            drawSparkle(ctx, size * 0.88, size * 0.15, 8 * s, '#06B6D4');
-            drawSparkle(ctx, size * 0.15, size * 0.85, 6 * s, '#8B5CF6');
-        }
-
-        function drawSparkle(ctx, x, y, r, color) {
-            ctx.save();
-            ctx.fillStyle = color;
-            ctx.shadowColor = color;
-            ctx.shadowBlur = r * 3;
-
-            // 4-point star
-            ctx.beginPath();
-            ctx.moveTo(x, y - r);
-            ctx.quadraticCurveTo(x + r * 0.2, y, x + r, y);
-            ctx.quadraticCurveTo(x, y + r * 0.2, x, y + r);
-            ctx.quadraticCurveTo(x - r * 0.2, y, x - r, y);
-            ctx.quadraticCurveTo(x, y - r * 0.2, x, y - r);
-            ctx.fill();
+            // Code text
+            ctx.font = `bold ${28*s}px monospace`;
+            ctx.fillStyle = '#fff';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('</>', badgeX, badgeY + 2*s);
             ctx.restore();
         }
 
-        // Draw all sizes
+        // Draw all canvases
         drawIcon(document.getElementById('canvas'), 512);
-        drawIcon(document.getElementById('canvas-medium'), 192);
-        drawIcon(document.getElementById('canvas-small'), 96);
+        drawIcon(document.getElementById('canvas-med'), 192);
+        drawIcon(document.getElementById('canvas-sm'), 96);
 
-        function downloadIcon() {
+        function download() {
             const link = document.createElement('a');
-            link.download = 'debugmaster_icon_512x512.png';
+            link.download = 'debugmaster_icon.png';
             link.href = document.getElementById('canvas').toDataURL('image/png');
             link.click();
-        }
-
-        function downloadAll() {
-            const sizes = [
-                { canvas: 'canvas', name: '512x512' },
-                { canvas: 'canvas-medium', name: '192x192' },
-                { canvas: 'canvas-small', name: '96x96' }
-            ];
-            sizes.forEach((s, i) => {
-                setTimeout(() => {
-                    const link = document.createElement('a');
-                    link.download = `debugmaster_icon_${s.name}.png`;
-                    link.href = document.getElementById(s.canvas).toDataURL('image/png');
-                    link.click();
-                }, i * 500);
-            });
         }
     </script>
 </body>
