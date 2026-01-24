@@ -1,92 +1,130 @@
 ================================================================================
-                    DEBUGMASTER - PLAY STORE LISTING
-                         Ready to Copy & Paste
+              DEBUGMASTER - PLAY STORE LISTING (MILLION-DOWNLOAD EDITION)
+                            Ready to Copy & Paste
 ================================================================================
 
---------------------------------------------------------------------------------
-APP NAME
---------------------------------------------------------------------------------
-DebugMaster - Learn Debugging
 
---------------------------------------------------------------------------------
-SHORT DESCRIPTION (80 characters max) - Currently: 74 chars
---------------------------------------------------------------------------------
-Master debugging through competitive gameplay. Solve bugs, battle players!
+================================================================================
+APP NAME (30 characters max)
+================================================================================
 
---------------------------------------------------------------------------------
+DebugMaster: Code Battle Game
+
+
+================================================================================
+SHORT DESCRIPTION (80 characters max) - Currently: 79 chars
+================================================================================
+
+Battle players worldwide! Fix code bugs faster than your opponent. Free to play.
+
+
+================================================================================
 FULL DESCRIPTION
---------------------------------------------------------------------------------
-🎮 DEBUGMASTER - Learn Debugging the Fun Way!
+================================================================================
 
-Transform debugging into an addictive competitive game. Solve real programming bugs, compete in ranked battles, and become a debugging master!
+🏆 THE #1 COMPETITIVE CODING GAME
 
-⚡ KEY FEATURES
+Think you can debug faster than anyone? Prove it.
 
-🐛 SOLVE REAL BUGS
-• 49+ carefully crafted bugs across Java, Python, JavaScript, Kotlin
-• Categories: Loops, Arrays, OOP, Strings, Concurrency & more
-• Learn from actual coding mistakes developers make
+DebugMaster turns real programming bugs into intense 1v1 battles. Find the bug. Fix the code. Beat your opponent. Climb from Bronze to Legend.
 
-⚔️ COMPETITIVE MULTIPLAYER
-• Real-time 1v1 battles against other players
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚔️ REAL-TIME BATTLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• 3-minute 1v1 matches against real players
+• Same bug, same clock — who fixes it first?
 • Ranked ladder: Bronze → Silver → Gold → Diamond → Master → Legend
-• Climb the global leaderboard
+• ELO-based matchmaking for fair competition
 
-📚 STRUCTURED LEARNING
-• 15+ learning paths from beginner to expert
-• Track your mental skills growth
-• AI mentor for personalized guidance
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧠 LEARN BY DOING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🏆 GAMIFICATION
-• Earn XP and level up
-• Daily challenges and streaks
+• 49+ real bugs from Java, Python, JavaScript, Kotlin
+• Categories: Loops, Arrays, OOP, Null Safety, Concurrency
+• AI mentor gives hints without spoiling the answer
+• Learn patterns that senior developers use daily
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏅 TRACK YOUR GROWTH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• 8 debugging skills tracked: Pattern Recognition, Error Intuition, Logic Flow...
+• 15+ structured learning paths from beginner to expert
 • 50+ achievements to unlock
-• Customize with avatars and titles
+• Watch yourself improve over time with detailed stats
 
-💎 REWARDS
-• Earn gems for completing challenges
-• Unlock premium cosmetics
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎮 FREE TO PLAY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• Daily challenges refresh every 24 hours
+• Earn XP, gems, and cosmetics
 • Streak bonuses and multipliers
+• Optional Pro subscription unlocks all content
 
-🧠 SKILL TRACKING
-• 8 core debugging skills tracked
-• Pattern Recognition, Error Intuition, Logic Flow & more
-• Watch yourself improve over time
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-FREE to play with optional Pro subscription for unlimited access.
+Whether you're a coding student, bootcamp grad, or senior developer — DebugMaster makes you faster, sharper, and battle-tested.
 
-Start your debugging journey today! 🚀
+Download now. Your opponent is waiting.
 
---------------------------------------------------------------------------------
+
+================================================================================
 CATEGORY
---------------------------------------------------------------------------------
+================================================================================
+
 Education
 
---------------------------------------------------------------------------------
-TAGS / KEYWORDS
---------------------------------------------------------------------------------
-debugging, programming, coding, learn to code, java, python, kotlin,
-javascript, competitive coding, multiplayer, education, game, learning app,
-developer tools, code practice
 
---------------------------------------------------------------------------------
+================================================================================
+KEYWORDS / TAGS
+================================================================================
+
+debug game, coding battle, programming practice, learn java, learn python,
+competitive coding, code challenge, developer game, programming quiz,
+leetcode alternative, coding app, debug practice, fix bugs game,
+coding competition, programming game, learn kotlin, learn javascript
+
+
+================================================================================
 CONTENT RATING
---------------------------------------------------------------------------------
+================================================================================
+
 Everyone (E)
 - No violence
 - No sexual content
 - Has in-app purchases
 - Has user interaction (multiplayer)
 
---------------------------------------------------------------------------------
-CONTACT EMAIL
---------------------------------------------------------------------------------
-[Your email here]
 
---------------------------------------------------------------------------------
+================================================================================
+CONTACT INFORMATION
+================================================================================
+
+Email: hamdanyasser2005@gmail.com
+GitHub: https://github.com/hamdanyasser/DebugAppProject
+
+
+================================================================================
 PRIVACY POLICY URL
---------------------------------------------------------------------------------
+================================================================================
+
 https://hamdanyasser.github.io/DebugAppProject/
+
+
+================================================================================
+WHAT'S NEW (for updates)
+================================================================================
+
+Version 1.1.0:
+• Real-time multiplayer battles
+• Ranked competitive ladder
+• AI mentor for personalized guidance
+• 49+ bugs across 4 languages
+• Premium dark theme UI
+
 
 ================================================================================
                               END OF LISTING

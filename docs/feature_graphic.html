@@ -3,241 +3,336 @@
 <head>
     <title>DebugMaster Feature Graphic - 1024x500</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 40px;
-            background: #1a1a2e;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+            min-height: 100vh;
             color: white;
         }
-        h1 { color: #8B5CF6; }
-        .preview {
-            border: 2px solid #8B5CF6;
+        h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #06B6D4, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .subtitle { color: #94A3B8; margin-bottom: 30px; }
+        canvas {
             border-radius: 16px;
-            margin: 20px;
+            box-shadow: 0 25px 80px rgba(6, 182, 212, 0.3), 0 10px 40px rgba(139, 92, 246, 0.2);
             max-width: 100%;
+            margin: 20px 0;
         }
         button {
-            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            background: linear-gradient(135deg, #06B6D4, #8B5CF6);
             color: white;
             border: none;
-            padding: 15px 40px;
+            padding: 18px 50px;
             font-size: 18px;
-            border-radius: 12px;
+            font-weight: 600;
+            border-radius: 16px;
             cursor: pointer;
             margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(6, 182, 212, 0.4);
         }
         button:hover {
-            transform: scale(1.05);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(6, 182, 212, 0.5);
         }
         .instructions {
-            background: #2d2d44;
-            padding: 20px;
-            border-radius: 12px;
-            margin-top: 20px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 16px;
+            margin-top: 30px;
             max-width: 600px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
+        .instructions h3 {
+            color: #06B6D4;
+            margin-bottom: 15px;
+        }
+        .instructions ol {
+            color: #94A3B8;
+            padding-left: 20px;
+        }
+        .instructions li { margin: 8px 0; }
     </style>
 </head>
 <body>
-    <h1>DebugMaster Feature Graphic</h1>
-    <p>1024x500 PNG for Google Play Store</p>
+    <h1>DebugMaster</h1>
+    <p class="subtitle">Feature Graphic - 1024x500 PNG</p>
 
-    <canvas id="canvas" width="1024" height="500" class="preview"></canvas>
+    <canvas id="canvas" width="1024" height="500"></canvas>
 
     <button onclick="downloadGraphic()">Download 1024x500 PNG</button>
 
     <div class="instructions">
-        <h3>Instructions:</h3>
+        <h3>Instructions</h3>
         <ol>
-            <li>Click "Download 1024x500 PNG"</li>
-            <li>Save the file</li>
-            <li>Upload to Play Store under "Feature graphic"</li>
+            <li>Click <strong>"Download 1024x500 PNG"</strong></li>
+            <li>Upload to Google Play Store under "Feature graphic"</li>
         </ol>
     </div>
 
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
+        const W = 1024;
+        const H = 500;
 
-        // Gradient background
-        const gradient = ctx.createLinearGradient(0, 0, 1024, 500);
-        gradient.addColorStop(0, '#4F46E5');
-        gradient.addColorStop(0.5, '#7C3AED');
-        gradient.addColorStop(1, '#EC4899');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 1024, 500);
+        // === BACKGROUND ===
+        const bgGradient = ctx.createLinearGradient(0, 0, W, H);
+        bgGradient.addColorStop(0, '#0F0D2E');
+        bgGradient.addColorStop(0.5, '#1E1B4B');
+        bgGradient.addColorStop(1, '#312E81');
+        ctx.fillStyle = bgGradient;
+        ctx.fillRect(0, 0, W, H);
 
-        // Decorative circles
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-        ctx.beginPath();
-        ctx.arc(900, 100, 150, 0, Math.PI * 2);
-        ctx.fill();
+        // === DECORATIVE GLOWS ===
+        ctx.save();
+        ctx.globalAlpha = 0.15;
 
-        ctx.beginPath();
-        ctx.arc(100, 400, 100, 0, Math.PI * 2);
-        ctx.fill();
+        const glow1 = ctx.createRadialGradient(900, 50, 0, 900, 50, 300);
+        glow1.addColorStop(0, '#8B5CF6');
+        glow1.addColorStop(1, 'transparent');
+        ctx.fillStyle = glow1;
+        ctx.fillRect(0, 0, W, H);
 
-        ctx.beginPath();
-        ctx.arc(800, 450, 80, 0, Math.PI * 2);
-        ctx.fill();
+        const glow2 = ctx.createRadialGradient(100, 450, 0, 100, 450, 250);
+        glow2.addColorStop(0, '#06B6D4');
+        glow2.addColorStop(1, 'transparent');
+        ctx.fillStyle = glow2;
+        ctx.fillRect(0, 0, W, H);
+        ctx.restore();
 
-        // Draw bug icon (simplified)
-        const iconX = 150;
-        const iconY = 250;
-        const iconScale = 2;
-
-        // Bug body
-        ctx.beginPath();
-        ctx.ellipse(iconX, iconY + 20, 35, 45, 0, 0, Math.PI * 2);
-        ctx.fillStyle = '#22C55E';
-        ctx.fill();
-        ctx.strokeStyle = '#166534';
-        ctx.lineWidth = 4;
-        ctx.stroke();
-
-        // Bug head
-        ctx.beginPath();
-        ctx.arc(iconX, iconY - 35, 25, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-
-        // Eyes
-        ctx.fillStyle = '#FFFFFF';
-        ctx.beginPath();
-        ctx.arc(iconX - 10, iconY - 38, 8, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(iconX + 10, iconY - 38, 8, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = '#0F172A';
-        ctx.beginPath();
-        ctx.arc(iconX - 8, iconY - 36, 4, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(iconX + 12, iconY - 36, 4, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Antennae
-        ctx.strokeStyle = '#22C55E';
-        ctx.lineWidth = 6;
-        ctx.lineCap = 'round';
-
-        ctx.beginPath();
-        ctx.moveTo(iconX - 15, iconY - 55);
-        ctx.lineTo(iconX - 30, iconY - 75);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(iconX + 15, iconY - 55);
-        ctx.lineTo(iconX + 30, iconY - 75);
-        ctx.stroke();
-
-        ctx.fillStyle = '#FBBF24';
-        ctx.beginPath();
-        ctx.arc(iconX - 30, iconY - 75, 8, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(iconX + 30, iconY - 75, 8, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Legs
-        ctx.strokeStyle = '#22C55E';
-        ctx.lineWidth = 8;
-
-        // Left
-        ctx.beginPath();
-        ctx.moveTo(iconX - 35, iconY);
-        ctx.lineTo(iconX - 60, iconY - 15);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(iconX - 35, iconY + 20);
-        ctx.lineTo(iconX - 65, iconY + 20);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(iconX - 35, iconY + 40);
-        ctx.lineTo(iconX - 60, iconY + 55);
-        ctx.stroke();
-
-        // Right
-        ctx.beginPath();
-        ctx.moveTo(iconX + 35, iconY);
-        ctx.lineTo(iconX + 60, iconY - 15);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(iconX + 35, iconY + 20);
-        ctx.lineTo(iconX + 65, iconY + 20);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(iconX + 35, iconY + 40);
-        ctx.lineTo(iconX + 60, iconY + 55);
-        ctx.stroke();
-
-        // Magnifying glass
-        ctx.beginPath();
-        ctx.arc(iconX + 50, iconY + 50, 28, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
-        ctx.fill();
-        ctx.strokeStyle = '#FBBF24';
-        ctx.lineWidth = 8;
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(iconX + 70, iconY + 70);
-        ctx.lineTo(iconX + 95, iconY + 95);
-        ctx.lineWidth = 12;
-        ctx.stroke();
-
-        // App name
-        ctx.fillStyle = '#FFFFFF';
-        ctx.font = 'bold 72px Arial, sans-serif';
-        ctx.fillText('DebugMaster', 300, 200);
-
-        // Tagline
-        ctx.font = '32px Arial, sans-serif';
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-        ctx.fillText('Master Debugging Through Play', 300, 260);
-
-        // Features
-        ctx.font = '24px Arial, sans-serif';
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-
-        const features = [
-            '49+ Real Programming Bugs',
-            'Real-time 1v1 Battles',
-            'Ranked Competitive Ladder',
-            'AI Mentor & Learning Paths'
-        ];
-
-        features.forEach((feature, i) => {
-            ctx.fillText('✓ ' + feature, 320, 320 + i * 35);
-        });
-
-        // Badge
-        ctx.fillStyle = '#22C55E';
-        roundRect(ctx, 750, 380, 200, 50, 25);
-        ctx.fill();
-
-        ctx.fillStyle = '#FFFFFF';
-        ctx.font = 'bold 22px Arial, sans-serif';
-        ctx.fillText('FREE TO PLAY', 785, 413);
-
-        function roundRect(ctx, x, y, w, h, r) {
+        // Grid pattern
+        ctx.save();
+        ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < W; x += 40) {
             ctx.beginPath();
-            ctx.moveTo(x + r, y);
-            ctx.lineTo(x + w - r, y);
-            ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-            ctx.lineTo(x + w, y + h - r);
-            ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-            ctx.lineTo(x + r, y + h);
-            ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-            ctx.lineTo(x, y + r);
-            ctx.quadraticCurveTo(x, y, x + r, y);
-            ctx.closePath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, H);
+            ctx.stroke();
         }
+        for (let y = 0; y < H; y += 40) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(W, y);
+            ctx.stroke();
+        }
+        ctx.restore();
+
+        // === MINI ICON ===
+        function drawMiniIcon(x, y, size) {
+            const s = size / 512;
+
+            ctx.save();
+            ctx.shadowColor = '#8B5CF6';
+            ctx.shadowBlur = 30;
+
+            const iconGrad = ctx.createRadialGradient(x, y, 0, x, y, size * 0.7);
+            iconGrad.addColorStop(0, '#312E81');
+            iconGrad.addColorStop(1, '#1E1B4B');
+
+            ctx.beginPath();
+            ctx.roundRect(x - size/2, y - size/2, size, size, size * 0.2);
+            ctx.fillStyle = iconGrad;
+            ctx.fill();
+            ctx.restore();
+
+            // Brackets
+            ctx.save();
+            ctx.font = `bold ${70 * s}px -apple-system, Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowColor = '#06B6D4';
+            ctx.shadowBlur = 20;
+            ctx.fillStyle = '#06B6D4';
+            ctx.fillText('<', x - size * 0.28, y - size * 0.05);
+            ctx.fillText('>', x + size * 0.28, y - size * 0.05);
+            ctx.fillStyle = '#8B5CF6';
+            ctx.shadowColor = '#8B5CF6';
+            ctx.fillText('/', x, y - size * 0.08);
+            ctx.restore();
+
+            // Bug
+            const bugY = y + size * 0.22;
+            ctx.save();
+            ctx.shadowColor = '#22C55E';
+            ctx.shadowBlur = 15;
+            ctx.fillStyle = '#22C55E';
+
+            ctx.beginPath();
+            ctx.ellipse(x, bugY, 22 * s, 17 * s, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(x, bugY - 22 * s, 12 * s, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = '#FFF';
+            ctx.beginPath();
+            ctx.arc(x - 5 * s, bugY - 24 * s, 5 * s, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + 5 * s, bugY - 24 * s, 5 * s, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#0F172A';
+            ctx.beginPath();
+            ctx.arc(x - 4 * s, bugY - 23 * s, 2.5 * s, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + 6 * s, bugY - 23 * s, 2.5 * s, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#FBBF24';
+            ctx.shadowColor = '#FBBF24';
+            ctx.shadowBlur = 8;
+            ctx.beginPath();
+            ctx.arc(x - 15 * s, bugY - 42 * s, 4 * s, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x + 15 * s, bugY - 42 * s, 4 * s, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        drawMiniIcon(140, 250, 220);
+
+        // === APP NAME ===
+        ctx.save();
+        ctx.font = 'bold 72px -apple-system, BlinkMacSystemFont, Arial';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.shadowColor = 'rgba(255,255,255,0.3)';
+        ctx.shadowBlur = 20;
+        ctx.fillText('DebugMaster', 290, 180);
+        ctx.restore();
+
+        // === TAGLINE ===
+        ctx.font = '28px -apple-system, Arial';
+        ctx.fillStyle = '#94A3B8';
+        ctx.fillText('Master Debugging Through Play', 290, 230);
+
+        // === FEATURE PILLS ===
+        function drawPill(x, y, icon, text, color) {
+            ctx.save();
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 15;
+            ctx.fillStyle = 'rgba(255,255,255,0.08)';
+            ctx.beginPath();
+            ctx.roundRect(x, y, 180, 50, 25);
+            ctx.fill();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.restore();
+
+            ctx.font = '24px Arial';
+            ctx.fillText(icon, x + 18, y + 33);
+
+            ctx.font = 'bold 18px -apple-system, Arial';
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillText(text, x + 50, y + 32);
+        }
+
+        drawPill(290, 280, '⚔️', 'Battle', '#EF4444');
+        drawPill(490, 280, '🏆', 'Rank Up', '#FBBF24');
+        drawPill(690, 280, '🧠', 'Learn', '#22C55E');
+
+        // === RATING ===
+        ctx.save();
+        ctx.font = '24px Arial';
+        ctx.fillStyle = '#FBBF24';
+        ctx.shadowColor = '#FBBF24';
+        ctx.shadowBlur = 10;
+        ctx.fillText('★★★★★', 290, 380);
+
+        ctx.shadowBlur = 0;
+        ctx.font = 'bold 20px -apple-system, Arial';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText('4.9', 410, 380);
+
+        ctx.font = '16px -apple-system, Arial';
+        ctx.fillStyle = '#64748B';
+        ctx.fillText('50K+ Players', 460, 380);
+        ctx.restore();
+
+        // === FREE BADGE ===
+        ctx.save();
+        ctx.shadowColor = '#22C55E';
+        ctx.shadowBlur = 20;
+
+        const badgeGrad = ctx.createLinearGradient(750, 360, 950, 400);
+        badgeGrad.addColorStop(0, '#22C55E');
+        badgeGrad.addColorStop(1, '#16A34A');
+        ctx.fillStyle = badgeGrad;
+
+        ctx.beginPath();
+        ctx.roundRect(750, 355, 200, 50, 25);
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+        ctx.font = 'bold 20px -apple-system, Arial';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.textAlign = 'center';
+        ctx.fillText('FREE TO PLAY', 850, 387);
+        ctx.restore();
+
+        // === SPARKLES ===
+        function drawSparkle(x, y, size, color) {
+            ctx.save();
+            ctx.fillStyle = color;
+            ctx.shadowColor = color;
+            ctx.shadowBlur = size * 2;
+
+            ctx.beginPath();
+            ctx.moveTo(x, y - size);
+            ctx.lineTo(x + size * 0.3, y);
+            ctx.lineTo(x, y + size);
+            ctx.lineTo(x - size * 0.3, y);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(x - size, y);
+            ctx.lineTo(x, y + size * 0.3);
+            ctx.lineTo(x + size, y);
+            ctx.lineTo(x, y - size * 0.3);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        drawSparkle(950, 80, 12, '#FBBF24');
+        drawSparkle(80, 60, 8, '#06B6D4');
+        drawSparkle(970, 420, 10, '#8B5CF6');
+        drawSparkle(550, 450, 6, '#22C55E');
+
+        // === BOTTOM LINE ===
+        ctx.save();
+        const lineGrad = ctx.createLinearGradient(0, 0, W, 0);
+        lineGrad.addColorStop(0, 'transparent');
+        lineGrad.addColorStop(0.2, '#06B6D4');
+        lineGrad.addColorStop(0.5, '#8B5CF6');
+        lineGrad.addColorStop(0.8, '#EC4899');
+        lineGrad.addColorStop(1, 'transparent');
+        ctx.strokeStyle = lineGrad;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(0, H - 3);
+        ctx.lineTo(W, H - 3);
+        ctx.stroke();
+        ctx.restore();
 
         function downloadGraphic() {
             const link = document.createElement('a');

@@ -1,220 +1,337 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>DebugMaster Icon Export - 512x512</title>
+    <title>DebugMaster Premium Icon - 512x512</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 40px;
-            background: #1a1a2e;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+            min-height: 100vh;
             color: white;
         }
-        h1 { color: #8B5CF6; }
-        .preview {
-            border: 2px solid #8B5CF6;
+        h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #06B6D4, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .subtitle { color: #94A3B8; margin-bottom: 30px; }
+        .preview-container {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .preview-box {
+            text-align: center;
+        }
+        .preview-box p {
+            color: #64748B;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        canvas {
+            border-radius: 24px;
+            box-shadow: 0 25px 80px rgba(6, 182, 212, 0.3), 0 10px 40px rgba(139, 92, 246, 0.2);
+        }
+        #canvas-small {
             border-radius: 16px;
-            margin: 20px;
+        }
+        #canvas-tiny {
+            border-radius: 8px;
         }
         button {
-            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            background: linear-gradient(135deg, #06B6D4, #8B5CF6);
             color: white;
             border: none;
-            padding: 15px 40px;
+            padding: 18px 50px;
             font-size: 18px;
-            border-radius: 12px;
+            font-weight: 600;
+            border-radius: 16px;
             cursor: pointer;
             margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(6, 182, 212, 0.4);
         }
         button:hover {
-            transform: scale(1.05);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(6, 182, 212, 0.5);
         }
         .instructions {
-            background: #2d2d44;
-            padding: 20px;
-            border-radius: 12px;
-            margin-top: 20px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 16px;
+            margin-top: 30px;
             max-width: 500px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .instructions h3 {
+            color: #06B6D4;
+            margin-bottom: 15px;
+        }
+        .instructions ol {
+            color: #94A3B8;
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin: 8px 0;
+        }
+        code {
+            background: rgba(6, 182, 212, 0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #06B6D4;
         }
     </style>
 </head>
 <body>
-    <h1>DebugMaster App Icon</h1>
-    <p>512x512 PNG for Google Play Store</p>
+    <h1>DebugMaster</h1>
+    <p class="subtitle">Premium App Icon - 512x512 PNG</p>
 
-    <canvas id="canvas" width="512" height="512" class="preview"></canvas>
+    <div class="preview-container">
+        <div class="preview-box">
+            <canvas id="canvas" width="512" height="512"></canvas>
+            <p>512x512 (Play Store)</p>
+        </div>
+        <div class="preview-box">
+            <canvas id="canvas-small" width="128" height="128"></canvas>
+            <p>128x128 (Preview)</p>
+        </div>
+        <div class="preview-box">
+            <canvas id="canvas-tiny" width="48" height="48"></canvas>
+            <p>48x48 (App drawer)</p>
+        </div>
+    </div>
 
     <button onclick="downloadIcon()">Download 512x512 PNG</button>
 
     <div class="instructions">
-        <h3>Instructions:</h3>
+        <h3>Instructions</h3>
         <ol>
-            <li>Click "Download 512x512 PNG"</li>
-            <li>Save the file as <code>debugmaster_icon.png</code></li>
-            <li>Upload to Play Store under "App icon"</li>
+            <li>Click <strong>"Download 512x512 PNG"</strong></li>
+            <li>Save as <code>debugmaster_icon.png</code></li>
+            <li>Upload to Google Play Store under "App icon"</li>
         </ol>
     </div>
 
     <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const scale = 512 / 108;
+        function drawIcon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            const scale = size / 512;
 
-        // Draw background
-        ctx.fillStyle = '#7C3AED';
-        ctx.fillRect(0, 0, 512, 512);
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
 
-        // Darker purple inner circle
-        ctx.beginPath();
-        ctx.arc(256, 256, 48 * scale, 0, Math.PI * 2);
-        ctx.fillStyle = '#6D28D9';
-        ctx.fill();
+            // === BACKGROUND ===
+            // Deep indigo gradient background
+            const bgGradient = ctx.createRadialGradient(
+                size * 0.3, size * 0.3, 0,
+                size * 0.5, size * 0.5, size * 0.7
+            );
+            bgGradient.addColorStop(0, '#312E81');
+            bgGradient.addColorStop(0.5, '#1E1B4B');
+            bgGradient.addColorStop(1, '#0F0D2E');
 
-        // Subtle highlight ring
-        ctx.beginPath();
-        ctx.arc(256, 256, 40 * scale, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(139, 92, 246, 0.4)';
-        ctx.fill();
+            // Rounded rectangle background
+            const cornerRadius = 100 * scale;
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, cornerRadius);
+            ctx.fillStyle = bgGradient;
+            ctx.fill();
 
-        // Bug body
-        ctx.beginPath();
-        ctx.ellipse(50 * scale, 56 * scale, 18 * scale, 22 * scale, 0, 0, Math.PI * 2);
-        ctx.fillStyle = '#22C55E';
-        ctx.fill();
-        ctx.strokeStyle = '#166534';
-        ctx.lineWidth = 3 * scale;
-        ctx.stroke();
+            // === OUTER GLOW ===
+            ctx.save();
+            ctx.globalAlpha = 0.3;
+            const glowGradient = ctx.createRadialGradient(
+                size * 0.5, size * 0.5, size * 0.2,
+                size * 0.5, size * 0.5, size * 0.5
+            );
+            glowGradient.addColorStop(0, '#8B5CF6');
+            glowGradient.addColorStop(0.5, '#06B6D4');
+            glowGradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = glowGradient;
+            ctx.fillRect(0, 0, size, size);
+            ctx.restore();
 
-        // Bug head
-        ctx.beginPath();
-        ctx.arc(50 * scale, 34 * scale, 12 * scale, 0, Math.PI * 2);
-        ctx.fillStyle = '#22C55E';
-        ctx.fill();
-        ctx.strokeStyle = '#166534';
-        ctx.lineWidth = 3 * scale;
-        ctx.stroke();
+            // === CODE BRACKETS </> ===
+            ctx.save();
+            ctx.font = `bold ${180 * scale}px "SF Pro Display", -apple-system, Arial, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
 
-        // Left eye white
-        ctx.beginPath();
-        ctx.arc(44 * scale, 32 * scale, 5 * scale, 0, Math.PI * 2);
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fill();
+            // Bracket glow
+            ctx.shadowColor = '#06B6D4';
+            ctx.shadowBlur = 40 * scale;
+            ctx.fillStyle = '#06B6D4';
 
-        // Left eye pupil
-        ctx.beginPath();
-        ctx.arc(45 * scale, 33 * scale, 2.5 * scale, 0, Math.PI * 2);
-        ctx.fillStyle = '#0F172A';
-        ctx.fill();
+            // Draw < on left
+            ctx.font = `bold ${160 * scale}px "SF Pro Display", -apple-system, Arial, sans-serif`;
+            ctx.fillText('<', size * 0.22, size * 0.48);
 
-        // Right eye white
-        ctx.beginPath();
-        ctx.arc(56 * scale, 32 * scale, 5 * scale, 0, Math.PI * 2);
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fill();
+            // Draw > on right
+            ctx.fillText('>', size * 0.78, size * 0.48);
 
-        // Right eye pupil
-        ctx.beginPath();
-        ctx.arc(57 * scale, 33 * scale, 2.5 * scale, 0, Math.PI * 2);
-        ctx.fillStyle = '#0F172A';
-        ctx.fill();
+            // Draw / in middle (slightly smaller)
+            ctx.font = `bold ${140 * scale}px "SF Pro Display", -apple-system, Arial, sans-serif`;
+            ctx.fillStyle = '#8B5CF6';
+            ctx.shadowColor = '#8B5CF6';
+            ctx.fillText('/', size * 0.5, size * 0.46);
 
-        // Left antenna
-        ctx.beginPath();
-        ctx.moveTo(42 * scale, 24 * scale);
-        ctx.lineTo(36 * scale, 16 * scale);
-        ctx.strokeStyle = '#22C55E';
-        ctx.lineWidth = 4 * scale;
-        ctx.lineCap = 'round';
-        ctx.stroke();
+            ctx.restore();
 
-        ctx.beginPath();
-        ctx.arc(36 * scale, 16 * scale, 4 * scale, 0, Math.PI * 2);
-        ctx.fillStyle = '#FBBF24';
-        ctx.fill();
+            // === STYLIZED BUG ===
+            const bugX = size * 0.5;
+            const bugY = size * 0.72;
+            const bugScale = scale * 1.2;
 
-        // Right antenna
-        ctx.beginPath();
-        ctx.moveTo(58 * scale, 24 * scale);
-        ctx.lineTo(64 * scale, 16 * scale);
-        ctx.strokeStyle = '#22C55E';
-        ctx.lineWidth = 4 * scale;
-        ctx.stroke();
+            // Bug body (oval)
+            ctx.save();
+            ctx.shadowColor = '#22C55E';
+            ctx.shadowBlur = 20 * scale;
 
-        ctx.beginPath();
-        ctx.arc(64 * scale, 16 * scale, 4 * scale, 0, Math.PI * 2);
-        ctx.fillStyle = '#FBBF24';
-        ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(bugX, bugY, 45 * bugScale, 35 * bugScale, 0, 0, Math.PI * 2);
+            ctx.fillStyle = '#22C55E';
+            ctx.fill();
 
-        // Left legs
-        ctx.strokeStyle = '#22C55E';
-        ctx.lineWidth = 5 * scale;
-        ctx.lineCap = 'round';
+            // Bug head
+            ctx.beginPath();
+            ctx.arc(bugX, bugY - 45 * bugScale, 25 * bugScale, 0, Math.PI * 2);
+            ctx.fill();
 
-        ctx.beginPath();
-        ctx.moveTo(32 * scale, 48 * scale);
-        ctx.lineTo(22 * scale, 42 * scale);
-        ctx.stroke();
+            // Bug eyes
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.arc(bugX - 12 * bugScale, bugY - 48 * bugScale, 10 * bugScale, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(bugX + 12 * bugScale, bugY - 48 * bugScale, 10 * bugScale, 0, Math.PI * 2);
+            ctx.fill();
 
-        ctx.beginPath();
-        ctx.moveTo(32 * scale, 56 * scale);
-        ctx.lineTo(20 * scale, 56 * scale);
-        ctx.stroke();
+            // Pupils
+            ctx.fillStyle = '#0F172A';
+            ctx.beginPath();
+            ctx.arc(bugX - 10 * bugScale, bugY - 46 * bugScale, 5 * bugScale, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(bugX + 14 * bugScale, bugY - 46 * bugScale, 5 * bugScale, 0, Math.PI * 2);
+            ctx.fill();
 
-        ctx.beginPath();
-        ctx.moveTo(32 * scale, 64 * scale);
-        ctx.lineTo(22 * scale, 70 * scale);
-        ctx.stroke();
+            // Antennae
+            ctx.strokeStyle = '#22C55E';
+            ctx.lineWidth = 4 * bugScale;
+            ctx.lineCap = 'round';
 
-        // Right legs
-        ctx.beginPath();
-        ctx.moveTo(68 * scale, 48 * scale);
-        ctx.lineTo(78 * scale, 42 * scale);
-        ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(bugX - 18 * bugScale, bugY - 65 * bugScale);
+            ctx.lineTo(bugX - 30 * bugScale, bugY - 85 * bugScale);
+            ctx.stroke();
 
-        ctx.beginPath();
-        ctx.moveTo(68 * scale, 56 * scale);
-        ctx.lineTo(80 * scale, 56 * scale);
-        ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(bugX + 18 * bugScale, bugY - 65 * bugScale);
+            ctx.lineTo(bugX + 30 * bugScale, bugY - 85 * bugScale);
+            ctx.stroke();
 
-        ctx.beginPath();
-        ctx.moveTo(68 * scale, 64 * scale);
-        ctx.lineTo(78 * scale, 70 * scale);
-        ctx.stroke();
+            // Antenna tips (gold)
+            ctx.fillStyle = '#FBBF24';
+            ctx.shadowColor = '#FBBF24';
+            ctx.shadowBlur = 10 * scale;
+            ctx.beginPath();
+            ctx.arc(bugX - 30 * bugScale, bugY - 85 * bugScale, 6 * bugScale, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(bugX + 30 * bugScale, bugY - 85 * bugScale, 6 * bugScale, 0, Math.PI * 2);
+            ctx.fill();
 
-        // Magnifying glass lens (semi-transparent)
-        ctx.beginPath();
-        ctx.arc(70 * scale, 68 * scale, 14 * scale, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
-        ctx.fill();
+            // Bug legs
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = '#22C55E';
+            ctx.lineWidth = 5 * bugScale;
 
-        // Magnifying glass ring
-        ctx.beginPath();
-        ctx.arc(70 * scale, 68 * scale, 14 * scale, 0, Math.PI * 2);
-        ctx.strokeStyle = '#FBBF24';
-        ctx.lineWidth = 5 * scale;
-        ctx.stroke();
+            // Left legs
+            ctx.beginPath();
+            ctx.moveTo(bugX - 40 * bugScale, bugY - 10 * bugScale);
+            ctx.lineTo(bugX - 65 * bugScale, bugY - 25 * bugScale);
+            ctx.stroke();
 
-        // Magnifying glass handle
-        ctx.beginPath();
-        ctx.moveTo(80 * scale, 78 * scale);
-        ctx.lineTo(92 * scale, 90 * scale);
-        ctx.strokeStyle = '#FBBF24';
-        ctx.lineWidth = 7 * scale;
-        ctx.lineCap = 'round';
-        ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(bugX - 45 * bugScale, bugY + 5 * bugScale);
+            ctx.lineTo(bugX - 70 * bugScale, bugY + 5 * bugScale);
+            ctx.stroke();
 
-        // Glass shine
-        ctx.beginPath();
-        ctx.ellipse(64 * scale, 62 * scale, 4 * scale, 3 * scale, 0, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-        ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(bugX - 40 * bugScale, bugY + 20 * bugScale);
+            ctx.lineTo(bugX - 65 * bugScale, bugY + 35 * bugScale);
+            ctx.stroke();
+
+            // Right legs
+            ctx.beginPath();
+            ctx.moveTo(bugX + 40 * bugScale, bugY - 10 * bugScale);
+            ctx.lineTo(bugX + 65 * bugScale, bugY - 25 * bugScale);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(bugX + 45 * bugScale, bugY + 5 * bugScale);
+            ctx.lineTo(bugX + 70 * bugScale, bugY + 5 * bugScale);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(bugX + 40 * bugScale, bugY + 20 * bugScale);
+            ctx.lineTo(bugX + 65 * bugScale, bugY + 35 * bugScale);
+            ctx.stroke();
+
+            ctx.restore();
+
+            // === SPARKLE ACCENTS ===
+            drawSparkle(ctx, size * 0.15, size * 0.18, 8 * scale, '#FBBF24');
+            drawSparkle(ctx, size * 0.88, size * 0.15, 6 * scale, '#06B6D4');
+            drawSparkle(ctx, size * 0.92, size * 0.85, 5 * scale, '#8B5CF6');
+        }
+
+        function drawSparkle(ctx, x, y, size, color) {
+            ctx.save();
+            ctx.fillStyle = color;
+            ctx.shadowColor = color;
+            ctx.shadowBlur = size * 2;
+
+            ctx.beginPath();
+            ctx.moveTo(x, y - size);
+            ctx.lineTo(x + size * 0.3, y);
+            ctx.lineTo(x, y + size);
+            ctx.lineTo(x - size * 0.3, y);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(x - size, y);
+            ctx.lineTo(x, y + size * 0.3);
+            ctx.lineTo(x + size, y);
+            ctx.lineTo(x, y - size * 0.3);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        // Draw all sizes
+        drawIcon(document.getElementById('canvas'), 512);
+        drawIcon(document.getElementById('canvas-small'), 128);
+        drawIcon(document.getElementById('canvas-tiny'), 48);
 
         function downloadIcon() {
             const link = document.createElement('a');
             link.download = 'debugmaster_icon_512x512.png';
-            link.href = canvas.toDataURL('image/png');
+            link.href = document.getElementById('canvas').toDataURL('image/png');
             link.click();
         }
     </script>
