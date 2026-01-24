@@ -10,13 +10,13 @@
             flex-direction: column;
             align-items: center;
             padding: 40px;
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 100%);
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 100%);
             min-height: 100vh;
             color: white;
         }
         h1 {
             font-size: 2.5em;
-            background: linear-gradient(135deg, #06B6D4, #8B5CF6);
+            background: linear-gradient(135deg, #00D9FF, #BD00FF);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
@@ -24,315 +24,470 @@
         .subtitle { color: #94A3B8; margin-bottom: 30px; }
         .preview-container {
             display: flex;
-            gap: 40px;
-            align-items: center;
-            margin: 30px 0;
+            gap: 50px;
+            align-items: flex-end;
+            margin: 40px 0;
             flex-wrap: wrap;
             justify-content: center;
         }
-        .preview-box {
-            text-align: center;
-        }
+        .preview-box { text-align: center; }
         .preview-box p {
             color: #64748B;
-            margin-top: 10px;
+            margin-top: 15px;
             font-size: 14px;
         }
         canvas {
-            border-radius: 24px;
-            box-shadow: 0 25px 80px rgba(6, 182, 212, 0.3), 0 10px 40px rgba(139, 92, 246, 0.2);
+            border-radius: 22%;
+            box-shadow:
+                0 0 60px rgba(0, 217, 255, 0.3),
+                0 0 120px rgba(189, 0, 255, 0.2),
+                0 25px 80px rgba(0, 0, 0, 0.5);
         }
-        #canvas-small {
-            border-radius: 16px;
-        }
-        #canvas-tiny {
-            border-radius: 8px;
+        .buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         button {
-            background: linear-gradient(135deg, #06B6D4, #8B5CF6);
+            background: linear-gradient(135deg, #00D9FF, #BD00FF);
             color: white;
             border: none;
-            padding: 18px 50px;
-            font-size: 18px;
+            padding: 18px 40px;
+            font-size: 16px;
             font-weight: 600;
-            border-radius: 16px;
+            border-radius: 50px;
             cursor: pointer;
-            margin: 10px;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 40px rgba(6, 182, 212, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 217, 255, 0.4);
         }
         button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 50px rgba(6, 182, 212, 0.5);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 50px rgba(0, 217, 255, 0.5);
         }
-        .instructions {
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-            padding: 25px;
-            border-radius: 16px;
-            margin-top: 30px;
-            max-width: 500px;
-            border: 1px solid rgba(255,255,255,0.1);
+        button.secondary {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: none;
         }
-        .instructions h3 {
-            color: #06B6D4;
-            margin-bottom: 15px;
-        }
-        .instructions ol {
-            color: #94A3B8;
-            padding-left: 20px;
-        }
-        .instructions li {
-            margin: 8px 0;
-        }
-        code {
-            background: rgba(6, 182, 212, 0.2);
-            padding: 2px 8px;
-            border-radius: 4px;
-            color: #06B6D4;
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #10B981, #059669);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
+    <span class="badge">Premium Quality</span>
     <h1>DebugMaster</h1>
-    <p class="subtitle">Premium App Icon - 512x512 PNG</p>
+    <p class="subtitle">App Icon Generator - Play Store Ready</p>
 
     <div class="preview-container">
         <div class="preview-box">
             <canvas id="canvas" width="512" height="512"></canvas>
-            <p>512x512 (Play Store)</p>
+            <p>512×512 — Play Store</p>
         </div>
         <div class="preview-box">
-            <canvas id="canvas-small" width="128" height="128"></canvas>
-            <p>128x128 (Preview)</p>
+            <canvas id="canvas-medium" width="192" height="192" style="border-radius: 20%;"></canvas>
+            <p>192×192 — xxxhdpi</p>
         </div>
         <div class="preview-box">
-            <canvas id="canvas-tiny" width="48" height="48"></canvas>
-            <p>48x48 (App drawer)</p>
+            <canvas id="canvas-small" width="96" height="96" style="border-radius: 18%;"></canvas>
+            <p>96×96 — xhdpi</p>
         </div>
     </div>
 
-    <button onclick="downloadIcon()">Download 512x512 PNG</button>
-
-    <div class="instructions">
-        <h3>Instructions</h3>
-        <ol>
-            <li>Click <strong>"Download 512x512 PNG"</strong></li>
-            <li>Save as <code>debugmaster_icon.png</code></li>
-            <li>Upload to Google Play Store under "App icon"</li>
-        </ol>
+    <div class="buttons">
+        <button onclick="downloadIcon()">Download 512×512 PNG</button>
+        <button class="secondary" onclick="downloadAll()">Download All Sizes</button>
     </div>
 
     <script>
         function drawIcon(canvas, size) {
             const ctx = canvas.getContext('2d');
-            const scale = size / 512;
+            const s = size / 512;
 
-            // Clear canvas
-            ctx.clearRect(0, 0, size, size);
-
-            // === BACKGROUND ===
-            // Deep indigo gradient background
-            const bgGradient = ctx.createRadialGradient(
-                size * 0.3, size * 0.3, 0,
-                size * 0.5, size * 0.5, size * 0.7
+            // === BACKGROUND WITH DEPTH ===
+            // Base dark gradient
+            const bgGrad = ctx.createRadialGradient(
+                size * 0.3, size * 0.2, 0,
+                size * 0.5, size * 0.5, size * 0.8
             );
-            bgGradient.addColorStop(0, '#312E81');
-            bgGradient.addColorStop(0.5, '#1E1B4B');
-            bgGradient.addColorStop(1, '#0F0D2E');
+            bgGrad.addColorStop(0, '#2D1B69');
+            bgGrad.addColorStop(0.4, '#1A1145');
+            bgGrad.addColorStop(1, '#0D0820');
 
-            // Rounded rectangle background
-            const cornerRadius = 100 * scale;
             ctx.beginPath();
-            ctx.roundRect(0, 0, size, size, cornerRadius);
-            ctx.fillStyle = bgGradient;
+            ctx.roundRect(0, 0, size, size, size * 0.22);
+            ctx.fillStyle = bgGrad;
             ctx.fill();
 
-            // === OUTER GLOW ===
+            // === AMBIENT GLOW LAYERS ===
+            // Top-left purple glow
             ctx.save();
-            ctx.globalAlpha = 0.3;
-            const glowGradient = ctx.createRadialGradient(
-                size * 0.5, size * 0.5, size * 0.2,
-                size * 0.5, size * 0.5, size * 0.5
+            ctx.globalAlpha = 0.4;
+            const glow1 = ctx.createRadialGradient(
+                size * 0.2, size * 0.15, 0,
+                size * 0.2, size * 0.15, size * 0.5
             );
-            glowGradient.addColorStop(0, '#8B5CF6');
-            glowGradient.addColorStop(0.5, '#06B6D4');
-            glowGradient.addColorStop(1, 'transparent');
-            ctx.fillStyle = glowGradient;
+            glow1.addColorStop(0, '#8B5CF6');
+            glow1.addColorStop(0.5, '#6366F1');
+            glow1.addColorStop(1, 'transparent');
+            ctx.fillStyle = glow1;
             ctx.fillRect(0, 0, size, size);
             ctx.restore();
 
-            // === CODE BRACKETS </> ===
+            // Bottom-right cyan glow
             ctx.save();
-            ctx.font = `bold ${180 * scale}px "SF Pro Display", -apple-system, Arial, sans-serif`;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-
-            // Bracket glow
-            ctx.shadowColor = '#06B6D4';
-            ctx.shadowBlur = 40 * scale;
-            ctx.fillStyle = '#06B6D4';
-
-            // Draw < on left
-            ctx.font = `bold ${160 * scale}px "SF Pro Display", -apple-system, Arial, sans-serif`;
-            ctx.fillText('<', size * 0.22, size * 0.48);
-
-            // Draw > on right
-            ctx.fillText('>', size * 0.78, size * 0.48);
-
-            // Draw / in middle (slightly smaller)
-            ctx.font = `bold ${140 * scale}px "SF Pro Display", -apple-system, Arial, sans-serif`;
-            ctx.fillStyle = '#8B5CF6';
-            ctx.shadowColor = '#8B5CF6';
-            ctx.fillText('/', size * 0.5, size * 0.46);
-
+            ctx.globalAlpha = 0.3;
+            const glow2 = ctx.createRadialGradient(
+                size * 0.8, size * 0.85, 0,
+                size * 0.8, size * 0.85, size * 0.5
+            );
+            glow2.addColorStop(0, '#06B6D4');
+            glow2.addColorStop(0.5, '#0891B2');
+            glow2.addColorStop(1, 'transparent');
+            ctx.fillStyle = glow2;
+            ctx.fillRect(0, 0, size, size);
             ctx.restore();
 
-            // === STYLIZED BUG ===
-            const bugX = size * 0.5;
-            const bugY = size * 0.72;
-            const bugScale = scale * 1.2;
+            // === CIRCUIT PATTERN (subtle) ===
+            ctx.save();
+            ctx.strokeStyle = 'rgba(139, 92, 246, 0.08)';
+            ctx.lineWidth = 1 * s;
+            for (let i = 0; i < 8; i++) {
+                const y = size * 0.1 + (size * 0.8 / 8) * i;
+                ctx.beginPath();
+                ctx.moveTo(size * 0.1, y);
+                ctx.lineTo(size * 0.9, y);
+                ctx.stroke();
+            }
+            for (let i = 0; i < 8; i++) {
+                const x = size * 0.1 + (size * 0.8 / 8) * i;
+                ctx.beginPath();
+                ctx.moveTo(x, size * 0.1);
+                ctx.lineTo(x, size * 0.9);
+                ctx.stroke();
+            }
+            ctx.restore();
 
-            // Bug body (oval)
+            // === MAIN SHIELD/HEXAGON SHAPE ===
+            const cx = size * 0.5;
+            const cy = size * 0.48;
+            const hexR = size * 0.32;
+
+            ctx.save();
+            // Outer glow
+            ctx.shadowColor = '#8B5CF6';
+            ctx.shadowBlur = 40 * s;
+
+            // Hexagon path
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+                const angle = (Math.PI / 3) * i - Math.PI / 2;
+                const x = cx + hexR * Math.cos(angle);
+                const y = cy + hexR * Math.sin(angle);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+
+            // Hexagon fill with gradient
+            const hexGrad = ctx.createLinearGradient(cx - hexR, cy - hexR, cx + hexR, cy + hexR);
+            hexGrad.addColorStop(0, 'rgba(139, 92, 246, 0.3)');
+            hexGrad.addColorStop(0.5, 'rgba(99, 102, 241, 0.2)');
+            hexGrad.addColorStop(1, 'rgba(6, 182, 212, 0.3)');
+            ctx.fillStyle = hexGrad;
+            ctx.fill();
+
+            // Hexagon border
+            ctx.strokeStyle = 'rgba(139, 92, 246, 0.6)';
+            ctx.lineWidth = 2 * s;
+            ctx.stroke();
+            ctx.restore();
+
+            // === BUG CHARACTER (3D style) ===
+            const bugX = cx;
+            const bugY = cy + size * 0.02;
+            const bugS = s * 1.1;
+
+            // Bug shadow
+            ctx.save();
+            ctx.globalAlpha = 0.3;
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.ellipse(bugX, bugY + 55 * bugS, 50 * bugS, 15 * bugS, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // Bug body with 3D gradient
             ctx.save();
             ctx.shadowColor = '#22C55E';
-            ctx.shadowBlur = 20 * scale;
+            ctx.shadowBlur = 25 * s;
+
+            const bodyGrad = ctx.createRadialGradient(
+                bugX - 15 * bugS, bugY - 10 * bugS, 0,
+                bugX, bugY + 10 * bugS, 55 * bugS
+            );
+            bodyGrad.addColorStop(0, '#4ADE80');
+            bodyGrad.addColorStop(0.5, '#22C55E');
+            bodyGrad.addColorStop(1, '#15803D');
 
             ctx.beginPath();
-            ctx.ellipse(bugX, bugY, 45 * bugScale, 35 * bugScale, 0, 0, Math.PI * 2);
-            ctx.fillStyle = '#22C55E';
+            ctx.ellipse(bugX, bugY + 15 * bugS, 42 * bugS, 50 * bugS, 0, 0, Math.PI * 2);
+            ctx.fillStyle = bodyGrad;
             ctx.fill();
+
+            // Body segments
+            ctx.strokeStyle = 'rgba(21, 128, 61, 0.4)';
+            ctx.lineWidth = 2 * bugS;
+            ctx.beginPath();
+            ctx.moveTo(bugX - 35 * bugS, bugY);
+            ctx.quadraticCurveTo(bugX, bugY - 5 * bugS, bugX + 35 * bugS, bugY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(bugX - 38 * bugS, bugY + 25 * bugS);
+            ctx.quadraticCurveTo(bugX, bugY + 20 * bugS, bugX + 38 * bugS, bugY + 25 * bugS);
+            ctx.stroke();
 
             // Bug head
+            const headGrad = ctx.createRadialGradient(
+                bugX - 8 * bugS, bugY - 55 * bugS, 0,
+                bugX, bugY - 45 * bugS, 35 * bugS
+            );
+            headGrad.addColorStop(0, '#4ADE80');
+            headGrad.addColorStop(0.6, '#22C55E');
+            headGrad.addColorStop(1, '#15803D');
+
             ctx.beginPath();
-            ctx.arc(bugX, bugY - 45 * bugScale, 25 * bugScale, 0, Math.PI * 2);
+            ctx.arc(bugX, bugY - 45 * bugS, 30 * bugS, 0, Math.PI * 2);
+            ctx.fillStyle = headGrad;
             ctx.fill();
-
-            // Bug eyes
-            ctx.shadowBlur = 0;
-            ctx.fillStyle = '#FFFFFF';
-            ctx.beginPath();
-            ctx.arc(bugX - 12 * bugScale, bugY - 48 * bugScale, 10 * bugScale, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(bugX + 12 * bugScale, bugY - 48 * bugScale, 10 * bugScale, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Pupils
-            ctx.fillStyle = '#0F172A';
-            ctx.beginPath();
-            ctx.arc(bugX - 10 * bugScale, bugY - 46 * bugScale, 5 * bugScale, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(bugX + 14 * bugScale, bugY - 46 * bugScale, 5 * bugScale, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Antennae
-            ctx.strokeStyle = '#22C55E';
-            ctx.lineWidth = 4 * bugScale;
-            ctx.lineCap = 'round';
-
-            ctx.beginPath();
-            ctx.moveTo(bugX - 18 * bugScale, bugY - 65 * bugScale);
-            ctx.lineTo(bugX - 30 * bugScale, bugY - 85 * bugScale);
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.moveTo(bugX + 18 * bugScale, bugY - 65 * bugScale);
-            ctx.lineTo(bugX + 30 * bugScale, bugY - 85 * bugScale);
-            ctx.stroke();
-
-            // Antenna tips (gold)
-            ctx.fillStyle = '#FBBF24';
-            ctx.shadowColor = '#FBBF24';
-            ctx.shadowBlur = 10 * scale;
-            ctx.beginPath();
-            ctx.arc(bugX - 30 * bugScale, bugY - 85 * bugScale, 6 * bugScale, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(bugX + 30 * bugScale, bugY - 85 * bugScale, 6 * bugScale, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Bug legs
-            ctx.shadowBlur = 0;
-            ctx.strokeStyle = '#22C55E';
-            ctx.lineWidth = 5 * bugScale;
-
-            // Left legs
-            ctx.beginPath();
-            ctx.moveTo(bugX - 40 * bugScale, bugY - 10 * bugScale);
-            ctx.lineTo(bugX - 65 * bugScale, bugY - 25 * bugScale);
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.moveTo(bugX - 45 * bugScale, bugY + 5 * bugScale);
-            ctx.lineTo(bugX - 70 * bugScale, bugY + 5 * bugScale);
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.moveTo(bugX - 40 * bugScale, bugY + 20 * bugScale);
-            ctx.lineTo(bugX - 65 * bugScale, bugY + 35 * bugScale);
-            ctx.stroke();
-
-            // Right legs
-            ctx.beginPath();
-            ctx.moveTo(bugX + 40 * bugScale, bugY - 10 * bugScale);
-            ctx.lineTo(bugX + 65 * bugScale, bugY - 25 * bugScale);
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.moveTo(bugX + 45 * bugScale, bugY + 5 * bugScale);
-            ctx.lineTo(bugX + 70 * bugScale, bugY + 5 * bugScale);
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.moveTo(bugX + 40 * bugScale, bugY + 20 * bugScale);
-            ctx.lineTo(bugX + 65 * bugScale, bugY + 35 * bugScale);
-            ctx.stroke();
-
             ctx.restore();
 
-            // === SPARKLE ACCENTS ===
-            drawSparkle(ctx, size * 0.15, size * 0.18, 8 * scale, '#FBBF24');
-            drawSparkle(ctx, size * 0.88, size * 0.15, 6 * scale, '#06B6D4');
-            drawSparkle(ctx, size * 0.92, size * 0.85, 5 * scale, '#8B5CF6');
+            // Eyes with reflection
+            ctx.save();
+            // Left eye
+            ctx.fillStyle = '#FFF';
+            ctx.shadowColor = '#FFF';
+            ctx.shadowBlur = 8 * s;
+            ctx.beginPath();
+            ctx.ellipse(bugX - 12 * bugS, bugY - 48 * bugS, 12 * bugS, 14 * bugS, -0.1, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Right eye
+            ctx.beginPath();
+            ctx.ellipse(bugX + 12 * bugS, bugY - 48 * bugS, 12 * bugS, 14 * bugS, 0.1, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Pupils with gradient
+            ctx.shadowBlur = 0;
+            const pupilGrad = ctx.createRadialGradient(
+                bugX - 10 * bugS, bugY - 46 * bugS, 0,
+                bugX - 10 * bugS, bugY - 46 * bugS, 6 * bugS
+            );
+            pupilGrad.addColorStop(0, '#1E293B');
+            pupilGrad.addColorStop(1, '#0F172A');
+
+            ctx.fillStyle = pupilGrad;
+            ctx.beginPath();
+            ctx.arc(bugX - 9 * bugS, bugY - 46 * bugS, 6 * bugS, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(bugX + 15 * bugS, bugY - 46 * bugS, 6 * bugS, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Eye shine
+            ctx.fillStyle = '#FFF';
+            ctx.beginPath();
+            ctx.arc(bugX - 6 * bugS, bugY - 52 * bugS, 3 * bugS, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(bugX + 18 * bugS, bugY - 52 * bugS, 3 * bugS, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // Antennae with glow tips
+            ctx.save();
+            ctx.strokeStyle = '#22C55E';
+            ctx.lineWidth = 4 * bugS;
+            ctx.lineCap = 'round';
+
+            // Left antenna
+            ctx.beginPath();
+            ctx.moveTo(bugX - 20 * bugS, bugY - 70 * bugS);
+            ctx.quadraticCurveTo(bugX - 35 * bugS, bugY - 90 * bugS, bugX - 40 * bugS, bugY - 105 * bugS);
+            ctx.stroke();
+
+            // Right antenna
+            ctx.beginPath();
+            ctx.moveTo(bugX + 20 * bugS, bugY - 70 * bugS);
+            ctx.quadraticCurveTo(bugX + 35 * bugS, bugY - 90 * bugS, bugX + 40 * bugS, bugY - 105 * bugS);
+            ctx.stroke();
+
+            // Glowing tips
+            ctx.shadowColor = '#FBBF24';
+            ctx.shadowBlur = 15 * s;
+            ctx.fillStyle = '#FBBF24';
+
+            ctx.beginPath();
+            ctx.arc(bugX - 40 * bugS, bugY - 105 * bugS, 8 * bugS, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(bugX + 40 * bugS, bugY - 105 * bugS, 8 * bugS, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Inner glow on tips
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = '#FEF3C7';
+            ctx.beginPath();
+            ctx.arc(bugX - 40 * bugS, bugY - 105 * bugS, 4 * bugS, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(bugX + 40 * bugS, bugY - 105 * bugS, 4 * bugS, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // Bug legs with joints
+            ctx.save();
+            ctx.strokeStyle = '#22C55E';
+            ctx.lineWidth = 5 * bugS;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            // Left legs
+            const legStartL = [{x: -38, y: -5}, {x: -42, y: 15}, {x: -38, y: 35}];
+            const legMidL = [{x: -58, y: -20}, {x: -65, y: 15}, {x: -58, y: 50}];
+            const legEndL = [{x: -75, y: -10}, {x: -80, y: 15}, {x: -75, y: 55}];
+
+            legStartL.forEach((start, i) => {
+                ctx.beginPath();
+                ctx.moveTo(bugX + start.x * bugS, bugY + start.y * bugS);
+                ctx.lineTo(bugX + legMidL[i].x * bugS, bugY + legMidL[i].y * bugS);
+                ctx.lineTo(bugX + legEndL[i].x * bugS, bugY + legEndL[i].y * bugS);
+                ctx.stroke();
+            });
+
+            // Right legs (mirrored)
+            legStartL.forEach((start, i) => {
+                ctx.beginPath();
+                ctx.moveTo(bugX - start.x * bugS, bugY + start.y * bugS);
+                ctx.lineTo(bugX - legMidL[i].x * bugS, bugY + legMidL[i].y * bugS);
+                ctx.lineTo(bugX - legEndL[i].x * bugS, bugY + legEndL[i].y * bugS);
+                ctx.stroke();
+            });
+            ctx.restore();
+
+            // === MAGNIFYING GLASS (premium) ===
+            const mgX = bugX + 60 * s;
+            const mgY = bugY + 70 * s;
+            const mgR = 35 * s;
+
+            ctx.save();
+            // Glass glow
+            ctx.shadowColor = '#06B6D4';
+            ctx.shadowBlur = 20 * s;
+
+            // Glass lens (gradient)
+            const lensGrad = ctx.createRadialGradient(
+                mgX - 10 * s, mgY - 10 * s, 0,
+                mgX, mgY, mgR
+            );
+            lensGrad.addColorStop(0, 'rgba(6, 182, 212, 0.4)');
+            lensGrad.addColorStop(0.7, 'rgba(6, 182, 212, 0.2)');
+            lensGrad.addColorStop(1, 'rgba(6, 182, 212, 0.1)');
+
+            ctx.beginPath();
+            ctx.arc(mgX, mgY, mgR, 0, Math.PI * 2);
+            ctx.fillStyle = lensGrad;
+            ctx.fill();
+
+            // Glass ring
+            ctx.shadowColor = '#FBBF24';
+            ctx.shadowBlur = 15 * s;
+
+            const ringGrad = ctx.createLinearGradient(mgX - mgR, mgY - mgR, mgX + mgR, mgY + mgR);
+            ringGrad.addColorStop(0, '#FCD34D');
+            ringGrad.addColorStop(0.5, '#FBBF24');
+            ringGrad.addColorStop(1, '#F59E0B');
+
+            ctx.strokeStyle = ringGrad;
+            ctx.lineWidth = 6 * s;
+            ctx.stroke();
+
+            // Handle
+            ctx.beginPath();
+            ctx.moveTo(mgX + mgR * 0.7, mgY + mgR * 0.7);
+            ctx.lineTo(mgX + mgR * 1.6, mgY + mgR * 1.6);
+            ctx.lineWidth = 10 * s;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+
+            // Lens shine
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.beginPath();
+            ctx.ellipse(mgX - 12 * s, mgY - 12 * s, 8 * s, 5 * s, -0.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // === TOP SPARKLES ===
+            drawSparkle(ctx, size * 0.12, size * 0.12, 10 * s, '#FBBF24');
+            drawSparkle(ctx, size * 0.88, size * 0.15, 8 * s, '#06B6D4');
+            drawSparkle(ctx, size * 0.15, size * 0.85, 6 * s, '#8B5CF6');
         }
 
-        function drawSparkle(ctx, x, y, size, color) {
+        function drawSparkle(ctx, x, y, r, color) {
             ctx.save();
             ctx.fillStyle = color;
             ctx.shadowColor = color;
-            ctx.shadowBlur = size * 2;
+            ctx.shadowBlur = r * 3;
 
+            // 4-point star
             ctx.beginPath();
-            ctx.moveTo(x, y - size);
-            ctx.lineTo(x + size * 0.3, y);
-            ctx.lineTo(x, y + size);
-            ctx.lineTo(x - size * 0.3, y);
-            ctx.closePath();
+            ctx.moveTo(x, y - r);
+            ctx.quadraticCurveTo(x + r * 0.2, y, x + r, y);
+            ctx.quadraticCurveTo(x, y + r * 0.2, x, y + r);
+            ctx.quadraticCurveTo(x - r * 0.2, y, x - r, y);
+            ctx.quadraticCurveTo(x, y - r * 0.2, x, y - r);
             ctx.fill();
-
-            ctx.beginPath();
-            ctx.moveTo(x - size, y);
-            ctx.lineTo(x, y + size * 0.3);
-            ctx.lineTo(x + size, y);
-            ctx.lineTo(x, y - size * 0.3);
-            ctx.closePath();
-            ctx.fill();
-
             ctx.restore();
         }
 
         // Draw all sizes
         drawIcon(document.getElementById('canvas'), 512);
-        drawIcon(document.getElementById('canvas-small'), 128);
-        drawIcon(document.getElementById('canvas-tiny'), 48);
+        drawIcon(document.getElementById('canvas-medium'), 192);
+        drawIcon(document.getElementById('canvas-small'), 96);
 
         function downloadIcon() {
             const link = document.createElement('a');
             link.download = 'debugmaster_icon_512x512.png';
             link.href = document.getElementById('canvas').toDataURL('image/png');
             link.click();
+        }
+
+        function downloadAll() {
+            const sizes = [
+                { canvas: 'canvas', name: '512x512' },
+                { canvas: 'canvas-medium', name: '192x192' },
+                { canvas: 'canvas-small', name: '96x96' }
+            ];
+            sizes.forEach((s, i) => {
+                setTimeout(() => {
+                    const link = document.createElement('a');
+                    link.download = `debugmaster_icon_${s.name}.png`;
+                    link.href = document.getElementById(s.canvas).toDataURL('image/png');
+                    link.click();
+                }, i * 500);
+            });
         }
     </script>
 </body>
