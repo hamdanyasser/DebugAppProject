@@ -216,4 +216,7 @@
     <!-- Section margins -->
     <dimen name="section_margin_top">24dp</dimen>
     <dimen name="section_margin_bottom">16dp</dimen>
+
+    <!-- FAB margin -->
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

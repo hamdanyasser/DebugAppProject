@@ -253,6 +253,29 @@
     <color name="error_red">#EF4444</color>
 
     <!-- =======================================================================
+         ADDITIONAL UI COLORS - Base values for night mode overrides
+         ======================================================================= -->
+    <color name="background_secondary">@color/background_light_secondary</color>
+    <color name="surface_variant">@color/surface_light_variant</color>
+    <color name="text_disabled">@color/text_disabled_light</color>
+    <color name="code_background">@color/code_background_light</color>
+    <color name="card_background">@color/surface_light</color>
+    <color name="card_background_elevated">@color/white</color>
+    <color name="input_background">#F1F5F9</color>
+    <color name="input_stroke">#E2E8F0</color>
+    <color name="input_stroke_focused">@color/primary</color>
+    <color name="chip_background">#E2E8F0</color>
+    <color name="chip_background_selected">@color/primary</color>
+    <color name="dialog_background">@color/surface_light</color>
+    <color name="snackbar_background">#323232</color>
+    <color name="snackbar_text">@color/white</color>
+    <color name="bottom_sheet_background">@color/surface_light</color>
+    <color name="navigation_background">@color/surface_light</color>
+    <color name="status_bar_color">@android:color/transparent</color>
+    <color name="shimmer_background">#E2E8F0</color>
+    <color name="shimmer_highlight">#F8FAFC</color>
+
+    <!-- =======================================================================
          ACCENT COLORS - Common aliases used across app
          ======================================================================= -->
     <color name="purple_200">#C4B5FD</color>

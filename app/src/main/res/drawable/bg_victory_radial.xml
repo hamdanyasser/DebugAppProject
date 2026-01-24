@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Dark overlay base -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#E6000000" />
+        </shape>
+    </item>
+    <!-- Radial golden glow from center -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="60%p"
+                android:centerX="0.5"
+                android:centerY="0.35"
+                android:startColor="#40FFD54F"
+                android:centerColor="#20F59E0B"
+                android:endColor="#00000000" />
+        </shape>
+    </item>
+    <!-- Top celebration rays -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="linear"
+                android:angle="270"
+                android:startColor="#1AFFD54F"
+                android:endColor="#00000000" />
+        </shape>
+    </item>
+</layer-list>

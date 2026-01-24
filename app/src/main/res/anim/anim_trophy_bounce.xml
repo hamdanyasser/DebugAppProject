@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fillAfter="true">
+
+    <!-- Initial scale up from 0 -->
+    <scale
+        android:fromXScale="0.0"
+        android:toXScale="1.2"
+        android:fromYScale="0.0"
+        android:toYScale="1.2"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:duration="300"
+        android:interpolator="@android:anim/overshoot_interpolator" />
+
+    <!-- Settle back -->
+    <scale
+        android:fromXScale="1.2"
+        android:toXScale="1.0"
+        android:fromYScale="1.2"
+        android:toYScale="1.0"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:startOffset="300"
+        android:duration="200"
+        android:interpolator="@android:anim/decelerate_interpolator" />
+
+    <!-- Fade in -->
+    <alpha
+        android:fromAlpha="0.0"
+        android:toAlpha="1.0"
+        android:duration="200"
+        android:interpolator="@android:anim/accelerate_interpolator" />
+
+    <!-- Gentle rotation wiggle -->
+    <rotate
+        android:fromDegrees="0"
+        android:toDegrees="5"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:startOffset="500"
+        android:duration="100"
+        android:repeatCount="3"
+        android:repeatMode="reverse"
+        android:interpolator="@android:anim/linear_interpolator" />
+</set>
