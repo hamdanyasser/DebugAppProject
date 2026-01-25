@@ -16,7 +16,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 import com.example.debugappproject.util.AuthManager;
 import com.example.debugappproject.util.SoundManager;
 import com.example.debugappproject.ui.shop.ShopFragment;

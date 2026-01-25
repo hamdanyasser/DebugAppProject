@@ -18,8 +18,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.debugappproject.R;
-import com.example.debugappproject.databinding.FragmentLeaderboardBinding;
+import com.debugmaster.app.R;
+import com.debugmaster.app.databinding.FragmentLeaderboardBinding;
 import com.example.debugappproject.util.SoundManager;
 
 import java.text.NumberFormat;

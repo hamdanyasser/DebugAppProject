@@ -15,9 +15,9 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.android.billingclient.api.ProductDetails;
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 import com.example.debugappproject.billing.BillingManager;
-import com.example.debugappproject.databinding.FragmentProSubscriptionBinding;
+import com.debugmaster.app.databinding.FragmentProSubscriptionBinding;
 import com.example.debugappproject.util.SoundManager;
 
 import java.util.List;

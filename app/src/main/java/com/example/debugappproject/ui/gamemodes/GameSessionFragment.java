@@ -32,8 +32,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.example.debugappproject.R;
-import com.example.debugappproject.databinding.FragmentGameSessionBinding;
+import com.debugmaster.app.R;
+import com.debugmaster.app.databinding.FragmentGameSessionBinding;
 import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.ui.buglist.BugListViewModel;
 import com.example.debugappproject.util.CelebrationManager;

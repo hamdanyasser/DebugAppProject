@@ -14,9 +14,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 import com.example.debugappproject.billing.BillingManager;
-import com.example.debugappproject.databinding.FragmentProfileBinding;
+import com.debugmaster.app.databinding.FragmentProfileBinding;
 import com.example.debugappproject.model.UserProgress;
 import com.example.debugappproject.util.AnimationUtil;
 import com.example.debugappproject.util.AuthManager;

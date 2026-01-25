@@ -2,19 +2,15 @@ package com.example.debugappproject.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
 /**
- * ThemeManager - Handles app-wide theme switching (Dark/Light/System)
- * 
- * Features:
- * - Dark mode
- * - Light mode  
- * - Follow system setting
- * - Persists preference
- * - Smooth transitions
+ * ThemeManager - Handles app-wide theme (Dark mode only)
+ *
+ * Note: This app is designed for dark mode only to match the gaming aesthetic.
+ * The UI uses dark backgrounds, neon colors, and glassmorphic effects that
+ * are optimized for dark mode.
  */
 public class ThemeManager {
     
@@ -27,10 +23,8 @@ public class ThemeManager {
     
     private static ThemeManager instance;
     private final SharedPreferences prefs;
-    private final Context context;
-    
+
     private ThemeManager(Context context) {
-        this.context = context.getApplicationContext();
         this.prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
     
@@ -44,18 +38,21 @@ public class ThemeManager {
     /**
      * Apply the saved theme preference.
      * Call this in Application.onCreate() or Activity.onCreate()
+     * Note: This app is designed for dark mode only to match the gaming aesthetic.
      */
     public void applyTheme() {
-        int mode = getThemeMode();
-        applyThemeMode(mode);
+        // Force dark mode - app is designed for dark theme only
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
     }
     
     /**
      * Set and apply a new theme mode.
+     * Note: This app is designed for dark mode only, so this always applies dark mode.
      */
     public void setThemeMode(int mode) {
         prefs.edit().putInt(KEY_THEME_MODE, mode).apply();
-        applyThemeMode(mode);
+        // Force dark mode - app is designed for dark theme only
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
     }
     
     /**
@@ -67,79 +64,35 @@ public class ThemeManager {
     
     /**
      * Check if dark mode is currently active.
+     * Note: This app is designed for dark mode only, so this always returns true.
      */
     public boolean isDarkMode() {
-        int mode = getThemeMode();
-        if (mode == THEME_DARK) {
-            return true;
-        } else if (mode == THEME_LIGHT) {
-            return false;
-        } else {
-            // System mode - check actual system setting
-            int nightModeFlags = context.getResources().getConfiguration().uiMode 
-                & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
-            return nightModeFlags == android.content.res.Configuration.UI_MODE_NIGHT_YES;
-        }
+        return true; // App is dark mode only
     }
     
     /**
      * Get theme mode name for display.
+     * Note: This app is dark mode only.
      */
     public String getThemeModeName() {
-        int mode = getThemeMode();
-        switch (mode) {
-            case THEME_LIGHT:
-                return "Light";
-            case THEME_DARK:
-                return "Dark";
-            case THEME_SYSTEM:
-            default:
-                return "System";
-        }
+        return "Dark"; // App is dark mode only
     }
-    
+
     /**
      * Get theme mode name for display with emoji.
+     * Note: This app is dark mode only.
      */
     public String getThemeModeNameWithEmoji() {
-        int mode = getThemeMode();
-        switch (mode) {
-            case THEME_LIGHT:
-                return "Light";
-            case THEME_DARK:
-                return "Dark";
-            case THEME_SYSTEM:
-            default:
-                return "System";
-        }
+        return "Dark"; // App is dark mode only
     }
     
     /**
-     * Cycle to next theme mode (Light -> Dark -> System -> Light).
+     * Cycle to next theme mode.
+     * Note: This app is dark mode only, so this is a no-op.
      */
     public void cycleTheme() {
-        int current = getThemeMode();
-        int next = (current + 1) % 3;
-        setThemeMode(next);
-    }
-    
-    private void applyThemeMode(int mode) {
-        switch (mode) {
-            case THEME_LIGHT:
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                break;
-            case THEME_DARK:
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                break;
-            case THEME_SYSTEM:
-            default:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
-                }
-                break;
-        }
+        // App is dark mode only - no cycling
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
     }
     
     /**

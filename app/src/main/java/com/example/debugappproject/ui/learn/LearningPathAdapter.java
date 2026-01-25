@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 import com.example.debugappproject.model.LearningPath;
 import com.google.android.material.button.MaterialButton;
 

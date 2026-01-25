@@ -10,8 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import com.example.debugappproject.R;
-import com.example.debugappproject.databinding.FragmentPracticeBinding;
+import com.debugmaster.app.R;
+import com.debugmaster.app.databinding.FragmentPracticeBinding;
 
 import java.util.Random;
 

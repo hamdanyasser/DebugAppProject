@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.util.AnimationUtil;
 import com.google.android.material.chip.Chip;

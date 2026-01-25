@@ -21,9 +21,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 import com.example.debugappproject.billing.BillingManager;
-import com.example.debugappproject.databinding.FragmentHomeBinding;
+import com.debugmaster.app.databinding.FragmentHomeBinding;
 import com.example.debugappproject.model.UserProgress;
 import com.example.debugappproject.util.AuthManager;
 import com.example.debugappproject.util.ByteMascot;

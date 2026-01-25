@@ -25,7 +25,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 import com.example.debugappproject.data.local.BugDao;
 import com.example.debugappproject.data.local.DebugMasterDatabase;
 import com.example.debugappproject.model.Bug;

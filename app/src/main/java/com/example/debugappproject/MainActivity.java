@@ -1,14 +1,21 @@
 package com.example.debugappproject;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.debugappproject.databinding.ActivityMainBinding;
+import com.debugmaster.app.R;
+import com.debugmaster.app.databinding.ActivityMainBinding;
 import com.example.debugappproject.util.ThemeManager;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -25,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
     private boolean isNavigationSetup = false;
     private NavController.OnDestinationChangedListener destinationListener;
 
+    // Permission launcher for POST_NOTIFICATIONS (Android 13+)
+    private final ActivityResultLauncher<String> notificationPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                // User's choice is respected - app works with or without notifications
+            });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Apply theme before super.onCreate
@@ -34,8 +47,24 @@ public class MainActivity extends AppCompatActivity {
         
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        
+
+        // Request notification permission for Android 13+ (required for push notifications)
+        requestNotificationPermissionIfNeeded();
+
         android.util.Log.d("MainActivity", "onCreate completed");
+    }
+
+    /**
+     * Request POST_NOTIFICATIONS permission on Android 13+ (API 33+).
+     * This is required for the app to show notifications.
+     */
+    private void requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
     }
 
     @Override

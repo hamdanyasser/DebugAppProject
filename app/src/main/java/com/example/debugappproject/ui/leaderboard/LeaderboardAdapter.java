@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;

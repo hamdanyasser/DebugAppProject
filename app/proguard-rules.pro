@@ -186,11 +186,11 @@
 # ===================================
 
 # Remove verbose and debug logs in release builds
-# Uncomment these lines to strip out all Log.v() and Log.d() calls
-#-assumenosideeffects class android.util.Log {
-#    public static *** v(...);
-#    public static *** d(...);
-#}
+# These rules strip out all Log.v() and Log.d() calls for production
+-assumenosideeffects class android.util.Log {
+    public static *** v(...);
+    public static *** d(...);
+}
 
 # ===================================
 # Optimization Settings

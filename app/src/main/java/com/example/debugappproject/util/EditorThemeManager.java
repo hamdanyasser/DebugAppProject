@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
 
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 
 /**
  * ╔══════════════════════════════════════════════════════════════════════════════╗

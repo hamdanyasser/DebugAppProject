@@ -1,13 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-   Sample backup rules file; uncomment and customize as necessary.
-   See https://developer.android.com/guide/topics/data/autobackup
-   for details.
-   Note: This file is ignored for devices older than API 31
-   See https://developer.android.com/about/versions/12/backup-restore
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Backup rules for Android Auto Backup (Android 6.0 - Android 11).
+    Defines what data to include/exclude from cloud backup.
+    See: https://developer.android.com/guide/topics/data/autobackup
 -->
 <full-backup-content>
-    <!--
-   <include domain="sharedpref" path="."/>
-   <exclude domain="sharedpref" path="device.xml"/>
--->
+    <!-- Include the game database for progress restoration -->
+    <include domain="database" path="." />
+
+    <!-- Include user preferences (theme, sound settings, etc.) -->
+    <include domain="sharedpref" path="." />
+
+    <!-- Exclude sensitive billing/purchase data (managed by Play Store) -->
+    <exclude domain="sharedpref" path="debugmaster_billing.xml" />
+
+    <!-- Exclude AI API keys (user should re-enter these) -->
+    <exclude domain="sharedpref" path="ai_mentor_prefs.xml" />
+
+    <!-- Exclude auth credentials (should re-authenticate) -->
+    <exclude domain="sharedpref" path="user_auth.xml" />
 </full-backup-content>

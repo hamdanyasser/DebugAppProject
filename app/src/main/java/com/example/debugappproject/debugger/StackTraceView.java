@@ -14,7 +14,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 
 import java.util.ArrayList;
 import java.util.List;

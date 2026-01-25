@@ -19,8 +19,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import com.example.debugappproject.R;
-import com.example.debugappproject.databinding.FragmentBugDetailBinding;
+import com.debugmaster.app.R;
+import com.debugmaster.app.databinding.FragmentBugDetailBinding;
 import com.example.debugappproject.execution.CodeExecutionEngine;
 import com.example.debugappproject.execution.CodeExecutionResult;
 import com.example.debugappproject.model.Bug;
@@ -946,7 +946,7 @@ public class BugDetailFragment extends Fragment {
             // Navigate to shop
             try {
                 androidx.navigation.Navigation.findNavController(requireView())
-                    .navigate(com.example.debugappproject.R.id.shopFragment);
+                    .navigate(com.debugmaster.app.R.id.shopFragment);
             } catch (Exception e) {
                 Toast.makeText(requireContext(), "Shop coming soon!", Toast.LENGTH_SHORT).show();
             }

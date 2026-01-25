@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 import com.example.debugappproject.model.AchievementDefinition;
 import com.example.debugappproject.util.SoundManager;
 

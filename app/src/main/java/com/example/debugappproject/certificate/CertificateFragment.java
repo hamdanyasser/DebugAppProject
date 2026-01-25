@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 import com.example.debugappproject.util.AuthManager;
 import com.example.debugappproject.util.SoundManager;
 import com.google.android.material.button.MaterialButton;

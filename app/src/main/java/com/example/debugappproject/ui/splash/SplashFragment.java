@@ -35,10 +35,10 @@ import androidx.fragment.app.Fragment;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.navigation.Navigation;
 
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 import com.example.debugappproject.data.repository.BugRepository;
 import com.example.debugappproject.data.seeding.DatabaseSeeder;
-import com.example.debugappproject.databinding.FragmentSplashBinding;
+import com.debugmaster.app.databinding.FragmentSplashBinding;
 import com.example.debugappproject.ui.onboarding.OnboardingActivity;
 import com.example.debugappproject.util.AuthManager;
 import com.example.debugappproject.util.DailyRewardManager;

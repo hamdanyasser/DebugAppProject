@@ -18,7 +18,7 @@ import android.view.animation.OvershootInterpolator;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 
 import java.util.ArrayList;
 import java.util.List;

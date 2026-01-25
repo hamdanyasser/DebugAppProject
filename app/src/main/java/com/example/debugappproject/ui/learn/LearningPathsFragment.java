@@ -16,9 +16,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 import com.example.debugappproject.billing.BillingManager;
-import com.example.debugappproject.databinding.FragmentLearningPathsBinding;
+import com.debugmaster.app.databinding.FragmentLearningPathsBinding;
 import com.example.debugappproject.model.LearningPath;
 import com.example.debugappproject.util.SoundManager;
 

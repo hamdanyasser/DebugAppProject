@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.debugappproject.databinding.FragmentProgressBinding;
+import com.debugmaster.app.databinding.FragmentProgressBinding;
 import com.example.debugappproject.model.Achievement;
 import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.model.UserProgress;
@@ -231,7 +231,7 @@ public class ProgressFragment extends Fragment {
         android.widget.TextView statusView = new android.widget.TextView(requireContext());
         if (achievement.isUnlocked()) {
             statusView.setText("✓");
-            statusView.setTextColor(getResources().getColor(com.example.debugappproject.R.color.difficulty_easy, null));
+            statusView.setTextColor(getResources().getColor(com.debugmaster.app.R.color.difficulty_easy, null));
         } else {
             statusView.setText("🔒");
             statusView.setAlpha(0.3f);

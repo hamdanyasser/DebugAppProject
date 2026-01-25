@@ -1,17 +1,20 @@
 package com.example.debugappproject.util;
 
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.example.debugappproject.MainActivity;
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 import com.example.debugappproject.ui.settings.SettingsFragment;
 
 /**
@@ -81,9 +84,13 @@ public class NotificationHelper {
             .setContentIntent(pendingIntent)
             .setAutoCancel(true);
 
-        // Show notification
+        // Show notification (check permission for Android 13+)
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(NOTIFICATION_ID_BUG_OF_DAY, builder.build());
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+                        == PackageManager.PERMISSION_GRANTED) {
+            notificationManager.notify(NOTIFICATION_ID_BUG_OF_DAY, builder.build());
+        }
     }
 
     /**
@@ -116,8 +123,12 @@ public class NotificationHelper {
             .setContentIntent(pendingIntent)
             .setAutoCancel(true);
 
-        // Show notification
+        // Show notification (check permission for Android 13+)
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(NOTIFICATION_ID_ACHIEVEMENT, builder.build());
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+                        == PackageManager.PERMISSION_GRANTED) {
+            notificationManager.notify(NOTIFICATION_ID_ACHIEVEMENT, builder.build());
+        }
     }
 }

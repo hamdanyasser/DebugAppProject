@@ -37,12 +37,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 import com.example.debugappproject.billing.BillingManager;
 import com.example.debugappproject.data.local.BugDao;
 import com.example.debugappproject.data.local.DebugMasterDatabase;
-import com.example.debugappproject.databinding.FragmentBattleArenaBinding;
-import com.example.debugappproject.databinding.LayoutBattleGameBinding;
+import com.debugmaster.app.databinding.FragmentBattleArenaBinding;
+import com.debugmaster.app.databinding.LayoutBattleGameBinding;
 import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.multiplayer.BattleRoom;
 import com.example.debugappproject.multiplayer.FirebaseMultiplayerManager;

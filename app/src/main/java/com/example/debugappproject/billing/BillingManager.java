@@ -42,8 +42,8 @@ public class BillingManager implements PurchasesUpdatedListener {
     public static final String PRODUCT_YEARLY = "debugmaster_pro_yearly";
     public static final String PRODUCT_LIFETIME = "debugmaster_lifetime";
     
-    // Demo mode - set to true to bypass Play Store
-    private static final boolean DEMO_MODE = true;
+    // Demo mode - set to true to bypass Play Store (MUST BE false for production!)
+    private static final boolean DEMO_MODE = false;
 
     // Singleton instance
     private static BillingManager instance;

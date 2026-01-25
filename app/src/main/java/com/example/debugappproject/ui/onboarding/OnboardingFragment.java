@@ -17,8 +17,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.debugappproject.R;
-import com.example.debugappproject.databinding.FragmentOnboardingNewBinding;
+import com.debugmaster.app.R;
+import com.debugmaster.app.databinding.FragmentOnboardingNewBinding;
 import com.example.debugappproject.util.SoundManager;
 
 /**

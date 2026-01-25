@@ -16,10 +16,10 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.debugappproject.MainActivity;
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 import com.example.debugappproject.data.repository.BugRepository;
 import com.example.debugappproject.data.seeding.DatabaseSeeder;
-import com.example.debugappproject.databinding.ActivityOnboardingBinding;
+import com.debugmaster.app.databinding.ActivityOnboardingBinding;
 import com.google.android.material.button.MaterialButton;
 
 /**

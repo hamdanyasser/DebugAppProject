@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission 
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -18,10 +17,9 @@
 
     <!-- Attribution tags for Android 12+ permission attribution -->
     <attribution android:tag="VibrationAttribution" android:label="@string/vibration_attribution" />
-    <attribution android:tag="AudioAttribution" android:label="@string/audio_attribution" />
 
     <application
-        android:name=".DebugMasterApplication"
+        android:name="com.example.debugappproject.DebugMasterApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -35,7 +33,7 @@
 
         <!-- Main Activity (Single Activity Architecture) -->
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.debugappproject.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.DebugAppProject">
@@ -47,7 +45,7 @@
 
         <!-- Onboarding Activity -->
         <activity
-            android:name=".ui.onboarding.OnboardingActivity"
+            android:name="com.example.debugappproject.ui.onboarding.OnboardingActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.DebugAppProject" />

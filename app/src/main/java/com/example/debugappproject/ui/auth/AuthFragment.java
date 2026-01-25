@@ -18,8 +18,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import com.example.debugappproject.R;
-import com.example.debugappproject.databinding.FragmentAuthBinding;
+import com.debugmaster.app.R;
+import com.debugmaster.app.databinding.FragmentAuthBinding;
 import com.example.debugappproject.util.AuthManager;
 import com.example.debugappproject.util.SoundManager;
 

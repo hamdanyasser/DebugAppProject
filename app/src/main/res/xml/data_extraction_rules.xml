@@ -1,19 +1,39 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-   Sample data extraction rules file; uncomment and customize as necessary.
-   See https://developer.android.com/about/versions/12/backup-restore#xml-changes
-   for details.
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Data extraction rules for Android 12+ (API 31+).
+    Controls both cloud backup and device-to-device transfer.
+    See: https://developer.android.com/about/versions/12/backup-restore#xml-changes
 -->
 <data-extraction-rules>
+    <!-- Cloud backup rules (Google Drive backup) -->
     <cloud-backup>
-        <!-- TODO: Use <include> and <exclude> to control what is backed up.
-        <include .../>
-        <exclude .../>
-        -->
+        <!-- Include the game database for progress restoration -->
+        <include domain="database" path="." />
+
+        <!-- Include user preferences (theme, sound settings, etc.) -->
+        <include domain="sharedpref" path="." />
+
+        <!-- Exclude sensitive billing/purchase data (managed by Play Store) -->
+        <exclude domain="sharedpref" path="debugmaster_billing.xml" />
+
+        <!-- Exclude AI API keys (user should re-enter these) -->
+        <exclude domain="sharedpref" path="ai_mentor_prefs.xml" />
+
+        <!-- Exclude auth credentials (should re-authenticate) -->
+        <exclude domain="sharedpref" path="user_auth.xml" />
     </cloud-backup>
-    <!--
+
+    <!-- Device-to-device transfer rules (Android to Android migration) -->
     <device-transfer>
-        <include .../>
-        <exclude .../>
+        <!-- Include database for device transfer -->
+        <include domain="database" path="." />
+
+        <!-- Include all preferences for device transfer -->
+        <include domain="sharedpref" path="." />
+
+        <!-- Exclude sensitive data even during device transfer -->
+        <exclude domain="sharedpref" path="debugmaster_billing.xml" />
+        <exclude domain="sharedpref" path="ai_mentor_prefs.xml" />
+        <exclude domain="sharedpref" path="user_auth.xml" />
     </device-transfer>
-    -->
 </data-extraction-rules>

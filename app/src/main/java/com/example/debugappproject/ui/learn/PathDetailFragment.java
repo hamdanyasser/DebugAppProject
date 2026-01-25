@@ -18,8 +18,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.debugappproject.R;
-import com.example.debugappproject.databinding.FragmentPathDetailBinding;
+import com.debugmaster.app.R;
+import com.debugmaster.app.databinding.FragmentPathDetailBinding;
 import com.example.debugappproject.model.LearningPath;
 import com.example.debugappproject.util.SoundManager;
 

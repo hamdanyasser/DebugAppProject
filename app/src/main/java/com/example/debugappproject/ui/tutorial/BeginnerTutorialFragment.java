@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 import com.example.debugappproject.ui.home.HomeFragment;
 import com.example.debugappproject.util.SoundManager;
 import com.google.android.material.button.MaterialButton;

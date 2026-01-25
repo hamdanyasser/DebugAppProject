@@ -16,8 +16,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.debugappproject.R;
-import com.example.debugappproject.databinding.BottomSheetAiMentorBinding;
+import com.debugmaster.app.R;
+import com.debugmaster.app.databinding.BottomSheetAiMentorBinding;
 import com.example.debugappproject.model.Bug;
 import com.example.debugappproject.util.AIMentor;
 import com.example.debugappproject.util.SoundManager;

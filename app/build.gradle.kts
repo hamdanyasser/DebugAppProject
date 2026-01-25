@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.hilt)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 // Load keystore properties
@@ -15,11 +16,11 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.debugappproject"
+    namespace = "com.debugmaster.app"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.debugappproject"
+        applicationId = "com.debugmaster.app"
         minSdk = 26
         targetSdk = 34
         versionCode = 2
@@ -114,6 +115,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-database")  // Realtime Database for multiplayer
+    implementation("com.google.firebase:firebase-crashlytics")  // Crash reporting
 
     // OkHttp for HTTP requests
     implementation("com.squareup.okhttp3:okhttp:4.12.0")

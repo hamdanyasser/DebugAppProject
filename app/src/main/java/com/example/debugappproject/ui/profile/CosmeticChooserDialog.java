@@ -21,7 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.debugappproject.R;
+import com.debugmaster.app.R;
 import com.example.debugappproject.ui.shop.ShopFragment;
 import com.example.debugappproject.util.AuthManager;
 import com.example.debugappproject.util.SoundManager;
