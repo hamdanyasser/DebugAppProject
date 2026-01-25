@@ -81,9 +81,9 @@
     </style>
 </head>
 <body>
-    <div class="research-badge">DUOLINGO-STYLE DESIGN</div>
+    <div class="research-badge">MISCHIEVOUS PERSONALITY</div>
     <h1>DebugMaster</h1>
-    <p class="subtitle">Face-Forward. Eyes That Connect. Zero Clutter.</p>
+    <p class="subtitle">"I know something you don't" energy</p>
 
     <div class="preview-container">
         <div class="preview-box">
@@ -109,13 +109,13 @@
     </div>
 
     <div class="tips">
-        <h3>Why This Design Works (Research-Backed)</h3>
+        <h3>Personality Features (Duolingo-Level)</h3>
         <ul>
-            <li><strong>Giant eyes</strong> — 50% of icon, creates emotional connection</li>
-            <li><strong>Face fills 90%</strong> — Like Duolingo, no wasted space</li>
-            <li><strong>Zero clutter</strong> — Single focal point, no cognitive load</li>
-            <li><strong>Direct eye contact</strong> — Bug is "watching" you</li>
-            <li><strong>Works at 48px</strong> — Eyes still visible and recognizable</li>
+            <li><strong>Asymmetric eyebrows</strong> — Left raised, right angled = "I know a secret"</li>
+            <li><strong>Eyes looking up-right</strong> — Creates intrigue, what's it looking at?</li>
+            <li><strong>Smirk instead of smile</strong> — Confident, slightly mischievous</li>
+            <li><strong>Meme-able expression</strong> — Memorable, shareable, Duolingo-energy</li>
+            <li><strong>Works at 48px</strong> — Personality still reads at small sizes</li>
         </ul>
     </div>
 
@@ -256,82 +256,86 @@
             ctx.fill();
             ctx.restore();
 
-            // === PUPILS (Looking slightly to side - creates intrigue) ===
+            // === PUPILS (Looking UP and to the RIGHT - mischievous!) ===
             ctx.save();
-            // Left pupil
-            const pupilGradL = ctx.createRadialGradient(cx - 50*s, cy - 15*s, 0, cx - 50*s, cy - 10*s, 35*s);
+            // Left pupil - shifted to upper-right of eye
+            const pupilGradL = ctx.createRadialGradient(cx - 40*s, cy - 35*s, 0, cx - 40*s, cy - 30*s, 35*s);
             pupilGradL.addColorStop(0, '#1e293b');
             pupilGradL.addColorStop(0.5, '#0f172a');
             pupilGradL.addColorStop(1, '#020617');
             ctx.beginPath();
-            ctx.arc(cx - 50*s, cy - 10*s, 32*s, 0, Math.PI*2);
+            ctx.arc(cx - 40*s, cy - 30*s, 32*s, 0, Math.PI*2);
             ctx.fillStyle = pupilGradL;
             ctx.fill();
 
-            // Right pupil (slightly different position for life)
-            const pupilGradR = ctx.createRadialGradient(cx + 78*s, cy - 15*s, 0, cx + 80*s, cy - 10*s, 35*s);
+            // Right pupil - also shifted to upper-right
+            const pupilGradR = ctx.createRadialGradient(cx + 88*s, cy - 35*s, 0, cx + 90*s, cy - 30*s, 35*s);
             pupilGradR.addColorStop(0, '#1e293b');
             pupilGradR.addColorStop(0.5, '#0f172a');
             pupilGradR.addColorStop(1, '#020617');
             ctx.beginPath();
-            ctx.arc(cx + 80*s, cy - 10*s, 32*s, 0, Math.PI*2);
+            ctx.arc(cx + 90*s, cy - 30*s, 32*s, 0, Math.PI*2);
             ctx.fillStyle = pupilGradR;
             ctx.fill();
             ctx.restore();
 
-            // === EYE SPARKLES (Multiple for that "alive" look) ===
+            // === EYE SPARKLES (Adjusted for new pupil positions) ===
             ctx.save();
             ctx.fillStyle = '#ffffff';
             ctx.shadowColor = '#ffffff';
             ctx.shadowBlur = 10 * s;
 
-            // Left eye - big sparkle
+            // Left eye - big sparkle (upper-right of pupil)
             ctx.beginPath();
-            ctx.arc(cx - 38*s, cy - 25*s, 12*s, 0, Math.PI*2);
+            ctx.arc(cx - 28*s, cy - 45*s, 12*s, 0, Math.PI*2);
             ctx.fill();
 
             // Left eye - small sparkle
             ctx.beginPath();
-            ctx.arc(cx - 60*s, cy + 5*s, 6*s, 0, Math.PI*2);
+            ctx.arc(cx - 52*s, cy - 18*s, 6*s, 0, Math.PI*2);
             ctx.fill();
 
-            // Right eye - big sparkle
+            // Right eye - big sparkle (upper-right of pupil)
             ctx.beginPath();
-            ctx.arc(cx + 92*s, cy - 25*s, 12*s, 0, Math.PI*2);
+            ctx.arc(cx + 102*s, cy - 45*s, 12*s, 0, Math.PI*2);
             ctx.fill();
 
             // Right eye - small sparkle
             ctx.beginPath();
-            ctx.arc(cx + 70*s, cy + 5*s, 6*s, 0, Math.PI*2);
+            ctx.arc(cx + 78*s, cy - 18*s, 6*s, 0, Math.PI*2);
             ctx.fill();
             ctx.restore();
 
-            // === EYEBROWS (Raised = Curious/Eager expression) ===
+            // === EYEBROWS (ASYMMETRIC - Left HIGH, Right angled = mischievous!) ===
             ctx.save();
             ctx.strokeStyle = '#047857';
             ctx.lineWidth = 6 * s;
             ctx.lineCap = 'round';
 
-            // Left eyebrow - raised
+            // Left eyebrow - RAISED HIGH (surprised/intrigued)
             ctx.beginPath();
-            ctx.moveTo(cx - 120*s, cy - 75*s);
-            ctx.quadraticCurveTo(cx - 65*s, cy - 110*s, cx - 10*s, cy - 85*s);
+            ctx.moveTo(cx - 120*s, cy - 85*s);
+            ctx.quadraticCurveTo(cx - 65*s, cy - 125*s, cx - 10*s, cy - 95*s);
             ctx.stroke();
 
-            // Right eyebrow - raised
+            // Right eyebrow - LOWER and angled (knowing/scheming)
             ctx.beginPath();
-            ctx.moveTo(cx + 10*s, cy - 85*s);
-            ctx.quadraticCurveTo(cx + 65*s, cy - 110*s, cx + 120*s, cy - 75*s);
+            ctx.moveTo(cx + 15*s, cy - 80*s);
+            ctx.quadraticCurveTo(cx + 65*s, cy - 95*s, cx + 115*s, cy - 70*s);
             ctx.stroke();
             ctx.restore();
 
-            // === SMILE (Confident, friendly) ===
+            // === SMIRK (Asymmetric - one side higher = mischievous!) ===
             ctx.save();
             ctx.strokeStyle = '#047857';
             ctx.lineWidth = 6 * s;
             ctx.lineCap = 'round';
+
+            // Asymmetric smirk - right side curves up more
             ctx.beginPath();
-            ctx.arc(cx, cy + 85*s, 50*s, 0.2, Math.PI - 0.2);
+            ctx.moveTo(cx - 45*s, cy + 80*s);
+            ctx.quadraticCurveTo(cx - 10*s, cy + 110*s, cx + 20*s, cy + 95*s);
+            ctx.quadraticCurveTo(cx + 45*s, cy + 75*s, cx + 55*s, cy + 65*s);
             ctx.stroke();
             ctx.restore();
 
