@@ -60,7 +60,27 @@
         </div>
     </div>
 
-    <button onclick="download()">Download PNG</button>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 20px;">
+        <button onclick="downloadSize(512, 'ic_launcher_512')">512x512 (Play Store)</button>
+        <button onclick="downloadSize(192, 'ic_launcher_xxxhdpi')">192x192</button>
+        <button onclick="downloadSize(144, 'ic_launcher_xxhdpi')">144x144</button>
+        <button onclick="downloadSize(96, 'ic_launcher_xhdpi')">96x96</button>
+        <button onclick="downloadSize(72, 'ic_launcher_hdpi')">72x72</button>
+        <button onclick="downloadSize(48, 'ic_launcher_mdpi')">48x48</button>
+    </div>
+    <button onclick="downloadAll()" style="background: #8B5CF6; margin-top: 15px;">Download All Sizes (ZIP)</button>
+
+    <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; max-width: 500px; text-align: left;">
+        <h3 style="color: #10B981; margin-bottom: 10px;">Android Icon Folders</h3>
+        <p style="color: #9CA3AF; font-size: 13px; line-height: 1.8;">
+            Put downloaded icons in:<br>
+            • <code>mipmap-mdpi/</code> → 48x48<br>
+            • <code>mipmap-hdpi/</code> → 72x72<br>
+            • <code>mipmap-xhdpi/</code> → 96x96<br>
+            • <code>mipmap-xxhdpi/</code> → 144x144<br>
+            • <code>mipmap-xxxhdpi/</code> → 192x192
+        </p>
+    </div>
 
     <script>
         function drawIcon(canvas, size) {
@@ -256,11 +276,31 @@
         drawIcon(document.getElementById('canvas-med'), 192);
         drawIcon(document.getElementById('canvas-sm'), 96);
 
-        function download() {
+        function downloadSize(size, name) {
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = size;
+            tempCanvas.height = size;
+            drawIcon(tempCanvas, size);
+
             const link = document.createElement('a');
-            link.download = 'debugmaster_icon.png';
-            link.href = document.getElementById('canvas').toDataURL('image/png');
+            link.download = name + '.png';
+            link.href = tempCanvas.toDataURL('image/png');
             link.click();
+        }
+
+        function downloadAll() {
+            const sizes = [
+                {size: 512, name: 'ic_launcher_512_playstore'},
+                {size: 192, name: 'ic_launcher_xxxhdpi'},
+                {size: 144, name: 'ic_launcher_xxhdpi'},
+                {size: 96, name: 'ic_launcher_xhdpi'},
+                {size: 72, name: 'ic_launcher_hdpi'},
+                {size: 48, name: 'ic_launcher_mdpi'}
+            ];
+
+            sizes.forEach((item, i) => {
+                setTimeout(() => downloadSize(item.size, item.name), i * 300);
+            });
         }
     </script>
 </body>
