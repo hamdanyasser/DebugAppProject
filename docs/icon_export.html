@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>DebugMaster - Duolingo-Level Icon</title>
+    <title>DebugMaster Icon</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -10,85 +10,45 @@
             flex-direction: column;
             align-items: center;
             padding: 40px;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background: #0f0f1a;
             min-height: 100vh;
             color: white;
         }
-        h1 {
-            font-size: 2.5em;
-            background: linear-gradient(135deg, #10B981, #34D399);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 5px;
-        }
-        .subtitle { color: #9CA3AF; margin-bottom: 30px; font-size: 16px; }
-        .research-badge {
-            background: linear-gradient(135deg, #8B5CF6, #A78BFA);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            letter-spacing: 0.5px;
-        }
+        h1 { font-size: 2.5em; color: #10B981; margin-bottom: 10px; }
+        .subtitle { color: #6B7280; margin-bottom: 30px; }
         .preview-container {
             display: flex;
-            gap: 50px;
+            gap: 40px;
             align-items: flex-end;
             margin: 30px 0;
             flex-wrap: wrap;
             justify-content: center;
         }
         .preview-box { text-align: center; }
-        .preview-box p { color: #6B7280; margin-top: 15px; font-size: 13px; }
-        canvas {
-            border-radius: 22%;
-            box-shadow:
-                0 0 0 1px rgba(255,255,255,0.05),
-                0 25px 50px rgba(0, 0, 0, 0.5),
-                0 0 100px rgba(16, 185, 129, 0.2);
-            transition: transform 0.3s ease;
-        }
-        canvas:hover { transform: scale(1.05) translateY(-5px); }
-        .buttons { display: flex; gap: 15px; margin-top: 25px; }
+        .preview-box p { color: #4B5563; margin-top: 12px; font-size: 13px; }
+        canvas { border-radius: 22%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
         button {
-            background: linear-gradient(135deg, #10B981, #059669);
+            background: #10B981;
             color: white;
             border: none;
-            padding: 16px 40px;
+            padding: 14px 35px;
             font-size: 15px;
-            font-weight: 700;
-            border-radius: 50px;
+            font-weight: 600;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            margin-top: 20px;
         }
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
-        }
-        .tips {
-            margin-top: 40px;
-            padding: 20px 30px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.05);
-            max-width: 500px;
-            text-align: left;
-        }
-        .tips h3 { color: #10B981; margin-bottom: 12px; font-size: 14px; }
-        .tips ul { color: #9CA3AF; font-size: 13px; line-height: 1.8; padding-left: 20px; }
+        button:hover { background: #059669; }
     </style>
 </head>
 <body>
-    <div class="research-badge">10/10 FINAL POLISH</div>
     <h1>DebugMaster</h1>
-    <p class="subtitle">Mischievous. Memorable. Ready to ship.</p>
+    <p class="subtitle">Final Icon</p>
 
     <div class="preview-container">
         <div class="preview-box">
             <canvas id="canvas" width="512" height="512"></canvas>
-            <p>512x512 — Play Store</p>
+            <p>512x512</p>
         </div>
         <div class="preview-box">
             <canvas id="canvas-med" width="192" height="192"></canvas>
@@ -98,290 +58,207 @@
             <canvas id="canvas-sm" width="96" height="96"></canvas>
             <p>96x96</p>
         </div>
-        <div class="preview-box">
-            <canvas id="canvas-xs" width="48" height="48"></canvas>
-            <p>48x48</p>
-        </div>
     </div>
 
-    <div class="buttons">
-        <button onclick="download()">Download 512x512</button>
-    </div>
-
-    <div class="tips">
-        <h3>10/10 Final Polish Features</h3>
-        <ul>
-            <li><strong>Enhanced eyebrow contrast</strong> — Left VERY high, right low and flat</li>
-            <li><strong>Extra eye sparkles</strong> — 3 sparkles per eye for maximum life</li>
-            <li><strong>Pronounced smirk</strong> — Curves up dramatically on right side</li>
-            <li><strong>Tiny tooth</strong> — Cheeky detail, holding back a laugh</li>
-            <li><strong>Ship it!</strong> — This icon is ready for the Play Store</li>
-        </ul>
-    </div>
+    <button onclick="download()">Download PNG</button>
 
     <script>
         function drawIcon(canvas, size) {
             const ctx = canvas.getContext('2d');
             const s = size / 512;
-            const cx = size * 0.5;
-            const cy = size * 0.55; // Slightly lower to show antenna orbs
+            const cx = size / 2;
+            const cy = size / 2 + 20 * s;
 
-            // === CLEAN GRADIENT BACKGROUND ===
-            const bg = ctx.createRadialGradient(cx, cy * 0.6, 0, cx, cy, size * 0.9);
-            bg.addColorStop(0, '#3D2A6D');
-            bg.addColorStop(0.5, '#2A1F4E');
-            bg.addColorStop(1, '#1A1433');
+            // Background
+            const bg = ctx.createRadialGradient(cx, cy - 50*s, 0, cx, cy, size * 0.8);
+            bg.addColorStop(0, '#2D1F54');
+            bg.addColorStop(0.6, '#1A1335');
+            bg.addColorStop(1, '#110D1F');
             ctx.beginPath();
             ctx.roundRect(0, 0, size, size, size * 0.22);
             ctx.fillStyle = bg;
             ctx.fill();
 
-            // === SUBTLE HEAD GLOW (Behind everything) ===
-            ctx.save();
-            const headGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 0.5);
-            headGlow.addColorStop(0, 'rgba(16, 185, 129, 0.15)');
-            headGlow.addColorStop(0.5, 'rgba(16, 185, 129, 0.05)');
-            headGlow.addColorStop(1, 'transparent');
-            ctx.fillStyle = headGlow;
+            // Soft glow behind head
+            const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, 180*s);
+            glow.addColorStop(0, 'rgba(16, 185, 129, 0.12)');
+            glow.addColorStop(1, 'transparent');
+            ctx.fillStyle = glow;
             ctx.fillRect(0, 0, size, size);
-            ctx.restore();
 
-            // === ANTENNAE (Behind head) ===
-            ctx.save();
+            // Antennae
             ctx.strokeStyle = '#10B981';
-            ctx.lineWidth = 8 * s;
+            ctx.lineWidth = 7 * s;
             ctx.lineCap = 'round';
 
-            // Left antenna
             ctx.beginPath();
-            ctx.moveTo(cx - 70*s, cy - 120*s);
-            ctx.bezierCurveTo(cx - 90*s, cy - 180*s, cx - 100*s, cy - 220*s, cx - 85*s, cy - 260*s);
+            ctx.moveTo(cx - 55*s, cy - 130*s);
+            ctx.quadraticCurveTo(cx - 75*s, cy - 200*s, cx - 60*s, cy - 240*s);
             ctx.stroke();
 
-            // Right antenna
             ctx.beginPath();
-            ctx.moveTo(cx + 70*s, cy - 120*s);
-            ctx.bezierCurveTo(cx + 90*s, cy - 180*s, cx + 100*s, cy - 220*s, cx + 85*s, cy - 260*s);
+            ctx.moveTo(cx + 55*s, cy - 130*s);
+            ctx.quadraticCurveTo(cx + 75*s, cy - 200*s, cx + 60*s, cy - 240*s);
             ctx.stroke();
-            ctx.restore();
 
-            // === ANTENNA ORBS (Glowing!) ===
+            // Antenna orbs
             ctx.save();
             ctx.shadowColor = '#FBBF24';
-            ctx.shadowBlur = 50 * s;
+            ctx.shadowBlur = 40 * s;
 
-            // Left orb
-            const orbGradL = ctx.createRadialGradient(cx - 90*s, cy - 268*s, 0, cx - 85*s, cy - 260*s, 25*s);
-            orbGradL.addColorStop(0, '#FEF9C3');
-            orbGradL.addColorStop(0.3, '#FDE047');
-            orbGradL.addColorStop(0.6, '#FBBF24');
-            orbGradL.addColorStop(1, '#F59E0B');
+            const orbGrad = ctx.createRadialGradient(cx - 65*s, cy - 248*s, 0, cx - 60*s, cy - 240*s, 20*s);
+            orbGrad.addColorStop(0, '#FEF3C7');
+            orbGrad.addColorStop(0.5, '#FCD34D');
+            orbGrad.addColorStop(1, '#F59E0B');
+            ctx.fillStyle = orbGrad;
             ctx.beginPath();
-            ctx.arc(cx - 85*s, cy - 260*s, 22*s, 0, Math.PI*2);
-            ctx.fillStyle = orbGradL;
+            ctx.arc(cx - 60*s, cy - 240*s, 18*s, 0, Math.PI*2);
             ctx.fill();
 
-            // Right orb
-            const orbGradR = ctx.createRadialGradient(cx + 80*s, cy - 268*s, 0, cx + 85*s, cy - 260*s, 25*s);
-            orbGradR.addColorStop(0, '#FEF9C3');
-            orbGradR.addColorStop(0.3, '#FDE047');
-            orbGradR.addColorStop(0.6, '#FBBF24');
-            orbGradR.addColorStop(1, '#F59E0B');
+            const orbGrad2 = ctx.createRadialGradient(cx + 55*s, cy - 248*s, 0, cx + 60*s, cy - 240*s, 20*s);
+            orbGrad2.addColorStop(0, '#FEF3C7');
+            orbGrad2.addColorStop(0.5, '#FCD34D');
+            orbGrad2.addColorStop(1, '#F59E0B');
+            ctx.fillStyle = orbGrad2;
             ctx.beginPath();
-            ctx.arc(cx + 85*s, cy - 260*s, 22*s, 0, Math.PI*2);
-            ctx.fillStyle = orbGradR;
+            ctx.arc(cx + 60*s, cy - 240*s, 18*s, 0, Math.PI*2);
             ctx.fill();
             ctx.restore();
 
-            // === THE HEAD (Giant, fills most of icon) ===
+            // Head
             ctx.save();
             ctx.shadowColor = '#10B981';
-            ctx.shadowBlur = 40 * s;
+            ctx.shadowBlur = 35 * s;
 
-            // Main head shape - BIG and round
-            const headGrad = ctx.createRadialGradient(cx - 30*s, cy - 80*s, 0, cx, cy, 200*s);
+            const headGrad = ctx.createRadialGradient(cx - 40*s, cy - 60*s, 0, cx, cy, 180*s);
             headGrad.addColorStop(0, '#6EE7B7');
-            headGrad.addColorStop(0.25, '#34D399');
-            headGrad.addColorStop(0.5, '#10B981');
-            headGrad.addColorStop(0.8, '#059669');
+            headGrad.addColorStop(0.3, '#34D399');
+            headGrad.addColorStop(0.6, '#10B981');
             headGrad.addColorStop(1, '#047857');
 
             ctx.beginPath();
-            ctx.ellipse(cx, cy, 185*s, 175*s, 0, 0, Math.PI*2);
+            ctx.ellipse(cx, cy, 175*s, 165*s, 0, 0, Math.PI*2);
             ctx.fillStyle = headGrad;
             ctx.fill();
 
-            // Head highlight (3D effect)
+            // Head shine
             ctx.shadowBlur = 0;
-            const headHL = ctx.createRadialGradient(cx - 60*s, cy - 100*s, 0, cx, cy, 185*s);
-            headHL.addColorStop(0, 'rgba(167, 243, 208, 0.7)');
-            headHL.addColorStop(0.3, 'rgba(167, 243, 208, 0.3)');
-            headHL.addColorStop(0.6, 'rgba(167, 243, 208, 0.05)');
-            headHL.addColorStop(1, 'transparent');
-            ctx.fillStyle = headHL;
-            ctx.fill();
-
-            // Rim light (top edge)
-            ctx.strokeStyle = 'rgba(167, 243, 208, 0.4)';
-            ctx.lineWidth = 3 * s;
-            ctx.beginPath();
-            ctx.ellipse(cx, cy, 182*s, 172*s, 0, -2.5, -0.6);
-            ctx.stroke();
-            ctx.restore();
-
-            // === EYES (MASSIVE - The Hero Element) ===
-            // Eye whites - Each eye is ~25% of icon width
-            ctx.save();
-            ctx.shadowColor = 'rgba(255,255,255,0.8)';
-            ctx.shadowBlur = 20 * s;
-
-            // Left eye white
-            const eyeGradL = ctx.createRadialGradient(cx - 70*s, cy - 30*s, 0, cx - 65*s, cy - 10*s, 75*s);
-            eyeGradL.addColorStop(0, '#ffffff');
-            eyeGradL.addColorStop(0.7, '#f8fafc');
-            eyeGradL.addColorStop(1, '#e2e8f0');
-            ctx.beginPath();
-            ctx.ellipse(cx - 65*s, cy - 10*s, 70*s, 80*s, -0.1, 0, Math.PI*2);
-            ctx.fillStyle = eyeGradL;
-            ctx.fill();
-
-            // Right eye white
-            const eyeGradR = ctx.createRadialGradient(cx + 70*s, cy - 30*s, 0, cx + 65*s, cy - 10*s, 75*s);
-            eyeGradR.addColorStop(0, '#ffffff');
-            eyeGradR.addColorStop(0.7, '#f8fafc');
-            eyeGradR.addColorStop(1, '#e2e8f0');
-            ctx.beginPath();
-            ctx.ellipse(cx + 65*s, cy - 10*s, 70*s, 80*s, 0.1, 0, Math.PI*2);
-            ctx.fillStyle = eyeGradR;
+            const shine = ctx.createRadialGradient(cx - 50*s, cy - 80*s, 0, cx, cy, 175*s);
+            shine.addColorStop(0, 'rgba(167, 243, 208, 0.6)');
+            shine.addColorStop(0.4, 'rgba(167, 243, 208, 0.1)');
+            shine.addColorStop(1, 'transparent');
+            ctx.fillStyle = shine;
             ctx.fill();
             ctx.restore();
 
-            // === PUPILS (Looking UP and to the RIGHT - mischievous!) ===
+            // Eyes
             ctx.save();
-            // Left pupil - shifted to upper-right of eye
-            const pupilGradL = ctx.createRadialGradient(cx - 40*s, cy - 35*s, 0, cx - 40*s, cy - 30*s, 35*s);
-            pupilGradL.addColorStop(0, '#1e293b');
-            pupilGradL.addColorStop(0.5, '#0f172a');
-            pupilGradL.addColorStop(1, '#020617');
+            ctx.shadowColor = 'rgba(255,255,255,0.6)';
+            ctx.shadowBlur = 15 * s;
+
+            // Left eye
+            const eyeL = ctx.createRadialGradient(cx - 60*s, cy - 20*s, 0, cx - 55*s, cy - 5*s, 65*s);
+            eyeL.addColorStop(0, '#ffffff');
+            eyeL.addColorStop(0.8, '#f1f5f9');
+            eyeL.addColorStop(1, '#e2e8f0');
             ctx.beginPath();
-            ctx.arc(cx - 40*s, cy - 30*s, 32*s, 0, Math.PI*2);
-            ctx.fillStyle = pupilGradL;
+            ctx.ellipse(cx - 55*s, cy - 5*s, 60*s, 70*s, -0.1, 0, Math.PI*2);
+            ctx.fillStyle = eyeL;
             ctx.fill();
 
-            // Right pupil - also shifted to upper-right
-            const pupilGradR = ctx.createRadialGradient(cx + 88*s, cy - 35*s, 0, cx + 90*s, cy - 30*s, 35*s);
-            pupilGradR.addColorStop(0, '#1e293b');
-            pupilGradR.addColorStop(0.5, '#0f172a');
-            pupilGradR.addColorStop(1, '#020617');
+            // Right eye
+            const eyeR = ctx.createRadialGradient(cx + 60*s, cy - 20*s, 0, cx + 55*s, cy - 5*s, 65*s);
+            eyeR.addColorStop(0, '#ffffff');
+            eyeR.addColorStop(0.8, '#f1f5f9');
+            eyeR.addColorStop(1, '#e2e8f0');
             ctx.beginPath();
-            ctx.arc(cx + 90*s, cy - 30*s, 32*s, 0, Math.PI*2);
-            ctx.fillStyle = pupilGradR;
+            ctx.ellipse(cx + 55*s, cy - 5*s, 60*s, 70*s, 0.1, 0, Math.PI*2);
+            ctx.fillStyle = eyeR;
             ctx.fill();
             ctx.restore();
 
-            // === EYE SPARKLES (Enhanced for more "alive" look) ===
-            ctx.save();
+            // Pupils - looking slightly up-right
+            const pupilGrad = ctx.createRadialGradient(cx - 42*s, cy - 18*s, 0, cx - 40*s, cy - 12*s, 30*s);
+            pupilGrad.addColorStop(0, '#334155');
+            pupilGrad.addColorStop(0.5, '#1e293b');
+            pupilGrad.addColorStop(1, '#0f172a');
+
+            ctx.fillStyle = pupilGrad;
+            ctx.beginPath();
+            ctx.arc(cx - 40*s, cy - 12*s, 28*s, 0, Math.PI*2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(cx + 70*s, cy - 12*s, 28*s, 0, Math.PI*2);
+            ctx.fill();
+
+            // Eye sparkles
             ctx.fillStyle = '#ffffff';
             ctx.shadowColor = '#ffffff';
-            ctx.shadowBlur = 10 * s;
+            ctx.shadowBlur = 8 * s;
 
-            // Left eye - big sparkle
+            // Left eye sparkles
             ctx.beginPath();
-            ctx.arc(cx - 28*s, cy - 45*s, 13*s, 0, Math.PI*2);
+            ctx.arc(cx - 30*s, cy - 25*s, 10*s, 0, Math.PI*2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(cx - 50*s, cy, 5*s, 0, Math.PI*2);
             ctx.fill();
 
-            // Left eye - medium sparkle
+            // Right eye sparkles
             ctx.beginPath();
-            ctx.arc(cx - 52*s, cy - 18*s, 7*s, 0, Math.PI*2);
+            ctx.arc(cx + 80*s, cy - 25*s, 10*s, 0, Math.PI*2);
             ctx.fill();
-
-            // Left eye - tiny sparkle (NEW!)
             ctx.beginPath();
-            ctx.arc(cx - 35*s, cy - 8*s, 4*s, 0, Math.PI*2);
+            ctx.arc(cx + 60*s, cy, 5*s, 0, Math.PI*2);
             ctx.fill();
+            ctx.shadowBlur = 0;
 
-            // Right eye - big sparkle
-            ctx.beginPath();
-            ctx.arc(cx + 102*s, cy - 45*s, 13*s, 0, Math.PI*2);
-            ctx.fill();
-
-            // Right eye - medium sparkle
-            ctx.beginPath();
-            ctx.arc(cx + 78*s, cy - 18*s, 7*s, 0, Math.PI*2);
-            ctx.fill();
-
-            // Right eye - tiny sparkle (NEW!)
-            ctx.beginPath();
-            ctx.arc(cx + 95*s, cy - 8*s, 4*s, 0, Math.PI*2);
-            ctx.fill();
-            ctx.restore();
-
-            // === EYEBROWS (MORE ASYMMETRIC - increased contrast!) ===
-            ctx.save();
+            // Eyebrows - subtle asymmetry
             ctx.strokeStyle = '#047857';
-            ctx.lineWidth = 7 * s;
+            ctx.lineWidth = 5 * s;
             ctx.lineCap = 'round';
 
-            // Left eyebrow - RAISED EVEN HIGHER (very intrigued)
+            // Left eyebrow - slightly raised
             ctx.beginPath();
-            ctx.moveTo(cx - 120*s, cy - 90*s);
-            ctx.quadraticCurveTo(cx - 65*s, cy - 135*s, cx - 10*s, cy - 100*s);
+            ctx.moveTo(cx - 100*s, cy - 70*s);
+            ctx.quadraticCurveTo(cx - 55*s, cy - 95*s, cx - 15*s, cy - 75*s);
             ctx.stroke();
 
-            // Right eyebrow - EVEN LOWER and flatter (knowing smirk)
+            // Right eyebrow - slightly lower/angled
             ctx.beginPath();
-            ctx.moveTo(cx + 15*s, cy - 78*s);
-            ctx.quadraticCurveTo(cx + 65*s, cy - 88*s, cx + 115*s, cy - 65*s);
+            ctx.moveTo(cx + 15*s, cy - 70*s);
+            ctx.quadraticCurveTo(cx + 55*s, cy - 85*s, cx + 100*s, cy - 60*s);
             ctx.stroke();
-            ctx.restore();
 
-            // === SMIRK (More pronounced + tiny tooth!) ===
-            ctx.save();
+            // Smile - simple, friendly, slight smirk
             ctx.strokeStyle = '#047857';
-            ctx.lineWidth = 7 * s;
+            ctx.lineWidth = 5 * s;
             ctx.lineCap = 'round';
-
-            // Enhanced asymmetric smirk - right side curves up MORE
             ctx.beginPath();
-            ctx.moveTo(cx - 50*s, cy + 75*s);
-            ctx.quadraticCurveTo(cx - 15*s, cy + 115*s, cx + 15*s, cy + 100*s);
-            ctx.quadraticCurveTo(cx + 40*s, cy + 70*s, cx + 60*s, cy + 55*s);
+            ctx.moveTo(cx - 35*s, cy + 70*s);
+            ctx.quadraticCurveTo(cx, cy + 95*s, cx + 45*s, cy + 65*s);
             ctx.stroke();
-            ctx.restore();
 
-            // === TINY TOOTH (Cheeky detail!) ===
-            ctx.save();
-            ctx.fillStyle = '#ffffff';
-            ctx.shadowColor = 'rgba(255,255,255,0.5)';
-            ctx.shadowBlur = 3 * s;
-            ctx.beginPath();
-            // Small rounded rectangle tooth peeking from smirk
-            ctx.roundRect(cx + 35*s, cy + 58*s, 12*s, 14*s, 3*s);
-            ctx.fill();
-            ctx.restore();
-
-            // === CHEEK BLUSH (Cute!) ===
-            ctx.save();
-            ctx.globalAlpha = 0.25;
+            // Cheek blush
+            ctx.globalAlpha = 0.2;
             ctx.fillStyle = '#FB7185';
             ctx.beginPath();
-            ctx.ellipse(cx - 140*s, cy + 40*s, 25*s, 15*s, -0.3, 0, Math.PI*2);
+            ctx.ellipse(cx - 120*s, cy + 30*s, 20*s, 12*s, -0.2, 0, Math.PI*2);
             ctx.fill();
             ctx.beginPath();
-            ctx.ellipse(cx + 140*s, cy + 40*s, 25*s, 15*s, 0.3, 0, Math.PI*2);
+            ctx.ellipse(cx + 120*s, cy + 30*s, 20*s, 12*s, 0.2, 0, Math.PI*2);
             ctx.fill();
-            ctx.restore();
+            ctx.globalAlpha = 1;
         }
 
-        // Draw all sizes
         drawIcon(document.getElementById('canvas'), 512);
         drawIcon(document.getElementById('canvas-med'), 192);
         drawIcon(document.getElementById('canvas-sm'), 96);
-        drawIcon(document.getElementById('canvas-xs'), 48);
 
         function download() {
             const link = document.createElement('a');
-            link.download = 'debugmaster_icon_512.png';
+            link.download = 'debugmaster_icon.png';
             link.href = document.getElementById('canvas').toDataURL('image/png');
             link.click();
         }
