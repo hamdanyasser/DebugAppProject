@@ -8,8 +8,8 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.example.debugappproject" />
-                  <option name="mobileSdkAppId" value="1:96849923832:android:cb2ab218e9ec18f192350d" />
+                  <option name="appId" value="com.debugmaster.app" />
+                  <option name="mobileSdkAppId" value="1:96849923832:android:6f2833d522a357d292350d" />
                   <option name="projectId" value="debugmaster-8ff5b" />
                   <option name="projectNumber" value="96849923832" />
                 </ConnectionSetting>
