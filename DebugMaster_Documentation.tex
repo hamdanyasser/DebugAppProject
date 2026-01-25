@@ -1,0 +1,708 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{tabularx}
+
+% Page geometry
+\geometry{margin=1in}
+
+% Colors
+\definecolor{primaryPurple}{RGB}{138,43,226}
+\definecolor{neonGreen}{RGB}{57,255,20}
+\definecolor{darkBg}{RGB}{30,30,50}
+\definecolor{codeGray}{RGB}{245,245,245}
+
+% Hyperlink colors
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryPurple,
+    urlcolor=primaryPurple,
+    citecolor=primaryPurple
+}
+
+% Code listing style
+\lstset{
+    backgroundcolor=\color{codeGray},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{primaryPurple},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{primaryPurple}\bfseries,
+    commentstyle=\color{gray}\itshape,
+    stringstyle=\color{neonGreen}
+}
+
+% Header/Footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textcolor{primaryPurple}{\textbf{DebugMaster}}}
+\fancyhead[R]{\textcolor{gray}{Project Documentation}}
+\fancyfoot[C]{\thepage}
+
+% Title formatting
+\titleformat{\section}
+    {\Large\bfseries\color{primaryPurple}}
+    {\thesection}{1em}{}
+\titleformat{\subsection}
+    {\large\bfseries\color{darkBg}}
+    {\thesubsection}{1em}{}
+
+% Custom box for scripts
+\newtcolorbox{scriptbox}[1][]{
+    colback=codeGray,
+    colframe=primaryPurple,
+    title=#1,
+    fonttitle=\bfseries,
+    arc=3mm
+}
+
+% Custom box for key points
+\newtcolorbox{keypoint}{
+    colback=primaryPurple!10,
+    colframe=primaryPurple,
+    arc=2mm,
+    left=5pt,
+    right=5pt
+}
+
+\begin{document}
+
+% ============================================
+% TITLE PAGE
+% ============================================
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\Huge\bfseries\textcolor{primaryPurple}{DebugMaster}}\\[0.5cm]
+    {\Large\textcolor{darkBg}{Learn to Debug. Level Up. Compete.}}\\[2cm]
+
+    {\large\textbf{Project Documentation \& Presentation Guide}}\\[1cm]
+
+    \vfill
+
+    {\large\textbf{Developed by:}}\\[0.3cm]
+    {\Large Yasser Hamdan}\\[0.2cm]
+    {\Large Mohamad Dmayriye}\\[2cm]
+
+    {\large January 2026}
+
+\end{titlepage}
+
+% ============================================
+% TABLE OF CONTENTS
+% ============================================
+\tableofcontents
+\newpage
+
+% ============================================
+% PART 1: PROJECT OVERVIEW
+% ============================================
+\section{Project Overview}
+
+\subsection{What is DebugMaster?}
+
+DebugMaster is an Android educational game that teaches programming through interactive bug debugging. The application combines gamification elements with real code execution to create an engaging learning experience.
+
+\begin{keypoint}
+\textbf{Core Concept:} Users fix real programming bugs, compete in ranked battles, and progress through structured learning paths --- combining Duolingo-style progression with competitive gaming mechanics.
+\end{keypoint}
+
+\subsection{Problem Statement}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{70\% of developer time} is spent debugging, not writing new code
+    \item Traditional programming tutorials are passive and boring
+    \item Debugging skills are rarely taught explicitly in education
+    \item Students often give up when stuck on bugs due to frustration
+\end{itemize}
+
+\subsection{Our Solution}
+
+DebugMaster addresses these problems by:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Real Code Execution} --- Users fix actual bugs that compile and run
+    \item \textbf{Gamification} --- XP, levels, achievements, and streaks for motivation
+    \item \textbf{Competition} --- Elo-ranked battles make debugging social
+    \item \textbf{AI Mentorship} --- Socratic method guidance without giving answers
+    \item \textbf{Structured Learning} --- Curated paths from beginner to expert
+\end{enumerate}
+
+% ============================================
+% PART 2: ARCHITECTURE
+% ============================================
+\section{System Architecture}
+
+\subsection{Architecture Pattern}
+
+The application follows the \textbf{MVVM (Model-View-ViewModel)} pattern with a \textbf{Repository} layer for data access.
+
+\begin{verbatim}
+    UI (Fragments)
+         |
+         v
+    ViewModels (LiveData)
+         |
+         v
+    BugRepository (Single Source of Truth)
+         |
+         v
+    Room DAOs
+         |
+         v
+    SQLite Database <---> Firebase Cloud
+\end{verbatim}
+
+\subsection{Key Components}
+
+\begin{table}[h]
+\centering
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Component} & \textbf{Description} \\
+\hline
+DebugMasterApplication & Entry point; initializes theme, seeds database, sets up achievements \\
+\hline
+MainActivity & Single activity hosting NavHostFragment for all navigation \\
+\hline
+BugRepository & Singleton managing all data operations with ExecutorService \\
+\hline
+DebugMasterDatabase & Room database (v13) with 11 entities and migrations \\
+\hline
+CodeExecutionEngine & Janino-based sandbox for compiling and running user code \\
+\hline
+GameManager & Handles XP calculations, streaks, and rewards \\
+\hline
+RankedBattleSystem & Elo rating calculations and matchmaking \\
+\hline
+AIDebugMentor & GPT-4 powered Socratic teaching assistant \\
+\hline
+\end{tabularx}
+\caption{Core System Components}
+\end{table}
+
+\subsection{Package Structure}
+
+\begin{lstlisting}[language=Java,title=Project Package Organization]
+com.example.debugappproject/
+|-- ai/              # AI mentor, code reviewer, certificates
+|-- auth/            # Firebase & Google authentication
+|-- billing/         # Google Play Billing integration
+|-- data/
+|   |-- local/       # Room database & DAOs
+|   |-- repository/  # BugRepository
+|   |-- seeding/     # Database seeders
+|-- di/              # Hilt dependency injection modules
+|-- execution/       # Code execution engine (Janino)
+|-- game/            # Game mechanics, Elo system
+|-- model/           # Room entities (Bug, UserProgress, etc.)
+|-- multiplayer/     # Real-time Firebase battles
+|-- sync/            # Progress sync strategies
+|-- ui/              # 25+ feature fragments with ViewModels
+|-- util/            # Managers (Theme, Sound, Streak, etc.)
+\end{lstlisting}
+
+% ============================================
+% PART 3: DATABASE
+% ============================================
+\section{Database Schema}
+
+\subsection{Overview}
+
+The application uses \textbf{Room} (Android's SQLite abstraction) with the following configuration:
+
+\begin{itemize}
+    \item Database Name: \texttt{debug\_master\_database}
+    \item Current Version: 13
+    \item Migrations: 11 migration scripts (v2 $\rightarrow$ v13)
+\end{itemize}
+
+\subsection{Entity Descriptions}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{Entity} & \textbf{Table} & \textbf{Purpose} \\
+\hline
+Bug & bugs & Debugging exercises with broken/fixed code \\
+\hline
+UserProgress & user\_progress & XP, gems, streaks (singleton, id=1) \\
+\hline
+LearningPath & learning\_paths & 15 curated learning journeys \\
+\hline
+BugInPath & bug\_in\_path & Many-to-many: bugs $\leftrightarrow$ paths \\
+\hline
+Hint & hints & Supplementary hints for bugs \\
+\hline
+Lesson & lessons & Educational content for bugs \\
+\hline
+LessonQuestion & lesson\_questions & Quiz questions for lessons \\
+\hline
+AchievementDefinition & achievement\_definitions & 40+ achievement templates \\
+\hline
+UserAchievement & user\_achievements & Tracks unlocked achievements \\
+\hline
+MentalProfile & mental\_profile & Cognitive skills \& Elo rating \\
+\hline
+DailyChallenge & daily\_challenges & Daily rotating challenges \\
+\hline
+\end{tabularx}
+\caption{Database Entities}
+\end{table}
+
+\subsection{Bug Entity Schema}
+
+\begin{lstlisting}[language=Java,title=Bug.java Entity Fields]
+@Entity(tableName = "bugs")
+public class Bug {
+    @PrimaryKey
+    public int id;
+    public String title;
+    public String language;        // Java, Python, JavaScript, Kotlin
+    public String difficulty;      // Easy, Medium, Hard, Expert
+    public String category;        // Fundamentals, Loops, Arrays, etc.
+    public String description;     // Mission briefing
+    public String brokenCode;      // Code with bug
+    public String fixedCode;       // Correct solution
+    public String expectedOutput;
+    public String actualOutput;
+    public String explanation;     // Why the bug occurs
+    public String hint;
+    public boolean isCompleted;
+    public int xpReward;
+}
+\end{lstlisting}
+
+\subsection{UserProgress Entity Schema}
+
+\begin{lstlisting}[language=Java,title=UserProgress.java Entity Fields]
+@Entity(tableName = "user_progress")
+public class UserProgress {
+    @PrimaryKey
+    public int id = 1;            // Singleton pattern
+    public int totalSolved;
+    public int easySolved;
+    public int mediumSolved;
+    public int hardSolved;
+    public int xp;
+    public int gems;
+    public int streakDays;
+    public int longestStreakDays;
+    public int hintsUsed;
+    public int bugsSolvedWithoutHints;
+    public long lastSolvedTimestamp;
+    public long lastOpenedTimestamp;
+}
+\end{lstlisting}
+
+% ============================================
+% PART 4: FEATURES
+% ============================================
+\section{Features}
+
+\subsection{Core Gameplay}
+
+Users solve real programming bugs through a four-step process:
+
+\begin{enumerate}
+    \item \textbf{See the Bug} --- View broken code and error message
+    \item \textbf{Fix It} --- Edit code in real-time editor
+    \item \textbf{Run Tests} --- Janino compiler executes code (5s timeout)
+    \item \textbf{Celebrate} --- Earn XP, gems, and see confetti animation
+\end{enumerate}
+
+\subsection{Game Modes}
+
+\begin{table}[h]
+\centering
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{Mode} & \textbf{Type} & \textbf{Description} \\
+\hline
+Quick Fix & Casual & 60 seconds per bug, 3 lives, combo system \\
+\hline
+Battle Arena & Competitive & 1v1 PvP with Elo ranking \\
+\hline
+Speed Run & Competitive & 45 sec/bug, 15 bugs, 2x speed bonus \\
+\hline
+Puzzle Mode & Special & No hints, no timer, 3x XP reward \\
+\hline
+Daily Challenge & Casual & Themed daily bugs (Memory Monday, etc.) \\
+\hline
+Mystery Bug & Special & Random modifiers, up to 5x XP \\
+\hline
+Survival & Special & 1 life, shrinking timer, endless waves \\
+\hline
+Tutorial & Casual & Guided step-by-step for beginners \\
+\hline
+\end{tabularx}
+\caption{8 Game Modes}
+\end{table}
+
+\subsection{XP and Rewards System}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Difficulty} & \textbf{Base XP} & \textbf{Gems} & \textbf{No-Hint XP} & \textbf{No-Hint Gems} \\
+\hline
+Easy & 10 & 5 & 20 & 7 \\
+Medium & 25 & 10 & 50 & 15 \\
+Hard & 50 & 20 & 100 & 30 \\
+Expert & 100 & 40 & 200 & 60 \\
+\hline
+\end{tabular}
+\caption{XP and Gem Rewards by Difficulty}
+\end{table}
+
+\textbf{Multipliers:}
+\begin{itemize}
+    \item Perfect Solve (no hints): 2x XP, 1.5x gems
+    \item Streak Bonus: +5\% per consecutive day (max 50\%)
+    \item Weekend Bonus: 2x XP on Saturday/Sunday
+\end{itemize}
+
+\subsection{Ranked Battle System}
+
+The competitive system uses the \textbf{Elo rating algorithm} (same as chess):
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{Tier} & \textbf{Elo Range} & \textbf{Badge} \\
+\hline
+Unranked & 0--999 & --- \\
+Bronze & 1000--1199 & Bronze medal \\
+Silver & 1200--1399 & Silver medal \\
+Gold & 1400--1599 & Gold medal \\
+Diamond & 1600--1799 & Diamond gem \\
+Master & 1800--1999 & Crown \\
+Legend & 2000+ & Trophy \\
+\hline
+\end{tabular}
+\caption{7 Ranked Tiers}
+\end{table}
+
+\textbf{Key Features:}
+\begin{itemize}
+    \item Matchmaking within $\pm$100--300 Elo
+    \item Win/loss streaks affect Elo multipliers
+    \item Seasonal soft resets: $NewElo = (OldElo + 1200) / 2$
+\end{itemize}
+
+\subsection{AI Debug Mentor}
+
+The AI mentor uses the \textbf{Socratic Method} --- asking guiding questions instead of providing direct answers.
+
+\textbf{5-Level Progressive Hint System:}
+\begin{enumerate}
+    \item Generic: ``Think about the problem step-by-step''
+    \item Direction: ``Focus on the loop condition''
+    \item Specific: ``Check line 5 carefully''
+    \item Almost There: ``The variable name is misspelled''
+    \item Solution: Full explanation with corrected code
+\end{enumerate}
+
+\textbf{Example Questions:}
+\begin{itemize}
+    \item ``What do you expect this line to do?''
+    \item ``Have you traced the variable values?''
+    \item ``What happens with edge cases?''
+\end{itemize}
+
+% ============================================
+% PART 5: TECH STACK
+% ============================================
+\section{Technology Stack}
+
+\begin{table}[h]
+\centering
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Category} & \textbf{Technology} \\
+\hline
+Language & Java \\
+\hline
+Architecture & MVVM + Repository Pattern \\
+\hline
+Dependency Injection & Hilt (Dagger) \\
+\hline
+Database & Room (SQLite) --- 11 entities, version 13 \\
+\hline
+Navigation & Jetpack Navigation Component \\
+\hline
+UI Framework & Material Design 3 \\
+\hline
+Code Execution & Janino Compiler (runtime Java compilation) \\
+\hline
+Authentication & Firebase Auth + Google Sign-In \\
+\hline
+Cloud Storage & Firebase Firestore \\
+\hline
+Realtime Data & Firebase Realtime Database (multiplayer) \\
+\hline
+AI Integration & OpenAI GPT-4 API \\
+\hline
+Payments & Google Play Billing \\
+\hline
+\end{tabularx}
+\caption{Complete Technology Stack}
+\end{table}
+
+\subsection{Code Execution Engine}
+
+The \texttt{CodeExecutionEngine} uses \textbf{Janino} to compile and execute user code:
+
+\begin{lstlisting}[language=Java,title=Code Execution Flow]
+// 1. User submits code fix
+String userCode = editText.getText().toString();
+
+// 2. Compile with Janino (runtime Java compiler)
+SimpleCompiler compiler = new SimpleCompiler();
+compiler.cook(userCode);
+
+// 3. Execute in sandboxed thread (5-second timeout)
+ExecutorService executor = Executors.newSingleThreadExecutor();
+Future<String> future = executor.submit(() -> {
+    // Run compiled code
+    return captureOutput();
+});
+String output = future.get(5, TimeUnit.SECONDS);
+
+// 4. Compare output with expected result
+boolean isCorrect = output.equals(expectedOutput);
+\end{lstlisting}
+
+% ============================================
+% PART 6: PRESENTATION SCRIPT
+% ============================================
+\section{Presentation Script (15 Minutes)}
+
+\subsection{Slide 1: Title (1 minute)}
+
+\begin{scriptbox}[Opening Script]
+``Good morning/afternoon everyone. Today we're presenting DebugMaster --- an Android app that teaches programming through gamified bug debugging.
+
+Think Duolingo meets LeetCode, but focused specifically on the skill every developer needs most: debugging.
+
+I'm Yasser Hamdan, and this is Mohamad Dmayriye.''
+\end{scriptbox}
+
+\subsection{Slide 2: The Problem (1 minute)}
+
+\begin{scriptbox}[Problem Script]
+``Let's talk about the problem we're solving.
+
+Studies show developers spend 70\% of their time debugging --- not writing new code. Yet most coding education focuses on syntax and building, not fixing.
+
+Traditional tutorials are passive. You watch, you read, but you don't practice. And when students get stuck on bugs, they get frustrated and quit.
+
+We asked: what if debugging was actually fun?''
+\end{scriptbox}
+
+\subsection{Slide 3: The Solution (2 minutes)}
+
+\begin{scriptbox}[Solution Script]
+``DebugMaster solves this by turning debugging into a game.
+
+Users fix real code bugs --- not fake exercises. The code actually runs in a Java sandbox. They see real errors, make real fixes, and get real feedback.
+
+We have 8 different game modes for every learning style --- from guided tutorials to competitive 1v1 battles.
+
+An AI mentor helps stuck users with Socratic questioning --- asking guiding questions instead of just giving answers.
+
+And like any good game, there's XP, levels, achievements, and leaderboards to keep users motivated.''
+\end{scriptbox}
+
+\subsection{Slide 4: Live Demo (3 minutes)}
+
+\begin{scriptbox}[Demo Script]
+``Let me show you how it works.
+
+\textbf{[Show Home Screen]}
+
+This is the home screen. Users see their level, XP progress, and daily streak. The Daily Challenge gives them a new bug every day.
+
+\textbf{[Tap Daily Challenge]}
+
+Here's a bug to solve. At the top is the `mission briefing' --- we make each bug feel like a story.
+
+The red section shows the broken code and the error. The green section is where users type their fix.
+
+\textbf{[Make the fix]}
+
+I'll fix this typo bug --- `printIn' should be `println'.
+
+\textbf{[Tap Run Tests]}
+
+When I tap Run Tests, the code compiles and executes in real-time using Janino compiler. Watch...
+
+\textbf{[Show results + confetti]}
+
+Green checkmarks! And confetti for the celebration. The user earned XP and their streak continues.''
+\end{scriptbox}
+
+\subsection{Slide 5: Game Modes (2 minutes)}
+
+\begin{scriptbox}[Game Modes Script]
+``We have 8 game modes to keep things fresh.
+
+\textbf{[Navigate to Game Modes]}
+
+Beginners start with Tutorial mode --- guided step-by-step.
+
+Quick Fix is timed --- 60 seconds per bug with 3 lives.
+
+Daily Challenge changes every day with themed bugs --- Memory Monday, Security Saturday.
+
+For competitive users, we have Battle Arena and Speed Run.
+
+\textbf{[Tap Show More]}
+
+Special modes include Puzzle Mode with no hints for triple XP, Mystery Bug with random modifiers, and Survival Mode --- one life, endless bugs.''
+\end{scriptbox}
+
+\subsection{Slide 6: Ranked Battles (2 minutes)}
+
+\begin{scriptbox}[Battles Script]
+``Battle Arena is our competitive mode, inspired by chess and League of Legends rankings.
+
+\textbf{[Navigate to Battle Arena]}
+
+It uses the Elo rating system --- same algorithm used in chess. Players have 7 tiers from Unranked up to Legend.
+
+\textbf{[Show difficulty chips]}
+
+Users pick their difficulty, then matchmaking finds an opponent at similar skill level.
+
+\textbf{[Tap Quick Match]}
+
+Both players get the same bug and race to fix it correctly. Winner gains Elo, loser drops. Win streaks give bonus multipliers.
+
+We have seasonal resets where everyone's rank compresses, and top players earn exclusive rewards.''
+\end{scriptbox}
+
+\subsection{Slide 7: Tech Stack (2 minutes)}
+
+\begin{scriptbox}[Tech Stack Script]
+``Let me briefly explain the technical architecture.
+
+We use MVVM pattern with Repository --- the standard modern Android architecture.
+
+UI is built with Fragments. ViewModels hold state with LiveData for reactive updates. BugRepository is the single source of truth that talks to the database.
+
+For the database, we use Room --- an Android SQLite wrapper. We have 11 entities including Bug, UserProgress, LearningPath, and Achievement tables.
+
+Dependency injection with Hilt keeps everything modular and testable.
+
+The most interesting technical piece is the code execution engine. We use Janino --- a runtime Java compiler. User code compiles and runs in a sandboxed thread with a 5-second timeout for safety.
+
+Backend services are Firebase: Auth for user accounts, Firestore for cloud sync, and Realtime Database for multiplayer battles.
+
+The AI Mentor integrates with OpenAI's GPT-4 API, with offline fallback responses.''
+\end{scriptbox}
+
+\subsection{Slide 8: Thank You (2 minutes)}
+
+\begin{scriptbox}[Closing Script]
+``To summarize what makes DebugMaster unique:
+
+One --- Real code execution. Not fake exercises. Janino compiles and runs actual Java code.
+
+Two --- Competitive gaming. Elo-ranked battles make debugging social and exciting.
+
+Three --- AI-powered learning. Socratic method teaches thinking, not just answers.
+
+Four --- Modern tech stack. MVVM, Hilt, Room, Firebase --- industry-standard Android development.
+
+That's DebugMaster --- learn to debug, level up, compete.
+
+We're happy to take any questions about the features, the technical implementation, or the design decisions we made.
+
+Thank you for your time.''
+\end{scriptbox}
+
+% ============================================
+% PART 7: KEY NUMBERS
+% ============================================
+\section{Quick Reference}
+
+\subsection{Key Statistics}
+
+\begin{itemize}
+    \item \textbf{50+} bugs across 4 programming languages
+    \item \textbf{8} game modes
+    \item \textbf{15} learning paths (4 free, 11 pro)
+    \item \textbf{7} ranked tiers
+    \item \textbf{40+} achievements
+    \item \textbf{11} database entities
+    \item \textbf{Version 13} database schema
+    \item \textbf{25+} UI screens
+\end{itemize}
+
+\subsection{Potential Q\&A}
+
+\begin{table}[h]
+\centering
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Question} & \textbf{Answer} \\
+\hline
+Why Java not Kotlin? & Project started in Java for consistency throughout the codebase \\
+\hline
+How is code execution secure? & Sandboxed thread with 5-second timeout, no system access \\
+\hline
+How does matchmaking work? & $\pm$100 Elo range, expands over time up to $\pm$300 \\
+\hline
+What about cheating? & Server-side validation for multiplayer, hash verification \\
+\hline
+Why Janino? & Lightweight runtime Java compiler, perfect for mobile \\
+\hline
+Offline support? & Local Room database with optional Firebase sync \\
+\hline
+\end{tabularx}
+\caption{Anticipated Questions and Answers}
+\end{table}
+
+% ============================================
+% END
+% ============================================
+\section{Conclusion}
+
+DebugMaster represents a novel approach to programming education by combining:
+
+\begin{enumerate}
+    \item Real code execution in a mobile environment
+    \item Gamification mechanics proven in apps like Duolingo
+    \item Competitive systems inspired by games like League of Legends
+    \item AI-powered personalized learning
+\end{enumerate}
+
+The application demonstrates proficiency in modern Android development practices including MVVM architecture, dependency injection, reactive programming, and cloud integration.
+
+\vspace{1cm}
+\begin{center}
+\textcolor{primaryPurple}{\Large\textbf{DebugMaster}}\\[0.3cm]
+\textit{Learn to Debug. Level Up. Compete.}\\[0.5cm]
+\textbf{Yasser Hamdan \& Mohamad Dmayriye}
+\end{center}
+
+\end{document}
