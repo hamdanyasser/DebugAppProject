@@ -81,9 +81,9 @@
     </style>
 </head>
 <body>
-    <div class="research-badge">MISCHIEVOUS PERSONALITY</div>
+    <div class="research-badge">10/10 FINAL POLISH</div>
     <h1>DebugMaster</h1>
-    <p class="subtitle">"I know something you don't" energy</p>
+    <p class="subtitle">Mischievous. Memorable. Ready to ship.</p>
 
     <div class="preview-container">
         <div class="preview-box">
@@ -109,13 +109,13 @@
     </div>
 
     <div class="tips">
-        <h3>Personality Features (Duolingo-Level)</h3>
+        <h3>10/10 Final Polish Features</h3>
         <ul>
-            <li><strong>Asymmetric eyebrows</strong> — Left raised, right angled = "I know a secret"</li>
-            <li><strong>Eyes looking up-right</strong> — Creates intrigue, what's it looking at?</li>
-            <li><strong>Smirk instead of smile</strong> — Confident, slightly mischievous</li>
-            <li><strong>Meme-able expression</strong> — Memorable, shareable, Duolingo-energy</li>
-            <li><strong>Works at 48px</strong> — Personality still reads at small sizes</li>
+            <li><strong>Enhanced eyebrow contrast</strong> — Left VERY high, right low and flat</li>
+            <li><strong>Extra eye sparkles</strong> — 3 sparkles per eye for maximum life</li>
+            <li><strong>Pronounced smirk</strong> — Curves up dramatically on right side</li>
+            <li><strong>Tiny tooth</strong> — Cheeky detail, holding back a laugh</li>
+            <li><strong>Ship it!</strong> — This icon is ready for the Play Store</li>
         </ul>
     </div>
 
@@ -279,64 +279,85 @@
             ctx.fill();
             ctx.restore();
 
-            // === EYE SPARKLES (Adjusted for new pupil positions) ===
+            // === EYE SPARKLES (Enhanced for more "alive" look) ===
             ctx.save();
             ctx.fillStyle = '#ffffff';
             ctx.shadowColor = '#ffffff';
             ctx.shadowBlur = 10 * s;
 
-            // Left eye - big sparkle (upper-right of pupil)
+            // Left eye - big sparkle
             ctx.beginPath();
-            ctx.arc(cx - 28*s, cy - 45*s, 12*s, 0, Math.PI*2);
+            ctx.arc(cx - 28*s, cy - 45*s, 13*s, 0, Math.PI*2);
             ctx.fill();
 
-            // Left eye - small sparkle
+            // Left eye - medium sparkle
             ctx.beginPath();
-            ctx.arc(cx - 52*s, cy - 18*s, 6*s, 0, Math.PI*2);
+            ctx.arc(cx - 52*s, cy - 18*s, 7*s, 0, Math.PI*2);
             ctx.fill();
 
-            // Right eye - big sparkle (upper-right of pupil)
+            // Left eye - tiny sparkle (NEW!)
             ctx.beginPath();
-            ctx.arc(cx + 102*s, cy - 45*s, 12*s, 0, Math.PI*2);
+            ctx.arc(cx - 35*s, cy - 8*s, 4*s, 0, Math.PI*2);
             ctx.fill();
 
-            // Right eye - small sparkle
+            // Right eye - big sparkle
             ctx.beginPath();
-            ctx.arc(cx + 78*s, cy - 18*s, 6*s, 0, Math.PI*2);
+            ctx.arc(cx + 102*s, cy - 45*s, 13*s, 0, Math.PI*2);
+            ctx.fill();
+
+            // Right eye - medium sparkle
+            ctx.beginPath();
+            ctx.arc(cx + 78*s, cy - 18*s, 7*s, 0, Math.PI*2);
+            ctx.fill();
+
+            // Right eye - tiny sparkle (NEW!)
+            ctx.beginPath();
+            ctx.arc(cx + 95*s, cy - 8*s, 4*s, 0, Math.PI*2);
             ctx.fill();
             ctx.restore();
 
-            // === EYEBROWS (ASYMMETRIC - Left HIGH, Right angled = mischievous!) ===
+            // === EYEBROWS (MORE ASYMMETRIC - increased contrast!) ===
             ctx.save();
             ctx.strokeStyle = '#047857';
-            ctx.lineWidth = 6 * s;
+            ctx.lineWidth = 7 * s;
             ctx.lineCap = 'round';
 
-            // Left eyebrow - RAISED HIGH (surprised/intrigued)
+            // Left eyebrow - RAISED EVEN HIGHER (very intrigued)
             ctx.beginPath();
-            ctx.moveTo(cx - 120*s, cy - 85*s);
-            ctx.quadraticCurveTo(cx - 65*s, cy - 125*s, cx - 10*s, cy - 95*s);
+            ctx.moveTo(cx - 120*s, cy - 90*s);
+            ctx.quadraticCurveTo(cx - 65*s, cy - 135*s, cx - 10*s, cy - 100*s);
             ctx.stroke();
 
-            // Right eyebrow - LOWER and angled (knowing/scheming)
+            // Right eyebrow - EVEN LOWER and flatter (knowing smirk)
             ctx.beginPath();
-            ctx.moveTo(cx + 15*s, cy - 80*s);
-            ctx.quadraticCurveTo(cx + 65*s, cy - 95*s, cx + 115*s, cy - 70*s);
+            ctx.moveTo(cx + 15*s, cy - 78*s);
+            ctx.quadraticCurveTo(cx + 65*s, cy - 88*s, cx + 115*s, cy - 65*s);
             ctx.stroke();
             ctx.restore();
 
-            // === SMIRK (Asymmetric - one side higher = mischievous!) ===
+            // === SMIRK (More pronounced + tiny tooth!) ===
             ctx.save();
             ctx.strokeStyle = '#047857';
-            ctx.lineWidth = 6 * s;
+            ctx.lineWidth = 7 * s;
             ctx.lineCap = 'round';
 
-            // Asymmetric smirk - right side curves up more
+            // Enhanced asymmetric smirk - right side curves up MORE
             ctx.beginPath();
-            ctx.moveTo(cx - 45*s, cy + 80*s);
-            ctx.quadraticCurveTo(cx - 10*s, cy + 110*s, cx + 20*s, cy + 95*s);
-            ctx.quadraticCurveTo(cx + 45*s, cy + 75*s, cx + 55*s, cy + 65*s);
+            ctx.moveTo(cx - 50*s, cy + 75*s);
+            ctx.quadraticCurveTo(cx - 15*s, cy + 115*s, cx + 15*s, cy + 100*s);
+            ctx.quadraticCurveTo(cx + 40*s, cy + 70*s, cx + 60*s, cy + 55*s);
             ctx.stroke();
+            ctx.restore();
+
+            // === TINY TOOTH (Cheeky detail!) ===
+            ctx.save();
+            ctx.fillStyle = '#ffffff';
+            ctx.shadowColor = 'rgba(255,255,255,0.5)';
+            ctx.shadowBlur = 3 * s;
+            ctx.beginPath();
+            // Small rounded rectangle tooth peeking from smirk
+            ctx.roundRect(cx + 35*s, cy + 58*s, 12*s, 14*s, 3*s);
+            ctx.fill();
             ctx.restore();
 
             // === CHEEK BLUSH (Cute!) ===
