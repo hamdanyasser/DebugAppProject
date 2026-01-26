@@ -23,6 +23,8 @@ public class HomeViewModel extends AndroidViewModel {
     private final LiveData<UserProgress> userProgress;
     private final LiveData<List<Bug>> allBugs;
     private final MutableLiveData<Bug> dailyChallenge = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(true);
+    private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
 
     public HomeViewModel(@NonNull Application application) {
         super(application);
@@ -35,13 +37,28 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
     private void loadDailyChallenge() {
+        isLoading.setValue(true);
         allBugs.observeForever(bugs -> {
             if (bugs != null && !bugs.isEmpty()) {
                 int dayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
                 int bugIndex = dayOfYear % bugs.size();
                 dailyChallenge.postValue(bugs.get(bugIndex));
             }
+            isLoading.postValue(false);
         });
+    }
+
+    public LiveData<Boolean> getIsLoading() {
+        return isLoading;
+    }
+
+    public LiveData<String> getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void retry() {
+        errorMessage.setValue(null);
+        loadDailyChallenge();
     }
 
     public LiveData<UserProgress> getUserProgress() {

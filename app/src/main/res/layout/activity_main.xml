@@ -24,6 +24,34 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/nav_graph" />
 
+    <!-- Offline Indicator Banner -->
+    <LinearLayout
+        android:id="@+id/offline_banner"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:background="#E65100"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/card_bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_cloud_off"
+            app:tint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/offline_mode_message"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+    </LinearLayout>
+
     <!-- Bottom Navigation - Floating glass style -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_bottom_nav"

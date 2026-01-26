@@ -294,6 +294,10 @@
         <action
             android:id="@+id/action_bugDetail_to_debugger"
             app:destination="@id/debuggerFragment" />
+
+        <action
+            android:id="@+id/action_bugDetail_to_geminiChat"
+            app:destination="@id/geminiChatFragment" />
     </fragment>
 
     <!-- Bug List Screen -->
@@ -389,7 +393,7 @@
     <!-- NEW FEATURE DESTINATIONS                      -->
     <!-- ============================================== -->
 
-    <!-- AI Mentor Chat -->
+    <!-- AI Mentor Chat (Quiz Game) -->
     <fragment
         android:id="@+id/mentorChatFragment"
         android:name="com.example.debugappproject.ui.mentor.MentorChatFragment"
@@ -400,6 +404,39 @@
             android:name="bug_id"
             app:argType="integer"
             android:defaultValue="-1" />
+    </fragment>
+
+    <!-- Real AI Chat (Gemini Powered) -->
+    <fragment
+        android:id="@+id/geminiChatFragment"
+        android:name="com.example.debugappproject.ai.GeminiChatFragment"
+        android:label="AI Debug Mentor"
+        tools:layout="@layout/fragment_gemini_chat">
+
+        <argument
+            android:name="bug_id"
+            app:argType="integer"
+            android:defaultValue="-1" />
+
+        <argument
+            android:name="bug_title"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <argument
+            android:name="bug_code"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <argument
+            android:name="bug_fixed"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <argument
+            android:name="bug_explanation"
+            app:argType="string"
+            android:defaultValue="" />
     </fragment>
 
     <!-- Interactive Debugger -->

@@ -1,7 +1,12 @@
 package com.example.debugappproject;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -31,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private NavController navController;
     private boolean isNavigationSetup = false;
     private NavController.OnDestinationChangedListener destinationListener;
+    private ConnectivityManager.NetworkCallback networkCallback;
+    private View offlineBanner;
 
     // Permission launcher for POST_NOTIFICATIONS (Android 13+)
     private final ActivityResultLauncher<String> notificationPermissionLauncher =
@@ -48,10 +55,52 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Setup offline banner
+        offlineBanner = findViewById(R.id.offline_banner);
+        setupNetworkListener();
+
         // Request notification permission for Android 13+ (required for push notifications)
         requestNotificationPermissionIfNeeded();
 
         android.util.Log.d("MainActivity", "onCreate completed");
+    }
+
+    /**
+     * Setup network connectivity listener to show/hide offline banner
+     */
+    private void setupNetworkListener() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        networkCallback = new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(Network network) {
+                runOnUiThread(() -> {
+                    if (offlineBanner != null) {
+                        offlineBanner.setVisibility(View.GONE);
+                    }
+                });
+            }
+
+            @Override
+            public void onLost(Network network) {
+                runOnUiThread(() -> {
+                    if (offlineBanner != null) {
+                        offlineBanner.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        };
+
+        NetworkRequest request = new NetworkRequest.Builder()
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .build();
+        cm.registerNetworkCallback(request, networkCallback);
+
+        // Check initial state
+        Network activeNetwork = cm.getActiveNetwork();
+        if (activeNetwork == null && offlineBanner != null) {
+            offlineBanner.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -148,6 +197,17 @@ public class MainActivity extends AppCompatActivity {
         if (navController != null && destinationListener != null) {
             navController.removeOnDestinationChangedListener(destinationListener);
         }
+
+        // Unregister network callback
+        if (networkCallback != null) {
+            try {
+                ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                cm.unregisterNetworkCallback(networkCallback);
+            } catch (Exception e) {
+                android.util.Log.e("MainActivity", "Error unregistering network callback", e);
+            }
+        }
+
         binding = null;
         super.onDestroy();
     }

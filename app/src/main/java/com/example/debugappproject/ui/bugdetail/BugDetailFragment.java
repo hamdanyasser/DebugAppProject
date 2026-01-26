@@ -310,7 +310,7 @@ public class BugDetailFragment extends Fragment {
                 String originalBroken = currentBug.getBrokenCode().trim();
                 if (CodeComparator.normalizeCode(userCode).equals(CodeComparator.normalizeCode(originalBroken))) {
                     soundManager.playSound(SoundManager.Sound.ERROR);
-                    Toast.makeText(requireContext(), "You need to fix the bug first!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), R.string.error_fix_bug_first, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 
@@ -325,18 +325,17 @@ public class BugDetailFragment extends Fragment {
                     // Code is significantly different - warn the user
                     soundManager.playSound(SoundManager.Sound.WARNING);
                     new AlertDialog.Builder(requireContext())
-                            .setTitle("Code Doesn't Match")
-                            .setMessage("Your code is only " + (int)(similarity * 100) + "% similar to the solution.\n\n" +
-                                    "Are you sure you want to mark this as solved without the correct fix?")
-                            .setPositiveButton("Mark Anyway", (dialog, which) -> {
+                            .setTitle(R.string.error_code_doesnt_match)
+                            .setMessage(getString(R.string.error_code_similarity, (int)(similarity * 100)))
+                            .setPositiveButton(R.string.btn_mark_anyway, (dialog, which) -> {
                                 soundManager.playSound(SoundManager.Sound.SUCCESS);
                                 viewModel.markBugAsCompleted(currentBug.getId(), currentBug.getDifficulty());
                                 binding.chipCompleted.setVisibility(View.VISIBLE);
                                 binding.buttonMarkSolved.setText("✅  Completed");
                                 binding.buttonMarkSolved.setEnabled(false);
-                                Toast.makeText(requireContext(), "Bug marked as completed (manual)", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(requireContext(), R.string.toast_bug_completed_manual, Toast.LENGTH_SHORT).show();
                             })
-                            .setNegativeButton("Keep Trying", (dialog, which) -> {
+                            .setNegativeButton(R.string.btn_keep_trying, (dialog, which) -> {
                                 soundManager.playSound(SoundManager.Sound.BUTTON_BACK);
                             })
                             .show();
@@ -347,7 +346,7 @@ public class BugDetailFragment extends Fragment {
                     binding.chipCompleted.setVisibility(View.VISIBLE);
                     binding.buttonMarkSolved.setText("✅  Completed");
                     binding.buttonMarkSolved.setEnabled(false);
-                    Toast.makeText(requireContext(), "Bug marked as completed!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), R.string.toast_bug_completed, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -360,7 +359,7 @@ public class BugDetailFragment extends Fragment {
                     String notes = binding.editUserNotes.getText().toString();
                     viewModel.saveBugNotes(currentBug.getId(), notes);
                     soundManager.playSound(SoundManager.Sound.SUCCESS);
-                    Toast.makeText(requireContext(), "Notes saved!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), R.string.toast_notes_saved, Toast.LENGTH_SHORT).show();
                 }
             });
         });
@@ -395,14 +394,12 @@ public class BugDetailFragment extends Fragment {
         if (!SettingsFragment.areHintsEnabled(requireContext())) {
             soundManager.playSound(SoundManager.Sound.ERROR);
             new AlertDialog.Builder(requireContext())
-                .setTitle("Hints Disabled")
-                .setMessage("Hints are currently disabled in Settings. Challenge mode is active! " +
-                    "Would you like to enable hints?")
-                .setPositiveButton("Enable Hints", (dialog, which) -> {
-                    Toast.makeText(requireContext(),
-                        "Please enable hints in Settings", Toast.LENGTH_LONG).show();
+                .setTitle(R.string.dialog_hints_disabled)
+                .setMessage(R.string.dialog_hints_disabled_message)
+                .setPositiveButton(R.string.btn_enable_hints, (dialog, which) -> {
+                    Toast.makeText(requireContext(), R.string.toast_enable_hints, Toast.LENGTH_LONG).show();
                 })
-                .setNegativeButton("Keep Disabled", null)
+                .setNegativeButton(R.string.btn_keep_disabled, null)
                 .show();
             return;
         }
@@ -434,7 +431,7 @@ public class BugDetailFragment extends Fragment {
 
         if (allHints.isEmpty()) {
             soundManager.playSound(SoundManager.Sound.ERROR);
-            Toast.makeText(requireContext(), "No hints available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.toast_no_hints, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -463,22 +460,22 @@ public class BugDetailFragment extends Fragment {
             viewModel.revealNextHint();
         } else {
             soundManager.playSound(SoundManager.Sound.WARNING);
-            Toast.makeText(requireContext(), "No more hints available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.toast_no_more_hints, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void showSolutionConfirmation() {
         new MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Reveal Solution?")
-            .setMessage("Spend 1 💎 gem to see the solution.\n\nNote: You won't earn XP or coins if you reveal the answer.")
-            .setPositiveButton("Spend 1 💎", (dialog, which) -> {
+            .setTitle(R.string.dialog_reveal_solution)
+            .setMessage(R.string.dialog_reveal_solution_message)
+            .setPositiveButton(R.string.btn_spend_gem, (dialog, which) -> {
                 soundManager.playSound(SoundManager.Sound.HINT_REVEAL);
                 viewModel.showSolution();
                 showSolution();
                 // Update button to show it's been revealed
                 updateSolutionButtonRevealed();
             })
-            .setNegativeButton("Keep Trying", null)
+            .setNegativeButton(R.string.btn_keep_trying, null)
             .show();
     }
 
@@ -542,15 +539,15 @@ public class BugDetailFragment extends Fragment {
 
         if (userCode.isEmpty()) {
             soundManager.playSound(SoundManager.Sound.ERROR);
-            Toast.makeText(requireContext(), "Please enter your code fix first", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.toast_enter_code, Toast.LENGTH_SHORT).show();
             return;
         }
-        
+
         // Check if user just submitted the original broken code
         String originalBroken = currentBug.getBrokenCode().trim();
         if (CodeComparator.normalizeCode(userCode).equals(CodeComparator.normalizeCode(originalBroken))) {
             soundManager.playSound(SoundManager.Sound.ERROR);
-            Toast.makeText(requireContext(), "You need to fix the bug first!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.error_fix_bug_first, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -897,7 +894,7 @@ public class BugDetailFragment extends Fragment {
     private void resetCode() {
         soundManager.playSound(SoundManager.Sound.BUTTON_BACK);
         binding.editUserCode.setText(initialCode);
-        Toast.makeText(requireContext(), "Code reset to starting point", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), R.string.toast_code_reset, Toast.LENGTH_SHORT).show();
     }
 
     private void celebrateBugCompletion() {
@@ -922,13 +919,37 @@ public class BugDetailFragment extends Fragment {
     }
 
     /**
-     * Open the AI Debug Mentor bottom sheet
+     * Open the AI Debug Mentor - Real Gemini AI Chat
      */
     private void openAIMentor() {
         if (currentBug == null) {
-            Toast.makeText(requireContext(), "Please wait for the bug to load", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.toast_wait_loading, Toast.LENGTH_SHORT).show();
             return;
         }
+
+        // Navigate to real AI chat powered by Gemini
+        try {
+            Bundle args = new Bundle();
+            args.putInt("bug_id", currentBug.getId());
+            args.putString("bug_title", currentBug.getTitle());
+            args.putString("bug_code", currentBug.getBrokenCode());
+            args.putString("bug_fixed", currentBug.getFixedCode());
+            args.putString("bug_explanation", currentBug.getExplanation());
+
+            androidx.navigation.Navigation.findNavController(requireView())
+                .navigate(R.id.action_bugDetail_to_geminiChat, args);
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to navigate to Gemini chat", e);
+            // Fallback to bottom sheet
+            openAIMentorBottomSheet();
+        }
+    }
+
+    /**
+     * Fallback: Open the old AI Mentor bottom sheet
+     */
+    private void openAIMentorBottomSheet() {
+        if (currentBug == null) return;
 
         // Update user's code in mentor for analysis
         if (aiMentor != null && binding.editUserCode != null) {

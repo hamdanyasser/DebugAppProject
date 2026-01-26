@@ -29,6 +29,7 @@ import com.example.debugappproject.util.AuthManager;
 import com.example.debugappproject.util.ByteMascot;
 import com.example.debugappproject.util.SoundManager;
 import com.example.debugappproject.ui.shop.ShopFragment;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Calendar;
 
@@ -281,6 +282,23 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupObservers() {
+        // Loading state observer
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            if (binding != null && binding.loadingContainer != null) {
+                binding.loadingContainer.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+                binding.scrollView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        // Error state observer
+        viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
+            if (error != null && binding != null) {
+                Snackbar.make(binding.getRoot(), error, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.retry, v -> viewModel.retry())
+                    .show();
+            }
+        });
+
         viewModel.getUserProgress().observe(getViewLifecycleOwner(), progress -> {
             if (progress != null) {
                 updateUserStats(progress);
@@ -288,7 +306,17 @@ public class HomeFragment extends Fragment {
         });
 
         viewModel.getDailyChallenge().observe(getViewLifecycleOwner(), bug -> {
+            if (binding == null) return;
+
             if (bug != null) {
+                // Show content, hide empty state
+                if (binding.layoutDailyContent != null) {
+                    binding.layoutDailyContent.setVisibility(View.VISIBLE);
+                }
+                if (binding.emptyDailyChallenge != null) {
+                    binding.emptyDailyChallenge.setVisibility(View.GONE);
+                }
+
                 // Store bug ID for navigation
                 currentDailyChallengeBugId = bug.getId();
 
@@ -303,6 +331,14 @@ public class HomeFragment extends Fragment {
                             binding.textGreeting.setText(byteMascot.getRandomTip());
                         }
                     }, 5000);
+                }
+            } else {
+                // Show empty state
+                if (binding.layoutDailyContent != null) {
+                    binding.layoutDailyContent.setVisibility(View.GONE);
+                }
+                if (binding.emptyDailyChallenge != null) {
+                    binding.emptyDailyChallenge.setVisibility(View.VISIBLE);
                 }
             }
         });

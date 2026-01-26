@@ -494,6 +494,7 @@
 
                         <!-- Progress + Button Row -->
                         <LinearLayout
+                            android:id="@+id/layout_daily_content"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
@@ -548,6 +549,32 @@
                                 app:backgroundTint="#FF6B35"
                                 app:cornerRadius="12dp"
                                 app:elevation="0dp" />
+                        </LinearLayout>
+
+                        <!-- Empty State -->
+                        <LinearLayout
+                            android:id="@+id/empty_daily_challenge"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="24dp"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/empty_daily_title"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="@string/empty_daily_message"
+                                android:textColor="@color/text_tertiary"
+                                android:textSize="14sp" />
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -807,5 +834,29 @@
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <!-- Loading Overlay -->
+    <LinearLayout
+        android:id="@+id/loading_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="#0D0D1A"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:indeterminateTint="@color/purple_500" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/loading_home"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp" />
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

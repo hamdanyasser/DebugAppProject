@@ -9,7 +9,7 @@
     <string name="app_name">DebugMaster</string>
     <string name="app_name_full">DebugMaster - Learn Debugging</string>
     <string name="app_tagline">Master debugging through play</string>
-    <string name="app_description">The most fun way to learn debugging! Solve real coding bugs, earn XP, and become a debugging master.</string>
+    <string name="app_description">Master debugging by solving real Java, Python &amp; JavaScript bugs. Climb the leaderboard, unlock achievements, battle friends, and become a Debug Master! Powered by AI mentor.</string>
 
     <!-- =======================================================================
          HOME SCREEN
@@ -152,7 +152,7 @@
          ======================================================================= -->
     <string name="upgrade_to_pro">Upgrade to Pro</string>
     <string name="unlock_pro">Unlock Pro</string>
-    <string name="pro_description">Access all features</string>
+    <string name="pro_description">Unlock unlimited bugs, 3x XP battles, exclusive leaderboards &amp; AI mentor!</string>
     <string name="upgrade">Upgrade</string>
     <string name="debugmaster_pro">DebugMaster PRO</string>
     <string name="unlock_full_potential">Unlock Your Full Potential</string>
@@ -300,4 +300,48 @@
     <string name="attribution_billing">Google Play Billing</string>
     <string name="vibration_attribution">Haptic Feedback</string>
     <string name="audio_attribution">Sound Effects</string>
+
+    <!-- =======================================================================
+         LOADING &amp; OFFLINE STATES
+         ======================================================================= -->
+    <string name="loading_home">Loading your progress…</string>
+    <string name="offline_mode_message">Offline mode - Progress saved locally</string>
+    <string name="error_loading_data">Failed to load data. Check your connection.</string>
+
+    <!-- =======================================================================
+         BUG DETAIL ERROR MESSAGES
+         ======================================================================= -->
+    <string name="error_fix_bug_first">You need to fix the bug first!</string>
+    <string name="error_code_doesnt_match">Code Doesn\'t Match</string>
+    <string name="error_code_similarity">Your code is only %d%% similar to the solution.\n\nAre you sure you want to mark this as solved without the correct fix?</string>
+    <string name="toast_bug_completed_manual">Bug marked as completed (manual)</string>
+    <string name="toast_bug_completed">Bug marked as completed!</string>
+    <string name="toast_notes_saved">Notes saved!</string>
+
+    <!-- Hints -->
+    <string name="dialog_hints_disabled">Hints Disabled</string>
+    <string name="dialog_hints_disabled_message">Hints are currently disabled in Settings. Challenge mode is active! Would you like to enable hints?</string>
+    <string name="toast_enable_hints">Please enable hints in Settings</string>
+    <string name="toast_no_hints">No hints available</string>
+    <string name="toast_no_more_hints">No more hints available</string>
+
+    <!-- Solution -->
+    <string name="dialog_reveal_solution">Reveal Solution?</string>
+    <string name="dialog_reveal_solution_message">Spend 1 gem to see the solution.\n\nNote: You won\'t earn XP or coins if you reveal the answer.</string>
+
+    <!-- Validation -->
+    <string name="toast_enter_code">Please enter your code fix first</string>
+    <string name="toast_wait_loading">Please wait for the bug to load</string>
+    <string name="toast_code_reset">Code reset to starting point</string>
+
+    <!-- Buttons -->
+    <string name="btn_mark_anyway">Mark Anyway</string>
+    <string name="btn_keep_trying">Keep Trying</string>
+    <string name="btn_enable_hints">Enable Hints</string>
+    <string name="btn_keep_disabled">Keep Disabled</string>
+    <string name="btn_spend_gem">Spend 1 Gem</string>
+
+    <!-- Empty States -->
+    <string name="empty_daily_title">No bugs today</string>
+    <string name="empty_daily_message">Check back tomorrow for a new challenge!</string>
 </resources>
